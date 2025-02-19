@@ -11,8 +11,13 @@ function AudioLooper(styleType) {
 
 	this.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra
 		const keys = id.split("_");
+		
+		if (this.styleType != "drum" && this.bpm != tempo) {	// transpose key to counter-balance stretched pitch (this.playbackRate)
+			const tonic = parseInt(keys[0].substring(3));
+			keys[0] = "key" + ((12 + tonic + ((this.bpm - tempo) / 8)) % 12);
+		}
 
-		let key = id;		
+		let key = keys[0];			
 		if (!this.loop[key]) key = keys[0] + "_" + keys[1] + "_" + keys[2];
 		if (!this.loop[key]) key = keys[0] + "_" + keys[1];
 		if (!this.loop[key]) key = keys[0] + "_maj_arra";
@@ -25,19 +30,19 @@ function AudioLooper(styleType) {
 	};
 		
 	this.doLoop = function(id, beginTime, howLong, when) {		
-		console.debug("doLoop starts", id, this.id, howLong, when);
+		console.debug("doLoop starts", id, this.id, howLong, when, tempo, this.bpm);
 		
-		if (id == "end1")  this.offset = 0; 
+		if (id == "end1")  this.playbackOffset = 0; 
 		if (when == undefined) when = this.audioContext.currentTime;
-		this.startTime = when - this.offset;
+		this.startTime = when - (this.playbackOffset);
 		
 		if (this.source) {
 
 		}
 		
 		this.source = this.audioContext.createBufferSource();		
-		this.source.buffer = this.sample;	
-		this.source.playbackRate.value = 1;
+		this.source.buffer = this.sample;		
+		this.source.playbackRate.value =  this.playbackRate;
 		this.gainNode = this.audioContext.createGain();
 		this.gainNode.gain.value = 0.01;			
 			
@@ -55,13 +60,14 @@ function AudioLooper(styleType) {
 		this.source.connect(this.gainNode);			
 		
 		try {
-			this.source.start(when, (beginTime + this.offset), (howLong - this.offset));	
+			this.source.start(when, (beginTime + (this.playbackOffset) * this.playbackRate));
+			this.source.stop(when + howLong - (this.playbackOffset));
 		} catch (e) {
 			this.source.start();
 		}
 
-		this.gainNode.gain.setValueAtTime(this.vol, when + howLong - this.offset - 0.01);
-		this.gainNode.gain.exponentialRampToValueAtTime(0.01, when + howLong - this.offset);			
+		this.gainNode.gain.setValueAtTime(this.vol, when + howLong - (this.playbackOffset) - 0.01);
+		this.gainNode.gain.exponentialRampToValueAtTime(0.01, when + howLong - (this.playbackOffset));			
 		
 		if (this.cb_status) this.cb_status("_eventPlaying", id); 		
 		
@@ -89,15 +95,15 @@ function AudioLooper(styleType) {
 			if (loop) {
 				const beginTime =  loop.start /1000;
 				const endTime = loop.stop / 1000;
-				const howLong = endTime - beginTime;
+				const howLong = (endTime - beginTime) / this.playbackRate;
 							
 				if (this.looping && this.reloop) {
-					this.doLoop(this.id, beginTime, howLong);	
+					this.doLoop(this.id, beginTime, howLong);
 				}
 				
 				if (!this.reloop) {
 					this.reloop = true;
-					this.offset = 0;
+					this.playbackOffset = 0;
 				}
 			}
 		});		
@@ -128,6 +134,7 @@ AudioLooper.prototype.update = function(id, sync) {
 	if (id == this.id) return;	
 	if (drumLoop?.id == "end1") return;	
 
+	this.playbackRate =  2 ** (((tempo - this.bpm) / 8) / 12);
 	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
 	console.debug("update", id, sync);	
 	this.displayUI(true);	
@@ -139,18 +146,18 @@ AudioLooper.prototype.update = function(id, sync) {
 		if (loop) {
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
-			const howLong = endTime - beginTime;
+			const howLong = (endTime - beginTime) / this.playbackRate;
 			const duration = this.audioContext.currentTime - this.startTime;	
 			
 			if (sync) {	
 				this.reloop = true;			
-				this.offset = 0;
+				this.playbackOffset = 0;
 				console.debug("update sync", id);				
 				
 			} else {	
 				this.reloop = false;	
-				this.offset = ((duration * 1000) % (howLong * 1000)) / 1000;							
-				console.debug("update demand", id, howLong, duration, this.offset);			
+				this.playbackOffset = ((duration * 1000) % (howLong * 1000) / 1000);							
+				console.debug("update demand", id, howLong, duration, this.playbackOffset);			
 
 				const gain = this.gainNode.gain;		
 				const old = this.source;					
@@ -163,13 +170,14 @@ AudioLooper.prototype.update = function(id, sync) {
 
 AudioLooper.prototype.start = function(id, when) {
     if (!this.finished || this.looping) return;
-	
+
+	this.playbackOffset = 0;
+	this.playbackRate =  2 ** (((tempo - this.bpm) / 8) / 12);	
 	this.displayUI(true);	
 	this.looping = true;
 	this.finished = false;	
 	this.reloop = true;
 	this.firstTime = true;
-	this.offset = 0;
 	this.id = id;
 	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
 	this.prevVol = this.vol;
@@ -179,7 +187,7 @@ AudioLooper.prototype.start = function(id, when) {
 	if (loop) {
 		const beginTime =  loop.start /1000;
 		const endTime = loop.stop / 1000;
-		const howLong = endTime - beginTime;	
+		const howLong = (endTime - beginTime) / this.playbackRate;	
 		
 		console.debug("AudioLooper " + this.styleType + " start", when);	
 
@@ -230,9 +238,9 @@ AudioLooper.prototype.stop = function() {
 		if (loop) {
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
-			const duration = endTime - beginTime;
-			const howLong = this.audioContext.currentTime - this.startTime;	
-			const fadeOutSeconds = (duration - howLong) / 4;				
+			const duration = (endTime - beginTime);
+			const timePassed = (this.audioContext.currentTime - this.startTime);	
+			const fadeOutSeconds = (duration - timePassed) / 4;				
 			console.debug("AudioLooper " + this.styleType + " stop", fadeOutSeconds, this.finished);		
 			when = this.audioContext.currentTime + fadeOutSeconds;	
 		}
@@ -248,7 +256,7 @@ AudioLooper.prototype.callback = function(cb_loaded, cb_status) {
 
 AudioLooper.prototype.addUri = function(loop, output, bpm) {
 	this.loop = loop;
-	this.bpm = bpm;
+	this.bpm = bpm;	
 
 	if (output) this.audioContext.setSinkId(output.deviceId);
 	

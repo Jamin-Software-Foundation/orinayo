@@ -28,6 +28,7 @@ const CONTROL = 100;
 var smplrKeys = [];
 var smplrPads = [];
 
+var tempoEle = null;
 var speechObject = null;
 var mobileViewpoint = false;
 var desktopContainer = null;
@@ -2001,6 +2002,7 @@ async function onloadHandler() {
 	loadFile = document.querySelector("#load_file")
 	resetApp = document.querySelector("#reset_app")	
 	bluetoothEle = document.querySelector("#bluetooth")		
+  	tempoEle = document.querySelector("#tempo");
 	
 	const saveReg = document.querySelector("#save_reg");
 	const realDrumsLoop = document.getElementById("realdrumLoop");	
@@ -2345,7 +2347,7 @@ async function onloadHandler() {
 	
 	document.querySelector("#tempo").addEventListener("input", function(event) {
 		const tmpo = +event.target.value; 
-		setTempo(tmpo);
+		updateTempo(tmpo);
 		saveConfig();
 	});
 	
@@ -2762,16 +2764,27 @@ function handleBinaryFile(filename, data) {
 	});			
 }
 
-function setTempo(tmpo) {
+function resetTempo() {
+	tempoEle.setAttribute("min", (tempo - 48));
+	tempoEle.setAttribute("max", (tempo + 48));	
+	tempoEle.setAttribute("step", 8);	
+}
+
+function setTempo(tmpo) {	
+	updateTempo(tmpo);	
+	resetTempo()	
+}
+
+function updateTempo(tmpo) {
 	tempo = tmpo;
-	document.querySelector("#tempo").value = tempo; 
-	tempoDiv.innerText = tempo;
+	tempoDiv.innerText = tempo;	
+	tempoEle.value = tempo;	
 	
 	if (window.delay) delay.delayTime.value = 60 / tmpo;
 	
 	if (writeCharacteristic) {	// liberlive sync
 		setLiberLiveDeviceSettings() 
-	}
+	}	
 }
 
 function handleKeyboard(name, code) {
@@ -7019,8 +7032,9 @@ function startStopWebAudio() {
 	
 	if (!styleStarted) {		
 		if (recordMode) startRecording();				
-		if (!registration || registration == 0) setTempo(realInstrument.bpm);	
+		//if (!registration || registration == 0) setTempo(realInstrument.bpm);	
 		const goTime = audioContext.currentTime + gapTime;				
+		const playbackRate =  2 ** (((tempo - realInstrument.bpm) / 8) / 12);							
 
 		if (songSequence) {
 			orinayo_section.innerHTML = ">Arr WebAudioA";					
@@ -7033,12 +7047,15 @@ function startStopWebAudio() {
 				orinayo_section.innerHTML = ">Arr A";
 										
 				if (drumLoop && drumCheckedEle?.checked) {
-					drumLoop.start('int1', goTime);					
+					drumLoop.start('int1', goTime);	
 				
-					setTimeout(() => {
-						if (bassLoop && bassCheckedEle?.checked) bassLoop.start("key" + (keyChange % 12), goTime + (realInstrument.drums.int1.stop / 1000));
-						if (chordLoop && chordCheckedEle?.checked) chordLoop.start("key" + (keyChange % 12), goTime + (realInstrument.drums.int1.stop / 1000));			
-					}, realInstrument.drums.int1.stop);
+					if (bassLoop && bassCheckedEle?.checked) {
+						bassLoop.start("key" + (keyChange % 12), goTime + (realInstrument.drums.int1.stop / 1000 / playbackRate));
+					}
+					
+					if (chordLoop && chordCheckedEle?.checked) {
+						chordLoop.start("key" + (keyChange % 12), goTime + (realInstrument.drums.int1.stop / 1000 / playbackRate));			
+					}
 				}
 			} else {
 				if (drumLoop && drumCheckedEle?.checked) drumLoop.start('arra', goTime);						
@@ -8439,6 +8456,7 @@ function setupRealInstruments() {
 				if (realInstrument.chord.length >= 4 && i == 2) size = parseInt(realInstrument.chord[3]); // SUS4 shorter length
 					
 				for (let j=0; j<12; j++) {
+					const tonic = j;
 					let key = "key" + j;
 					let variation = "";
 					
@@ -8451,7 +8469,7 @@ function setupRealInstruments() {
 					if (i == 1) key = "key" + j + "_min" + variation;
 					if (i == 2) key = "key" + j + "_sus" + variation;	
 				
-					realInstrument.chords[key] = {start, stop};
+					realInstrument.chords[key] = {start, stop, tonic};
 					start += size;
 					stop += size;
 				}				
@@ -8506,6 +8524,7 @@ function setupRealInstruments() {
 			for (let i=0; i<2; i++) 
 			{				
 				for (let j=0; j<12; j++) {
+					const tonic = j;					
 					let key = "key" + j;
 					let variation = "";
 					
@@ -8517,7 +8536,7 @@ function setupRealInstruments() {
 					if (i == 0) key = "key" + j + "_maj" + variation;
 					if (i == 1) key = "key" + j + "_min" + variation;
 				
-					realInstrument.basses[key] = {start, stop};
+					realInstrument.basses[key] = {start, stop, tonic};
 					start += size;
 					stop += size;
 				}				
@@ -8560,7 +8579,7 @@ function setupRealInstruments() {
 	bassLoop = null;
 	chordLoop = null;
 	
-	loopWait = 3000;
+	loopWait = 5000;
 	
 	if (realInstrument.drums) {	
 		drumLoop = new AudioLooper("drum");
