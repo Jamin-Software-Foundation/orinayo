@@ -176,7 +176,7 @@ Orange | Ketron FS-7  | Ketron FS-6
 
 ### LiberLive C1
 OrinAyo will connect to the LiberLive C1 guitar by the Bluetooth connection used by the LiberLive mobile app. You can't use both OrinAyo and the mobile app at the same time.
-You can select different drum beats and guitar styles for both paddles and OrinAyo will use the tempo set by LiberLive except for web-audio styles that have fixed tempos.
+You can select different drum beats and guitar styles for both paddles and OrinAyo will use the tempo set by LiberLive except for web-audio styles that have a pre-determined set of tempos per style.
 
 You can also use both the audio from LiberLive C1 and OrinAyo together in harmony
 
@@ -315,7 +315,7 @@ This feature is very useful if you want to stream or sent the live music directl
 
 If you select **Web Audio Files** as your  [*Arranger Type*](#3---arranger-type), then you have to select an audio loop here that OrinAyo will use together with the bass and drums to give the music a style a groove. It could be a rhythmic guitar riff or  a keyboard chordal harmony.
 
-Audio loop styles in OrinAyo have fixed tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names or tempos.  You can manually change these selections to your taste.
+Audio loop styles in OrinAyo have tweleve pre-determined tempos and a default tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names and tempos.  You can manually change these selections to your taste.
 <br clear="left"/>
 
 ## 16 - Audio Drum

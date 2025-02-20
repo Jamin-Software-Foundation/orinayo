@@ -2037,8 +2037,11 @@ async function onloadHandler() {
 		const chordView = document.getElementById("mobile-chord-view");	
 		chordView.append(document.getElementById("orinayo"));
 		
+		const mobileTempo = document.getElementById("mobile-tempo");			
+		mobileTempo.append(document.getElementById("tempo-toolbar"));
+		
 		const arrView = document.getElementById("mobile-arr-view");			
-		arrView.append(document.getElementById("orinayo-section"));
+		arrView.append(document.getElementById("orinayo-section"));		
 		
 		drumKnob = createKnob("drum-volume", 50, 1, 100, '#88ff88');
 		const drumChoice = document.getElementById("drum-choice");
@@ -2290,6 +2293,20 @@ async function onloadHandler() {
 		}
 	});		
 	
+	const configButton = document.querySelector("#config-button");
+	const configDlg = document.querySelector("#settings-dialog");
+	
+	configButton.addEventListener("click", function(event) {
+		//ettings.style.display = "none";
+		configDlg.style.display = "";
+		configDlg.hidden = false;		
+		
+		document.querySelector("#dialogCloser").addEventListener("click", function(event) {
+			configDlg.style.display = "none";
+			configDlg.hidden = true;
+		})
+	});
+		
 	
 	const chordaBluetooth = document.querySelector("#chorda_bluetooth");
 	

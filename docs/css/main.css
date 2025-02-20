@@ -56,6 +56,15 @@ h1 {
 	
 }
 
+#config {
+	border:none; 
+	margin:0; 
+	padding:0; 
+	overflow:hidden;
+	width: 90%;
+	height: 90%;	
+}
+
 #chordpro, #lyrics, #chatview {
 	border:none; 
 	margin:0; 
