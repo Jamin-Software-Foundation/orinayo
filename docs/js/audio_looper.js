@@ -14,7 +14,7 @@ function AudioLooper(styleType) {
 		
 		if (this.styleType != "drum" && this.bpm != tempo) {	// transpose key to counter-balance stretched pitch (this.playbackRate)
 			const tonic = parseInt(keys[0].substring(3));
-			keys[0] = "key" + ((12 + tonic + ((this.bpm - tempo) / 8)) % 12);
+			keys[0] = "key" + ((12 + tonic - parseInt(tempoEle.value)) % 12);
 		}
 
 		let key = keys[0];			
@@ -134,7 +134,7 @@ AudioLooper.prototype.update = function(id, sync) {
 	if (id == this.id) return;	
 	if (drumLoop?.id == "end1") return;	
 
-	this.playbackRate =  2 ** (((tempo - this.bpm) / 8) / 12);
+	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
 	console.debug("update", id, sync);	
 	this.displayUI(true);	
@@ -171,8 +171,8 @@ AudioLooper.prototype.update = function(id, sync) {
 AudioLooper.prototype.start = function(id, when) {
     if (!this.finished || this.looping) return;
 
+	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.playbackOffset = 0;
-	this.playbackRate =  2 ** (((tempo - this.bpm) / 8) / 12);	
 	this.displayUI(true);	
 	this.looping = true;
 	this.finished = false;	
@@ -256,7 +256,7 @@ AudioLooper.prototype.callback = function(cb_loaded, cb_status) {
 
 AudioLooper.prototype.addUri = function(loop, output, bpm) {
 	this.loop = loop;
-	this.bpm = bpm;	
+	this.bpm = bpm;		
 
 	if (output) this.audioContext.setSinkId(output.deviceId);
 	

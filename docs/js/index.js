@@ -64,6 +64,7 @@ var keysSound2 = null;
 var savedDrumVol = 100;
 var savedBassVol = 100;
 var savedChordVol = 100;
+var savedTempo = 100;
 var midiNotesProceesed = false;
 var midiNotes = new Map();
 var padsEnvelopes = [];
@@ -2345,9 +2346,8 @@ async function onloadHandler() {
 		if (leadKnob) leadKnob.setValue(displayVol);
 	});
 	
-	document.querySelector("#tempo").addEventListener("input", function(event) {
-		const tmpo = +event.target.value; 
-		updateTempo(tmpo);
+	tempoEle.addEventListener("input", function(event) {
+		updateTempo();
 		saveConfig();
 	});
 	
@@ -2764,23 +2764,17 @@ function handleBinaryFile(filename, data) {
 	});			
 }
 
-function resetTempo() {
-	tempoEle.setAttribute("min", (tempo - 48));
-	tempoEle.setAttribute("max", (tempo + 48));	
-	tempoEle.setAttribute("step", 8);	
+function setTempo(tmpo) {
+	savedTempo = tmpo;	
+	tempoEle.value = 0;		
+	updateTempo();	
 }
 
-function setTempo(tmpo) {	
-	updateTempo(tmpo);	
-	resetTempo()	
-}
-
-function updateTempo(tmpo) {
-	tempo = tmpo;
+function updateTempo() {
+	tempo = Math.floor((2 ** [tempoEle.value / 12]) * savedTempo);		
 	tempoDiv.innerText = tempo;	
-	tempoEle.value = tempo;	
 	
-	if (window.delay) delay.delayTime.value = 60 / tmpo;
+	if (window.delay) delay.delayTime.value = 60 / tempo;
 	
 	if (writeCharacteristic) {	// liberlive sync
 		setLiberLiveDeviceSettings() 
