@@ -2351,6 +2351,11 @@ async function onloadHandler() {
 		saveConfig();
 	});
 	
+	document.querySelector("#tempo-label").addEventListener("click", function(event) {
+		setTempo(savedTempo);
+	});
+	
+	
 	document.querySelector("#voice-commands").addEventListener("change", function(event) {
 		console.debug("voice command", event.target.checked); 		
 		if (!speechObject) setupVoiceCommands();	
@@ -7484,10 +7489,7 @@ function updatePosition(e) {
 	}
 }
 
-function enableSequencer(flag) {
-	
-	//document.querySelector("#sequencer").style.display = flag ? "" : "none";
-	//document.querySelector("#sequencer2").style.display = flag ? "" : "none";	
+function enableSequencer(flag) {	
 	document.querySelector("#tempoCanvas").style.display = flag ? "" : "none";
 
 	if (!canvasContext && flag) {
@@ -8377,9 +8379,7 @@ function setupSongSequence() {
 	}
 	
 	dokeyChange();
-
-	//document.querySelector("#sequencer").style.display = flag ? "" : "none";
-	//document.querySelector("#sequencer2").style.display = flag ? "" : "none";
+	
 	document.querySelector("#tempoCanvas").style.display = flag ? "" : "none";
 
 	if (!canvasContext && flag) {
@@ -8410,9 +8410,6 @@ function setupSongSequence() {
 }
 
 function setupRealInstruments() {
-	//document.querySelector("#sequencer").style.display = "";	
-	//document.querySelector("#sequencer2").style.display = "";	
-	
 	console.debug("setupRealInstruments", realInstrument);
 	playButton.innerText = "Wait..";
 	playButton.style.setProperty("--accent-fill-rest", "red");	
