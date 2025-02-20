@@ -2766,12 +2766,29 @@ function handleBinaryFile(filename, data) {
 
 function setTempo(tmpo) {
 	savedTempo = tmpo;	
-	tempoEle.value = 0;		
+
+	if (arranger == "webaudio") {	
+		tempoEle.setAttribute("min", -6);
+		tempoEle.setAttribute("max", 6);	
+		tempoEle.setAttribute("step", 1);	
+		tempoEle.value = 0;			
+	} else {
+		tempoEle.setAttribute("min", 40);
+		tempoEle.setAttribute("max", 140);	
+		tempoEle.setAttribute("step", 1);
+		tempoEle.value = tmpo;	
+	}
+		
 	updateTempo();	
 }
 
 function updateTempo() {
-	tempo = Math.floor((2 ** [tempoEle.value / 12]) * savedTempo);		
+	if (arranger == "webaudio") {	
+		tempo = Math.floor((2 ** [tempoEle.value / 12]) * savedTempo);	
+	} else {
+		tempo = tempoEle.value;
+	}
+	
 	tempoDiv.innerText = tempo;	
 	
 	if (window.delay) delay.delayTime.value = 60 / tempo;
