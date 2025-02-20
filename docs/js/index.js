@@ -7065,7 +7065,6 @@ function startStopWebAudio() {
 	
 	if (!styleStarted) {		
 		if (recordMode) startRecording();				
-		//if (!registration || registration == 0) setTempo(realInstrument.bpm);	
 		const goTime = audioContext.currentTime + gapTime;				
 		const playbackRate =  2 ** (((tempo - realInstrument.bpm) / 8) / 12);							
 
@@ -8365,16 +8364,18 @@ function songScheduler() {
 
 function setupSongSequence() {
 	const flag = songSequence || arrSequence;
-	
-	//if (!songSequence && !arrSequence) return;
-	
+		
 	if (songSequence?.data) {
 		console.debug("setupSongSequence", flag, songSequence);	
 		
 		playButton.innerText = "Wait..";
 		playButton.style.setProperty("--accent-fill-rest", "red");
-		const bpm = Math.floor(60 /(songSequence.data.Hdr.setTempo.microsecondsPerBeat / 1000000))
-		if (!registration || registration == 0) setTempo(bpm);	
+		
+		if (arranger != "webaudio") {
+			const bpm = Math.floor(60 /(songSequence.data.Hdr.setTempo.microsecondsPerBeat / 1000000))
+			if (!registration || registration == 0) setTempo(bpm);	
+		}
+		
 		document.getElementById("song_control").style.display = "";	
 
 		keyChange = songSequence.data.Hdr.keySignature.tonic;		
