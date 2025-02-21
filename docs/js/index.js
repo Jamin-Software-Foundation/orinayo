@@ -8731,7 +8731,7 @@ function setupRealInstruments() {
 		}		
 	}	
 
-	if (realInstrument.riff && realInstrument.riff.length > 2 && realInstrument.drums && realInstrument.basses && realInstrument.chords) {			
+	if (realInstrument.riff && realInstrument.riff.length > 2 && realInstrument.drums) {			
 		let int1Len = parseInt(realInstrument.riff[2]);
 		let size = parseInt(realInstrument.riff[2]);	
 		let start = 0;
@@ -8761,8 +8761,13 @@ function setupRealInstruments() {
 						if (i == 0) key = "key" + j + "_maj" + variation;
 						if (i == 1) key = "key" + j + "_min" + variation;
 					
-						if (s == 0) realInstrument.bass[key] = {start, stop, tonic};
-						if (s == 1) realInstrument.chords[key] = {start, stop, tonic};
+						if (s == 0 && realInstrument.basses) {
+							realInstrument.bass[key] = {start, stop, tonic};
+						}
+						
+						if (s == 1 && realInstrument.chords) {
+							realInstrument.chords[key] = {start, stop, tonic};
+						}
 						
 						start += size;
 						stop += size;
@@ -8822,9 +8827,9 @@ function setupRealInstruments() {
 	}
 
 	if (realInstrument.riffUrl) {	
-		realInstrument.chords.riffUrl = realInstrument.riffUrl;	
-		realInstrument.basses.riffUrl = realInstrument.riffUrl;	
-		realInstrument.drums.riffUrl = realInstrument.riffUrl;			
+		if (realInstrument.chords) realInstrument.chords.riffUrl = realInstrument.riffUrl;	
+		if (realInstrument.basses) realInstrument.basses.riffUrl = realInstrument.riffUrl;	
+		if (realInstrument.drums) realInstrument.drums.riffUrl = realInstrument.riffUrl;			
 		
 		if (window.loopCache[realInstrument.riffUrl]) {
 			loopWait+=1000;

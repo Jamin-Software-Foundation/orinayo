@@ -142,10 +142,11 @@ var chord_loops = [
 	"assets/chords/acoustic-strum-6-8_48_10000_10000_4.chord",
 	"assets/chords/acoustic-strum-6-8_60_8000.chord",	
 	"assets/chords/afro-beat_96_10000_10000_4.chord",
+	"assets/chords/afro-folk_128_3750.chord",	
 	"assets/chords/afro-funk_125_7680_7680_2.chord",	
 	"assets/chords/afro-highlife_134_3582.chord",
 	"assets/chords/afro-juju_125_3840.chord",
-	"assets/chords/afro-juju_128_3750.chord",	
+	"assets/chords/afro-juju_128_15000_3750_2.chord",
 	"assets/chords/afro-juju_140_3429.chord",	
 	"assets/chords/afro-pop_111_8649_8649_4.chord",
 	"assets/chords/afro-pop_126_7619_7619_4.chord",	
@@ -437,5 +438,7 @@ var bass_loops = [
 ]
 
 var riff_loops = [
+	"assets/riffs/afro-juju_128_7500.riff",	
+	"assets/riffs/afro-juju-2_128_7500.riff",
 	"assets/riffs/funky-groove_108_8889.riff"
 ]
