@@ -7223,7 +7223,7 @@ function endAudioStyle() {
 		if (bassLoop) {	
 
 			if (bassLoop.loop.riffUrl) {
-				bassLoop.update('key0_maj_end3', false);	
+				bassLoop.update('key' + keyChange + '_maj_end3', false);	
 			} else {
 				bassLoop.finished = true;
 				bassLoop.stop();				
@@ -7233,7 +7233,7 @@ function endAudioStyle() {
 		if (chordLoop) {	
 
 			if (chordLoop.loop.riffUrl) {
-				chordLoop.update('key0_maj_end3', false);	
+				chordLoop.update('key' + keyChange + '_maj_end3', false);	
 			} else {
 				chordLoop.finished = true;
 				chordLoop.stop();				

@@ -102,7 +102,7 @@ function AudioLooper(styleType) {
 
 			if (this.styleType != "drum" && this.playbackOffset == 0) {
 				const tonic = parseInt(this.keys[0].substring(3));
-				if (tonic == 0) this.id = this.keys[0] + "_maj_int3";
+				if (keyChange - tonic == 0) this.id = this.keys[0] + "_maj_int3";
 			}
 			
 			const loop = this.getLoop(this.id);
