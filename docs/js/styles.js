@@ -399,6 +399,7 @@ var bass_loops = [
 	"assets/bass/acoustic-strum_145_6621_2.bass",
 	"assets/bass/acoustic-strum-6-8_60_8000.bass",
 	"assets/bass/afro-juju_125_7680_2.bass",
+	"assets/bass/afro-juju_128_7500_2.bass",
 	"assets/bass/ballad-rock_75_12800.bass",
 	"assets/bass/beat-arp_118_8135_2.bass",
 	"assets/bass/bluey_88_21818.bass",	
