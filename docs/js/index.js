@@ -109,6 +109,7 @@ var gamePadModeButton = null;
 var styleType = null;
 var keyboard = new Map();
 var bassLoop = null;
+var riffLoop = null;
 var drumLoop = null;
 var chordLoop = null;
 var realInstrument = null;
@@ -1845,6 +1846,7 @@ function saveConfig() {
 	config.realDrum = realInstrument?.drumUrl;	
 	config.realChord = realInstrument?.chordUrl;	
 	config.realBass = realInstrument?.bassUrl;	
+	config.realRiff = realInstrument?.riffUrl;		
 	config.realdrumDevice = realdrumDevice ? realdrumDevice.deviceId : null;
 	config.guitarDeviceId = guitarDeviceId;
 	config.songName = (songSequence && songSequence.name != "playback") ? songSequence.name : null;
@@ -2007,7 +2009,8 @@ async function onloadHandler() {
 	
 	const saveReg = document.querySelector("#save_reg");
 	const realDrumsLoop = document.getElementById("realdrumLoop");	
-	const realBassLoop = document.getElementById("realbassLoop");		
+	const realBassLoop = document.getElementById("realbassLoop");
+	const realriffLoop = document.getElementById("realriffLoop");
 	const realChordsLoop = document.getElementById("realchordLoop");		
 	const guitarType = document.getElementById("guitarType");
 	const guitarVolEle = document.querySelector("#volume");	
@@ -4690,12 +4693,14 @@ async function setupUI(config,err) {
 	const realDrumsLoop = document.getElementById("realdrumLoop");	
 	const realBassLoop = document.getElementById("realbassLoop");		
 	const realChordsLoop = document.getElementById("realchordLoop");
+	const realRiffLoop = document.getElementById("realriffLoop");	
 
 	guitarDevice.options[0] = new Option("NOT USED", "guitarDevice", false, false);	
 	realDrumsDevice.options[0] = new Option("NOT USED", "realDrumsDevice", false, false);
 	realDrumsLoop.options[0] = new Option("NOT USED", "realDrumsLoop", false, false);		
 	realBassLoop.options[0] = new Option("NOT USED", "realBassLoop", false, false);		
 	realChordsLoop.options[0] = new Option("NOT USED", "realChordsLoop", false, false);
+	realRiffLoop.options[0] = new Option("NOT USED", "realRiffLoop", false, false);	
 			
 	for (var i=0; i<drum_loops.length; i++) {
 		const drumLoop = drum_loops[i];
@@ -4744,10 +4749,27 @@ async function setupUI(config,err) {
 		}
 		realChordsLoop.options[i + 1] = new Option(chordName, chordLoop, selectedChord, selectedChord);
 	}
+	
+	for (var i=0; i<riff_loops.length; i++) {
+		const riffLoop = riff_loops[i];
+		let selectedRiff = false;	
+		const loopData = riffLoop.substring(riffLoop.lastIndexOf("/") + 1).replace(".riff", "");
+		const metaData = loopData.split("_");		
+		const riffName = metaData[0] + " (" + metaData[1] + ")";		
+		
+		if (config.realRiff && config.realRiff == riffLoop) {
+			if (!realInstrument) realInstrument = {};			
+			selectedRiff = true;
+			realInstrument.riff = metaData;	
+			realInstrument.riffUrl = riffLoop;				
+		}
+		realRiffLoop.options[i + 1] = new Option(riffName, riffLoop, selectedRiff, selectedRiff);
+	}	
 
 	let drumIndex = drum_loops.length + 1;
 	let chordIndex = chord_loops.length + 1;
 	let bassIndex = bass_loops.length + 1;
+	let riffIndex = riff_loops.length + 1;
 	
 	indexedDB.databases().then(function (databases) 
 	{
@@ -4800,11 +4822,33 @@ async function setupUI(config,err) {
 				}
 
 				realBassLoop.options[bassIndex++] = new Option("*" + bassName, loop, selectedLoop, selectedLoop);
+			}
+
+			else
+				
+			if (db.name.toLowerCase().endsWith(".riff")) {
+				selectedLoop = db.name == config.realRiff;
+				const loopData = loop.replace(".riff", "");
+				const metaData = loopData.split("_");		
+				const riffName = metaData[0] + " (" + metaData[1] + ")";
+				
+				if (selectedLoop) {
+					if (!realInstrument) realInstrument = {};
+					realInstrument.riff = metaData;	
+					realInstrument.riffUrl = loop;	
+				}
+
+				realRiffLoop.options[riffIndex++] = new Option("*" + riffName, loop, selectedLoop, selectedLoop);
 			}			
 		})	
 	});	
 	
 
+	realRiffLoop.addEventListener("change", function() {
+		if (styleStarted) return;		
+		riffLoopChanged(realRiffLoop);		
+	});	
+	
 	realBassLoop.addEventListener("change", function() {
 		if (styleStarted) return;		
 		bassLoopChanged(realBassLoop);		
@@ -4830,6 +4874,7 @@ async function setupUI(config,err) {
 
 			createDrumList(config, realDrumsLoop, realChordsLoop);					
 			createBassList(config, realBassLoop, realChordsLoop);			
+			createRiffList(config, realRiffLoop, realChordsLoop);				
 		}
 		
 		console.debug("selected real chord loop", realInstrument, realChordsLoop.value);		
@@ -5141,6 +5186,21 @@ function setGuitarVolume(value) {
 	if (leadKnob) leadKnob.setValue(guitarVol.value);	
 }
 
+function riffLoopChanged(realRiffLoop) {
+	if (!realInstrument) realInstrument = {};		
+	realInstrument.riff = null;
+	realInstrument.riffUrl = null;
+	
+	if (realRiffLoop.value != "realRiffLoop") {
+		realInstrument.riffUrl = realRiffLoop.value;		
+		const loopData = realRiffLoop.value.replace(".bass", "");
+		realInstrument.riff = loopData.split("_");						
+	}
+	if (!styleStarted) setupRealInstruments();		
+	saveConfig();		
+	console.debug("selected real riff loop", realInstrument, realRiffLoop.value);		
+}
+
 function bassLoopChanged(realBassLoop) {
 	if (!realInstrument) realInstrument = {};		
 	realInstrument.bass = null;
@@ -5207,6 +5267,42 @@ function createDrumList(config, realDrumsLoop, realChordsLoop) {
 	}
 
 	drumLoopChanged(realDrumsLoop);		
+}
+
+function createRiffList(config, realRiffLoop, realChordsLoop) {
+	realRiffLoop.innerHTML = "";
+	realRiffLoop.options[0] = new Option("NOT USED", "realRiffLoop");	
+	realRiffLoop.selectedIndex = 0;		
+	
+	let s = 1;
+	let selectedIndex = 1; // first style as default match
+	
+	for (var i=0; i<riff_loops.length; i++) {
+		const riffLoop = riff_loops[i];
+		let selectedRiff = false;	
+		const styleName = realInstrument.chord[0].substring(realInstrument.chord[0].lastIndexOf("/") + 1);
+		const loopData = riffLoop.substring(riffLoop.lastIndexOf("/") + 1).replace(".riff", "");		
+		const metaData = loopData.split("_");		
+		const riffName = metaData[0] + " (" + metaData[1] + ")";			
+
+		if (realInstrument.chord[1] == metaData[1]) 
+		{
+			if (config.realRiff && config.realRiff == riffLoop) {
+				if (!realInstrument) realInstrument = {};			
+				selectedRiff = true;			
+				realInstrument.riff = metaData;				
+				realInstrument.riffUrl = riffLoop;		
+			}
+			if (styleName == metaData[0]) selectedIndex = s;	// same style name. best match						
+			realRiffLoop.options[s++] = new Option(riffName, riffLoop, selectedRiff, selectedRiff);			
+		}
+	}	
+	
+	if (s > 1) {
+		realRiffLoop.selectedIndex = selectedIndex;		
+	}
+
+	riffLoopChanged(realRiffLoop);		
 }
 
 function createBassList(config, realBassLoop, realChordsLoop) {
@@ -7107,26 +7203,60 @@ function startStopWebAudio() {
 
 function endAudioStyle() {
 	console.debug("endAudioStyle");
-	
-	if (drumLoop) {
-		if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd) {	
-			orinayo_section.innerHTML = ">End 1";					
-			drumLoop.update('end1', false);	
-		} else {
+
+	if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd) {	
+
+		if (drumLoop) {
+			orinayo_section.innerHTML = "End 1";
+			drumLoop.update(drumLoop.loop.riffUrl ? 'end3' : 'end1', false);	
+		}	
+
+		if (drumLoop) {	
+
+			if (drumLoop.loop.riffUrl) {
+				drumLoop.update('end3', false);	
+			} else {
+				drumLoop.update('end1', false);					
+			}
+		}	
+		
+		if (bassLoop) {	
+
+			if (bassLoop.loop.riffUrl) {
+				bassLoop.update('key0_maj_end3', false);	
+			} else {
+				bassLoop.finished = true;
+				bassLoop.stop();				
+			}
+		}	
+
+		if (chordLoop) {	
+
+			if (chordLoop.loop.riffUrl) {
+				chordLoop.update('key0_maj_end3', false);	
+			} else {
+				chordLoop.finished = true;
+				chordLoop.stop();				
+			}
+		}			
+		
+	} else {
+
+		if (drumLoop) {		
 			orinayo_section.innerHTML = "End 1";
 			drumLoop.finished = true;
 			drumLoop.stop();
 		}
-	}
-	
-	if (bassLoop) {	
-		bassLoop.finished = true;
-		bassLoop.stop();
-	}
+		
+		if (bassLoop) {	
+			bassLoop.finished = true;
+			bassLoop.stop();
+		}
 
-	if (chordLoop) {
-		chordLoop.finished = true;		
-		chordLoop.stop();
+		if (chordLoop) {
+			chordLoop.finished = true;		
+			chordLoop.stop();
+		}		
 	}	
 }
 
@@ -8599,30 +8729,109 @@ function setupRealInstruments() {
 				}					
 			}
 		}		
-	}		
+	}	
+
+	if (realInstrument.riff && realInstrument.riff.length > 2 && realInstrument.drums && realInstrument.basses && realInstrument.chords) {			
+		let int1Len = parseInt(realInstrument.riff[2]);
+		let size = parseInt(realInstrument.riff[2]);	
+		let start = 0;
+		let stop = start + size;
+			
+		realInstrument.drums["int3"] = {start, stop};	
+		start += size;
+		stop += size;
+		
+		realInstrument.drums["end3"] = {start, stop};
+		start += size;
+		stop += size;						
+
+		for (let s=0; s<2; s++) 											// bass, chords
+		{
+			for (let v=0; v<2; v++) 										// end3, int3
+			{					
+				for (let i=0; i<2; i++) 									// maj, min
+				{				
+					for (let j=0; j<12; j++) {
+						const tonic = j;					
+						let key = "key" + j;
+						
+						if (v == 0) variation = "_end3";
+						if (v == 1) variation = "_int3";					
+						
+						if (i == 0) key = "key" + j + "_maj" + variation;
+						if (i == 1) key = "key" + j + "_min" + variation;
+					
+						if (s == 0) realInstrument.bass[key] = {start, stop, tonic};
+						if (s == 1) realInstrument.chords[key] = {start, stop, tonic};
+						
+						start += size;
+						stop += size;
+					}				
+				}	
+			}
+		}			
+	}	
 
 	drumLoop = null;	
 	bassLoop = null;
 	chordLoop = null;
+	riffLoop = null;
 	
-	loopWait = 5000;
+	loopWait = 2000;
 	
-	if (realInstrument.drums) {	
+	if (realInstrument.drums) {
+
+		if (window.loopCache[realInstrument.drums.url]) {
+			loopWait+=1000;
+		} else {
+			loopWait+=2000;
+			fetchLoopSample(realInstrument.drums.url);		
+		}
+		
 		drumLoop = new AudioLooper("drum");
 		drumLoop.callback(soundsLoaded, eventStatus);				
 		drumLoop.addUri(realInstrument.drums, realdrumDevice, realInstrument.bpm);
 	}
 	
 	if (realInstrument.basses) {
+		
+		if (window.loopCache[realInstrument.basses.url]) {
+			loopWait+=1000;
+		} else {
+			loopWait+=2000;
+			fetchLoopSample(realInstrument.basses.url);				
+		}
+		
 		bassLoop = new AudioLooper("bass");
 		bassLoop.callback(soundsLoaded, eventStatus);		
-		bassLoop.addUri(realInstrument.basses, realdrumDevice, realInstrument.bpm);
+		bassLoop.addUri(realInstrument.basses, realdrumDevice, realInstrument.bpm);	
 	}
 	
 	if (realInstrument.chords) {
+		
+		if (window.loopCache[realInstrument.chords.url]) {
+			loopWait+=1000;
+		} else {
+			loopWait+=2000;
+			fetchLoopSample(realInstrument.chords.url);				
+		}
+		
 		chordLoop = new AudioLooper("chord");
 		chordLoop.callback(soundsLoaded, eventStatus);		
-		chordLoop.addUri(realInstrument.chords, realdrumDevice, realInstrument.bpm);	
+		chordLoop.addUri(realInstrument.chords, realdrumDevice, realInstrument.bpm);		
+	}
+
+	if (realInstrument.riffUrl) {	
+		realInstrument.chords.riffUrl = realInstrument.riffUrl;	
+		realInstrument.basses.riffUrl = realInstrument.riffUrl;	
+		realInstrument.drums.riffUrl = realInstrument.riffUrl;			
+		
+		if (window.loopCache[realInstrument.riffUrl]) {
+			loopWait+=1000;
+		} else {
+			loopWait+=2000;
+			fetchLoopSample(realInstrument.riffUrl);			
+		}	
 	}
 	
 	if ((!registration || registration == 0) && realInstrument.bpm && tempo != realInstrument.bpm) {
@@ -8640,14 +8849,48 @@ function setupRealInstruments() {
 	}, loopWait);	
 }
 
-function soundsLoaded(cached) {
-	console.debug("audio loaded ok");
+function fetchLoopSample(url) {
+	console.debug("", url);
 	
-	if (cached) {
-		loopWait+=2000;
+	if (window.loopCache[url]) return;
+
+	
+	if (url.startsWith("assets")) 	{
+		fetch(url, {cache: "force-cache"})
+			.then(response => response.arrayBuffer())
+			.then(buffer => this.audioContext.decodeAudioData(buffer))
+			.then(sample => {
+				window.loopCache[url] = sample;
+				console.debug("fetchLoopSample fetched", url, sample);
+				
+		}).catch(function (err) {
+			console.error('fetchLoopSample failed!', err)
+		});
+		
 	} else {
-		loopWait+=3000;		
-	}
+		const dbName = url;
+		const store = new idbKeyval.Store(dbName, dbName);		
+
+		idbKeyval.get(dbName, store).then((data) => 
+		{
+			if (data) {
+				console.debug("get ogg file", dbName, data);
+				
+				this.audioContext.decodeAudioData(data).then(sample => 
+				{
+					window.loopCache[url] = sample;
+					console.debug("fetchLoopSample DB retrieve", url, sample);
+				});				
+				
+			}			
+		}).catch(function (err) {
+			console.error('fetchLoopSample failed!', err)
+		});		
+	}	
+}
+
+function soundsLoaded(cached) {
+	console.debug("audio loaded ok", cached);
 }
 
 function eventStatus(event, id) {

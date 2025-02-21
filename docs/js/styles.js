@@ -435,3 +435,7 @@ var bass_loops = [
 	"assets/bass/u2-guitar_105_18286.bass",
 	"assets/bass/wild-rock_120_8000.bass"
 ]
+
+var riff_loops = [
+	"assets/riffs/funky-groove_108_8889.riff"
+]

@@ -11,21 +11,31 @@ function AudioLooper(styleType) {
 
 	this.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra
 		const keys = id.split("_");
+		this.keys = keys;		
 		
 		if (this.styleType != "drum" && this.bpm != tempo) {	// transpose key to counter-balance stretched pitch (this.playbackRate)
 			const tonic = parseInt(keys[0].substring(3));
-			keys[0] = "key" + ((12 + tonic - parseInt(tempoEle.value)) % 12);
+			keys[0] = keys[0].substring(0, 3) + ((12 + tonic - parseInt(tempoEle.value)) % 12);
 		}
 
 		let key = keys[0];			
 		if (!this.loop[key]) key = keys[0] + "_" + keys[1] + "_" + keys[2];
 		if (!this.loop[key]) key = keys[0] + "_" + keys[1];
-		if (!this.loop[key]) key = keys[0] + "_maj_arra";
+		if (!this.loop[key]) key = keys[0] + "_maj_int3";
+		if (!this.loop[key]) key = keys[0] + "_maj_end3";		
+		if (!this.loop[key]) key = keys[0] + "_maj_arra";		
 		if (!this.loop[key]) key = keys[0] + "_maj";		
 		if (!this.loop[key]) key = keys[0];		
 		
 		const loop = this.loop[key];
-		console.debug("getLoop", id, key, loop);		
+		this.sample = window.loopCache[this.loop.url];
+		
+		if (key.startsWith("int3") || key.startsWith("end3") || key.endsWith("_int3") || key.endsWith("_end3")) {
+			this.sample = window.loopCache[this.loop.riffUrl];
+		}
+		
+		console.debug("getLoop", id, key, loop);	
+		
 		return loop;		
 	};
 		
@@ -78,7 +88,7 @@ function AudioLooper(styleType) {
 			
 			if (this.id == "int1") 	this.id = "arra";	
 			
-			if (id == "end1" || this.finished) 	{
+			if (id == "end1" || id == "end3" || id.endsWith("end3") || this.finished) 	{
 				this.looping = false;	
 				this.finished = true;
 				this.mute();
@@ -88,7 +98,12 @@ function AudioLooper(styleType) {
 				return;
 			}
 			
-			if (this.id.startsWith("fil") || this.id.startsWith("brk")) this.id = "arr" + this.id.substring(3);					
+			if (this.id.startsWith("fil") || this.id.startsWith("brk")) this.id = "arr" + this.id.substring(3);	
+
+			if (this.styleType != "drum" && this.playbackOffset == 0) {
+				const tonic = parseInt(this.keys[0].substring(3));
+				if (tonic == 0) this.id = this.keys[0] + "_maj_int3";
+			}
 			
 			const loop = this.getLoop(this.id);
 			
@@ -143,7 +158,7 @@ AudioLooper.prototype.update = function(id, sync) {
 		this.id = id;		
 		const loop = this.getLoop(id);
 		
-		if (loop) {
+		if (loop) {		
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
 			const howLong = (endTime - beginTime) / this.playbackRate;
@@ -184,7 +199,7 @@ AudioLooper.prototype.start = function(id, when) {
 
 	const loop = this.getLoop(this.id);
 	
-	if (loop) {
+	if (loop) {	
 		const beginTime =  loop.start /1000;
 		const endTime = loop.stop / 1000;
 		const howLong = (endTime - beginTime) / this.playbackRate;	
@@ -258,43 +273,5 @@ AudioLooper.prototype.addUri = function(loop, output, bpm) {
 	this.loop = loop;
 	this.bpm = bpm;		
 
-	if (output) this.audioContext.setSinkId(output.deviceId);
-	
-	if (loop.url.startsWith("assets")) 	{
-		this.sample = window.loopCache[loop.url];	
-		
-		if (this.sample == undefined) {
-			fetch(loop.url, {cache: "force-cache"})
-				.then(response => response.arrayBuffer())
-				.then(buffer => this.audioContext.decodeAudioData(buffer))
-				.then(sample => {
-					this.sample = sample;
-					window.loopCache[loop.url] = sample;
-					console.debug("addUri fetched", loop.url, sample);
-					if (this.cb_loaded) this.cb_loaded(false);
-				});
-		} else {
-			console.debug("addUri cached", loop.url, this.sample);
-			if (this.cb_loaded) this.cb_loaded(true);				
-		}
-	} else {
-		const dbName = loop.url;
-		const store = new idbKeyval.Store(dbName, dbName);		
-
-		idbKeyval.get(dbName, store).then((data) => 
-		{
-			if (data) {
-				console.debug("get ogg file", dbName, data);
-				
-				this.audioContext.decodeAudioData(data).then(sample => 
-				{
-					this.sample = sample;
-					console.debug("addUri", loop, sample);
-				});				
-				
-			}			
-		}).catch(function (err) {
-			console.error('getSongSequence failed!', err)
-		});		
-	}
+	if (output) this.audioContext.setSinkId(output.deviceId);		
 };
