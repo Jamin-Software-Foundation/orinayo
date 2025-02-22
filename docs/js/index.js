@@ -6245,9 +6245,25 @@ function playChord(chord, root, type, bass) {
 					chordTracker.sendSysex(0x43, [0x7E, 0x02, trasposedRoot, type, transposedBass, type]);				
 				}
 				
-				if (arranger == "webaudio" && realInstrument && styleStarted) {				
-					if (bassLoop && bassChecked) bassLoop.update(bassKey, false);
-					if (chordLoop && chordChecked) chordLoop.update(key, false);		
+				if (arranger == "webaudio" && realInstrument && styleStarted) 
+				{				
+					if (bassLoop && bassChecked) 
+					{
+						if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord) {			// play riff if on root major chord and up-strum
+							bassLoop.update('key' + keyChange + '_maj_int3', false);
+						} else {
+							bassLoop.update(bassKey, false);
+						}
+					}
+					
+					if (chordLoop && chordChecked) 
+					{
+						if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord) {			// play riff if on root major chord and up-strum
+							chordLoop.update('key' + keyChange + '_maj_int3', false);
+						} else {
+							chordLoop.update(key, false);
+						}		
+					}
 				}
 				else
 					
