@@ -7152,17 +7152,17 @@ function doChord() {
 }
 
 function verifyStartStopWebAudio() {
-	if (chordLoop) {
+	if (chordLoop && chordCheckedEle?.checked) {
 		styleStarted = chordLoop.looping;
 	} 
 	else 
 		
-	if (bassLoop) {
+	if (bassLoop && bassCheckedEle?.checked) {
 		styleStarted = bassLoop.looping;
 	}		
 	else
 		
-	if (drumLoop) {
+	if (drumLoop && drumCheckedEle?.checked) {
 		styleStarted = drumLoop.looping;
 	}
 	

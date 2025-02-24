@@ -8,38 +8,39 @@ function AudioLooper(styleType) {
 
 	this.channel = (this.styleType == "drum" ? "16" : (this.styleType == "bass" ? "17" : "18"));	
 	this.counter = 6;	
+}
 
-	this.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra
-		const keys = id.split("_");
-		this.keys = keys;		
-		
-		if (this.styleType != "drum" && this.bpm != tempo) {	// transpose key to counter-balance stretched pitch (this.playbackRate)
-			const tonic = parseInt(keys[0].substring(3));
-			keys[0] = keys[0].substring(0, 3) + ((12 + tonic - parseInt(tempoEle.value)) % 12);
-		}
+AudioLooper.prototype.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra
+	const keys = id.split("_");
+	this.keys = keys;		
+	
+	if (this.styleType != "drum" && this.bpm != tempo) {	// transpose key to counter-balance stretched pitch (this.playbackRate)
+		const tonic = parseInt(keys[0].substring(3));
+		keys[0] = keys[0].substring(0, 3) + ((12 + tonic - parseInt(tempoEle.value)) % 12);
+	}
 
-		let key = keys[0];			
-		if (!this.loop[key]) key = keys[0] + "_" + keys[1] + "_" + keys[2];
-		if (!this.loop[key]) key = keys[0] + "_" + keys[1];
-		if (!this.loop[key]) key = keys[0] + "_maj_int3";
-		if (!this.loop[key]) key = keys[0] + "_maj_end3";		
-		if (!this.loop[key]) key = keys[0] + "_maj_arra";		
-		if (!this.loop[key]) key = keys[0] + "_maj";		
-		if (!this.loop[key]) key = keys[0];		
+	let key = keys[0];			
+	if (!this.loop[key]) key = keys[0] + "_" + keys[1] + "_" + keys[2];
+	if (!this.loop[key]) key = keys[0] + "_" + keys[1];
+	if (!this.loop[key]) key = keys[0] + "_maj_int3";
+	if (!this.loop[key]) key = keys[0] + "_maj_end3";		
+	if (!this.loop[key]) key = keys[0] + "_maj_arra";		
+	if (!this.loop[key]) key = keys[0] + "_maj";		
+	if (!this.loop[key]) key = keys[0];		
+	
+	const loop = this.loop[key];
+	this.sample = window.loopCache[this.loop.url];
+	
+	if (key.startsWith("int3") || key.startsWith("end3") || key.endsWith("_int3") || key.endsWith("_end3")) {
+		this.sample = window.loopCache[this.loop.riffUrl];
+	}
+	
+	console.debug("getLoop", id, key, loop);	
+	
+	return loop;		
+};
 		
-		const loop = this.loop[key];
-		this.sample = window.loopCache[this.loop.url];
-		
-		if (key.startsWith("int3") || key.startsWith("end3") || key.endsWith("_int3") || key.endsWith("_end3")) {
-			this.sample = window.loopCache[this.loop.riffUrl];
-		}
-		
-		console.debug("getLoop", id, key, loop);	
-		
-		return loop;		
-	};
-		
-	this.doLoop = function(id, beginTime, howLong, when) {		
+AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {		
 		console.debug("doLoop starts", id, this.id, howLong, when, tempo, this.bpm);
 		
 		if (id == "end1")  this.playbackOffset = 0; 
@@ -128,7 +129,6 @@ function AudioLooper(styleType) {
 				}
 			}
 		});		
-	};
 }
 
 AudioLooper.prototype.muteToggle = function(id) {
