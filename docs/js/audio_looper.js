@@ -95,7 +95,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 				this.mute();
 				this.source.stop();
 				this.displayUI(false);		
-				setTimeout(verifyStartStopWebAudio, 3000);	
+				verifyStartStopWebAudio();	
 				return;
 			}
 			
@@ -103,12 +103,12 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 
 			if (this.styleType != "drum" && this.playbackOffset == 0) {		// play riff after tonic major plays a complete loop
 				
-				if (this.riffTriggered) {
+				if (this.riffAutoTriggered) {
 					const tonic = parseInt(this.keys[0].substring(3));
 					if (keyChange - tonic == 0) this.id = this.keys[0] + "_maj_int3";
-					this.riffTriggered = false;
+					this.riffAutoTriggered = false;
 				} else {
-					this.riffTriggered = true;
+					this.riffAutoTriggered = true;
 				}
 			}
 			
@@ -152,10 +152,10 @@ AudioLooper.prototype.unmute = function(id) {
 }
 
 AudioLooper.prototype.update = function(id, sync) {
+	this.riffAutoTriggered = false;	
 	if (id == this.id) return;	
 	if (drumLoop?.id == "end1") return;	
-
-	this.riffTriggered = false;
+	
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
 	console.debug("update", id, sync);	
@@ -193,7 +193,7 @@ AudioLooper.prototype.update = function(id, sync) {
 AudioLooper.prototype.start = function(id, when) {
     if (!this.finished || this.looping) return;
 
-	this.riffTriggered = false;
+	this.riffAutoTriggered = false;
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.playbackOffset = 0;
 	this.displayUI(true);	
@@ -215,7 +215,7 @@ AudioLooper.prototype.start = function(id, when) {
 		console.debug("AudioLooper " + this.styleType + " start", when);	
 
 		if (this.sample) this.doLoop(id, beginTime, howLong, when);
-		setTimeout(verifyStartStopWebAudio, howLong + 1000);
+		verifyStartStopWebAudio();
 	}
 };
 
