@@ -7172,20 +7172,7 @@ function doChord() {
 }
 
 function verifyStartStopWebAudio() {
-	if (chordLoop) {
-		styleStarted = chordLoop.looping;
-	} 
-	else 
-		
-	if (bassLoop) {
-		styleStarted = bassLoop.looping;
-	}		
-	else
-		
-	if (drumLoop) {
-		styleStarted = drumLoop.looping;
-	}
-	
+	styleStarted = chordLoop?.looping || drumLoop?.looping || bassLoop?.looping;
 	handleStartStopButton();	
 }
 
@@ -7212,8 +7199,8 @@ function startStopWebAudio() {
 			if ((pad.buttons[YELLOW] || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
 				orinayo_section.innerHTML = ">Arr A";
 				
-				if (syncStartCheckedEle.checked) {			// start on next half beat sync start
-					goTime = audioContext.currentTime + ((60 / tempo) * 16);							
+				if (syncStartCheckedEle.checked) {			// start on next 1/4 beat sync start
+					goTime = audioContext.currentTime + ((60 / tempo) * 1);							
 				}
 										
 				if (drumLoop && drumCheckedEle?.checked) {

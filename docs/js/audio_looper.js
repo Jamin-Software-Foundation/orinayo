@@ -1,4 +1,5 @@
 function AudioLooper(styleType) {
+	this.loopPending = false;
 	this.looping = false;
 	this.finished = true;	
 	this.styleType = styleType;
@@ -10,7 +11,7 @@ function AudioLooper(styleType) {
 	this.counter = 6;	
 }
 
-AudioLooper.prototype.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra
+AudioLooper.prototype.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_arra	
 	const keys = id.split("_");
 	this.keys = keys;		
 	
@@ -40,7 +41,12 @@ AudioLooper.prototype.getLoop = function(id) {	// key0 OR key0_maj OR key0_min_a
 	return loop;		
 };
 		
-AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {		
+AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
+		if (this.loopPending) return;
+		
+		this.loopPending = true;
+		this.stopPending = false;		
+
 		console.debug("doLoop starts", id, this.id, howLong, when, tempo, this.bpm);
 		
 		if (id == "end1")  this.playbackOffset = 0; 
@@ -114,7 +120,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 			
 			const loop = this.getLoop(this.id);
 			
-			if (loop) {
+			if (loop && !this.stopPending) {
 				const beginTime =  loop.start /1000;
 				const endTime = loop.stop / 1000;
 				const howLong = (endTime - beginTime) / this.playbackRate;
@@ -128,7 +134,9 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 					this.playbackOffset = 0;
 				}
 			}
-		});		
+		});	
+
+		this.loopPending = false;		
 }
 
 AudioLooper.prototype.muteToggle = function(id) {
@@ -153,8 +161,10 @@ AudioLooper.prototype.unmute = function(id) {
 
 AudioLooper.prototype.update = function(id, sync) {
 	this.riffAutoTriggered = false;	
+	
 	if (id == this.id) return;	
 	if (drumLoop?.id == "end1") return;	
+	if (this.stopPending) return;
 	
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
@@ -191,7 +201,7 @@ AudioLooper.prototype.update = function(id, sync) {
 };
 
 AudioLooper.prototype.start = function(id, when) {
-    if (!this.finished || this.looping) return;
+    if (!this.finished || this.looping || this.stopPending) return;
 
 	this.riffAutoTriggered = false;
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
@@ -251,24 +261,32 @@ AudioLooper.prototype.displayUI = function(flag) {
 
 AudioLooper.prototype.stop = function() {
 	this.displayUI(false);
-	this.looping = false;	
 	this.firstTime = false;	
 	
 	if (this.source && this.id) {
+		this.stopPending = true;		
 		const loop = this.getLoop(this.id);
-		let when = this.audioContext.currentTime;
+		const when = this.audioContext.currentTime;
+		let fadeOutSeconds = 0.01;
 		
 		if (loop) {
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
 			const duration = (endTime - beginTime);
 			const timePassed = (this.audioContext.currentTime - this.startTime);	
-			const fadeOutSeconds = (duration - timePassed) / 4;				
+			
+			fadeOutSeconds += (duration - timePassed) / 4;				
 			console.debug("AudioLooper " + this.styleType + " stop", fadeOutSeconds, this.finished);		
-			when = this.audioContext.currentTime + fadeOutSeconds;	
 		}
 		this.gainNode.gain.setTargetAtTime(0.01, this.audioContext.currentTime, 0.5);		
-		this.source.stop(when + 0.01);
+		this.source.stop(when + fadeOutSeconds);
+		
+		setTimeout(() => {
+			this.looping = false;	
+			this.stopPending = false;			
+			verifyStartStopWebAudio;
+			
+		}, (fadeOutSeconds + 0.5) * 1000);
 	}
 };
 
