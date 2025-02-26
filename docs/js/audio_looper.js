@@ -202,6 +202,7 @@ AudioLooper.prototype.update = function(id, sync) {
 
 AudioLooper.prototype.start = function(id, when) {
     if (!this.finished || this.looping || this.stopPending) return;
+	if (!window.loopCache[this.loop.url]) return;
 
 	this.riffAutoTriggered = false;
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);

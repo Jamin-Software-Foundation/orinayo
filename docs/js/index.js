@@ -1857,6 +1857,7 @@ function saveConfig() {
 	config.rgIndex = rgIndex;
 	config.autoFill = autoFillCheckedEle.checked;
 	config.introEnd = introEndCheckedEle.checked;
+	config.syncStart = syncStartCheckedEle.checked;
 	config.reverb = guitarReverb.checked;
 	config.microphone = microphone.checked;
 	config.programChange = programChangeEle.checked;
@@ -5133,6 +5134,7 @@ async function setupUI(config,err) {
 	
 	autoFillCheckedEle.checked = config.autoFill;	
 	introEndCheckedEle.checked = config.introEnd;
+	syncStartCheckedEle.checked = config.syncStart;	
 	
 	guitarReverb.checked = config.reverb;
 	setupPedalBoard(guitarContext, guitarName, guitarDeviceId, guitarReverb.checked);
@@ -7196,7 +7198,7 @@ function startStopWebAudio() {
 		} else {
 			const introEnd = introEndCheckedEle?.checked;
 			
-			if ((pad.buttons[YELLOW] || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
+			if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
 				orinayo_section.innerHTML = ">Arr A";
 				
 				if (syncStartCheckedEle.checked) {			// start on next 1/4 beat sync start
@@ -8813,14 +8815,14 @@ function setupRealInstruments() {
 	chordLoop = null;
 	riffLoop = null;
 	
-	loopWait = 2000;
+	loopWait = 1000;
 	
 	if (realInstrument.drums) {
 
 		if (window.loopCache[realInstrument.drums.url]) {
-			loopWait+=1000;
+			loopWait+=500;
 		} else {
-			loopWait+=2000;
+			loopWait+=1000;
 			fetchLoopSample(realInstrument.drums.url);		
 		}
 		
@@ -8832,7 +8834,7 @@ function setupRealInstruments() {
 	if (realInstrument.basses) {
 		
 		if (window.loopCache[realInstrument.basses.url]) {
-			loopWait+=1000;
+			loopWait+=500;
 		} else {
 			loopWait+=2000;
 			fetchLoopSample(realInstrument.basses.url);				
@@ -8846,9 +8848,9 @@ function setupRealInstruments() {
 	if (realInstrument.chords) {
 		
 		if (window.loopCache[realInstrument.chords.url]) {
-			loopWait+=1000;
+			loopWait+=500;
 		} else {
-			loopWait+=2000;
+			loopWait+=4000;
 			fetchLoopSample(realInstrument.chords.url);				
 		}
 		
@@ -8863,9 +8865,9 @@ function setupRealInstruments() {
 		if (realInstrument.drums) realInstrument.drums.riffUrl = realInstrument.riffUrl;			
 		
 		if (window.loopCache[realInstrument.riffUrl]) {
-			loopWait+=1000;
+			loopWait+=500;
 		} else {
-			loopWait+=2000;
+			loopWait+=1000;
 			fetchLoopSample(realInstrument.riffUrl);			
 		}	
 	}
