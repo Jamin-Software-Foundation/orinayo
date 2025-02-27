@@ -7173,6 +7173,24 @@ function doChord() {
   }
 }
 
+function webAudioStyleEnded() {
+	const ended = (!chordLoop || !chordLoop.looping) && (!drumLoop || !drumLoop.looping) && (!bassLoop || !bassLoop.looping);	
+	console.debug("webAudioStyleEnded", ended);
+	return ended;	
+}
+
+function webAudioStyleStarted() {
+	const started = (!chordLoop || chordLoop.looping) && (!drumLoop || drumLoop.looping) && (!bassLoop || bassLoop.looping);	
+	console.debug("webAudioStyleStarted", started);
+	return started;	
+}
+
+function webAudioStyleReady() {
+	const ready = (!drumLoop || !!window.loopCache[drumLoop.loop.url]) && (!bassLoop || !!window.loopCache[bassLoop.loop.url]) && (!chordLoop || !!window.loopCache[chordLoop.loop.url]);
+	console.debug("webAudioStyleReady", ready);
+	return ready;
+}
+
 function verifyStartStopWebAudio() {
 	styleStarted = chordLoop?.looping || drumLoop?.looping || bassLoop?.looping;
 	handleStartStopButton();	
@@ -7180,11 +7198,18 @@ function verifyStartStopWebAudio() {
 
 function startStopWebAudio() {
 	let gapTime = 0.5;
-	const stillPlaying = drumLoop?.looping || bassLoop?.looping || chordLoop?.looping;
+	const stillPlaying = webAudioStyleStarted();
+	const ready = webAudioStyleReady();
 
-	console.debug("startStopWebAudio", styleStarted, stillPlaying, pad.buttons[YELLOW]);
+	console.console("startStopWebAudio", styleStarted, stillPlaying, ready, pad.buttons[YELLOW]);
 	
-	if (!styleStarted) {		
+	if (!ready) {
+		playButton.innerText = "Wait..";
+		playButton.style.setProperty("--accent-fill-rest", "red");		
+		return 0;
+	}
+	
+	if (!styleStarted) {	
 		if (recordMode) startRecording();				
 		let goTime = audioContext.currentTime + gapTime;				
 		const playbackRate =  2 ** (((tempo - realInstrument.bpm) / 8) / 12);							
@@ -7229,6 +7254,7 @@ function startStopWebAudio() {
 		if (recordMode) setTimeout(stopRecording, 20000);				
 	}
 
+	handleStartStopButton();
 	return gapTime;
 }
 
@@ -7317,6 +7343,8 @@ function toggleStartStop() {
 	if (arranger == "webaudio") {				
 		if ((drumLoop || chordLoop || bassLoop) && realInstrument) {
 			startStopWebAudio();
+			handledStartStop = true;
+			return;			
 		}
 			
 	}
