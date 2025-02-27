@@ -7201,7 +7201,7 @@ function startStopWebAudio() {
 	const stillPlaying = webAudioStyleStarted();
 	const ready = webAudioStyleReady();
 
-	console.console("startStopWebAudio", styleStarted, stillPlaying, ready, pad.buttons[YELLOW]);
+	console.debug("startStopWebAudio", styleStarted, stillPlaying, ready, pad.buttons[YELLOW]);
 	
 	if (!ready) {
 		playButton.innerText = "Wait..";
