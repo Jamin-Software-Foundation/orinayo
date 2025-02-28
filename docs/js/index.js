@@ -6255,7 +6255,7 @@ function playChord(chord, root, type, bass) {
 					{			
 						if (bassLoop && bassChecked) 
 						{
-							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
+							if (bassLoop.loop.riffUrl && pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
 								bassLoop.update('key' + keyChange + '_maj_int3', false);
 							} else {
 								bassLoop.update(bassKey, false);
@@ -6264,7 +6264,7 @@ function playChord(chord, root, type, bass) {
 						
 						if (chordLoop && chordChecked) 
 						{
-							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
+							if (chordLoop.loop.riffUrl && pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
 								chordLoop.update('key' + keyChange + '_maj_int3', false);
 							} else {
 								chordLoop.update(key, false);

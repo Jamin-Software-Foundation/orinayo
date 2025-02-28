@@ -47,7 +47,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 		this.loopPending = true;
 		this.stopPending = false;		
 
-		console.debug("doLoop starts", id, this.id, howLong, when, tempo, this.bpm);
+		console.debug("doLoop starts", this.styleType, id, this.id, howLong, when, tempo, this.bpm);
 		
 		if (id == "end1")  this.playbackOffset = 0; 
 		if (when == undefined) when = this.audioContext.currentTime;
@@ -110,7 +110,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 				this.playbackOffset = 0;				
 			}
 
-			if (this.styleType != "drum" && this.playbackOffset == 0) {		// play riff after tonic major plays a complete loop
+			if (this.loop.riffUrl && this.styleType != "drum" && this.playbackOffset == 0) {		// play riff after tonic major plays a complete loop
 				
 				if (this.riffAutoTriggered) {
 					const tonic = parseInt(this.keys[0].substring(3));
