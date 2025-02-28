@@ -5628,7 +5628,7 @@ function setGigladUI() {
 function doBreak() {
 	console.debug("doBreak " + arranger);	
 
-	if (((drumLoop || chordLoop) && realInstrument) && drumCheckedEle?.checked) 	
+	if (((drumLoop || chordLoop  || bassLoop) && realInstrument) && drumCheckedEle?.checked) 	
 	{
 		if (sectionChange == 0) {
 			drumLoop.update('brka', false);		
@@ -6255,7 +6255,7 @@ function playChord(chord, root, type, bass) {
 					{			
 						if (bassLoop && bassChecked) 
 						{
-							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord) {			// play riff if on root major chord and up-strum
+							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
 								bassLoop.update('key' + keyChange + '_maj_int3', false);
 							} else {
 								bassLoop.update(bassKey, false);
@@ -6264,7 +6264,7 @@ function playChord(chord, root, type, bass) {
 						
 						if (chordLoop && chordChecked) 
 						{
-							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord) {			// play riff if on root major chord and up-strum
+							if (pad.axis[STRUM] == STRUM_UP && keyChange == arrChord && lastChord[0] != chord[0]) {			// play riff if on root major chord and up-strum
 								chordLoop.update('key' + keyChange + '_maj_int3', false);
 							} else {
 								chordLoop.update(key, false);

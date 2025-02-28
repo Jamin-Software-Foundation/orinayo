@@ -105,7 +105,10 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 				return;
 			}
 			
-			if (this.id.startsWith("fil") || this.id.startsWith("brk")) this.id = "arr" + this.id.substring(3);	
+			if (this.id.startsWith("fil") || this.id.startsWith("brk")) {
+				this.id = "arr" + this.id.substring(3);	
+				this.playbackOffset = 0;				
+			}
 
 			if (this.styleType != "drum" && this.playbackOffset == 0) {		// play riff after tonic major plays a complete loop
 				
@@ -172,13 +175,14 @@ AudioLooper.prototype.update = function(id, sync) {
 	this.displayUI(true);	
 	
 	if (this.source) {	
-		this.id = id;		
+		this.id = id;	
+		this.source.stop();			
 		const loop = this.getLoop(id);
 		
 		if (loop) {		
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
-			const howLong = (endTime - beginTime) / this.playbackRate;
+			let howLong = (endTime - beginTime) / this.playbackRate;
 			const duration = this.audioContext.currentTime - this.startTime;	
 			
 			if (sync) {	
@@ -187,14 +191,12 @@ AudioLooper.prototype.update = function(id, sync) {
 				console.debug("update sync", id);				
 				
 			} else {	
-				this.reloop = false;	
-				this.playbackOffset = ((duration * 1000) % (howLong * 1000) / 1000);							
+				this.reloop = false;
+				this.playbackOffset = ((duration * 1000) % (howLong * 1000)) / 1000;				
 				console.debug("update demand", id, howLong, duration, this.playbackOffset);			
 
-				const gain = this.gainNode.gain;		
-				const old = this.source;					
-				this.doLoop(id, beginTime, howLong);
-				old.stop();		
+				const gain = this.gainNode.gain;							
+				this.doLoop(id, beginTime, howLong);	
 			}
 		}	
 	}
