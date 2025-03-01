@@ -51,11 +51,9 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 		
 		if (id == "end1")  this.playbackOffset = 0; 
 		if (when == undefined) when = this.audioContext.currentTime;
-		this.startTime = when - (this.playbackOffset);
 		
-		if (this.source) {
-
-		}
+		this.startTime = when - (this.playbackOffset);
+		this.oldSource = this.source;
 		
 		this.source = this.audioContext.createBufferSource();		
 		this.source.buffer = this.sample;		
@@ -76,11 +74,12 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 		if (streamDestination) this.gainNode.connect(streamDestination);			
 		this.source.connect(this.gainNode);			
 		
-		try {
+		try {			
 			this.source.start(when, (beginTime + (this.playbackOffset) * this.playbackRate));
-			this.source.stop(when + howLong - (this.playbackOffset));
+			this.source.stop(when + howLong - (this.playbackOffset));	
+			if (this.oldSource) this.oldSource.buffer = null;			
 		} catch (e) {
-			this.source.start();
+			console.error("doLoop cannot start and stop", e);
 		}
 
 		this.gainNode.gain.setValueAtTime(this.vol, when + howLong - (this.playbackOffset) - 0.01);
@@ -89,7 +88,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 		if (this.cb_status) this.cb_status("_eventPlaying", id); 		
 		
 		this.source.addEventListener("ended", () => {
-			console.debug("doLoop ends", id, id, this.reloop);	
+			console.debug("doLoop ends", this.styleType, id, id, this.reloop);	
 			
 			if (this.cb_status) this.cb_status("_eventEnded", id);	
 			
@@ -100,6 +99,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 				this.finished = true;
 				this.mute();
 				this.source.stop();
+				this.source.buffer = null;
 				this.displayUI(false);		
 				verifyStartStopWebAudio();	
 				return;
@@ -129,7 +129,7 @@ AudioLooper.prototype.doLoop = function(id, beginTime, howLong, when) {
 				const howLong = (endTime - beginTime) / this.playbackRate;
 							
 				if (this.looping && this.reloop) {
-					this.doLoop(this.id, beginTime, howLong);
+					this.doLoop(this.id, beginTime, howLong);				
 				}
 				
 				if (!this.reloop) {
@@ -163,27 +163,38 @@ AudioLooper.prototype.unmute = function(id) {
 }
 
 AudioLooper.prototype.update = function(id, sync) {
-	this.riffAutoTriggered = false;	
+	const interval = this.audioContext.currentTime - this.updateTime;
+	const one32Note = 30 / tempo;
+	
+	if (interval < one32Note) {
+		return;		// must be at least 1/32 beat long
+	}
+	
+	this.updateTime = this.audioContext.currentTime;
+	this.riffAutoTriggered = false;		
 	
 	if (id == this.id) return;	
 	if (drumLoop?.id == "end1") return;	
 	if (this.stopPending) return;
 	
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
-	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);
-	console.debug("update", id, sync);	
+	this.vol = this.styleType == "bass" ? bassVol/100 : ( this.styleType == "chord" ? chordVol/100 : drumVol/100);	
 	this.displayUI(true);	
 	
 	if (this.source) {	
 		this.id = id;	
-		this.source.stop();			
+		this.source.stop();	
+		this.source.buffer = null;
+		
 		const loop = this.getLoop(id);
 		
-		if (loop) {		
+		if (loop) {				
 			const beginTime =  loop.start /1000;
 			const endTime = loop.stop / 1000;
 			let howLong = (endTime - beginTime) / this.playbackRate;
 			const duration = this.audioContext.currentTime - this.startTime;	
+
+			console.debug("AudioLooper " + this.styleType + " update", howLong, duration);
 			
 			if (sync) {	
 				this.reloop = true;			
@@ -206,6 +217,7 @@ AudioLooper.prototype.start = function(id, when) {
     if (!this.finished || this.looping || this.stopPending) return;
 	if (!window.loopCache[this.loop.url]) return;
 
+	this.updateTime = this.audioContext.currentTime;
 	this.riffAutoTriggered = false;
 	this.playbackRate =  2 ** (parseInt(tempoEle.value) / 12);
 	this.playbackOffset = 0;
@@ -285,6 +297,7 @@ AudioLooper.prototype.stop = function() {
 		this.source.stop(when + fadeOutSeconds);
 		
 		setTimeout(() => {
+			this.source.buffer = null;
 			this.looping = false;	
 			this.stopPending = false;			
 			verifyStartStopWebAudio;

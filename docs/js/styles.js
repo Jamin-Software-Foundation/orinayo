@@ -406,7 +406,6 @@ var bass_loops = [
 	"assets/bass/beat-arp_118_8135_2.bass",
 	"assets/bass/bluey_88_21818.bass",	
 	"assets/bass/classic-beat_95_10105.bass",
-	"assets/bass/classic-funk_110_8727.bass",	
 	"assets/bass/country_073_26300.bass",	
 	"assets/bass/country-beat_124_15484.bass",
 	"assets/bass/country-rock_180_10667.bass",
