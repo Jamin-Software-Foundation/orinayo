@@ -6994,7 +6994,7 @@ function doChord() {
 
   if (pad.buttons[LOGO])
   {
-	if (pad.buttons[YELLOW] && pad.buttons[BLUE]) {	
+	if (pad.buttons[YELLOW] && pad.buttons[BLUE] && !pad.buttons[BLUE] && !pad.buttons[RED] && !pad.buttons[GREEN]) {	
 		styleStarted = false;	
 		resetArrToA();
 		playButton.innerText = !styleStarted ? "Play" : "Stop";	
