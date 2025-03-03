@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orin Ayo User Guide</title>
+  <title>Welcome file</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
 
@@ -37,6 +37,7 @@
 <li><a href="#audio-chord">15 - Audio Chord</a></li>
 <li><a href="#audio-drum">16 - Audio Drum</a></li>
 <li><a href="#audio-bass">17 - Audio Bass</a></li>
+<li><a href="#a---audio-riffs">17a - Audio Riffs</a></li>
 <li><a href="#chord-tracker">18 - Chord Tracker</a></li>
 <li><a href="#song-player">19 - Song Player</a></li>
 </ul>
@@ -44,7 +45,12 @@
 <li><a href="#dashboard">Dashboard</a>
 <ul>
 <li><a href="#main-display">20 - Main Display</a></li>
-<li><a href="#guitar-buttons-display">21 - Guitar Buttons Display</a></li>
+<li><a href="#guitar-buttons-display">21,22 - Guitar Buttons Display</a></li>
+<li><a href="#external-guitar-status-liberlive-c1-or-lava-genie">23 - External Guitar Status (LiberLive C1 or Lava Genie)</a></li>
+<li><a href="#instruments-control-midi-and-audio">24 - Instruments Control (Midi and Audio)</a></li>
+<li><a href="#guitar-control">25 - Guitar Control</a></li>
+<li><a href="#style-control">26 Style Control</a></li>
+<li><a href="#action-buttons">27 Action Buttons</a></li>
 </ul>
 </li>
 </ul>
@@ -71,8 +77,8 @@
 <h1 id="mobile-view">Mobile view</h1>
 <img src="https://jus-be.github.io/orinayo/assets/screenshots/orinayo_mobile.svg">
 <h1 id="how-to-use">How To Use</h1>
-<p>To use the application, you select a number of features you need, click on an action and watch the status display. For example, select web audio as your arranger type, select a web audio chord loop, click on play and watch the chords being displayed as you press the buttons of your guitar controller.</p>
-<p>To prevent un-desired results, make sure that unused and uneeded features are set to *<em>NOT USED</em></p>
+<p>To use the application, you select a number of features you need, click on an action and watch the dashboard display. For example, select web audio as your arranger type, select a web audio chord loop, click on play and watch the chords being displayed as you press the buttons of your guitar controller.</p>
+<p>To prevent un-desired results, make sure that unused and uneeded features are set to <strong>NOT USED</strong>. For some features, you might need to refresh the screen with the <em>Refresh</em> action button to enable the selected feature.</p>
 <p>The application views are roughly divided into three sections.</p>
 <ul>
 <li>Feature Selections</li>
@@ -410,7 +416,7 @@ This includes sending Foot Switch on/off mesages to Ketron Arrangers that can be
 </tbody>
 </table><h3 id="liberlive-c1">LiberLive C1</h3>
 <p>OrinAyo will connect to the LiberLive C1 guitar by the Bluetooth connection used by the LiberLive mobile app. You can’t use both OrinAyo and the mobile app at the same time.<br>
-You can select different drum beats and guitar styles for both paddles and OrinAyo will use the tempo set by LiberLive except for web-audio styles that have fixed tempos.</p>
+You can select different drum beats and guitar styles for both paddles and OrinAyo will use the tempo set by LiberLive except for web-audio styles that have a pre-determined set of tempos per style.</p>
 <p>You can also use both the audio from LiberLive C1 and OrinAyo together in harmony</p>
 <h4 id="chords-1">Chords</h4>
 <img width="250px" align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/feature6-1.jpeg">
@@ -577,12 +583,19 @@ This feature is very useful if you want to stream or sent the live music directl
 <h2 id="audio-chord">15 - Audio Chord</h2>
 <img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/feature15.png">
 <p>If you select <strong>Web Audio Files</strong> as your  <a href="#3---arranger-type"><em>Arranger Type</em></a>, then you have to select an audio loop here that OrinAyo will use together with the bass and drums to give the music a style a groove. It could be a rhythmic guitar riff or  a keyboard chordal harmony.</p>
-<p>Audio loop styles in OrinAyo have fixed tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names or tempos.  You can manually change these selections to your taste.<br>
+<p>Audio loop styles in OrinAyo have tweleve pre-determined tempos and a default tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names and tempos.  You can manually change these selections to your taste.<br>
 <br clear="left"></p>
 <h2 id="audio-drum">16 - Audio Drum</h2>
-<p>Select alternative drum loop to play at the current tempo from this drop-down selection list. Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.</p>
+<p>Select alternative drum loop to play at the current tempo from this drop-down selection list.<br>
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.</p>
 <h2 id="audio-bass">17 - Audio Bass</h2>
-<p>Select alternative bass loops to play at the current tempo from this drop-down selection list. Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.<br>
+<p>Select alternative bass loops to play at the current tempo from this drop-down selection list.<br>
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.<br>
+The selected loop choice will be saved and recalled when the page is re-opened.</p>
+<h2 id="a---audio-riffs">17a - Audio Riffs</h2>
+<p>Select chord and bass loops to be played at song begining or ending with the current tempo from this drop-down selection list.<br>
+Melody loops in the current song key will be played at the start and end of the style respectively. Depending on your input controller, you can repeat the into loop at any point by pressing the correct key combination. Also, the melody loop auto-plays if a style variation loops twice and no chord keys are received from the input controller.<br>
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.<br>
 The selected loop choice will be saved and recalled when the page is re-opened.</p>
 <h2 id="chord-tracker">18 - Chord Tracker</h2>
 <img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/feature8.png">
@@ -605,9 +618,95 @@ The user can uses the song like backing tracks and sing or play along live with 
 <li>If a RealGuitar strum is in effect, this shows what strum variation is in use</li>
 <li>If OrinAyo is using recalled configuration settings, the slot number for the saved configuration  settings is shown here.</li>
 </ul>
-<h2 id="guitar-buttons-display">21 - Guitar Buttons Display</h2>
+<h2 id="guitar-buttons-display">21,22 - Guitar Buttons Display</h2>
 <img src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard21.png">
 <p>Displays which Guitar Controller buttons currently pressed and consequently what chord will be be display on the main display.</p>
+<h2 id="external-guitar-status-liberlive-c1-or-lava-genie">23 - External Guitar Status (LiberLive C1 or Lava Genie)</h2>
+<img src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard23.png">
+<p>If you have an external digital guitar that supports bluetooth like the LiberLive C1 or Lava Genie, this is where the connection status of the device is shown.<br>
+With the LiberLive C1, the following additional features are available:</p>
+<ul>
+<li>Select what internal strum styles are to be played on paddle A and B at the current tempo. Please note that this is independent of the styles being played by Orin Ayo. When using this feature ensure that both styles complement each other.</li>
+<li>Select what drum beats to play from paddles A and B.</li>
+<li>Select what key signature (flat or sharp) to be used with the current key. This used to make LiberLive support 12 song keys like Orin Ayo by applying sharps and flats to the chord key mappings.</li>
+</ul>
+<h2 id="instruments-control-midi-and-audio">24 - Instruments Control (Midi and Audio)</h2>
+<img src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard24.png">
+<p>Apart from the main guitar instrument (see <a href="#25---guitar-control"><em>Guitar Control</em></a> below), all other musical instrument are controlled from this part of the user interface.<br>
+The first two instruments represent the sampled keyboard instruments played by any connected MIDI keyboard controller. The last three instruments represent the drums, bass and chord loop players and everything else is MIDI channels 3-16.</p>
+<p>For each instrument track, the following controls are available:</p>
+<ul>
+<li>A check box to enable or disable the instrument. The instrument can heared or silenced.</li>
+<li>A drop down list to select a specic instrument. For MIDI device instruments in sound fonts (SF2 files), this is a list of General MIDI instruments. For Audio style loops, there is no selection and for web audio sampled instruments used by the MIDI input controller, it is a list of internal instruments supported or external instruments loaded from sound fonts (.keys and .pads files)</li>
+<li>Volume control</li>
+<li>Map of notes being played (MIDI only)</li>
+</ul>
+<h2 id="guitar-control">25 - Guitar Control</h2>
+<img src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard25.png">
+<p>This is where the internal guitar is controlled. It includes controls for:</p>
+<h3 id="the-sampled-sound-to-be-used.">The sampled sound to be used.</h3>
+<img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-1.png">
+<p>Select one of the sampled guitar instruments to play as. They range from acoustic to electric guitars. The sound is clean without effects applied. To apply effect use the pdedalboard explained below.<br>
+<br clear="left"></p>
+<h3 id="strum-type-12--3">Strum Type 1,2 &amp; 3</h3>
+<img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-2.png">
+<p>Orin Ayo supports three types of guitar strumming:</p>
+<ul>
+<li>STRUM.</li>
+<li>BASS&amp;STRUM</li>
+<li>PICKING</li>
+</ul>
+<h4 id="strum">Strum</h4>
+<p>Pressing Strum bar Down/Up triggers DownStrum/UpStrum of the chord switched by Frets. Pressing Strum bar Down/Up with all Frets released triggers Muted Strums Down/Up of the last played chord.</p>
+<h4 id="bass-and-strum">Bass and Strum</h4>
+<p>Strum bar Down triggers Bass once on chord change and/or after you release all Fret buttons, and will continue triggering DownStrums of the same chord until you change the chord or release Fret buttons. Strum bar Up triggers UpStrums all the time.</p>
+<h4 id="picking">Picking</h4>
+<p>With Picking function Strum bar works differently, according to its name. Strum bar Down triggers Bass of the current chord all the time. Strum bar Ups sequentially trigger individual strings (chord voices) in the order specified by selected String Sequence. Click on drop-down list shown on the left to select String Sequence in the popup list</p>
+<br clear="left">
+<h3 id="strum-voicing">Strum Voicing</h3>
+<img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-3.png">
+<p>Select what type of voicing should be used to play sampled guitar sound. Three ranges are supported</p>
+<ul>
+<li>Low voicing is MIDI note C2 and below</li>
+<li>High voicing is MIDI note C6 and above</li>
+<li>Medium voicing is between MIDI notes C4 and C6</li>
+</ul>
+<br clear="left">
+<h3 id="impulse-response-file">Impulse Response File</h3>
+<img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-4.png">
+An impulse response, in terms of its application to guitar, is a sonic snapshot measuring the exact sound of a complete amplifier setup. That includes the speaker cabinet, microphone, microphone placement, room, and peripheral equipment.
+Select any of the IR wav files provided to use.
+<br clear="left">
+<h2 id="style-control">26 Style Control</h2>
+<img src="https://jus-be.github.io/orinayo/assets/screenshots/dashboard26.png">
+<p>These controls are used to control style playback. They include:</p>
+<ul>
+<li>Tempo determines the playback speed. When a MIDI style file is being played, the tempo can be adjusted freely between 40bpm and 140bpm. When an WebAudio style loop is being played, tempo can only be adjusted five steps lower and five steps higher.</li>
+<li>Auto Fill determines if fills will be played automatically when you switch stype variations A to D.</li>
+<li>Into/Outro determines if a intro Outro variation will be played when style starts and ends.</li>
+<li>Sync Start determines if the stype will start automatically when the first chord is played.</li>
+<li>Pedals enables or disable the use of the pedalboard to apply effects to the sampled guitar.</li>
+<li>Mute Chords is used in song mode (see actions below) to ignore the recorded chord progression and use what is played live instead</li>
+<li>Vocalist mode is also used in song mode to display lyrics only in the Lyrics window.</li>
+<li>Volume is the control for the internal guitar volume.</li>
+</ul>
+<h2 id="action-buttons">27 Action Buttons</h2>
+<p>These are all the buttons to making Orin Ayo perform a specific action depending on what features have been set and what controls are enabled or disabled. They include</p>
+<ul>
+<li>Play</li>
+<li>Normal/DJ</li>
+<li>Color Tabs</li>
+<li>Load</li>
+<li>Stream Deck</li>
+<li>Pedalboard</li>
+<li>ChordPro</li>
+<li>Lyrics</li>
+<li>Save</li>
+<li>Record</li>
+<li>Refresh</li>
+<li>Settings</li>
+<li>Help</li>
+</ul>
 
     </div>
   </div>
