@@ -28,6 +28,11 @@ const CONTROL = 100;
 var smplrKeys = [];
 var smplrPads = [];
 
+var realChordsLoopHandled = false;
+var realBassLoopHandled = false;
+var realDrumsLoopHandled = false;
+var realRiffsLoopHandled = false;
+
 var tempoEle = null;
 var speechObject = null;
 var mobileViewpoint = false;
@@ -4852,36 +4857,79 @@ async function setupUI(config,err) {
 		riffLoopChanged(realRiffLoop);		
 	});	
 	
+	realRiffLoop.addEventListener("click", function() {
+		if (realRiffsLoopHandled) {
+			realRiffsLoopHandled = false;
+			return;
+		}		
+		createRiffList(config, realRiffLoop, realChordsLoop);	
+		realRiffsLoopHandled = true;
+	});	
+	
 	realBassLoop.addEventListener("change", function() {
 		if (styleStarted) return;		
 		bassLoopChanged(realBassLoop);		
 	});	
 	
+	realBassLoop.addEventListener("click", function() {
+		if (realBassLoopHandled) {
+			realBassLoopHandled = false;
+			return;
+		}		
+		createBassList(config, realBassLoop, realChordsLoop);	
+		realBassLoopHandled = true;		
+	});
+	
 	realDrumsLoop.addEventListener("change", function() {
 		if (styleStarted) return;		
 		drumLoopChanged(realDrumsLoop);		
-	});		
+	});	
+	
+	realDrumsLoop.addEventListener("click", function(evt) {	
+		if (realDrumsLoopHandled) {
+			realDrumsLoopHandled = false;
+			return;
+		}	
+		createDrumList(config, realDrumsLoop, realChordsLoop);	
+		realDrumsLoopHandled = true;		
+	});	
 
 	realChordsLoop.addEventListener("change", function() {
-		if (!realInstrument) realInstrument = {};		
-		realInstrument.chord = null;
-		realInstrument.chords = null;
-		realInstrument.chordUrl = null;		
-				
-		if (realChordsLoop.value != "realChordsLoop") {
-			realInstrument.chordUrl = realChordsLoop.value;				
-			const loopData = realChordsLoop.value.replace(".chord", "");
-			realInstrument.chord = loopData.split("_");			
-			if (!styleStarted) setupRealInstruments();
-			saveConfig();	
-
-			createDrumList(config, realDrumsLoop, realChordsLoop);					
-			createBassList(config, realBassLoop, realChordsLoop);			
-			createRiffList(config, realRiffLoop, realChordsLoop);				
+		if (styleStarted) return;			
+		chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, realRiffLoop);
+	});	
+	
+	realChordsLoop.addEventListener("click", function(evt) {	
+		if (realChordsLoopHandled) {
+			realChordsLoopHandled = false;
+			return;
 		}
 		
-		console.debug("selected real chord loop", realInstrument, realChordsLoop.value);		
-	});	
+		realChordsLoop.innerHTML = "";
+		realChordsLoop.options[0] = new Option("NOT USED", "realChordsLoop");	
+		
+		let s = 1;
+		
+		for (var i=0; i<chord_loops.length; i++) {
+			let selectedChord = false;				
+			const chordLoop = chord_loops[i];
+			const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");		
+			const metaData = loopData.split("_");		
+			const chordName = metaData[0] + " (" + metaData[1] + ")";			
+
+			if (Math.abs(tempo - parseInt(metaData[1])) < 5) 
+			{
+				if (config.realChord && config.realChord == chordLoop) {			
+					selectedChord = true;
+					selectedIndex = s;					
+				}
+						
+				realChordsLoop.options[s++] = new Option(chordName, chordLoop, selectedChord, selectedChord);			
+			}
+		}
+
+		realChordsLoopHandled = true;		
+	});		
 
 	console.debug("WebMidi devices", input, midiOutput, midiRealGuitar, chordTracker);
 	
@@ -5219,6 +5267,27 @@ function bassLoopChanged(realBassLoop) {
 	if (!styleStarted) setupRealInstruments();		
 	saveConfig();		
 	console.debug("selected real drums loop", realInstrument, realBassLoop.value);		
+}
+
+function chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, realRiffLoop) {
+	if (!realInstrument) realInstrument = {};		
+	realInstrument.chord = null;
+	realInstrument.chords = null;
+	realInstrument.chordUrl = null;		
+			
+	if (realChordsLoop.value != "realChordsLoop") {
+		realInstrument.chordUrl = realChordsLoop.value;				
+		const loopData = realChordsLoop.value.replace(".chord", "");
+		realInstrument.chord = loopData.split("_");			
+		if (!styleStarted) setupRealInstruments();
+		saveConfig();	
+
+		createDrumList(config, realDrumsLoop, realChordsLoop);					
+		createBassList(config, realBassLoop, realChordsLoop);			
+		createRiffList(config, realRiffLoop, realChordsLoop);				
+	}
+	
+	console.log("selected real chord loop", realInstrument, realChordsLoop.value);		
 }
 
 function drumLoopChanged(realDrumsLoop) {
