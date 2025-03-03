@@ -389,18 +389,18 @@ For each instrument track, the following controls are available:
 - Map of notes being played (MIDI only)
 
 ## 25 - Guitar Control
-<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard24.png />
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard25.png />
 
 This is where the internal guitar is controlled. It includes controls for:
 
 ### The sampled sound to be used. 
-<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-1.png />
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-1.png />
 
 Select one of the sampled guitar instruments to play as. They range from acoustic to electric guitars. The sound is clean without effects applied. To apply effect use the pdedalboard explained below.
 <br clear="left"/>
 
 ### Strum Type 1,2 & 3
-<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-2.png />
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-2.png />
 
 Orin Ayo supports three types of guitar strumming:
 - STRUM. 
@@ -419,7 +419,7 @@ With Picking function Strum bar works differently, according to its name. Strum 
 <br clear="left"/>
 
 ### Strum Voicing
-<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-3.png />
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-3.png />
 
 Select what type of voicing should be used to play sampled guitar sound. Three ranges are supported
 - Low voicing is MIDI note C2 and below
@@ -429,13 +429,13 @@ Select what type of voicing should be used to play sampled guitar sound. Three r
 <br clear="left"/>
 
 ### Impulse Response File
-<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-4.png />
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard25-4.png />
 An impulse response, in terms of its application to guitar, is a sonic snapshot measuring the exact sound of a complete amplifier setup. That includes the speaker cabinet, microphone, microphone placement, room, and peripheral equipment.
 Select any of the IR wav files provided to use.
 <br clear="left"/>
 
 ## 26 Style Control
-<img src=https://jus-be.github.io/orinayo/assets/screenshots/feature26.png />
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard26.png />
 
 These controls are used to control style playback. They include:
 
