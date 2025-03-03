@@ -319,10 +319,18 @@ Audio loop styles in OrinAyo have tweleve pre-determined tempos and a default te
 <br clear="left"/>
 
 ## 16 - Audio Drum
-Select alternative drum loop to play at the current tempo from this drop-down selection list. Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.
+Select alternative drum loop to play at the current tempo from this drop-down selection list. 
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.
 
 ## 17 - Audio Bass
-Select alternative bass loops to play at the current tempo from this drop-down selection list. Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops. 
+Select alternative bass loops to play at the current tempo from this drop-down selection list. 
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops. 
+The selected loop choice will be saved and recalled when the page is re-opened.
+
+## 17a - Audio Riffs
+Select chord and bass loops to be played at song begining or ending with the current tempo from this drop-down selection list. 
+Melody loops in the current song key will be played at the start and end of the style respectively. Depending on your input controller, you can repeat the into loop at any point by pressing the correct key combination. Also, the melody loop auto-plays if a style variation loops twice and no chord keys are received from the input controller.
+Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops. 
 The selected loop choice will be saved and recalled when the page is re-opened.
 
 ## 18 - Chord Tracker
@@ -352,10 +360,109 @@ This part of the application is the application dashboard showing the current st
 - If a RealGuitar strum is in effect, this shows what strum variation is in use
 - If OrinAyo is using recalled configuration settings, the slot number for the saved configuration  settings is shown here.
 
-## 21 - Guitar Buttons Display
+## 21,22 - Guitar Buttons Display
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard21.png />
 
 Displays which Guitar Controller buttons currently pressed and consequently what chord will be be display on the main display.
 
+## 23 - External Guitar Status (LiberLive C1 or Lava Genie)
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard23.png />
+
+If you have an external digital guitar that supports bluetooth like the LiberLive C1 or Lava Genie, this is where the connection status of the device is shown.
+With the LiberLive C1, the following additional features are available:
+
+- Select what internal strum styles are to be played on paddle A and B at the current tempo. Please note that this is independent of the styles being played by Orin Ayo. When using this feature ensure that both styles complement each other.
+- Select what drum beats to play from paddles A and B.
+- Select what key signature (flat or sharp) to be used with the current key. This used to make LiberLive support 12 song keys like Orin Ayo by applying sharps and flats to the chord key mappings.
+
+## 24 - Instruments Control (Midi and Audio)
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard24.png />
+
+Apart from the main guitar instrument (see [*Guitar Control*](#25---guitar-control) below), all other musical instrument are controlled from this part of the user interface.
+The first two instruments represent the sampled keyboard instruments played by any connected MIDI keyboard controller. The last three instruments represent the drums, bass and chord loop players and everything else is MIDI channels 3-16.
+
+For each instrument track, the following controls are available:
+
+- A check box to enable or disable the instrument. The instrument can heared or silenced.
+- A drop down list to select a specic instrument. For MIDI device instruments in sound fonts (SF2 files), this is a list of General MIDI instruments. For Audio style loops, there is no selection and for web audio sampled instruments used by the MIDI input controller, it is a list of internal instruments supported or external instruments loaded from sound fonts (.keys and .pads files)
+- Volume control
+- Map of notes being played (MIDI only)
+
+## 25 - Guitar Control
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard24.png />
+
+This is where the internal guitar is controlled. It includes controls for:
+
+### The sampled sound to be used. 
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-1.png />
+
+Select one of the sampled guitar instruments to play as. They range from acoustic to electric guitars. The sound is clean without effects applied. To apply effect use the pdedalboard explained below.
+<br clear="left"/>
+
+### Strum Type 1,2 & 3
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-2.png />
+
+Orin Ayo supports three types of guitar strumming:
+- STRUM. 
+- BASS&STRUM
+- PICKING
+
+#### Strum
+Pressing Strum bar Down/Up triggers DownStrum/UpStrum of the chord switched by Frets. Pressing Strum bar Down/Up with all Frets released triggers Muted Strums Down/Up of the last played chord.
+
+#### Bass and Strum
+Strum bar Down triggers Bass once on chord change and/or after you release all Fret buttons, and will continue triggering DownStrums of the same chord until you change the chord or release Fret buttons. Strum bar Up triggers UpStrums all the time.
+
+#### Picking
+With Picking function Strum bar works differently, according to its name. Strum bar Down triggers Bass of the current chord all the time. Strum bar Ups sequentially trigger individual strings (chord voices) in the order specified by selected String Sequence. Click on drop-down list shown on the left to select String Sequence in the popup list
+
+<br clear="left"/>
+
+### Strum Voicing
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-3.png />
+
+Select what type of voicing should be used to play sampled guitar sound. Three ranges are supported
+- Low voicing is MIDI note C2 and below
+- High voicing is MIDI note C6 and above
+- Medium voicing is between MIDI notes C4 and C6
+ 
+<br clear="left"/>
+
+### Impulse Response File
+<img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature25-4.png />
+An impulse response, in terms of its application to guitar, is a sonic snapshot measuring the exact sound of a complete amplifier setup. That includes the speaker cabinet, microphone, microphone placement, room, and peripheral equipment.
+Select any of the IR wav files provided to use.
+<br clear="left"/>
+
+## 26 Style Control
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/feature26.png />
+
+These controls are used to control style playback. They include:
+
+- Tempo determines the playback speed. When a MIDI style file is being played, the tempo can be adjusted freely between 40bpm and 140bpm. When an WebAudio style loop is being played, tempo can only be adjusted five steps lower and five steps higher.
+- Auto Fill determines if fills will be played automatically when you switch stype variations A to D.
+- Into/Outro determines if a intro Outro variation will be played when style starts and ends.
+- Sync Start determines if the stype will start automatically when the first chord is played.
+- Pedals enables or disable the use of the pedalboard to apply effects to the sampled guitar.
+- Mute Chords is used in song mode (see actions below) to ignore the recorded chord progression and use what is played live instead
+- Vocalist mode is also used in song mode to display lyrics only in the Lyrics window.
+- Volume is the control for the internal guitar volume.
+
+## 27 Action Buttons
+These are all the buttons to making Orin Ayo perform a specific action depending on what features have been set and what controls are enabled or disabled. They include
+
+- Play
+- Normal/DJ
+- Color Tabs
+- Load
+- Stream Deck
+- Pedalboard
+- ChordPro
+- Lyrics
+- Save
+- Record
+- Refresh
+- Settings
+- Help
 
 
