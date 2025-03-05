@@ -2707,7 +2707,7 @@ function handleFileContent(event) {
 
 		reader.onload = function(event)	
 		{
-			if (file.name.toLowerCase().endsWith(".mid") || file.name.toLowerCase().endsWith(".sf2") || file.name.toLowerCase().endsWith(".kst") || file.name.toLowerCase().endsWith(".sty") || file.name.toLowerCase().endsWith(".prs") || file.name.toLowerCase().endsWith(".bcs") || file.name.toLowerCase().endsWith(".ac7") || file.name.toLowerCase().endsWith(".sas") || file.name.toLowerCase().endsWith(".drum") || file.name.toLowerCase().endsWith(".chord") || file.name.toLowerCase().endsWith(".keys") || file.name.toLowerCase().endsWith(".pads")) {
+			if (file.name.toLowerCase().endsWith(".mid") || file.name.toLowerCase().endsWith(".sf2") || file.name.toLowerCase().endsWith(".kst") || file.name.toLowerCase().endsWith(".sty") || file.name.toLowerCase().endsWith(".prs") || file.name.toLowerCase().endsWith(".bcs") || file.name.toLowerCase().endsWith(".ac7") || file.name.toLowerCase().endsWith(".sas") || file.name.toLowerCase().endsWith(".bass") || file.name.toLowerCase().endsWith(".drum") || file.name.toLowerCase().endsWith(".chord") || file.name.toLowerCase().endsWith(".keys") || file.name.toLowerCase().endsWith(".pads")) {
 				handleBinaryFile(file.name, event.target.result);
 			}	
 			else

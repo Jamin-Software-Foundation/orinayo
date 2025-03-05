@@ -1,11 +1,11 @@
 # Introduction
-Orina Ayo work best with in desktop mode with a Logitech Guitar Hero Controlller or a LiberLive C1. If you do not have a guitar controller nor a keyboard midi controller, you can still use a wireless numeric keypad or the numeric keypad of your desktop computer. See supported devices below for more details.
+Orin Ayo work best with in desktop mode with a Logitech Guitar Hero Controller or a LiberLive C1. If you do not have a guitar controller nor a keyboard midi controller, you can still use a wireless numeric keypad or the numeric keypad of your desktop computer. See supported devices below for more details.
 
-Also note that Gamepad compatible guitar controllers like the PDP Riff Master or the Logitech Guitar hero have been tested from a desktop computer. On mobile phones, only Bluetooth midi controllers or guitars like LiberLive C1 amd Lava Genie have been tested with OrinAyo. 
+Also note that Gamepad compatible guitar controllers like the PDP Riff Master or the Logitech Guitar hero have been tested from a desktop computer. On mobile phones, only Bluetooth midi controllers or guitars like LiberLive C1 and Lava Genie have been tested with Orin Ayo. 
 
-When OrinAyo works in standalone mode and not controlling an external arranger device via MIDI and generating all the music internally from WebAudio, you would need a high spec PC or mobile phone like an Intel iCore 7 or Apple M series laptop or a Samsung S25 spec type mobile phone.
+When Orin Ayo works in standalone mode and not controlling an external arranger device via MIDI and generating all the music internally from WebAudio, you would need a high spec PC or mobile phone like an Intel iCore 7 or Apple M series laptop or a Samsung S25 spec type mobile phone.
 
-If you are using a Bluetooth guitar controller like LiberLive C1 or Lava Genie, you must first give the web browser (Chrome or Edge) permission to acces these devices. See section on Bluetooth below for more details.
+If you are using a Bluetooth guitar controller like LiberLive C1 or Lava Genie, you must first give the web browser (Chrome or Edge) permission to access these devices. See section on Bluetooth below for more details.
 
 # Install
 Orinayo can be setup and accessed as follows:
@@ -153,7 +153,7 @@ Orange | Fade In | Fade Out
 #### Style Variations/Sections (A,B,C,D)
 The Star-Power button and the START button are used to control the style variations.  
 
-When the Star-Power button is pressed on its own, it will cycles the style variations A-->B-->C-->D-->A.  When a colored fret key is also pressed, then it will play a fill for the current playing variation.
+When the Star-Power button is pressed on its own, it will cycles the style variations A-->B-->C-->D-->A.  When a coloured fret key is also pressed, then it will play a fill for the current playing variation.
 The START button cycles back down from A<--B<--C<--D<--A. 
 
 #### Changing Song Key
@@ -163,7 +163,7 @@ Please note that this does nothing with a Looper. You have to preload the Looper
 
 #### Other Playing Features 
 Pressing down on any of the five sections in the slider bar at the same time the strum bar is moved up or down can be used to perform other features.
-This includes sending Foot Switch on/off mesages to Ketron Arrangers that can be used to mute arranger parts or perform any custom feature required by the user.
+This includes sending Foot Switch on/off messages to Ketron Arrangers that can be used to mute arranger parts or perform any custom feature required by the user.
 
 Button | Strum Up     | Strum Down
 ---    | ---          | ---
@@ -175,10 +175,10 @@ Orange | Ketron FS-7  | Ketron FS-6
 
 
 ### LiberLive C1
-OrinAyo will connect to the LiberLive C1 guitar by the Bluetooth connection used by the LiberLive mobile app. You can't use both OrinAyo and the mobile app at the same time.
-You can select different drum beats and guitar styles for both paddles and OrinAyo will use the tempo set by LiberLive except for web-audio styles that have a pre-determined set of tempos per style.
+Orin Ayo will connect to the LiberLive C1 guitar by the Bluetooth connection used by the LiberLive mobile app. You can't use both Orin Ayo and the mobile app at the same time.
+You can select different drum beats and guitar styles for both paddles and Orin Ayo will use the tempo set by LiberLive except for web-audio styles that have a pre-determined set of tempos per style.
 
-You can also use both the audio from LiberLive C1 and OrinAyo together in harmony
+You can also use both the audio from LiberLive C1 and Orin Ayo together in harmony
 
 #### Chords
 <img width="250px" align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature6-1.jpeg />
@@ -193,13 +193,13 @@ Press both paddles to toggle between starting and stopping the arranger feature.
 #### Style Variations/Sections (A,B,C,D)
 Press either strum paddle alone to control the style variations.  
 
-When the first paddle is moved **down** on its own, OrinAyo will cycles the style variations A-->B-->C-->D-->A.  When it is moved **up**, OrinAyo will cycles back down from A<--B<--C<--D<--A. 
+When the first paddle is moved **down** on its own, Orin Ayo will cycles the style variations A-->B-->C-->D-->A.  When it is moved **up**, Orin Ayo will cycles back down from A<--B<--C<--D<--A. 
 
 When the second paddle is moved **down**, then it will play a fill for the current playing variation. When it is moved **up**, then it plays a break for  the current playing variation. 
 
 
 ### Lava Genie
-The Lava Genie behaves like the LiberLive C1. However, it can only be used as a MIDI controller.  There is currently no support for using the internal sounds with OrinAyo in harmony like the LiberLive C1. 
+The Lava Genie behaves like the LiberLive C1. However, it can only be used as a MIDI controller.  There is currently no support for using the internal sounds with Orin Ayo in harmony like the LiberLive C1. 
 #### Chords
 It also uses the modified 7 basic chord key mapping and the 21 advanced key mapping from LiberLive C1.
 
@@ -300,7 +300,7 @@ Select the device you want and Orin Ayo will play the audio from this device ins
 
 It can be used in the following situations:
 - To enable a solo musician to play and mix the sounds from LiberLive C1 guitar with the selected music style in Orin Ayo
-- To enable a guitarist to play lead and riff melodies along with another person controlling the selected music style in OrinAyo
+- To enable a guitarist to play lead and riff melodies along with another person controlling the selected music style in Orin Ayo
 
 
 ## 14 - Audio Device Out
@@ -313,30 +313,30 @@ This feature is very useful if you want to stream or sent the live music directl
 ## 15 - Audio Chord
 <img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature15.png />
 
-If you select **Web Audio Files** as your  [*Arranger Type*](#3---arranger-type), then you have to select an audio loop here that OrinAyo will use together with the bass and drums to give the music a style a groove. It could be a rhythmic guitar riff or  a keyboard chordal harmony.
+If you select **Web Audio Files** as your  [*Arranger Type*](#3---arranger-type), then you have to select an audio loop here that Orin Ayo will use together with the bass and drums to give the music a style a groove. It could be a rhythmic guitar riff or  a keyboard chordal harmony.
 
-Audio loop styles in OrinAyo have tweleve pre-determined tempos and a default tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names and tempos.  You can manually change these selections to your taste.
+Audio loop styles in Orin Ayo have twelve pre-determined tempos and a default tempo. Orin Ayo will use the selection for the chord loop to pre-select corresponding bass and drum loops that have matching names and tempos.  You can manually change these selections to your taste.
 <br clear="left"/>
 
 ## 16 - Audio Drum
 Select alternative drum loop to play at the current tempo from this drop-down selection list. 
-Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.
+Please note that mixing different tempos can produce undesirable results as Orin Ayo does not stretch audio loops.  The selected loop choice will be saved and recalled when the page is re-opened.
 
 ## 17 - Audio Bass
 Select alternative bass loops to play at the current tempo from this drop-down selection list. 
-Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops. 
+Please note that mixing different tempos can produce undesirable results as Orin Ayo does not stretch audio loops. 
 The selected loop choice will be saved and recalled when the page is re-opened.
 
 ## 17a - Audio Riffs
-Select chord and bass loops to be played at song begining or ending with the current tempo from this drop-down selection list. 
+Select a combination of chord and bass loops to be played at song begining or ending with the current tempo from this drop-down selection list. 
 Melody loops in the current song key will be played at the start and end of the style respectively. Depending on your input controller, you can repeat the into loop at any point by pressing the correct key combination. Also, the melody loop auto-plays if a style variation loops twice and no chord keys are received from the input controller.
-Please note that mixing different tempos can produce undesirable results as OrinAyo does not stretch audio loops. 
+Please note that mixing different tempos can produce undesirable results as Orin Ayo does not stretch audio loops. 
 The selected loop choice will be saved and recalled when the page is re-opened.
 
 ## 18 - Chord Tracker
 <img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature8.png />
 
-Select an input MIDI device to use with the OrinAyo ChordTracker feature.  This feature is implemented for the Yamaha Sonogenic SHS-500 Keytar and compatible devices.  OrinAyo well send the chords being played as Yamaha midi SYSEX messages to the selected device. The device is then able to ensure that only notes in the current key and in harmony with the current chord will be played by the device.
+Select an input MIDI device to use with the Orin Ayo ChordTracker feature.  This feature is implemented for the Yamaha Sonogenic SHS-500 Keytar and compatible devices.  Orin Ayo well send the chords being played as Yamaha midi SYSEX messages to the selected device. The device is then able to ensure that only notes in the current key and in harmony with the current chord will be played by the device.
 <br clear="left"/>
 
 ## 19 - Song Player
@@ -349,13 +349,13 @@ Select one of the internal midi files in the list or use the **Load** action but
 <br clear="left"/>
 
 # Dashboard
-This part of the application is the application dashboard showing the current status or values associated with the live music being created by OrinAyo.
+This part of the application is the application dashboard showing the current status or values associated with the live music being created by Orin Ayo.
 
 ## 20 - Main Display
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard20.png />
 
 - Displays the current song key and the current chord being played in that key.
-- The arranger style currently selected. OrinAyo supports an intro,  four main ( labelled A-D) and an end variation for each music style.
+- The arranger style currently selected. Orin Ayo supports an intro,  four main ( labelled A-D) and an end variation for each music style.
 - Which Pad style (numbered 1-5) is currently playing
 - If a RealGuitar strum is in effect, this shows what strum variation is in use
 - If OrinAyo is using recalled configuration settings, the slot number for the saved configuration  settings is shown here.
@@ -368,7 +368,7 @@ Displays which Guitar Controller buttons currently pressed and consequently what
 ## 23 - External Guitar Status (LiberLive C1 or Lava Genie)
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard23.png />
 
-If you have an external digital guitar that supports bluetooth like the LiberLive C1 or Lava Genie, this is where the connection status of the device is shown.
+If you have an external digital guitar that supports Bluetooth like the LiberLive C1 or Lava Genie, this is where the connection status of the device is shown.
 With the LiberLive C1, the following additional features are available:
 
 - Select what internal strum styles are to be played on paddle A and B at the current tempo. Please note that this is independent of the styles being played by Orin Ayo. When using this feature ensure that both styles complement each other.
@@ -383,8 +383,8 @@ The first two instruments represent the sampled keyboard instruments played by a
 
 For each instrument track, the following controls are available:
 
-- A check box to enable or disable the instrument. The instrument can heared or silenced.
-- A drop down list to select a specic instrument. For MIDI device instruments in sound fonts (SF2 files), this is a list of General MIDI instruments. For Audio style loops, there is no selection and for web audio sampled instruments used by the MIDI input controller, it is a list of internal instruments supported or external instruments loaded from sound fonts (.keys and .pads files)
+- A check box to enable or disable the instrument. The instrument can heard or silenced.
+- A drop down list to select a specific instrument. For MIDI device instruments in sound fonts (SF2 files), this is a list of General MIDI instruments. For Audio style loops, there is no selection and for web audio sampled instruments used by the MIDI input controller, it is a list of internal instruments supported or external instruments loaded from sound fonts (.keys and .pads files)
 - Volume control
 - Map of notes being played (MIDI only)
 
@@ -408,10 +408,10 @@ Orin Ayo supports three types of guitar strumming:
 - PICKING
 
 #### Strum
-Pressing Strum bar Down/Up triggers DownStrum/UpStrum of the chord switched by Frets. Pressing Strum bar Down/Up with all Frets released triggers Muted Strums Down/Up of the last played chord.
+Pressing Strum bar Down/Up triggers Down-Strum/Up-Strum of the chord switched by Frets. Pressing Strum bar Down/Up with all Frets released triggers Muted Strums Down/Up of the last played chord.
 
 #### Bass and Strum
-Strum bar Down triggers Bass once on chord change and/or after you release all Fret buttons, and will continue triggering DownStrums of the same chord until you change the chord or release Fret buttons. Strum bar Up triggers UpStrums all the time.
+Strum bar Down triggers Bass once on chord change and/or after you release all Fret buttons, and will continue triggering Down-Strums of the same chord until you change the chord or release Fret buttons. Strum bar Up triggers Up-Strums all the time.
 
 #### Picking
 With Picking function Strum bar works differently, according to its name. Strum bar Down triggers Bass of the current chord all the time. Strum bar Ups sequentially trigger individual strings (chord voices) in the order specified by selected String Sequence. Click on drop-down list shown on the left to select String Sequence in the popup list
@@ -442,13 +442,16 @@ These controls are used to control style playback. They include:
 - Tempo determines the playback speed. When a MIDI style file is being played, the tempo can be adjusted freely between 40bpm and 140bpm. When an WebAudio style loop is being played, tempo can only be adjusted five steps lower and five steps higher.
 - Auto Fill determines if fills will be played automatically when you switch stype variations A to D.
 - Into/Outro determines if a intro Outro variation will be played when style starts and ends.
-- Sync Start determines if the stype will start automatically when the first chord is played.
+- Sync Start determines if the style will start automatically when the first chord is played.
 - Pedals enables or disable the use of the pedalboard to apply effects to the sampled guitar.
 - Mute Chords is used in song mode (see actions below) to ignore the recorded chord progression and use what is played live instead
 - Vocalist mode is also used in song mode to display lyrics only in the Lyrics window.
 - Volume is the control for the internal guitar volume.
 
-## 27 Action Buttons
+# Action Buttons
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/action-buttons27.png />
+
+## 27 Application Actions
 These are all the buttons to making Orin Ayo perform a specific action depending on what features have been set and what controls are enabled or disabled. They include
 
 - Play
@@ -465,4 +468,83 @@ These are all the buttons to making Orin Ayo perform a specific action depending
 - Settings
 - Help
 
+### Play
+This action button starts a song or style depending on what features have been enabled. If a style is enabled, the style will start and use the chords from the input controller. If a song is enabled, then the chord progression from the song will be used instead unless song chords are muted.
+While a song or style is being loaded, the button background color will change to red displaying the label "Waiting".
+When the song and/or style is loaded and ready to be played, the background color will change to green and the label will change to "Play".
+If the user now clicks the button to start playing, the background color changes again to red and the label will change to "Stop".
+Clicking the button one last time will stop the song and/or style and change the background back to green and the label back to "Play".
 
+### Normal/DJ
+This action button is only useful when Orin Ayo in remotely controlling an external Yamaha keyboard with style control like PSR SX-600 and higher. It toggles between sending both chords and style section control midi events (Normal) and sending only style section control midi events (DJ).
+
+### Color Tabs
+This action button is only useful when Orin Ayo is remotely controlling the Music Labs RealGuitar software. It toggles between the "Color Tabs", "Smart Strum" and "Smart String" modes. For more details, see Music Labs documentation for RealGuitar.
+
+### Load
+This button will load an external file into the web browser database that extends Orin Ayo features. When loaded successfully, they will extend the appropriate drop-down list and will be stored in the Web Browser IndexedDB database.
+The following file types are supported.
+
+- Orin Ayo audio style loops (.drum, .chord, .bass, .riff)
+- Ketron style file (.kst)
+- Yamaha style file (.sty, .prs, bcs)
+- Casio style files (.ac7)
+- Soft Arranger style files (.sas)
+- Sound Font files to play General Midi styles (.sf2)
+- Sound Font files to play piano keyboard instrument (.keys)
+- Sound Font files to play pads keyboard instrument (.pads)
+- Song Files with chord progressions (.mid)
+- Chord Pro chord sheets (.cho)
+
+#### Orin Ayo audio style loops
+These are OGG audio files with audio slices formatted as required by Orin Ayo. The meta data for locating the slices is stored in the file name. 
+The following naming convention is being used:
+
+- Chord loops are formatted as <label>_<tempo>_<maj-min-size>_[sus-size]_[variation-count]. For example, *acoustic-guitar_103_4660.chord* or *acoustic-guitar_120_4000_4000_2.chord*
+- Bass loops are formatted as <label>_<tempo>_<maj-min-size>_[variation-count]. For example, *funky-beat_95_10105.bass* or *funky-groove_108_8889_4.bass*
+- Drum loops are formatted as <label>_<tempo>_<intro>_<variation-size>_<fill-size>_<break-size>_<end-size>. For example, *pop-tropical_96_2500_10000_2500_2500_5000.drum*
+- Riff loops are formatted as <label>_<tempo>_<maj-min-size>. For example, *funky-groove_108_8889.riff*
+
+#### MIDI style files from other arrangers (Ketron, Yamaha, Casio and Soft Arranger)
+These are MIDI or other binary files containing style data supported by Orin Ayo. The style name will added to the list of styles when the style file is loaded successfully.
+
+#### Sound Font files
+Orin Ayo uses sampler data stored in sound fonts (SF2) files for supporting a MIDI keyboard controller and playing GM MIDI style file. 
+The voice names will be added to the respective drop-down lists.
+
+#### Song Files with chord progression
+Orin Ayo can load external MIDI files with chord progression data that can be played on any compatible Yamaha keyboard like the PSR-SX600 with a different style each time.
+
+#### Chord Pro chord sheets
+Orin Ayo supports the [extended Chord-Pro format proposed by Paul J. Drongowski](https://sandsoftwaresound.net/chordpro-for-yamaha-accompaniment/). 
+It provides an editor that can edit a song and add extra directives for precise timing, section changes, tempo, etc. The editor can generate a compatible midi file.
+
+### Stream Deck
+Orin Ayo supports the Stream Deck USB device. The touch buttons, encoder dials and LCD screen can be used to control live play.
+This action button is used to pair/unpair a Stream Deck device.
+
+### Pedalboard
+Orin Ayo has a built-in pedal-board with various guitar effects that can be used with the internal guitar or an external guitar plugged into PC.
+This action button toggles between showing the features/instruments view and the pedalboard view.
+
+### Chord-Pro
+This action button toggles between showing the features/instruments view and the chord pro editor view.
+
+### Lyrics
+Orin Ayo has a lyrics display that is used to show the lyrics and the chord progression of a song file.
+This action button toggles between showing the features/instruments view and the displayed lyrics.
+
+### Save
+Orin Ayo can save most of the selected features and dashboard settings in a registration slot.  Up to 128 slots can be used.
+These saved settings can recalled from a slot from the input controller device, external midi controller or a Stream Deck.
+This action button is used to save the current settings to a specific slot number.
+
+### Record
+Orin Ayo can record the current live style performance as an audio file (OGG). It can also record the playback of a song with the lyrics and chord progression as a video file (MP4)
+This action button is used to prompt for a file name for the audio or video file that will be created when the music is started.
+
+### Refresh
+Use this action button to refresh the screen or reset the application. It should also be used after external files are loaded with the load button.
+
+### Help
+Displays this information
