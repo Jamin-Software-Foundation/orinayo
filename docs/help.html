@@ -742,11 +742,21 @@ The following file types are supported.</p>
 <p>These are OGG audio files with audio slices formatted as required by Orin Ayo. The meta data for locating the slices is stored in the file name.<br>
 The following naming convention is being used:</p>
 <ul>
-<li>Chord loops are formatted as <label><em></em><em>[sus-size]</em>[variation-count]. For example, <em>acoustic-guitar_103_4660.chord</em> or <em>acoustic-guitar_120_4000_4000_2.chord</em></label></li>
-<li>Bass loops are formatted as <label><em></em>_[variation-count]. For example, <em>funky-beat_95_10105.bass</em> or <em>funky-groove_108_8889_4.bass</em></label></li>
-<li>Drum loops are formatted as <label><em></em><em></em><em></em>. For example, <em>pop-tropical_96_2500_10000_2500_2500_5000.drum</em></label></li>
-<li>Riff loops are formatted as <label><em></em>. For example, <em>funky-groove_108_8889.riff</em></label></li>
+<li>Chord loops are formatted as <strong>{label}<em>{tempo}</em>{maj-min-size}<em>(sus-size)</em>(variation-count)</strong>. For example, <em>acoustic-guitar_103_4660.chord</em> or <em>acoustic-guitar_120_4000_4000_2.chord</em></li>
+<li>Bass loops are formatted as <strong>{label}<em>{tempo}</em>{maj-min-size}_(variation-count)</strong>. For example, <em>funky-beat_95_10105.bass</em> or <em>funky-groove_108_8889_4.bass</em></li>
+<li>Drum loops are formatted as <strong>{label}<em>{tempo}</em>{intro-size}<em>{variation-size}</em>{fill-size}<em>{break-size}</em>{end-size}</strong>. For example, <em>pop-tropical_96_2500_10000_2500_2500_5000.drum</em></li>
+<li>Riff loops are formatted as <strong>{label}<em>{tempo}</em>{maj-min-size}</strong>. For example, <em>funky-groove_108_8889.riff</em></li>
 </ul>
+<p><strong>{label}</strong> is the required name of the audio style loop.<br>
+<strong>{tempo}</strong> is required and indicates what tempo to play the loop.<br>
+<strong>{maj-min-size}</strong> is required and specifies the size of each of the twelve slices for major chord keys and the twelve slices for minor chord keys. Needed for chords, bass and riff audio loops.<br>
+<strong>(sus-size)</strong> is optional, but is required if (variation-count) is specified. It specifies the size of each audio slice for the twelve suspended chord keys.<br>
+<strong>(variation-count)</strong> is optional and specifies how many variation slice block are in the loop.<br>
+<strong>{intro-size}</strong> is required. It is the size of the intro drum slice.<br>
+<strong>{variation-size}</strong> is required. It is the size of each of the four drum variation audio slices.<br>
+<strong>{fill-size}</strong> is required. It is the size of each of the four drum fills.<br>
+<strong>{break-size}</strong> is required. It is the size of the drum break audio slice.<br>
+<strong>{end-size}</strong> is required. It is the size of the ending audio drum slice.</p>
 <h4 id="midi-style-files-from-other-arrangers-ketron-yamaha-casio-and-soft-arranger">MIDI style files from other arrangers (Ketron, Yamaha, Casio and Soft Arranger)</h4>
 <p>These are MIDI or other binary files containing style data supported by Orin Ayo. The style name will added to the list of styles when the style file is loaded successfully.</p>
 <h4 id="sound-font-files">Sound Font files</h4>

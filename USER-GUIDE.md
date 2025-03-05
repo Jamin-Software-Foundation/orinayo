@@ -500,21 +500,21 @@ The following file types are supported.
 These are OGG audio files with audio slices formatted as required by Orin Ayo. The meta data for locating the slices is stored in the file name. 
 The following naming convention is being used:
 
-- Chord loops are formatted as {label}_{tempo}_{maj-min-size}_(sus-size)_(variation-count). For example, *acoustic-guitar_103_4660.chord* or *acoustic-guitar_120_4000_4000_2.chord*
-- Bass loops are formatted as {label}_{tempo}_{maj-min-size}_(variation-count). For example, *funky-beat_95_10105.bass* or *funky-groove_108_8889_4.bass*
-- Drum loops are formatted as {label}_{tempo}_{intro-size}_{variation-size}_{fill-size}_{break-size}_{end-size}. For example, *pop-tropical_96_2500_10000_2500_2500_5000.drum*
-- Riff loops are formatted as {label}_{tempo}_{maj-min-size}. For example, *funky-groove_108_8889.riff*
+- Chord loops are formatted as **{label}_{tempo}_{maj-min-size}_(sus-size)_(variation-count)**. For example, *acoustic-guitar_103_4660.chord* or *acoustic-guitar_120_4000_4000_2.chord*
+- Bass loops are formatted as **{label}_{tempo}_{maj-min-size}_(variation-count)**. For example, *funky-beat_95_10105.bass* or *funky-groove_108_8889_4.bass*
+- Drum loops are formatted as **{label}_{tempo}_{intro-size}_{variation-size}_{fill-size}_{break-size}_{end-size}**. For example, *pop-tropical_96_2500_10000_2500_2500_5000.drum*
+- Riff loops are formatted as **{label}_{tempo}_{maj-min-size}**. For example, *funky-groove_108_8889.riff*
 
-{label} is the required name of the audio style loop.
-{tempo} is required and indicates what tempo to play the loop.
-{maj-min-size} is required and specifies the size of each of the twelve slices for major chord keys and the twelve slices for minor chord keys. Needed for chords, bass and riff audio loops.
-(sus-size) is optional, but is required if (variation-count) is specified. It specifies the size of each audio slice for the tweleve suspeneded chord keys.
-(variation-count) is optional and specifies how many variation slice block are in the loop.
-{intro-size} is required. It is the size of the intro drum slice.
-{variation-size} is required. It is the size of each of the four drum variation audio slices.
-{fill-size} is required. It is the size of each of the four drum fills.
-{break-size} is required. It is the size of the drum break audio slice.
-{end-size} is required. It is the size of the ending audio drum slice.
+**{label}** is the required name of the audio style loop.
+**{tempo}** is required and indicates what tempo to play the loop.
+**{maj-min-size}** is required and specifies the size of each of the twelve slices for major chord keys and the twelve slices for minor chord keys. Needed for chords, bass and riff audio loops.
+**(sus-size)** is optional, but is required if (variation-count) is specified. It specifies the size of each audio slice for the twelve suspended chord keys.
+**(variation-count)** is optional and specifies how many variation slice block are in the loop.
+**{intro-size}** is required. It is the size of the intro drum slice.
+**{variation-size}** is required. It is the size of each of the four drum variation audio slices.
+**{fill-size}** is required. It is the size of each of the four drum fills.
+**{break-size}** is required. It is the size of the drum break audio slice.
+**{end-size}** is required. It is the size of the ending audio drum slice.
 
 #### MIDI style files from other arrangers (Ketron, Yamaha, Casio and Soft Arranger)
 These are MIDI or other binary files containing style data supported by Orin Ayo. The style name will added to the list of styles when the style file is loaded successfully.
