@@ -2372,7 +2372,7 @@ async function onloadHandler() {
 	tempoEle.addEventListener("input", function(event) {
 		updateTempo();
 		saveConfig();
-		// TODO
+		// TODO implement tempo filter
 		//createChordList(config, realChordsLoop)
 	});
 	
@@ -5242,7 +5242,8 @@ function chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, r
 
 		createDrumList(config, realDrumsLoop, realChordsLoop);					
 		createBassList(config, realBassLoop, realChordsLoop);			
-		createRiffList(config, realRiffLoop, realChordsLoop);				
+		createRiffList(config, realRiffLoop, realChordsLoop);
+		setTempo(realInstrument.bpm);
 	}
 	
 	console.debug("selected real chord loop", realInstrument, realChordsLoop.value);		
