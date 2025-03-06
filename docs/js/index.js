@@ -28,11 +28,6 @@ const CONTROL = 100;
 var smplrKeys = [];
 var smplrPads = [];
 
-var realChordsLoopHandled = false;
-var realBassLoopHandled = false;
-var realDrumsLoopHandled = false;
-var realRiffsLoopHandled = false;
-
 var tempoEle = null;
 var speechObject = null;
 var mobileViewpoint = false;
@@ -171,7 +166,7 @@ var audioContext = new AudioContext();
 var unlocked = false;
 var arrangerBeat;
 var current16thNote;        		// What note is currently last scheduled?
-var tempo = 100.0;          		// tempo (in beats per minute)
+var tempo = 100;          			// tempo (in beats per minute)
 var lookahead = 25.0;       		// How frequently to call scheduling function 
 									//(in milliseconds)
 var scheduleAheadTime = 0.1;		// How far ahead to schedule audio (sec)
@@ -2377,6 +2372,8 @@ async function onloadHandler() {
 	tempoEle.addEventListener("input", function(event) {
 		updateTempo();
 		saveConfig();
+		// TODO
+		//createChordList(config, realChordsLoop)
 	});
 	
 	document.querySelector("#tempo-label").addEventListener("click", function(event) {
@@ -2798,18 +2795,20 @@ function handleBinaryFile(filename, data) {
 }
 
 function setTempo(tmpo) {
-	savedTempo = tmpo;	
+	console.debug("setTempo", tmpo);
 
-	if (arranger == "webaudio") {	
+	if (arranger == "webaudio") {			
 		tempoEle.setAttribute("min", -6);
 		tempoEle.setAttribute("max", 6);	
 		tempoEle.setAttribute("step", 1);	
-		tempoEle.value = 0;			
+		tempoEle.value = Math.ceil(12 * (Math.log(tmpo / realInstrument.bpm) / Math.log(2)));	
+		savedTempo = realInstrument.bpm;	
 	} else {
 		tempoEle.setAttribute("min", 40);
 		tempoEle.setAttribute("max", 140);	
 		tempoEle.setAttribute("step", 1);
 		tempoEle.value = tmpo;	
+		savedTempo = tmpo;			
 	}
 		
 	updateTempo();	
@@ -2817,7 +2816,7 @@ function setTempo(tmpo) {
 
 function updateTempo() {
 	if (arranger == "webaudio") {	
-		tempo = Math.floor((2 ** [tempoEle.value / 12]) * savedTempo);	
+		tempo = Math.floor((2 ** (tempoEle.value / 12)) * savedTempo);	
 	} else {
 		tempo = tempoEle.value;
 	}
@@ -2902,7 +2901,23 @@ function handleSevenButtons(name, code) {
 }
 
 function handleNumPad(name, code) {
-	var handled = false;	
+	var handled = false;
+
+	if (!styleStarted && keyboard.get("0") && (keyboard.get("1") || keyboard.get("2") || keyboard.get("3") || keyboard.get("4") || keyboard.get("5") || keyboard.get("6") || keyboard.get("7") || keyboard.get("8") || keyboard.get("9"))) {
+		console.log("handleNumPad", keyboard.get("Shift"));
+		
+		if (keyboard.get("1")) recallRegistration(1);
+		if (keyboard.get("2")) recallRegistration(2);
+		if (keyboard.get("3")) recallRegistration(3);
+		if (keyboard.get("4")) recallRegistration(4);
+		if (keyboard.get("5")) recallRegistration(5);
+		if (keyboard.get("6")) recallRegistration(6);
+		if (keyboard.get("7")) recallRegistration(7);
+		if (keyboard.get("8")) recallRegistration(8);
+		if (keyboard.get("9")) recallRegistration(9);
+					
+		return true;
+	}	
 	
 	if (keyboard.get(" ") || code == "NumpadEnter") {
 		pad.buttons[LOGO] = true;
@@ -4024,10 +4039,11 @@ function normaliseSffStyle() {
 	}		
 }
 
-async function setupUI(config,err) {	
+async function setupUI(config, err) {	
 	console.debug("setupUI", config);
 	
 	//guitarDeviceId = config.guitarDeviceId;
+	tempo = config.tempo ? config.tempo : tempo;
 	guitarVolume = config.guitarVolume ? config.guitarVolume : guitarVolume;
 	savedGuitarVolume = guitarVolume;
 	bassVol = config.bassVol ? config.bassVol : bassVol;	
@@ -4856,81 +4872,22 @@ async function setupUI(config,err) {
 		if (styleStarted) return;		
 		riffLoopChanged(realRiffLoop);		
 	});	
-	
-	realRiffLoop.addEventListener("click", function() {
-		if (realRiffsLoopHandled) {
-			realRiffsLoopHandled = false;
-			return;
-		}		
-		createRiffList(config, realRiffLoop, realChordsLoop);	
-		realRiffsLoopHandled = true;
-	});	
-	
+		
 	realBassLoop.addEventListener("change", function() {
 		if (styleStarted) return;		
 		bassLoopChanged(realBassLoop);		
 	});	
-	
-	realBassLoop.addEventListener("click", function() {
-		if (realBassLoopHandled) {
-			realBassLoopHandled = false;
-			return;
-		}		
-		createBassList(config, realBassLoop, realChordsLoop);	
-		realBassLoopHandled = true;		
-	});
-	
+		
 	realDrumsLoop.addEventListener("change", function() {
 		if (styleStarted) return;		
 		drumLoopChanged(realDrumsLoop);		
-	});	
-	
-	realDrumsLoop.addEventListener("click", function(evt) {	
-		if (realDrumsLoopHandled) {
-			realDrumsLoopHandled = false;
-			return;
-		}	
-		createDrumList(config, realDrumsLoop, realChordsLoop);	
-		realDrumsLoopHandled = true;		
-	});	
+	});		
 
 	realChordsLoop.addEventListener("change", function() {
 		if (styleStarted) return;			
 		chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, realRiffLoop);
 	});	
 	
-	realChordsLoop.addEventListener("click", function(evt) {	
-		if (realChordsLoopHandled) {
-			realChordsLoopHandled = false;
-			return;
-		}
-		
-		realChordsLoop.innerHTML = "";
-		realChordsLoop.options[0] = new Option("NOT USED", "realChordsLoop");	
-		
-		let s = 1;
-		
-		for (var i=0; i<chord_loops.length; i++) {
-			let selectedChord = false;				
-			const chordLoop = chord_loops[i];
-			const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");		
-			const metaData = loopData.split("_");		
-			const chordName = metaData[0] + " (" + metaData[1] + ")";			
-
-			if (Math.abs(tempo - parseInt(metaData[1])) < 5) 
-			{
-				if (config.realChord && config.realChord == chordLoop) {			
-					selectedChord = true;
-					selectedIndex = s;					
-				}
-						
-				realChordsLoop.options[s++] = new Option(chordName, chordLoop, selectedChord, selectedChord);			
-			}
-		}
-
-		realChordsLoopHandled = true;		
-	});		
-
 	console.debug("WebMidi devices", input, midiOutput, midiRealGuitar, chordTracker);
 	
 	if (guitarDevice.value != "guitarDevice") {	
@@ -5287,7 +5244,7 @@ function chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, r
 		createRiffList(config, realRiffLoop, realChordsLoop);				
 	}
 	
-	console.log("selected real chord loop", realInstrument, realChordsLoop.value);		
+	console.debug("selected real chord loop", realInstrument, realChordsLoop.value);		
 }
 
 function drumLoopChanged(realDrumsLoop) {
@@ -5340,6 +5297,31 @@ function createDrumList(config, realDrumsLoop, realChordsLoop) {
 	}
 
 	drumLoopChanged(realDrumsLoop);		
+}
+
+function createChordList(config, realChordsLoop) {
+	const oldValue = realChordsLoop.value;
+	realChordsLoop.innerHTML = "";
+	realChordsLoop.options[0] = new Option("NOT USED", "realChordsLoop");	
+	
+	let s = 1;
+	
+	for (var i=0; i<chord_loops.length; i++) {
+		let selectedChord = false;				
+		const chordLoop = chord_loops[i];
+		const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");		
+		const metaData = loopData.split("_");		
+		const chordName = metaData[0] + " (" + metaData[1] + ")";			
+
+		if (Math.abs(tempo - parseInt(metaData[1])) < 5) 
+		{
+			if (oldValue == chordLoop) {			
+				selectedChord = true;				
+			}
+					
+			realChordsLoop.options[s++] = new Option(chordName, chordLoop, selectedChord, selectedChord);			
+		}
+	}	
 }
 
 function createRiffList(config, realRiffLoop, realChordsLoop) {
@@ -7280,8 +7262,8 @@ function startStopWebAudio() {
 	
 	if (!styleStarted) {	
 		if (recordMode) startRecording();				
-		let goTime = audioContext.currentTime + gapTime;				
-		const playbackRate =  2 ** (((tempo - realInstrument.bpm) / 8) / 12);							
+		let goTime = audioContext.currentTime + gapTime;										
+		const playbackRate = 2 ** (parseInt(tempoEle.value) / 12);
 
 		if (songSequence) {
 			orinayo_section.innerHTML = ">Arr WebAudioA";					
@@ -8969,8 +8951,8 @@ function setupRealInstruments() {
 		}	
 	}
 	
-	if ((!registration || registration == 0) && realInstrument.bpm && tempo != realInstrument.bpm) {
-		setTempo(realInstrument.bpm);	
+	if (realInstrument.bpm) {
+		setTempo(getConfig().tempo);	
 	}
 	
 	setTimeout(() => {
