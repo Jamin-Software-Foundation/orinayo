@@ -2802,6 +2802,7 @@ function setTempo(tmpo) {
 		tempoEle.setAttribute("max", 6);	
 		tempoEle.setAttribute("step", 1);	
 		tempoEle.value = Math.ceil(12 * (Math.log(tmpo / realInstrument.bpm) / Math.log(2)));	
+		if (tempoEle.value < -6 || tempoEle.value > 6) tempoEle.value = 0;
 		savedTempo = realInstrument.bpm;	
 	} else {
 		tempoEle.setAttribute("min", 40);
