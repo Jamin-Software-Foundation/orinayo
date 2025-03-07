@@ -5,7 +5,7 @@ export const dronePedal = function(input, index) {
 	const samples = {}, sources = {};
 	
     const defaults = {
-		gain: 0.5,
+		gain: 0.25,
 		active: false
     };
 	
@@ -50,23 +50,27 @@ export const dronePedal = function(input, index) {
 	function rePlay(name, gainNode) {
 		const buffer = samples[name];
 		const source = sources[name];	
-		console.debug("rePlay", defaults.active, name, buffer, source, gainNode);
+		console.debug("rePlay", droneOn, name, buffer, source, gainNode);
 		
 		source.stop();			
-		if (defaults.active) doPlay(name, gainNode);		
-	}	
-	
-	function myToggle() {
-		console.debug("myToggle", defaults.active);	
+		if (droneOn) doPlay(name, gainNode);		
+	}
 
-		if (!defaults.active) {
+	window.droneOn = defaults.active;	
+	
+	const droneToggle = function() {
+		const checkbx = pedal.querySelector('[type="checkbox"]');
+		console.debug("droneToggle", checkbx.checked);
+		
+		if (checkbx.checked) {
 			doPlay('root', root);
 			doPlay('fifth', fifth);
 			doPlay('diatonic', diatonic);
 			doPlay('high', high);
 			doPlay('reverse', reverse);
 			doPlay('shimmer', shimmer);
-			doPlay('trempicking', trempicking);			
+			doPlay('trempicking', trempicking);
+			
 		} else {
 			sources['root'].stop();
 			sources['fifth'].stop();
@@ -76,14 +80,14 @@ export const dronePedal = function(input, index) {
 			sources['shimmer'].stop();
 			sources['trempicking'].stop();			
 		}
-		
-		defaults.active = !defaults.active;
+
+		window.droneOn = checkbx.checked;		
 		toggle();
 	}
 
 
 	// Create audio nodes
-	const [output, toggle] = createInputSwitch(input, sum, defaults.active);
+	const [output, toggle] = createInputSwitch(input, sum, droneOn);
 	root.gain.value = defaults.gain;
 	fifth.gain.value = defaults.gain;
 	diatonic.gain.value = defaults.gain;
@@ -106,8 +110,8 @@ export const dronePedal = function(input, index) {
 	const pedal = createPedal({
 	name: 'drone',
 	label: '',
-	toggle : myToggle,
-	active: defaults.active,
+	toggle : droneToggle,
+	active: droneOn,
 	index
 	});
 

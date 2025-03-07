@@ -255,6 +255,7 @@ var chord_loops = [
 	"assets/chords/surf_170_11294.chord",	
 	"assets/chords/sweet-pop_85_11294_11294_2.chord",
 	"assets/chords/sweet-pop_114_8421.chord",
+	"assets/chords/thanksgiving-praise_118_8136_8136_2.chord",
 	"assets/chords/tight-eight_110_8727.chord",	
 	"assets/chords/triple-hop_85_11294_11294_4.chord",		
 	"assets/chords/u2-guitar_105_22857.chord",
@@ -391,6 +392,7 @@ var drum_loops = [
 	"assets/drums/super-disco_125_1920_15354_1920_1920_7676.drum",
 	"assets/drums/surf_170_2824_11294_1412_1412_8471.drum",	
 	"assets/drums/sweet-pop_85_2824_11294_2824_2824_11294.drum",
+	"assets/drums/thanksgiving-praise_118_1525_8136_2034_2034_4068.drum",
 	"assets/drums/triple-hop_85_2824_11294_2824_2824_5647.drum",		
 	"assets/drums/u2-guitar_105_27429_18286_2286_2286_11429.drum",
 	"assets/drums/village-pop_107_2243_8972_2243_2243_4486.drum",
@@ -440,6 +442,7 @@ var bass_loops = [
 	"assets/bass/steel-pop_115_8348.bass",
 	"assets/bass/super-disco_125_7680_2.bass",
 	"assets/bass/sweet-pop_85_11294.bass",
+	"assets/bass/thanksgiving-praise_118_8136_2.bass",
 	"assets/bass/u2-guitar_105_18286.bass",
 	"assets/bass/wild-rock_120_8000.bass"
 ]

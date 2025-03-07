@@ -28,6 +28,7 @@ const CONTROL = 100;
 var smplrKeys = [];
 var smplrPads = [];
 
+var droneActive = false;
 var tempoEle = null;
 var speechObject = null;
 var mobileViewpoint = false;
@@ -1825,6 +1826,7 @@ function getConfig() {
 
 function saveConfig() {
     let config = {};
+	config.droneActive = droneOn;
 	config.mobileViewpoint = mobileViewpoint;
 	config.registration = registration;
 	config.tempo = tempo;
@@ -1974,6 +1976,7 @@ async function onloadHandler() {
 	const config = getConfig();
 	console.debug("onloadHandler", config);
 	
+	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
     navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
 	  				
@@ -5559,7 +5562,7 @@ function setupMidiChannels() {
 		savedChordVol = chordVol;	
 		if (chordKnob) chordKnob.setValue(chordVol);		
 		if (chordLoop) chordLoop.setVolume(chordVol / 100);			
-	});		
+	});	
 }
 
 function getSongSequence(songName, callback) {
@@ -6967,6 +6970,10 @@ function doChord() {
   //console.debug("doChord", pad)
   stopChord();
 
+  if (!window.droneOn && droneActive) {
+     window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));
+  }  
+
   if (!pad.buttons[YELLOW] && !pad.buttons[BLUE] && !pad.buttons[ORANGE] && !pad.buttons[RED]  && !pad.buttons[GREEN]) 
   {
 	  if (pad.axis[STRUM] == STRUM_LEFT)
@@ -7377,7 +7384,14 @@ function toggleStartStop() {
 	audioContext.resume();
 	
 	handledStartStop = false;
-	if (!styleStarted) resetArrToA();
+	
+	if (!styleStarted) {
+		resetArrToA();
+
+	    if (!window.droneOn && droneActive) {
+		    window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));
+	    } 		
+	}
 		
 	if (((midiRealGuitar || guitarName != "none") && realGuitarStyle != "none" && window[realGuitarStyle]) || songSequence || (arrSequence && arranger == "sff")) 
 	{
