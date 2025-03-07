@@ -1826,7 +1826,7 @@ function getConfig() {
 
 function saveConfig() {
     let config = {};
-	config.droneActive = droneOn;
+	config.droneActive = window.droneOn;
 	config.mobileViewpoint = mobileViewpoint;
 	config.registration = registration;
 	config.tempo = tempo;
@@ -6964,6 +6964,11 @@ function dokeyChange() {
 
     if (midiRealGuitar) midiRealGuitar.playNote(84 + keyChange, 1, {velocity: getVelocity(), duration: 1000});
 	if (padsDevice?.playNote) padsDevice.sendControlChange(104, keyChange, 2);	
+	
+	if (window.droneOn) {
+		window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));	 //stop
+		setTimeout(() => {window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }))}, 250); // restart
+	}
 }
 
 function doChord() {
