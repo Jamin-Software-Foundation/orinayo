@@ -6789,13 +6789,14 @@ function resetArrToA() {
 
 function stopChord() {			
 	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) {
+
+		if (padsDevice?.stopNote || padsDevice?.name == "soundfont") stopPads();
 		
 		if (activeChord) {
 			console.debug("stopChord", pad);
 			
 			if (midiOutput) outputStopNote(activeChord, [4], {velocity: getVelocity()}); 
 			if (!guitarAvailable && midiRealGuitar) midiRealGuitar.stopNote(activeChord, 1, {velocity: getVelocity()});		
-			if (padsDevice?.stopNote || padsDevice?.name == "soundfont") stopPads();
 			if (guitarName != "none" && !guitarDeviceId) player.cancelQueue(guitarContext);
 			
 			if (!guitarAvailable && midiRealGuitar) 
@@ -6872,7 +6873,7 @@ function changeArrSection(changed) {
 				
 		if (realInstrument && drumLoop && drumCheckedEle?.checked) {
 			console.debug("changeArrSection pressed " + changed, sectionChange);		
-			orinayo_section.innerHTML = ">" + orinayo_section.innerHTML;	
+			orinayo_section.innerHTML = orinayo_section.innerHTML;	
 			
 			if (sectionChange == 0) drumLoop.update(!changed || !autoFill ? 'arra': 'fila', false);
 			if (sectionChange == 1) drumLoop.update(!changed || !autoFill ? 'arrb': 'filb', false);
@@ -7279,17 +7280,10 @@ function startStopWebAudio() {
 		let goTime = audioContext.currentTime + gapTime;										
 		const playbackRate = 2 ** (parseInt(tempoEle.value) / 12);
 
-		if (songSequence) {
-			orinayo_section.innerHTML = ">Arr WebAudioA";					
-			if (drumLoop && drumCheckedEle?.checked) drumLoop.start('arra', goTime);
-			if (bassLoop && bassCheckedEle?.checked) bassLoop.start("key" + (keyChange % 12), goTime);
-			if (chordLoop && chordCheckedEle?.checked) chordLoop.start("key" + (keyChange % 12), goTime);
-				
-		} else {
 			const introEnd = introEndCheckedEle?.checked;
 			
 			if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
-				orinayo_section.innerHTML = ">Arr A";
+				orinayo_section.innerHTML = "Arr A";
 				
 				if (syncStartCheckedEle.checked) {			// start on next 1/4 beat sync start
 					goTime = audioContext.currentTime + ((60 / tempo) * 1);							
@@ -7312,9 +7306,9 @@ function startStopWebAudio() {
 				if (chordLoop && chordCheckedEle?.checked) chordLoop.start("key" + (keyChange % 12), goTime);							
 			}
 			
-		}
 		
 	} else {
+		console.log("WWWWWWWWWWWWWWW");
 		endAudioStyle();
 		if (recordMode) setTimeout(stopRecording, 20000);				
 	}
@@ -7324,7 +7318,7 @@ function startStopWebAudio() {
 }
 
 function endAudioStyle() {
-	console.debug("endAudioStyle");
+	console.debug("endAudioStyle", styleStarted, webAudioStyleReady(), webAudioStyleStarted());
 
 	if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd) {	
 		orinayo_section.innerHTML = "End";
@@ -7901,14 +7895,14 @@ function sendControlChange(event) {
 
 function doStartStopSequencer() {
 	console.debug("doStartStopSequencer", styleStarted);
-	let syncGap = 0;
 	
-	if (arranger == "webaudio" && songSequence) {
-		syncGap = startStopWebAudio() + (songSequence.data.Hdr.setTempo.microsecondsPerBeat / 1000);	
-	}
+	if (!styleStarted) 	{
+		let syncGap = 0;
+		
+		if (arranger == "webaudio" && songSequence) {
+			syncGap = startStopWebAudio() + ((songSequence.data.Hdr.setTempo.microsecondsPerBeat / 1000) * 1);	
+		}
 	
-	if (!styleStarted) 	
-	{
 		if (arrSequence && realGuitarStyle == "none") 
 		{	
 			if (requestArrEnd) {
@@ -7916,7 +7910,8 @@ function doStartStopSequencer() {
 				styleStarted = !styleStarted;	
 				playButton.innerText = !styleStarted ? "Play" : "Stop";	
 				playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");	
-				orinayo_section.innerHTML = currentSffVar;	
+				orinayo_section.innerHTML = currentSffVar;
+				console.log("xxxxxxxxxxxxxxxxx");				
 				endAudioStyle();
 				return;
 			}
@@ -7962,6 +7957,7 @@ function doStartStopSequencer() {
 		if (arrSequence && realGuitarStyle == "none") {
 
 		} else {
+			console.log("yyyyyyyyyyyyyyy");
 			endAudioStyle();			
 			
 			if (timerWorker) timerWorker.postMessage("stop");	
@@ -7969,9 +7965,11 @@ function doStartStopSequencer() {
 		}		
 	}
 
-	styleStarted = !styleStarted;	
-	playButton.innerText = !styleStarted ? "Play" : "Stop";		
-	playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");		
+	if (arranger != "webaudio" || !songSequence) {
+		styleStarted = !styleStarted;	
+		playButton.innerText = !styleStarted ? "Play" : "Stop";		
+		playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");	
+	}		
 }
 
 function resetCanvas (e) {
@@ -8175,6 +8173,7 @@ function nextArrNote() {
 function endSffStyle() {
 	requestArrEnd = false;
 	
+	console.log("bbbbbbbbbbbbbbbb");
 	endAudioStyle();	
 	timerWorker.postMessage("stop");	
 	notesInQueue = [];				
@@ -8323,6 +8322,7 @@ function scheduleSongNote() {
 			if (event.section == 0x20 || event.section == 0x21 || event.section == 0x22 || event.section == 0x23) {			
 				pad.buttons[YELLOW] = true;
 				toggleStartStop();
+				stopChord();
 			}	
 		}
 		else
@@ -8364,6 +8364,7 @@ function scheduleSongNote() {
 				}
 				
 				if (!muteChords.checked) {
+					stopChord();
 					playChord(chord, event.chordRoot,  event.chordType, event.chordBass);
 					//updateCanvas();				
 				}

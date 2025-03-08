@@ -544,10 +544,14 @@ Orin Ayo supports the Stream Deck USB device. The touch buttons, encoder dials a
 This action button is used to pair/unpair a Stream Deck device.
 
 ### Pedalboard
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/orinayo_pedalboard.png />
+
 Orin Ayo has a built-in pedal-board with various guitar effects that can be used with the internal guitar or an external guitar plugged into PC.
 This action button toggles between showing the features/instruments view and the pedalboard view.
 
 ### Chord-Pro
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/orinayo_chordpro.png />
+
 This action button toggles between showing the features/instruments view and the chord pro editor view.
 
 ### Lyrics
