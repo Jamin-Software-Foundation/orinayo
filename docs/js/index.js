@@ -483,7 +483,7 @@ function startRecording() {
 	mediaRecorder = new MediaRecorder(recorderDestination.stream, { mimeType: blobType });	
 	
 	mediaRecorder.addEventListener('dataavailable', e => { 
-		console.debug("dataavailable", e.data);
+		console.debug("startRecording - dataavailable", e.data);
 		
 		const blob = new Blob([e.data], { type: blobType });		
         const anchor = document.createElement('a');
@@ -499,7 +499,7 @@ function startRecording() {
 	})	
 	
 	mediaRecorder.addEventListener('onstop', e => { 
-		 console.debug("onstop", e.data);
+		 console.debug("startRecording - onstop", e.data);
 	})
 	
 	mediaRecorder.start();
@@ -2908,7 +2908,7 @@ function handleNumPad(name, code) {
 	var handled = false;
 
 	if (!styleStarted && keyboard.get("0") && (keyboard.get("1") || keyboard.get("2") || keyboard.get("3") || keyboard.get("4") || keyboard.get("5") || keyboard.get("6") || keyboard.get("7") || keyboard.get("8") || keyboard.get("9"))) {
-		console.log("handleNumPad", keyboard.get("Shift"));
+		console.debug("handleNumPad", keyboard.get("Shift"));
 		
 		if (keyboard.get("1")) recallRegistration(1);
 		if (keyboard.get("2")) recallRegistration(2);
@@ -7308,9 +7308,8 @@ function startStopWebAudio() {
 			
 		
 	} else {
-		console.log("WWWWWWWWWWWWWWW");
 		endAudioStyle();
-		if (recordMode) setTimeout(stopRecording, 20000);				
+		if (recordMode) setTimeout(stopRecording, 10000);				
 	}
 
 	handleStartStopButton();
@@ -7910,8 +7909,7 @@ function doStartStopSequencer() {
 				styleStarted = !styleStarted;	
 				playButton.innerText = !styleStarted ? "Play" : "Stop";	
 				playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");	
-				orinayo_section.innerHTML = currentSffVar;
-				console.log("xxxxxxxxxxxxxxxxx");				
+				orinayo_section.innerHTML = currentSffVar;				
 				endAudioStyle();
 				return;
 			}
@@ -7957,8 +7955,8 @@ function doStartStopSequencer() {
 		if (arrSequence && realGuitarStyle == "none") {
 
 		} else {
-			console.log("yyyyyyyyyyyyyyy");
-			endAudioStyle();			
+			endAudioStyle();	
+			if (recordMode) setTimeout(stopRecording, 10000);	
 			
 			if (timerWorker) timerWorker.postMessage("stop");	
 			notesInQueue = []; 
@@ -8172,8 +8170,6 @@ function nextArrNote() {
 
 function endSffStyle() {
 	requestArrEnd = false;
-	
-	console.log("bbbbbbbbbbbbbbbb");
 	endAudioStyle();	
 	timerWorker.postMessage("stop");	
 	notesInQueue = [];				
