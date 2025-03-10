@@ -9363,12 +9363,12 @@ function handleEncoderPress(encoder) {
 	else
 		
 	if (encoder == 6) {
-      window.dispatchEvent(new CustomEvent('MIDI', { detail: 2 }));	// compressor effect
+      window.dispatchEvent(new CustomEvent('MIDI', { detail: 7 }));	// delay effect
 	}		
 	else
 		
 	if (encoder == 7) {
-      window.dispatchEvent(new CustomEvent('MIDI', { detail: 7 }));	// delay effect
+      window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));	// drone effect
 	}	
 	else
 		

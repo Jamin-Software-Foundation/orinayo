@@ -1,11 +1,13 @@
 // https://github.com/fent/chrome-options
 
-orinayo_config.options.opts.about = "<b>Introduction</b><p>Orin Ayo is live music production web application implemented in JavaScript and runs inside a browser as a web page, progressive web app (PWA) or browser extension external window</p><p>It was originally developed to turn a guitar games controller HID device into a chord based MIDI controller for an arranger keyboard (Yamaha PSR SX-600), module (Ketron SD90), looper (Boss RC600) device or application (Giglad). </p><p>Now it can work standalone without depending on an external musical hardware device to create quality backing music to accompany a singer (including yourself) or a solo musician playing a melodic instrument.</p>";
+orinayo_config.options.opts.about = "<b>Introduction</b><p><a target=_blank href=" + (location.protocol.startsWith("http") ? location.origin + "/orinayo/index.html" : location.origin + "/index.html") + ">Orin Ayo</a> is live music production web application implemented in JavaScript and runs inside a browser as a web page, progressive web app (PWA) or browser extension external window</p><p>It was originally developed to turn a guitar games controller HID device into a chord based MIDI controller for an arranger keyboard (Yamaha PSR SX-600), module (Ketron SD90), looper (Boss RC600) device or application (Giglad). </p><p>Now it can work standalone without depending on an external musical hardware device to create quality backing music to accompany a singer (including yourself) or a solo musician playing a melodic instrument.</p>";
 orinayo_config.options.opts.autoSave = true;
 orinayo_config.options.opts.saveDefaults = true;
 
 orinayo_config.options.addTab('General', [
-
+    { type: 'h3', desc: 'Features' },
+    { type: 'h3', desc: 'Dashboard' },	
+    { type: 'h3', desc: 'Actions' },	
 ]);
 
 orinayo_config.options.addTab('Collaboration Server', [

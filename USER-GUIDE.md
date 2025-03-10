@@ -542,6 +542,7 @@ It provides an editor that can edit a song and add extra directives for precise 
 ### Stream Deck
 Orin Ayo supports the Stream Deck USB device. The touch buttons, encoder dials and LCD screen can be used to control live play.
 This action button is used to pair/unpair a Stream Deck device.
+Please note that this button has no effect when the Orin Ayo is application is started from a browser extension. Use the Settings action button below to open it as a web page. Click on About|Orin Ayo to do so and then try again.
 
 ### Pedalboard
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/orinayo_pedalboard.png />
@@ -555,20 +556,65 @@ This action button toggles between showing the features/instruments view and the
 This action button toggles between showing the features/instruments view and the chord pro editor view.
 
 ### Lyrics
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/orinayo_lyrics.png />
+
 Orin Ayo has a lyrics display that is used to show the lyrics and the chord progression of a song file.
 This action button toggles between showing the features/instruments view and the displayed lyrics.
 
 ### Save
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/action-button27-save.png />
+
 Orin Ayo can save most of the selected features and dashboard settings in a registration slot.  Up to 128 slots can be used.
 These saved settings can recalled from a slot from the input controller device, external midi controller or a Stream Deck.
 This action button is used to save the current settings to a specific slot number.
 
 ### Record
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/action-button27-record.png />
+
 Orin Ayo can record the current live style performance as an audio file (OGG). It can also record the playback of a song with the lyrics and chord progression as a video file (MP4)
 This action button is used to prompt for a file name for the audio or video file that will be created when the music is started.
 
 ### Refresh
 Use this action button to refresh the screen or reset the application. It should also be used after external files are loaded with the load button.
 
+### Settings
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/action-button27-settings.png />
+
+The behaviour of Orin Ayo can be modified from the settings dialog screen. Use this button to open the screen.
+
 ### Help
 Displays this information
+
+# External Accessory Devices
+Orin Ayo supports various Bluetooth and USB external devices that can enhance the live playing. These devices are used with the main input controller device. 
+The following devices are supported
+
+- Behringer X-TOUCH MINI Midi Controller
+- M-VAVE Chocolate Wireless MIDI Controller
+- Elegato StreamDeck USB Controller
+
+## Behringer X-TOUCH MINI Midi Controller
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/x-touch-mini-guide.png />
+
+When Orin Ayo is idle and no style playing, the 16 buttons can be used to start/stop or recall application settings saved into slots (1-15).
+
+While a style is playing, the buttons can be used to control the playing style by changing the style variations and adding drum fills or breaks.
+
+The encoders can be pressed to mute musical instruments or rotated to change thier volumes.
+
+## M-VAVE Chocolate Wireless MIDI Controller
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/mvave-footswitch.png />
+
+The wireleass M-VAVE foot-switch can be used by Orin Ayo to mute and umnute musical instruments while a style is playing.
+
+## Elegato StreamDeck USB Controller
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/stream-deck-guide.png />
+
+When Orin Ayo is idle and no style playing, the 8 buttons can be used to start/stop or recall application settings saved into slots (1-32). Use the encoders to change page numbers (1 -4).
+
+While a style is playing, the buttons can be used to control the playing style by changing the style variations and adding drum fills or breaks.
+
+The encoders can be pressed to mute musical instruments or rotated to change thier volumes.
+
+
+
