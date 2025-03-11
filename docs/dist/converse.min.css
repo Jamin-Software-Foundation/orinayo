@@ -10362,7 +10362,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --message-font-size: var(--font-size-small);
 }
 
-.conversejs[data-converse-theme=nord], .conversejs[data-bs-theme=nord], converse-bg[data-converse-theme=nord], converse-bg[data-bs-theme=nord] {
+.conversejs[data-converse-theme=nordic], .conversejs[data-bs-theme=nordic], converse-bg[data-converse-theme=nordic], converse-bg[data-bs-theme=nordic] {
   --polar-night-1: #2e3440;
   --polar-night-2: #3b4252;
   --polar-night-3: #434c5e;
@@ -10370,21 +10370,23 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --snow-storm-1: #d8dee9;
   --snow-storm-2: #e5e9f0;
   --snow-storm-3: #eceff4;
-  --frost-1: #8fbcbb;
-  --frost-2: #88c0d0;
-  --frost-3: #81a1c1;
-  --frost-4: #5e81ac;
-  --green: #a3be8c;
-  --dark-green: #5f8341;
-  --orange: #d08770;
+  --green-1: #5D9795;
+  --green-2: #387C79;
+  --green-3: #8FBCBA;
+  --green-4: #0B4C4A;
+  --blue-1: #5D9795;
+  --blue-2: #475D8B;
+  --orange: #D0925F;
+  --orange-darker: #A76632;
   --purple: #b48ead;
   --red: #bf616a;
   --yellow: #ebcb8b;
   --background-color: var(--snow-storm-2);
   --foreground-color: var(--polar-night-2);
-  --primary-color: var(--frost-1) !important;
-  --secondary-color: var(--frost-3) !important;
-  --success-color: var(--green);
+  --primary-color: var(--green-2) !important;
+  --primary-color-hover: var(--green-3) !important;
+  --secondary-color: var(--blue-1) !important;
+  --success-color: var(--green-3);
   --danger-color: var(--red);
   --warning-color: var(--orange);
   --info-color: var(--purple);
@@ -10392,24 +10394,25 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
   --chat-status-offline: gray;
-  --chat-status-online: var(--dark-green);
+  --chat-status-online: var(--green-4);
   --controlbox-color: var(--purple);
   --disabled-color: var(--secondary-color);
   --error-color: var(--red);
   --focus-color: var(--secondary-color);
   --heading-color: var(--purple);
   --headlines-color: var(--yellow);
-  --link-color: var(--frost-4);
-  --selection-color: var(--frost-1);
+  --link-color: var(--blue-2);
+  --subdued-color: gray;
+  --selection-color: var(--green-1);
   --highlight-color: var(--snow-storm-2);
   --highlight-color-hover: var(--snow-storm-1);
-  --chat-color: var(--dark-green);
+  --chat-color: var(--green-1);
   --chat-header-fg-color: var(--background-color);
-  --chat-header-bg-color: var(--green);
+  --chat-header-bg-color: var(--chat-color);
   --muc-color: var(--orange);
   --muc-header-fg-color: var(--background-color);
   --muc-header-bg-color: var(--muc-color);
-  --brand-heading-color: var(--frost-4);
+  --brand-heading-color: var(--green-4);
   --chat-color-hover: var(--chat-color);
   --danger-color-hover: var(--danger-color);
   --global-background-color: var(--background-color);
@@ -10447,10 +10450,11 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --controlbox-color: var(--light-blue);
   --disabled-color: gray;
   --error-color: var(--dark-red);
-  --focus-color: #aaa;
+  --focus-color: var(--light-blue);
   --heading-color: var(--background-color);
   --headlines-color: var(--orange);
-  --link-color: var(--dark-blue);
+  --link-color: #2D3991;
+  --subdued-color: gray;
   --selection-color: black;
   --highlight-color: var(--lighter-blue);
   --highlight-color-hover: var(--lighter-blue);
@@ -10486,10 +10490,11 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --primary-color: var(--purple) !important;
   --secondary-color: var(--pink) !important;
   --success-color: var(--green);
-  --danger-color: var(--pink);
+  --danger-color: var(--red);
   --warning-color: var(--orange);
   --info-color: var(--yellow);
-  --converse-highlight-color: var(--yellow);
+  --converse-body-bg: var(--background-color);
+  --converse-highlight-color: var(--yellow) !important;
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
   --chat-status-offline: var(--gray);
@@ -10501,6 +10506,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --heading-color: var(--purple);
   --headlines-color: var(--pink);
   --link-color: var(--cyan);
+  --subdued-color: var(--gray);
   --selection-color: black;
   --highlight-color: var(--gray);
   --highlight-color-hover: var(--darkgray);
@@ -10521,6 +10527,12 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=dracula] .list-group-item, .conversejs[data-bs-theme=dracula] .list-group-item, converse-bg[data-converse-theme=dracula] .list-group-item, converse-bg[data-bs-theme=dracula] .list-group-item {
+  --converse-list-group-color: var(--foreground-color);
+}
+.conversejs[data-converse-theme=dracula] .list-group-item.active, .conversejs[data-bs-theme=dracula] .list-group-item.active, converse-bg[data-converse-theme=dracula] .list-group-item.active, converse-bg[data-bs-theme=dracula] .list-group-item.active {
+  --converse-list-group-active-color: var(--background-color) !important;
+}
 .conversejs[data-converse-theme=cyberpunk], .conversejs[data-bs-theme=cyberpunk], converse-bg[data-converse-theme=cyberpunk], converse-bg[data-bs-theme=cyberpunk] {
   --blue: #1ba2f6;
   --cyan: #32fbe2;
@@ -10537,7 +10549,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --background-color-lighter: #2C174C;
   --foreground-color: var(--white);
   --primary-color: var(--purple) !important;
-  --secondary-color: var(--indigo) !important;
+  --secondary-color: var(--pink) !important;
   --success-color: var(--green);
   --danger-color: var(--red);
   --warning-color: var(--orange);
@@ -10552,8 +10564,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --error-color: var(--red);
   --focus-color: var(--secondary-color);
   --heading-color: var(--purple);
-  --headlines-color: var(--pink);
+  --headlines-color: var(--indigo);
   --link-color: var(--cyan);
+  --subdued-color: gray;
   --selection-color: black;
   --highlight-color: var(--purple);
   --highlight-color-hover: var(--background-color-lighter);
@@ -10574,13 +10587,19 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=cyberpunk] .toggle-controlbox, .conversejs[data-bs-theme=cyberpunk] .toggle-controlbox, converse-bg[data-converse-theme=cyberpunk] .toggle-controlbox, converse-bg[data-bs-theme=cyberpunk] .toggle-controlbox {
+  color: var(--foreground-color) !important;
+}
 .conversejs[data-converse-theme=cyberpunk] #controlbox .flyout, .conversejs[data-bs-theme=cyberpunk] #controlbox .flyout, converse-bg[data-converse-theme=cyberpunk] #controlbox .flyout, converse-bg[data-bs-theme=cyberpunk] #controlbox .flyout {
   box-shadow: 0 0 1rem 0rem rgba(234, 57, 184, 0.5) inset, 0 0 2rem 0rem rgba(234, 57, 184, 0.2) inset, 0 0 4rem 2rem rgba(234, 57, 184, 0.1) inset !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .modal-header .btn-close, .conversejs[data-bs-theme=cyberpunk] .modal-header .btn-close, converse-bg[data-converse-theme=cyberpunk] .modal-header .btn-close, converse-bg[data-bs-theme=cyberpunk] .modal-header .btn-close {
   background-color: var(--header-color);
 }
-.conversejs[data-converse-theme=cyberpunk] .message .separator-text, .conversejs[data-bs-theme=cyberpunk] .message .separator-text, converse-bg[data-converse-theme=cyberpunk] .message .separator-text, converse-bg[data-bs-theme=cyberpunk] .message .separator-text {
+.conversejs[data-converse-theme=cyberpunk] .date-separator, .conversejs[data-bs-theme=cyberpunk] .date-separator, converse-bg[data-converse-theme=cyberpunk] .date-separator, converse-bg[data-bs-theme=cyberpunk] .date-separator {
+  margin-bottom: 1em !important;
+}
+.conversejs[data-converse-theme=cyberpunk] .date-separator .separator-text, .conversejs[data-bs-theme=cyberpunk] .date-separator .separator-text, converse-bg[data-converse-theme=cyberpunk] .date-separator .separator-text, converse-bg[data-bs-theme=cyberpunk] .date-separator .separator-text {
   border-radius: 50px;
   box-shadow: 0 0 0.25rem rgba(60, 242, 129, 0.8), 0 0 1rem rgba(60, 242, 129, 0.2), 0 0 4rem rgba(60, 242, 129, 0.1) !important;
 }
@@ -11133,6 +11152,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs {
   --button-text-color: var(--background-color);
 }
+.conversejs .btn {
+  --converse-btn-active-color: var(--background-color) !important;
+}
 .conversejs .btn.fa {
   color: var(--button-text-color) !important;
 }
@@ -11152,81 +11174,121 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 }
 .conversejs .btn-primary,
 .conversejs .btn-outline-primary {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--primary-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--primary-color);
-  --converse-btn-hover-bg: var(--primary-color);
-  --converse-btn-hover-border-color: var(--primary-color-hover);
   --converse-btn-active-bg: var(--primary-color);
   --converse-btn-active-border-color: var(--primary-color);
-  --converse-btn-disabled-color: var(--primary-color);
+  --converse-btn-border-color: var(--primary-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--primary-color);
+  --converse-btn-disabled-color: var(--primary-color);
+  --converse-btn-hover-bg: var(--primary-color);
+  --converse-btn-hover-border-color: var(--primary-color-hover);
+  --converse-btn-hover-color: var(--background-color);
+}
+.conversejs .btn-primary {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--primary-color);
+}
+.conversejs .btn-outline-primary {
+  --converse-btn-bg: var(--background);
+  --converse-btn-color: var(--primary-color);
 }
 .conversejs .btn-secondary,
 .conversejs .btn-outline-secondary {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--secondary-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--secondary-color);
-  --converse-btn-hover-bg: var(--secondary-color);
-  --converse-btn-hover-border-color: var(--secondary-color-hover);
   --converse-btn-active-bg: var(--secondary-color);
   --converse-btn-active-border-color: var(--secondary-color);
-  --converse-btn-disabled-color: var(--secondary-color);
+  --converse-btn-border-color: var(--secondary-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--secondary-color);
+  --converse-btn-disabled-color: var(--secondary-color);
+  --converse-btn-hover-bg: var(--secondary-color);
+  --converse-btn-hover-border-color: var(--secondary-color-hover);
+  --converse-btn-hover-color: var(--background-color);
+}
+.conversejs .btn-secondary {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--secondary-color);
+}
+.conversejs .btn-outline-secondary {
+  --converse-btn-color: var(--secondary-color);
+  --converse-btn-bg: var(--background);
 }
 .conversejs .btn-success,
 .conversejs .btn-outline-success {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--success-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--success-color);
-  --converse-btn-hover-bg: var(--success-color-hover);
-  --converse-btn-hover-border-color: var(--success-color-hover);
   --converse-btn-active-bg: var(--success-color);
   --converse-btn-active-border-color: var(--success-color);
-  --converse-btn-disabled-color: var(--success-color);
+  --converse-btn-border-color: var(--success-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--success-color);
+  --converse-btn-disabled-color: var(--success-color);
+  --converse-btn-hover-bg: var(--success-color-hover);
+  --converse-btn-hover-border-color: var(--success-color-hover);
+}
+.conversejs .btn-success {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--success-color);
+}
+.conversejs .btn-outline-success {
+  --converse-btn-color: var(--success-color);
+  --converse-btn-bg: var(--background);
 }
 .conversejs .btn-warning,
 .conversejs .btn-outline-warning {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--warning-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--warning-color);
-  --converse-btn-hover-bg: var(--warning-color-hover);
-  --converse-btn-hover-border-color: var(--warning-color-hover);
   --converse-btn-active-bg: var(--warning-color);
   --converse-btn-active-border-color: var(--warning-color);
-  --converse-btn-disabled-color: var(--warning-color);
+  --converse-btn-border-color: var(--warning-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--warning-color);
+  --converse-btn-disabled-color: var(--warning-color);
+  --converse-btn-hover-bg: var(--warning-color-hover);
+  --converse-btn-hover-border-color: var(--warning-color-hover);
+}
+.conversejs .btn-warning {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--warning-color);
+}
+.conversejs .btn-outline-warning {
+  --converse-btn-color: var(--warning-color);
+  --converse-btn-bg: var(--background);
 }
 .conversejs .btn-danger,
 .conversejs .btn-outline-danger {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--danger-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--danger-color);
-  --converse-btn-hover-bg: var(--danger-color-hover);
-  --converse-btn-hover-border-color: var(--danger-color-hover);
   --converse-btn-active-bg: var(--danger-color);
   --converse-btn-active-border-color: var(--danger-color);
-  --converse-btn-disabled-color: var(--danger-color);
+  --converse-btn-border-color: var(--danger-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--danger-color);
+  --converse-btn-disabled-color: var(--danger-color);
+  --converse-btn-hover-bg: var(--danger-color-hover);
+  --converse-btn-hover-border-color: var(--danger-color-hover);
+  --converse-btn-hover-color: var(--background-color);
+}
+.conversejs .btn-danger {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--danger-color);
+}
+.conversejs .btn-outline-danger {
+  --converse-btn-color: var(--danger-color);
+  --converse-btn-bg: var(--background);
 }
 .conversejs .btn-info,
 .conversejs .btn-outline-info {
-  --converse-btn-color: var(--button-text-color);
-  --converse-btn-bg: var(--info-color);
-  --converse-btn-disabled-bg: var(--disabled-color);
-  --converse-btn-border-color: var(--info-color);
-  --converse-btn-hover-bg: var(--info-color-dark);
-  --converse-btn-hover-border-color: var(--info-color-dark);
   --converse-btn-active-bg: var(--info-color);
   --converse-btn-active-border-color: var(--info-color);
-  --converse-btn-disabled-color: var(--info-color);
+  --converse-btn-border-color: var(--info-color);
+  --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--info-color);
+  --converse-btn-disabled-color: var(--info-color);
+  --converse-btn-hover-bg: var(--info-color-dark);
+  --converse-btn-hover-border-color: var(--danger-color-hover);
+  --converse-btn-hover-border-color: var(--info-color-dark);
+}
+.conversejs .btn-info {
+  --converse-btn-color: var(--button-text-color);
+  --converse-btn-bg: var(--info-color);
+}
+.conversejs .btn-outline-info {
+  --converse-btn-color: var(--info-color);
+  --converse-btn-bg: var(--background);
 }
 .conversejs .btn--transparent {
   background: transparent;
@@ -11292,12 +11354,12 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   background-color: var(--primary-color-hover);
 }
 .conversejs .badge-secondary {
-  background-color: var(--secondary-color-color);
-  border-color: var(--secondary-color-color);
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
 }
 .conversejs .badge-secondary:hover {
-  background-color: var(--secondary-color-color-dark);
-  border-color: var(--secondary-color-color-dark);
+  background-color: var(--secondary-color-dark);
+  border-color: var(--secondary-color-dark);
 }
 
 .conversejs .card {
@@ -11307,6 +11369,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs .btn--small {
   font-size: 80%;
   font-weight: normal;
+}
+.conversejs form .invalid-feedback {
+  display: block;
 }
 .conversejs form .form-instructions {
   color: var(--text-color);
@@ -11331,7 +11396,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   color: var(--text-color);
   background-color: var(--background-color);
 }
-.conversejs form .form-control::-moz-placeholder { /* Firefox 19+ */
+.conversejs form .form-control::-moz-placeholder {
   color: var(--secondary-color);
 }
 .conversejs form .form-control::placeholder {
@@ -11341,12 +11406,11 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   margin-top: 0.5em;
 }
 .conversejs form .btn-group .clear-input {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  position: absolute;
-  right: 0.2em;
   cursor: pointer;
   font-size: var(--font-size);
+  margin-top: 0.4em;
+  position: absolute;
+  right: 0.2em;
 }
 .conversejs form#converse-register, .conversejs form#converse-login {
   background: var(--background-color);
@@ -11388,14 +11452,14 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs form.converse-form input[type=text] {
   min-width: 50%;
 }
+.conversejs form.converse-form input.is_invalid,
 .conversejs form.converse-form input.error {
-  border: 1px solid var(--error-color);
   color: var(--text-color);
+  border-color: var(--error-color);
 }
 .conversejs form.converse-form .text-muted {
-  color: var(--secondary-color) !important;
+  color: var(--subdued-color) !important;
   font-size: 85%;
-  padding-top: 0.5em;
 }
 .conversejs form.converse-form .text-muted a {
   color: var(--link-color);
@@ -11954,7 +12018,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   display: inline-flex;
   width: 100%;
   flex-direction: row;
-  padding: 0.25em 1rem;
+  padding: 0 1rem;
 }
 .conversejs .message.chat-msg.onload {
   animation: colorchange-chatmessage 1s;
@@ -11994,11 +12058,11 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   margin-inline-start: 0;
 }
 .conversejs .message.chat-msg .chat-msg__message {
-  line-height: 1.65em;
   display: inline-flex;
   flex-direction: column;
-  width: 100%;
+  line-height: 1.5em;
   overflow-wrap: break-word;
+  width: 100%;
 }
 .conversejs .message.chat-msg .chat-msg__message .chat-msg__body--wrapper {
   display: flex;
@@ -12047,6 +12111,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 }
 .conversejs .message.chat-msg .chat-msg__error {
   color: var(--error-color);
+  white-space: pre-wrap;
 }
 .conversejs .message.chat-msg .chat-msg__media {
   margin-top: 0.25rem;
@@ -12070,6 +12135,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs .message.chat-msg .chat-msg__heading {
   width: 100%;
   padding-inline-end: 0.25rem;
+  margin-bottom: 0.25em;
 }
 .conversejs .message.chat-msg .chat-msg__heading .badge {
   margin-inline-start: 0.5em;
@@ -12101,17 +12167,25 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   font-size: var(--message-font-size);
 }
 .conversejs .message.chat-msg.chat-msg--action .chat-msg__time {
+  margin-inline-end: 0.5em;
   margin-inline-start: 0;
+}
+.conversejs .message.chat-msg.chat-msg--action .retraction {
+  display: flex;
+  flex-direction: column;
 }
 .conversejs .message.chat-msg .chat-msg__content {
   width: calc(100% - var(--message-avatar-width));
+}
+.conversejs .message.chat-msg .chat-msg__content--action {
+  width: 100%;
 }
 .conversejs .message.chat-msg.chat-msg--followup .chat-msg__heading,
 .conversejs .message.chat-msg.chat-msg--followup .show-msg-author-modal {
   display: none;
 }
 .conversejs .message.chat-msg.chat-msg--followup.chat-msg--with-avatar .chat-msg__content {
-  margin-inline-start: 2.75rem;
+  margin-inline-start: 3rem;
   width: 100%;
 }
 .conversejs .message.chat-msg .chat-msg__receipt {
@@ -12269,6 +12343,17 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs #converse-modals .btn {
   font-weight: normal;
 }
+/*!**************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/modal/styles/popover.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************/
+converse-root#conversejs .popover-header {
+  color: var(--background-color);
+  background-color: var(--secondary-color);
+}
+converse-root#conversejs .popover-body {
+  color: var(--foreground-color);
+  background-color: var(--background-color);
+}
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/autocomplete/styles/_autocomplete.scss ***!
   \**************************************************************************************************************************************************************************************************************************************************************************/
@@ -12403,6 +12488,13 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 
 .conversejs.converse-overlayed .suggestion-box__results--above {
   bottom: 3.5em;
+}
+/*!********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/audio.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************/
+.conversejs .audio-element figcaption {
+  padding-bottom: 0.5em;
+  padding-inline-start: 1em;
 }
 /*!**********************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/spinner.scss ***!
@@ -12620,7 +12712,7 @@ converse-chat-message-body audio {
 }
 converse-chat-message-body video {
   display: block;
-  max-height: 25em;
+  max-height: 30em;
 }
 @media (max-width: 575.98px) {
   converse-chat-message-body video {
@@ -12630,16 +12722,6 @@ converse-chat-message-body video {
 @media (min-width: 768px) {
   converse-chat-message-body video {
     max-width: 70%;
-  }
-}
-@media (min-width: 992px) {
-  converse-chat-message-body video {
-    max-width: 50%;
-  }
-}
-@media (min-width: 1200px) {
-  converse-chat-message-body video {
-    max-width: 40%;
   }
 }
 
@@ -12721,6 +12803,22 @@ a converse-icon:hover svg, .clickable converse-icon:hover svg {
   \***************************************************************************************************************************************************************************************************************************************************************************/
 .conversejs converse-message-versions time {
   font-weight: bold;
+}
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/modals/styles/user-details.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-user-details-modal .nav-pills {
+  margin-bottom: 1em;
+}
+.conversejs converse-user-details-modal .badge-roster-group {
+  background-color: var(--chat-color);
+}
+.conversejs converse-user-details-modal #profile-tabpanel label {
+  color: var(--secondary-color);
+  margin-inline-end: 0.5em;
+}
+.conversejs converse-user-details-modal .remove-contact {
+  margin-inline-end: 0.5em;
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/chat/styles/unfurl.scss ***!
@@ -12977,37 +13075,39 @@ converse-chat-content {
 /*!************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/chat/styles/toolbar.scss ***!
   \************************************************************************************************************************************************************************************************************************************************************/
-.conversejs converse-chat-toolbar.btn-toolbar {
+.conversejs converse-chat-toolbar {
+  justify-content: space-between !important;
+}
+.conversejs converse-chat-toolbar converse-message-limit-indicator {
+  padding: 0.75em 0.5em;
+}
+.conversejs converse-chat-toolbar .send-button {
+  color: var(--background-color);
+  border-radius: 0;
+}
+.conversejs converse-chat-toolbar .btn-toolbar {
   background-color: var(--background-color);
   box-sizing: border-box;
   width: 100%;
   justify-content: space-between;
   margin-bottom: 1px;
 }
-.conversejs converse-chat-toolbar.btn-toolbar .toolbar-buttons .message-limit {
-  padding: 0.5em;
-  font-weight: bold;
-}
-.conversejs converse-chat-toolbar.btn-toolbar .btn {
+.conversejs converse-chat-toolbar .btn-toolbar .btn {
   padding: 0.25em 0.5em !important;
 }
-.conversejs converse-chat-toolbar.btn-toolbar .send-button {
-  color: var(--background-color);
-  border-radius: 0;
-}
-.conversejs converse-chat-toolbar.btn-toolbar .fa, .conversejs converse-chat-toolbar.btn-toolbar .fa:hover,
-.conversejs converse-chat-toolbar.btn-toolbar .far, .conversejs converse-chat-toolbar.btn-toolbar .far:hover,
-.conversejs converse-chat-toolbar.btn-toolbar .fas, .conversejs converse-chat-toolbar.btn-toolbar .fas:hover {
+.conversejs converse-chat-toolbar .btn-toolbar .fa, .conversejs converse-chat-toolbar .btn-toolbar .fa:hover,
+.conversejs converse-chat-toolbar .btn-toolbar .far, .conversejs converse-chat-toolbar .btn-toolbar .far:hover,
+.conversejs converse-chat-toolbar .btn-toolbar .fas, .conversejs converse-chat-toolbar .btn-toolbar .fas:hover {
   color: var(--background-color);
   font-size: var(--font-size-large);
 }
-.conversejs converse-chat-toolbar.btn-toolbar .fa svg, .conversejs converse-chat-toolbar.btn-toolbar .fa:hover svg,
-.conversejs converse-chat-toolbar.btn-toolbar .far svg, .conversejs converse-chat-toolbar.btn-toolbar .far:hover svg,
-.conversejs converse-chat-toolbar.btn-toolbar .fas svg, .conversejs converse-chat-toolbar.btn-toolbar .fas:hover svg {
+.conversejs converse-chat-toolbar .btn-toolbar .fa svg, .conversejs converse-chat-toolbar .btn-toolbar .fa:hover svg,
+.conversejs converse-chat-toolbar .btn-toolbar .far svg, .conversejs converse-chat-toolbar .btn-toolbar .far:hover svg,
+.conversejs converse-chat-toolbar .btn-toolbar .fas svg, .conversejs converse-chat-toolbar .btn-toolbar .fas:hover svg {
   fill: var(--background-color);
 }
-.conversejs converse-chat-toolbar.btn-toolbar .unencrypted a,
-.conversejs converse-chat-toolbar.btn-toolbar .unencrypted {
+.conversejs converse-chat-toolbar .btn-toolbar .unencrypted a,
+.conversejs converse-chat-toolbar .btn-toolbar .unencrypted {
   color: var(--text-color);
 }
 .conversejs .chatbox .send-button {
@@ -13020,12 +13120,15 @@ converse-chat-content {
   color: var(--chat-color);
   background-color: var(--background-color);
 }
+.conversejs .chatbox converse-chat-toolbar .message-limit,
 .conversejs .chatbox converse-chat-toolbar .fas, .conversejs .chatbox converse-chat-toolbar .fas:hover,
 .conversejs .chatbox converse-chat-toolbar .far, .conversejs .chatbox converse-chat-toolbar .far:hover,
 .conversejs .chatbox converse-chat-toolbar .fa, .conversejs .chatbox converse-chat-toolbar .fa:hover {
   color: var(--chat-color);
 }
-.conversejs .chatbox converse-chat-toolbar .fas svg, .conversejs .chatbox converse-chat-toolbar .fas svg:hover, .conversejs .chatbox converse-chat-toolbar .fas:hover svg, .conversejs .chatbox converse-chat-toolbar .fas:hover svg:hover,
+.conversejs .chatbox converse-chat-toolbar .message-limit svg, .conversejs .chatbox converse-chat-toolbar .message-limit svg:hover,
+.conversejs .chatbox converse-chat-toolbar .fas svg,
+.conversejs .chatbox converse-chat-toolbar .fas svg:hover, .conversejs .chatbox converse-chat-toolbar .fas:hover svg, .conversejs .chatbox converse-chat-toolbar .fas:hover svg:hover,
 .conversejs .chatbox converse-chat-toolbar .far svg,
 .conversejs .chatbox converse-chat-toolbar .far svg:hover, .conversejs .chatbox converse-chat-toolbar .far:hover svg, .conversejs .chatbox converse-chat-toolbar .far:hover svg:hover,
 .conversejs .chatbox converse-chat-toolbar .fa svg,
@@ -13084,7 +13187,7 @@ converse-chat-content {
 }
 .conversejs .chatbox .chat-head.chat-head-chatbox {
   background-color: var(--chat-header-bg-color);
-  border-bottom: 0.15em solid var(--chat-header-bg-color);
+  border-bottom: 0.15em solid var(--chat-color);
 }
 .conversejs .chatbox .chat-head .avatar {
   margin-inline-end: 0.5em;
@@ -13199,9 +13302,10 @@ converse-chat-content {
   height: calc(100% - (var(--chat-textarea-height) + var(--send-button-height) + 2 * var(--send-button-margin)));
 }
 .conversejs .chatbox .bottom-panel .chat-message-form {
+  border-top: 0.25em solid var(--chat-color);
+  border-right: 0 !important;
   border-bottom: 0;
   border-inline-start: 0;
-  border-top: 0.25em solid var(--chat-color);
   border-inline-end: 0.25em solid var(--chat-color);
   border-bottom-radius: var(--chatbox-border-radius);
   background-clip: padding-box;
@@ -13483,6 +13587,9 @@ converse-chat-content {
   fill: var(--background-color);
 }
 .conversejs .chatbox .chat-content .chat-content__messages {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
@@ -13786,7 +13893,7 @@ converse-chat-content {
   }
 }
 .conversejs converse-chats.converse-embedded #controlbox #converse-register .title, .conversejs converse-chats.converse-embedded #controlbox #converse-register .instructions, .conversejs converse-chats.converse-embedded #controlbox #converse-login .title, .conversejs converse-chats.converse-embedded #controlbox #converse-login .instructions, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register .title, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register .instructions, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login .title, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login .instructions {
-  margin: 1em 0;
+  margin: 0.5em 0;
 }
 .conversejs converse-chats.converse-embedded #controlbox #converse-register input[type=submit],
 .conversejs converse-chats.converse-embedded #controlbox #converse-register input[type=button], .conversejs converse-chats.converse-embedded #controlbox #converse-login input[type=submit],
@@ -13990,6 +14097,7 @@ converse-chat-content {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0;
+  padding-top: 1em;
   text-align: start;
 }
 .conversejs #controlbox .controlbox-pane .add-converse-contact {
@@ -14244,19 +14352,24 @@ converse-chat-content {
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/mam-views/styles/placeholder.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
-converse-mam-placeholder .mam-placeholder {
+.conversejs converse-mam-placeholder .spinner-grow {
+  height: 1em;
+  width: 1em;
+  margin: 1em;
+}
+.conversejs converse-mam-placeholder .mam-placeholder {
   position: relative;
   height: 2em;
   margin: 0.5em 0;
 }
-converse-mam-placeholder .mam-placeholder:before, converse-mam-placeholder .mam-placeholder:after {
+.conversejs converse-mam-placeholder .mam-placeholder:before, .conversejs converse-mam-placeholder .mam-placeholder:after {
   content: "";
   display: block;
   position: absolute;
   left: 0;
   right: 0;
 }
-converse-mam-placeholder .mam-placeholder:before {
+.conversejs converse-mam-placeholder .mam-placeholder:before {
   height: 1em;
   top: 1em;
   background: linear-gradient(-135deg, lightgray 0.5em, transparent 0) 0 0.5em, linear-gradient(135deg, lightgray 0.5em, transparent 0) 0 0.5em;
@@ -14264,7 +14377,7 @@ converse-mam-placeholder .mam-placeholder:before {
   background-repeat: repeat-x;
   background-size: 1em 1em;
 }
-converse-mam-placeholder .mam-placeholder:after {
+.conversejs converse-mam-placeholder .mam-placeholder:after {
   height: 1em;
   top: 0.75em;
   background: linear-gradient(-135deg, var(--background-color) 0.5em, transparent 0) 0 0.5em, linear-gradient(135deg, var(--background-color) 0.5em, transparent 0) 0 0.5em;
@@ -14557,6 +14670,9 @@ converse-list-filter .items-filter-form select.state-type {
 .conversejs converse-muc-occupants .occupants .items-list .list-item.occupant {
   cursor: pointer;
 }
+.conversejs converse-muc-occupants .occupants .items-list .list-item.occupant .chat-status {
+  margin-top: -0.1em;
+}
 .conversejs converse-muc-occupants .occupants .items-list .list-item.occupant .msgs-indicator {
   margin-inline-start: -3em;
   margin-inline-end: 0.5em;
@@ -14666,6 +14782,7 @@ converse-muc-details-modal .room-info converse-avatar {
 }
 converse-muc-details-modal .room-info strong {
   color: var(--muc-color);
+  margin-right: 0.5em;
 }
 converse-muc-details-modal .chatroom-features {
   width: 100%;
@@ -14683,9 +14800,9 @@ converse-muc-details-modal .chatroom-features .features-list .feature {
 converse-muc-details-modal .chatroom-features .features-list .feature converse-icon {
   margin-inline-end: 0.5em;
 }
-/*!********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/rich-text.scss ***!
-  \********************************************************************************************************************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/texture/texture.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************/
 converse-rich-text {
   display: block;
 }
@@ -15052,6 +15169,9 @@ converse-rich-text {
   fill: var(--background-color);
 }
 .conversejs .chatbox .chat-content .chat-content__messages {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
@@ -15458,18 +15578,34 @@ converse-user-profile .xmpp-status .far.fa-circle,
 converse-user-profile .xmpp-status .fa-times-circle {
   color: var(--secondary-color);
 }
+/*!******************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/qrcode/qrcode.scss ***!
+  \******************************************************************************************************************************************************************************************************************************************************/
+converse-qr-code {
+  display: block;
+}
+/*!************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/omemo/styles/omemo.scss ***!
+  \************************************************************************************************************************************************************************************************************************************************************/
+converse-omemo-fingerprints .fingerprints .list-group-item {
+  color: var(--foreground-color);
+}
+converse-omemo-fingerprints .fingerprint {
+  margin-top: 1em;
+  display: block;
+}
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/register/styles/register.scss ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
-converse-register-panel {
+converse-registration-form {
   padding-top: 0;
   padding-bottom: 0;
 }
-converse-register-panel .alert {
+converse-registration-form .alert {
   margin: auto;
   max-width: 50vw;
 }
-converse-register-panel #converse-register {
+converse-registration-form #converse-register {
   opacity: 0; /* make things invisible upon start */
   animation-name: fadein;
   animation-fill-mode: forwards;
@@ -15478,34 +15614,37 @@ converse-register-panel #converse-register {
   padding-top: 0;
   background-color: var(--background-color);
 }
-converse-register-panel #converse-register .title {
+converse-registration-form #converse-register .title {
   font-weight: bold;
 }
-converse-register-panel #converse-register .input-group input {
+converse-registration-form #converse-register .input-group input {
   height: auto;
 }
-converse-register-panel #converse-register .input-group .input-group-text {
+converse-registration-form #converse-register .input-group .input-group-text {
   color: var(--text-color);
   background-color: var(--background-color);
 }
-converse-register-panel #converse-register .form-errors {
+converse-registration-form #converse-register .form-errors {
   color: var(--error-color);
   margin: 1em 0;
 }
-converse-register-panel #converse-register .form-help .url {
+converse-registration-form #converse-register .form-help .url {
   font-weight: bold;
   color: var(--link-color);
 }
-converse-register-panel #converse-register .instructions {
+converse-registration-form #converse-register .instructions {
   color: gray;
   font-size: 85%;
 }
-converse-register-panel #converse-register .instructions:hover {
+converse-registration-form #converse-register .instructions:hover {
   color: var(--foreground-color);
 }
 /*!************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/add-muc-modal.scss ***!
   \************************************************************************************************************************************************************************************************************************************************************************/
+converse-add-muc-modal .add-chatroom converse-autocomplete {
+  width: 100%;
+}
 converse-add-muc-modal .add-chatroom converse-autocomplete .suggestion-box__results--below {
   height: 10em;
   overflow: auto;
@@ -15527,6 +15666,7 @@ converse-add-muc-modal .add-chatroom converse-autocomplete .suggestion-box ul li
 }
 .conversejs #chatrooms converse-rooms-list {
   display: block;
+  margin-bottom: 1em;
 }
 .conversejs #chatrooms converse-rooms-list svg {
   fill: var(--muc-color);
@@ -15662,7 +15802,7 @@ converse-bg .converse-brand__heading svg {
   margin: 0;
   padding: 0;
 }
-.conversejs #converse-roster svg {
+.conversejs #converse-roster converse-dropdown converse-icon svg {
   fill: var(--chat-color) !important;
 }
 .conversejs #converse-roster .roster-contacts {
@@ -15676,17 +15816,28 @@ converse-bg .converse-brand__heading svg {
 }
 .conversejs #converse-roster .roster-contacts converse-roster-contact {
   width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: flex;
   justify-content: space-between;
 }
-.conversejs #converse-roster .roster-contacts converse-roster-contact .list-item-action {
+.conversejs #converse-roster .roster-contacts converse-roster-contact .open-chat {
+  width: 100%;
+}
+.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions .list-item-action {
   line-height: 2em;
 }
-.conversejs #converse-roster .roster-contacts converse-roster-contact:hover .list-item-action {
+.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions:hover .list-item-action {
   opacity: 1;
+}
+.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions converse-icon {
+  padding-top: 0.5em;
+}
+.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions converse-icon svg {
+  fill: var(--chat-color) !important;
 }
 .conversejs #converse-roster .roster-contacts .group-toggle {
   font-family: var(--heading-font);
@@ -15700,15 +15851,11 @@ converse-bg .converse-brand__heading svg {
 .conversejs #converse-roster .roster-contacts .group-toggle:hover, .conversejs #converse-roster .roster-contacts .group-toggle .fa:hover {
   color: var(--chat-color-hover) !important;
 }
-.conversejs #converse-roster .roster-contacts .current-xmpp-contact {
-  margin: 0.25em 0;
+.conversejs #converse-roster .roster-contacts .list-item .list-item-link {
+  margin: 0;
 }
 .conversejs #converse-roster .roster-contacts .list-item.requesting-xmpp-contact a {
   line-height: var(--line-height);
-}
-.conversejs #converse-roster .roster-contacts .list-item .open-chat {
-  margin: 0;
-  padding: 0;
 }
 .conversejs #converse-roster .roster-contacts .list-item .open-chat converse-icon.chat-status {
   position: relative;
@@ -15725,8 +15872,6 @@ converse-bg .converse-brand__heading svg {
   width: 70%;
 }
 .conversejs #converse-roster .roster-contacts .list-item .open-chat .contact-name {
-  padding: 0;
-  margin: 0;
   max-width: 85%;
   float: none;
   height: 100%;

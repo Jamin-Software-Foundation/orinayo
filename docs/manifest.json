@@ -2,8 +2,8 @@
 	"manifest_version": 3,
 	"name": "OrinAyo",  
 	"short_name": "OrinAyo",
-	"description": "The Guitar Arranger",
-	"version": "0.9.19",
+	"description": "The Live Music Producer",
+	"version": "0.9.20",
 	"homepage_url": "https://jus-be.github.io/orinayo/help.html",
 	"background": {
 		"service_worker": "./js/background.js"
