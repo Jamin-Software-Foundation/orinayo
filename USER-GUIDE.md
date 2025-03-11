@@ -592,6 +592,7 @@ The following devices are supported
 - Behringer X-TOUCH MINI Midi Controller
 - M-VAVE Chocolate Wireless MIDI Controller
 - Elegato StreamDeck USB Controller
+- Wireless Numeric Pads
 
 ## Behringer X-TOUCH MINI Midi Controller
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/x-touch-mini-guide.png />
@@ -616,5 +617,10 @@ While a style is playing, the buttons can be used to control the playing style b
 
 The encoders can be pressed to mute musical instruments or rotated to change thier volumes.
 
+## Wireless Numeric Pads
+<img src=https://jus-be.github.io/orinayo/assets/screenshots/numpad-guide.png />
 
+Orin ayo can be played live with a USB or Bluetooth numeric keypad. Any compatible wireless numeric keypad should work. 
+All basic chords are accessible with single key presses, while the advanced chords require two key key presses.
+Styles can be started, stopped and varied. The song key signature can also be stepped up and down.
 

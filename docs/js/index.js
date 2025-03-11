@@ -2969,20 +2969,17 @@ function handleNumPad(name, code) {
 		else 
 			
 		if (keyboard.get("Backspace") && keyboard.get("1")) {	// Mute Drums
-			pad.axis[TOUCH] = 1.0;	
-			pad.axis[STRUM] = STRUM_DOWN;			
+			handleEncoderPress(1);		
 		}
 		else 
 			
 		if (keyboard.get("Backspace") && keyboard.get("2")) {	// Mute Chord
-			pad.axis[TOUCH] = 1.0;	
-			pad.axis[STRUM] = STRUM_DOWN;				
+			handleEncoderPress(3);				
 		}
 		else 
 			
 		if (keyboard.get("Backspace") && keyboard.get("3")) {	// Mute Bass
-			pad.axis[TOUCH] = -0.4;
-			pad.axis[STRUM] = STRUM_DOWN;			
+			handleEncoderPress(2);			
 		}
 		else 
 			
