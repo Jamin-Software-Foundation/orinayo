@@ -1161,6 +1161,19 @@ async function handleMediaStream(started) {
 }
 
 function startXMPP() {
+	let conURI = localStorage.getItem("collaboration_server.server_url");
+	let domain = localStorage.getItem("collaboration_server.domain");
+	let username = localStorage.getItem("collaboration_server.username");
+	let password = localStorage.getItem("collaboration_server.password");
+	
+	console.debug("startXMPP", conURI, username, domain);
+	if (!username || !password || !conURI || !domain) return;
+	
+	username = JSON.parse(username);
+	password = JSON.parse(password);	
+	conURI = JSON.parse(conURI);
+	domain = JSON.parse(domain);	
+	
 	const streamSong = document.querySelector("#stream_song");	
 	const streamsList = document.querySelector("#streams_list");
 	const toggleChat = document.querySelector("#toggle_chat");
@@ -1172,17 +1185,7 @@ function startXMPP() {
 		streamSong.innerText = streamStarted ? "Start Stream" : "Stop Stream";		
 		await handleMediaStream(streamStarted);
 		streamSong.style.setProperty("--accent-fill-rest", !streamStarted ? "red" : "green");			
-	});		
-	
-	let ws = location.protocol.replace("http", "ws") + "//" + location.host;	
-	let http = location.origin;		
-    let domain = location.hostname;
-	
-	if (location.hostname == "oileglflkhgmeabhodafmhahdbfbekdh") {
-		ws = "ws://localhost:7070";
-		http = "http://localhost:7070";			
-		domain = "localhost";
-	}
+	});	
 	
 	converse.plugins.add("orinayo", {
 		dependencies: [],
@@ -1206,7 +1209,7 @@ function startXMPP() {
 				if (toolbar_el.model.get("type") === "chatroom") color = "fill:var(--muc-toolbar-btn-color);";
 				
 				buttons.push(html`
-					<button class="toolbar-utilities-refresh" title="${__('Return to group chat')}" @click=${hideChat}/>
+					<button class="toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
 						<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
 					</button>
 				`);	
@@ -1243,15 +1246,17 @@ function startXMPP() {
 		}
 	});			
 		
-	converse.initialize({
+	const options = {
+		persistent_store: location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
 		discover_connection_methods: false,
+		clear_cache_on_logout: true,
 		assets_path: "./dist/",	
 		sounds_path: "./dist/sounds/",	
 		notification_icon: "./assets/icon_128.png",
 		allow_logout: false, 
 		allow_muc_invitations: false,                                          
 		allow_contact_requests: false, 
-		authentication: 'anonymous',
+		authentication: 'login',
 		auto_reconnect: true,			
 		auto_login: true,
 		auto_join_rooms: [
@@ -1260,8 +1265,9 @@ function startXMPP() {
 		notify_all_room_messages: [
 			'lobby@conference.' + domain,
 		],
-		websocket_url: ws + '/ws/', 
-		jid: domain,
+		websocket_url: conURI, 
+		jid: username + "@" + domain,
+		password: password,
 		keepalive: true,
 		hide_muc_server: true, 
 		play_sounds: false,
@@ -1271,8 +1277,11 @@ function startXMPP() {
 		view_mode: 'embedded',	
 		theme: 'dracula',
 		muc_show_logs_before_join: true,	
+		loglevel: 'debug',
 		whitelisted_plugins: ['orinayo']					
-	});
+	};
+	console.debug("startXMPP - converse options", options);
+	converse.initialize(options);	
 }
 
 function parseStanza(stanza, attrs) {
@@ -3980,10 +3989,8 @@ function letsGo(config) {
 	  }
 	  
 	  setupUI(config, err);	
+	  startXMPP();  
 	  
-	  if (!location.origin.startsWith("chrome-extension") && location.hostname != "jus-be.github.io") {
-		startXMPP();
-	  }	  
     }, true);
 }
 
@@ -9479,12 +9486,8 @@ function hideChat(ev) {
 	ev.stopPropagation();
 	ev.preventDefault();
 
-    let domain = location.hostname;
-	
-	if (location.hostname == "oileglflkhgmeabhodafmhahdbfbekdh") {		
-		domain = "localhost";
-	}	
-	_converse.api.rooms.open('lobby@conference.' + domain, {'bring_to_foreground': true}, true);	
+    const domain = localStorage.getItem("collaboration_server.domain");	
+	if (domain) _converse.api.rooms.open('lobby@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
 }
 
 // -------------------------------------------------------

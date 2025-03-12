@@ -1,8 +1,30 @@
 // https://github.com/fent/chrome-options
 
+let conURI = localStorage.getItem("collaboration_server.server_url");
+let domain = localStorage.getItem("collaboration_server.domain");
+
+if (!conURI || !domain) {
+	
+	if (location.origin.startsWith("chrome-extension") || location.hostname == "jus-be.github.io") {
+		conURI = JSON.stringify("wss://pade.chat:5443/ws/");		
+		domain = JSON.stringify("pade.chat");			
+	} else {
+		conURI = JSON.stringify(location.protocol.replace("http", "ws") + "//" + location.host + '/ws/');		
+		domain = JSON.stringify(location.hostname);
+		
+		if (location.hostname == "oileglflkhgmeabhodafmhahdbfbekdh") {
+			conURI = JSON.stringify("ws://localhost:7070/ws/");		
+			domain = JSON.stringify("localhost");
+		}
+	}
+
+	localStorage.setItem("collaboration_server.server_url", conURI);
+	localStorage.setItem("collaboration_server.domain", domain);			
+}
+
 orinayo_config.options.opts.about = "<b>Introduction</b><p><a target=_blank href=" + (location.protocol.startsWith("http") ? location.origin + "/orinayo/index.html" : location.origin + "/index.html") + ">Orin Ayo</a> is live music production web application implemented in JavaScript and runs inside a browser as a web page, progressive web app (PWA) or browser extension external window</p><p>It was originally developed to turn a guitar games controller HID device into a chord based MIDI controller for an arranger keyboard (Yamaha PSR SX-600), module (Ketron SD90), looper (Boss RC600) device or application (Giglad). </p><p>Now it can work standalone without depending on an external musical hardware device to create quality backing music to accompany a singer (including yourself) or a solo musician playing a melodic instrument.</p>";
 orinayo_config.options.opts.autoSave = true;
-orinayo_config.options.opts.saveDefaults = true;
+orinayo_config.options.opts.saveDefaults = false;
 
 orinayo_config.options.addTab('General', [
     { type: 'h3', desc: 'Features' },
@@ -11,6 +33,13 @@ orinayo_config.options.addTab('General', [
 ]);
 
 orinayo_config.options.addTab('Collaboration Server', [
+    { name: 'username', 'default': '', type: 'text', desc: 'XMPP Username', singleline: true },
+    { name: 'password', 'default': '', type: 'password', desc: 'Password', singleline: true },
+    { name: 'domain', 'default': '', type: 'text', desc: 'XMPP Domain', singleline: true },	
+    { name: 'server_url', 'default': '', type: 'url', desc: 'Connection URI', singleline: true },
+    
+	{ type: 'html', html: '<hr/>' },
+	
     { name: 'allow_logout', desc: 'Allows you to log out' },
     { name: 'allow_public_bookmarks', desc: 'Enable if your server does not support #publish-options feature\nYour room bookmarks will be exposed' },
     { name: 'allow_registration', desc: 'Support for XEP-0077: In band registration' },
