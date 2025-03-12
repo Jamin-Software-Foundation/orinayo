@@ -30,6 +30,7 @@ var smplrPads = [];
 
 var droneActive = false;
 var tempoEle = null;
+var chatViewEle = null;
 var speechObject = null;
 var mobileViewpoint = false;
 var desktopContainer = null;
@@ -1176,8 +1177,7 @@ function startXMPP() {
 	
 	const streamSong = document.querySelector("#stream_song");	
 	const streamsList = document.querySelector("#streams_list");
-	const toggleChat = document.querySelector("#toggle_chat");
-	const chatview = document.querySelector("#chatview");		
+	const toggleChat = document.querySelector("#toggle_chat");		
 	
 	streamSong.addEventListener("click", async (evt) => {
 		const streamStarted = streamSong.innerText == "Stop Stream";
@@ -2224,13 +2224,14 @@ async function onloadHandler() {
 		chordpro.src = "/orinayo/chordpro-pdf-online/";
 	}		
 	
-	const chatview = document.querySelector("#chatview");	
+	chatViewEle = document.querySelector("#chatview");
+	
 	const gameCanvas = document.querySelector("#gameCanvas");
 	const toggleChat = document.querySelector("#toggle_chat");
 	const settings = document.querySelector("#settings");		
 	
 	toggleChat.addEventListener('click', function(event) {	
-		chatview.style.display = "none";	
+		chatViewEle.style.display = "none";	
 		board.style.display = "none";
 		chordpro.style.display = "none";	
 		lyricsCanvas.style.display = "none";		
@@ -2239,11 +2240,11 @@ async function onloadHandler() {
 			settings.style.display = "";
 			mobileBody.style.display = "";
 			//gameCanvas.style.display = "";
-			chatview.style.display = "none";
+			chatViewEle.style.display = "none";
 	
 			
 		} else {
-			chatview.style.display = "";
+			chatViewEle.style.display = "";
 			settings.style.display = "none";
 			mobileBody.style.display = "none";
 			//gameCanvas.style.display = "none";			
@@ -2251,7 +2252,7 @@ async function onloadHandler() {
 	});
 	
 	pedalBoard.addEventListener('click', function(event) {	
-		chatview.style.display = "none";		
+		chatViewEle.style.display = "none";		
 		board.style.display = "none";
 		chordpro.style.display = "none";	
 		lyricsCanvas.style.display = "none";		
@@ -2272,7 +2273,7 @@ async function onloadHandler() {
 	const chordPro = document.querySelector("#chord_pro");
 	
 	chordPro.addEventListener('click', function(event) {
-		chatview.style.display = "none";			
+		chatViewEle.style.display = "none";			
 		board.style.display = "none";
 		chordpro.style.display = "none";	
 		lyricsCanvas.style.display = "none";		
@@ -2294,7 +2295,7 @@ async function onloadHandler() {
     lyricsContext.fillRect(0, 0, lyricsCanvas.width, lyricsCanvas.height);	
 	
 	showLyrics.addEventListener('click', function(event) {
-		chatview.style.display = "none";		
+		chatViewEle.style.display = "none";		
 		board.style.display = "none";
 		chordpro.style.display = "none";	
 		lyricsCanvas.style.display = "none";	
@@ -2914,6 +2915,8 @@ function handleSevenButtons(name, code) {
 }
 
 function handleNumPad(name, code) {
+	if (chatViewEle.style.display != "none") return	// can't use keyboard input and chat
+	
 	var handled = false;
 
 	if (!styleStarted && keyboard.get("0") && (keyboard.get("1") || keyboard.get("2") || keyboard.get("3") || keyboard.get("4") || keyboard.get("5") || keyboard.get("6") || keyboard.get("7") || keyboard.get("8") || keyboard.get("9"))) {
