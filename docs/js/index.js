@@ -1247,7 +1247,7 @@ function startXMPP() {
 	});			
 		
 	const options = {
-		persistent_store: location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
+		persistent_store: "localStorage", //location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
 		discover_connection_methods: false,
 		clear_cache_on_logout: true,
 		assets_path: "./dist/",	
@@ -1301,8 +1301,8 @@ function parseStanza(stanza, attrs) {
 	return attrs;
 }
 
-function getSelectedChatBox() {
-	var models = _converse.chatboxes.models;
+async function getSelectedChatBox() {
+	var models = await _converse.api.chatboxes.get(); //_converse.chatboxes.models;
 	console.debug("getSelectedChatBox", models);
 
 	for (var i=0; i<models.length; i++) 
@@ -2134,7 +2134,6 @@ async function onloadHandler() {
 			location.reload();
 		});		
 	}
-	
 	
 	document.body.addEventListener('click', function(event) 	{
 		// TODO
@@ -6207,16 +6206,6 @@ function playChord(chord, root, type, bass) {
 		
 		orinayo.innerHTML = displaySymbol;
 		
-		if (_converse) {
-			const jid = getSelectedChatBox();
-			
-			if (jid) {
-				const json = {bassNote, rootNote, firstNote, thirdNote, fifthNote, displaySymbol};
-				_converse.api.send(converse.env.$msg({to: jid, type: 'chat'}).c("json", {'xmlns': 'urn:xmpp:json:0'}).t(JSON.stringify(json)));							
-			}
-		}
-		
-
 		if (guitarName != "none" && !guitarDeviceId) 
 		{	
 			if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN)	
@@ -6412,7 +6401,16 @@ function playChord(chord, root, type, bass) {
 			} else {
 				if (arranger == "aeroslooper" && aerosPart < 3) aerosChordTrack = root - 48;
 			}		
-		}			
+		}
+
+		if (_converse) {
+			const jid = getSelectedChatBox();
+			
+			if (jid) {
+				const json = {bassNote, rootNote, firstNote, thirdNote, fifthNote, displaySymbol};
+				_converse.api.send(converse.env.$msg({to: jid, type: 'chat'}).c("json", {'xmlns': 'urn:xmpp:json:0'}).t(JSON.stringify(json)));							
+			}
+		}		
 		
 		activeChord = chord;
 	}

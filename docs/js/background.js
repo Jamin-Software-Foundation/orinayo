@@ -105,7 +105,12 @@ const openOrinAyoWindow = () => {
 				}
 				
 				if (window) {
-					chrome.windows.update(window.id, {focused: true});			
+					try {
+						chrome.windows.update(window.id, {focused: true});	
+					} catch (e) {
+						console.error("openOrinAyoWindow", e);
+						createOrinAyoWindow();	
+					} 
 				} else {
 					createOrinAyoWindow();
 				}					
