@@ -1168,7 +1168,7 @@ function startXMPP() {
 	let password = localStorage.getItem("collaboration_server.password");
 	
 	console.debug("startXMPP", conURI, username, domain);
-	if (!username || !password || !conURI || !domain) return;
+	if (isNull(username) || isNull(password )|| isNull(conURI) || isNull(domain)) return;
 	
 	username = JSON.parse(username);
 	password = JSON.parse(password);	
@@ -1251,7 +1251,7 @@ function startXMPP() {
 	});			
 		
 	const options = {
-		persistent_store: "localStorage", //location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
+		persistent_store: "localStorage", // TODO location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
 		discover_connection_methods: false,
 		clear_cache_on_logout: true,
 		assets_path: "./dist/",	
@@ -9436,6 +9436,10 @@ function handleEncoderPress(encoder) {
 //  Converse
 //
 // -------------------------------------------------------
+
+function isNull(value) {
+	return value == null || value == undefined || JSON.parse(value) == "";
+}
 
 function openChatbox(view) {
 	let jid = view.model.get("jid");

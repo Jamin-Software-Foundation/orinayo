@@ -12,7 +12,7 @@ if (!conURI || !domain) {
 		conURI = JSON.stringify(location.protocol.replace("http", "ws") + "//" + location.host + '/ws/');		
 		domain = JSON.stringify(location.hostname);
 		
-		if (location.hostname == "oileglflkhgmeabhodafmhahdbfbekdh") {
+		if (location.origin.startsWith("chrome-extension")) {
 			conURI = JSON.stringify("ws://localhost:7070/ws/");		
 			domain = JSON.stringify("localhost");
 		}

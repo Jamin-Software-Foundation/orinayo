@@ -51,6 +51,7 @@ if (location.protocol == "chrome-extension:") {
 
 	chrome.runtime.onStartup.addListener(() => {
 		console.debug("onStartup");	
+		openOrinAyoWindow();
 	});
 	
 	chrome.action.onClicked.addListener( () => {

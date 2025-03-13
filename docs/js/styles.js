@@ -260,6 +260,7 @@ var chord_loops = [
 	"assets/chords/tight-eight_110_8727.chord",	
 	"assets/chords/triple-hop_85_11294_11294_4.chord",		
 	"assets/chords/u2-guitar_105_22857.chord",
+	"assets/chords/unplugged_82_11707_11707_4.chord",
 	"assets/chords/village-pop_107_8972_8972_4.chord",
 	"assets/chords/way-pop_75_12800.chord",
 	"assets/chords/wild-rock_120_8000.chord"	
