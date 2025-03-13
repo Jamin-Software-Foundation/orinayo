@@ -1206,13 +1206,17 @@ function startXMPP() {
 
 			_converse.api.listen.on('getToolbarButtons', function(toolbar_el, buttons)	{
 				let color = "fill:var(--chat-toolbar-btn-color);";
-				if (toolbar_el.model.get("type") === "chatroom") color = "fill:var(--muc-toolbar-btn-color);";
 				
-				buttons.push(html`
-					<button class="toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
-						<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
-					</button>
-				`);	
+				if (toolbar_el.model.get("type") !== "chatbox") {
+					color = "fill:var(--muc-toolbar-btn-color);";
+					
+				} else {				
+					buttons.push(html`
+						<button class="toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
+							<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
+						</button>
+					`);						
+				}
 							
 				buttons.push(html`
 					<button class="toolbar-utilities-scroll" title="${__('Scroll to the bottom')}" @click=${scrollToBottom}/>
@@ -2236,7 +2240,7 @@ async function onloadHandler() {
 		if (settings.style.display == "none") {
 			settings.style.display = "";
 			mobileBody.style.display = "";
-			//gameCanvas.style.display = "";
+			gameCanvas.style.display = "";
 			chatViewEle.style.display = "none";
 	
 			
@@ -2244,7 +2248,7 @@ async function onloadHandler() {
 			chatViewEle.style.display = "";
 			settings.style.display = "none";
 			mobileBody.style.display = "none";
-			//gameCanvas.style.display = "none";			
+			gameCanvas.style.display = "none";			
 		}
 	});
 	
@@ -2277,13 +2281,15 @@ async function onloadHandler() {
 		
 		if (settings.style.display == "none") {
 			settings.style.display = "";
-			mobileBody.style.display = "";			
+			mobileBody.style.display = "";	
+			gameCanvas.style.display = "";			
 			chordpro.style.display = "none";		
 			
 		} else {
 			chordpro.style.display = "";
 			settings.style.display = "none";	
-			mobileBody.style.display = "none";			
+			mobileBody.style.display = "none";	
+			gameCanvas.style.display = "none";			
 		}
 	});	
 	
@@ -9478,7 +9484,7 @@ function scrollToBottom(ev) {
 	const chatview = _converse.chatboxviews.get(toolbar_el.model.get('jid'));		
 	console.debug("scrollToBottom", chatview);
 
-	chatview.scrollDown();
+	if (chatview) chatview.scrollDown();
 }
 
 function hideChat(ev) {

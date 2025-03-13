@@ -74,6 +74,10 @@ h1 {
 	height: 700px;
 }
 
+#chordpro, #chatview {
+	height: 875px;	
+}
+
 .synthtable {
 	margin: 10px;
 	width: 99%;
