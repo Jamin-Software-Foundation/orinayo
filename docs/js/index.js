@@ -1260,10 +1260,7 @@ function startXMPP() {
 		auto_reconnect: true,			
 		auto_login: true,
 		auto_join_rooms: [
-			'lobby@conference.' + domain,
-		],
-		notify_all_room_messages: [
-			'lobby@conference.' + domain,
+			'orinayo@conference.' + domain,
 		],
 		websocket_url: conURI, 
 		jid: username + "@" + domain,
@@ -1271,13 +1268,14 @@ function startXMPP() {
 		keepalive: true,
 		hide_muc_server: true, 
 		play_sounds: false,
-		show_controlbox_by_default: false,			
+		show_controlbox_by_default: false,	
+		show_desktop_notifications: true,		
 		strict_plugin_dependencies: false,	
 		singleton: true,
 		view_mode: 'embedded',	
 		theme: 'dracula',
 		muc_show_logs_before_join: true,	
-		loglevel: 'debug',
+		loglevel: 'info',
 		whitelisted_plugins: ['orinayo']					
 	};
 	console.debug("startXMPP - converse options", options);
@@ -9490,7 +9488,7 @@ function hideChat(ev) {
 	ev.preventDefault();
 
     const domain = localStorage.getItem("collaboration_server.domain");	
-	if (domain) _converse.api.rooms.open('lobby@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
+	if (domain) _converse.api.rooms.open('orinayo@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
 }
 
 // -------------------------------------------------------
