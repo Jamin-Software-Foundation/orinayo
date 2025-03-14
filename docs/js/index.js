@@ -2305,13 +2305,15 @@ async function onloadHandler() {
 		
 		if (settings.style.display == "none") {
 			settings.style.display = "";
-			mobileBody.style.display = "";			
+			mobileBody.style.display = "";	
+			gameCanvas.style.display = "";			
 			lyricsCanvas.style.display = "none";	
 			
 		} else {
 			lyricsCanvas.style.display = "";
 			settings.style.display = "none";	
 			mobileBody.style.display = "none";
+			gameCanvas.style.display = "none";				
 		}
 	});		
 	
