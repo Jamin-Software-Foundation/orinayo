@@ -6879,10 +6879,10 @@ function changeArrSection(changed) {
 	
 	if (arranger == "webaudio") {
 		const autoFill = autoFillCheckedEle?.checked;	
+		orinayo_section.innerHTML = SECTIONS[sectionChange];		
 				
 		if (realInstrument && drumLoop && drumCheckedEle?.checked) {
 			console.debug("changeArrSection pressed " + changed, sectionChange);		
-			orinayo_section.innerHTML = orinayo_section.innerHTML;	
 			
 			if (sectionChange == 0) drumLoop.update(!changed || !autoFill ? 'arra': 'fila', false);
 			if (sectionChange == 1) drumLoop.update(!changed || !autoFill ? 'arrb': 'filb', false);
@@ -8691,15 +8691,19 @@ function setupSongSequence() {
 		};
 		timerWorker.postMessage({"interval":lookahead});	
 	}	
-		
-	playButton.innerText = "Play";	
-	playButton.style.setProperty("--accent-fill-rest", "green");	
+
+	if (arranger != "webaudio") {
+		playButton.innerText = "Play";	
+		playButton.style.setProperty("--accent-fill-rest", "green");	
+	}
 }
 
 function setupRealInstruments() {
 	console.debug("setupRealInstruments", realInstrument);
 	playButton.innerText = "Wait..";
 	playButton.style.setProperty("--accent-fill-rest", "red");	
+	
+	realInstrument.size = 0;
 
 	if (realInstrument.drum && realInstrument.drum.length == 7) {	
 		realInstrument.drums = {};
@@ -8731,7 +8735,8 @@ function setupRealInstruments() {
 
 		start = stop;
 		stop += end1Len;
-		realInstrument.drums["end1"] = {start, stop};		
+		realInstrument.drums["end1"] = {start, stop};
+		realInstrument.size += (int1Len + (arrLen * 4) + (fillLen * 4) + brkLen + end1Len);
 	}
 
 	if (realInstrument.chord && realInstrument.chord.length > 2) {	
@@ -8769,6 +8774,8 @@ function setupRealInstruments() {
 					stop += size;
 				}				
 			}
+			
+			realInstrument.size += stop;		
 		}
 		
 		// fill missing variations from defined 
@@ -8836,6 +8843,8 @@ function setupRealInstruments() {
 					stop += size;
 				}				
 			}
+			
+			realInstrument.size += stop;			
 		}
 		
 		// fill missing variations from defined 
@@ -8913,7 +8922,8 @@ function setupRealInstruments() {
 					}				
 				}	
 			}
-		}			
+		}
+		realInstrument.size += stop;
 	}	
 
 	drumLoop = null;	
@@ -8926,9 +8936,9 @@ function setupRealInstruments() {
 	if (realInstrument.drums) {
 
 		if (window.loopCache[realInstrument.drums.url]) {
-			loopWait+=500;
+			loopWait += realInstrument.size / 500;
 		} else {
-			loopWait+=1000;
+			loopWait+= realInstrument.size / 1000;
 			fetchLoopSample(realInstrument.drums.url);		
 		}
 		
@@ -8940,9 +8950,9 @@ function setupRealInstruments() {
 	if (realInstrument.basses) {
 		
 		if (window.loopCache[realInstrument.basses.url]) {
-			loopWait+=500;
+			loopWait += realInstrument.size / 500;
 		} else {
-			loopWait+=2000;
+			loopWait += realInstrument.size / 1000;
 			fetchLoopSample(realInstrument.basses.url);				
 		}
 		
@@ -8954,9 +8964,9 @@ function setupRealInstruments() {
 	if (realInstrument.chords) {
 		
 		if (window.loopCache[realInstrument.chords.url]) {
-			loopWait+=500;
+			loopWait += realInstrument.size / 500;
 		} else {
-			loopWait+=4000;
+			loopWait += realInstrument.size / 1000;
 			fetchLoopSample(realInstrument.chords.url);				
 		}
 		
@@ -8971,9 +8981,9 @@ function setupRealInstruments() {
 		if (realInstrument.drums) realInstrument.drums.riffUrl = realInstrument.riffUrl;			
 		
 		if (window.loopCache[realInstrument.riffUrl]) {
-			loopWait+=500;
+			loopWait += realInstrument.size / 50;
 		} else {
-			loopWait+=1000;
+			loopWait += realInstrument.size / 100;
 			fetchLoopSample(realInstrument.riffUrl);			
 		}	
 	}
@@ -8983,6 +8993,8 @@ function setupRealInstruments() {
 	}
 	
 	setTimeout(() => {
+		console.debug("loop loaded timeout", realInstrument.size, Math.ceil(loopWait));
+		
 		playButton.innerText = "Play";
 		playButton.style.setProperty("--accent-fill-rest", "green");	
 
@@ -8994,10 +9006,9 @@ function setupRealInstruments() {
 }
 
 function fetchLoopSample(url) {
-	console.debug("", url);
-	
 	if (window.loopCache[url]) return;
 
+	console.debug("fetchLoopSample", url);
 	
 	if (url.startsWith("assets")) 	{
 		fetch(url, {cache: "force-cache"})
