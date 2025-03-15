@@ -8990,8 +8990,8 @@ function setupRealInstruments() {
 		}	
 	}
 	
-	if (realInstrument.bpm) {
-		setTempo(getConfig().tempo);	
+	if (realInstrument.bpm) {	
+		setTempo(realInstrument.bpm);
 	}
 	
 	setTimeout(() => {

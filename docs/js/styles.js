@@ -349,6 +349,8 @@ var drum_loops = [
 	"assets/drums/kompa1_103_2330_18641_2330_2286_4660.drum",
 	"assets/drums/kompa2_103_2316_18641_2330_2330_4660.drum",
 	"assets/drums/lafunk_116_2069_16552_2069_2069_4138.drum",
+	"assets/drums/latin-night-pop_110_2182_8727_2182_2182_4364.drum",
+	"assets/drums/latin-pop_110_2182_8727_2182_2182_4364.drum",
 	"assets/drums/lounge_102_2353_9412_2353_2353_7059.drum",
 	"assets/drums/miami-rock_85_2824_11294_2824_2824_11294.drum",
 	"assets/drums/midtempo1_100_2400_9600_2400_2400_7200.drum",
