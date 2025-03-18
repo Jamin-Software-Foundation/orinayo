@@ -12,7 +12,11 @@
 		"background",	
 		"storage",   
 		"unlimitedStorage"
-	],	
+	],
+	"options_ui": {
+	"page": "index.html",
+	"open_in_tab": true
+	},		
 	"action": {
       "default_icon": {
 		"16": "assets/icon_16.png",
