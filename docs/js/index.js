@@ -4550,6 +4550,9 @@ async function setupUI(config, err) {
 		console.debug("selected midi device type", inputDeviceType, midiInType.value);				
 		saveConfig();
 		
+		const bluetooth = document.querySelector("#bluetooth");
+		bluetooth.style.display = "none";			
+		
 		if (inputDeviceType == "liberlivec1") {
 			handleLiberLive(inputDeviceType == "liberlivec1");
 			
@@ -4720,9 +4723,11 @@ async function setupUI(config, err) {
 	songSeq.addEventListener("change", function()
 	{
 		songSequence = null;
+		document.querySelector("#tempoCanvas").style.display = "none";		
 
 		if (songSeq.value != "songSeq") {
-			songSequence = {name: songSeq.value};			
+			songSequence = {name: songSeq.value};	
+			document.querySelector("#tempoCanvas").style.display = "";			
 			console.debug("selected song sequence", songSequence, songSeq.value);
 		}
 		saveConfig();		
