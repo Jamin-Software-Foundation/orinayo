@@ -1248,7 +1248,37 @@ function startXMPP() {
 			});
 			
 		}
-	});			
+	});	
+
+	const MUC_AFFILIATION_CHANGES_LIST = ['owner', 'admin', 'member', 'exowner', 'exadmin', 'exmember', 'exoutcast']
+	const MUC_ROLE_CHANGES_LIST = ['op', 'deop', 'voice', 'mute'];
+	const MUC_TRAFFIC_STATES_LIST = ['entered', 'exited'];
+
+	const MUC_INFO_CODES = {
+		'visibility_changes': ['100', '102', '103', '172', '173', '174'],
+		'self': ['110'],
+		'non_privacy_changes': ['104', '201'],
+		'muc_logging_changes': ['170', '171'],
+		'nickname_changes': ['210', '303'],
+		'disconnect_messages': ['301', '307', '321', '322', '332', '333'],
+		'affiliation_changes': [MUC_AFFILIATION_CHANGES_LIST],
+		'join_leave_events': [MUC_TRAFFIC_STATES_LIST],
+		'role_changes': [MUC_ROLE_CHANGES_LIST],
+	};
+
+	const mucShowInfoMessages = [
+		MUC_INFO_CODES.visibility_changes,
+		MUC_INFO_CODES.self,
+		MUC_INFO_CODES.non_privacy_changes,
+		MUC_INFO_CODES.muc_logging_changes,
+		MUC_INFO_CODES.nickname_changes,
+		MUC_INFO_CODES.disconnect_messages,
+		MUC_INFO_CODES.affiliation_changes,
+		MUC_INFO_CODES.join_leave_events,
+		MUC_INFO_CODES.role_changes,
+	]
+	
+	const roomName = JSON.parse(localStorage.getItem("collaboration_server.room"));	
 		
 	const options = {
 		persistent_store: "localStorage", // TODO location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
@@ -1264,7 +1294,7 @@ function startXMPP() {
 		auto_reconnect: true,			
 		auto_login: true,
 		auto_join_rooms: [
-			'orinayo@conference.' + domain,
+			roomName + '@conference.' + domain,
 		],
 		websocket_url: conURI, 
 		jid: username + "@" + domain,
@@ -1273,12 +1303,14 @@ function startXMPP() {
 		hide_muc_server: true, 
 		play_sounds: false,
 		show_controlbox_by_default: false,	
-		show_desktop_notifications: true,		
+		show_desktop_notifications: true,	
+		hide_offline_users: true,		
 		strict_plugin_dependencies: false,	
 		singleton: true,
 		view_mode: 'embedded',	
 		theme: 'dracula',
 		muc_show_logs_before_join: true,	
+		muc_show_info_messages: [], //mucShowInfoMessages,
 		loglevel: 'info',
 		whitelisted_plugins: ['orinayo']					
 	};
@@ -7681,7 +7713,15 @@ function handleStartStopButton() {
 	playButton.innerText = !styleStarted ? "Play" : "Stop";
 	playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");
 	playButton.style.backgroundColor = !styleStarted ? "green" : "red";
-	if (midiOutput?.name == "X-TOUCH MINI" && !styleStarted) resetXTouch();		
+	
+	if (midiOutput?.name == "X-TOUCH MINI" && !styleStarted) {
+		resetXTouch();	
+	}
+	
+	if (chrome.action) {
+		chrome.action.setBadgeBackgroundColor({ color: !styleStarted ? "green" : "red"});
+		chrome.action.setBadgeText({ text: !styleStarted ? " " : " " });	
+	}
 }
 
 function updateCanvas() {
@@ -9513,8 +9553,12 @@ function hideChat(ev) {
 	ev.stopPropagation();
 	ev.preventDefault();
 
+	const roomName = localStorage.getItem("collaboration_server.room");	
     const domain = localStorage.getItem("collaboration_server.domain");	
-	if (domain) _converse.api.rooms.open('orinayo@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
+	
+	if (roomName && domain) {
+		_converse.api.rooms.open(JSON.parse(roomName) + '@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
+	}
 }
 
 // -------------------------------------------------------

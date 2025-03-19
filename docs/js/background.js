@@ -8,8 +8,9 @@ self.addEventListener('install', function(event) {
     console.debug('activate', event);
 });
 self.addEventListener('activate', function (event) {
-    console.debug('activate', event);	
-	openOrinAyoWindow();
+    console.debug('activate', event);
+	// TODO
+	//openOrinAyoWindow();
 });
 
 self.addEventListener('message', function (event) {
@@ -50,8 +51,9 @@ if (location.protocol == "chrome-extension:") {
 	});
 
 	chrome.runtime.onStartup.addListener(() => {
-		console.debug("onStartup");	
-		openOrinAyoWindow();
+		console.debug("onStartup");
+		// TODO
+		//openOrinAyoWindow();
 	});
 	
 	chrome.action.onClicked.addListener( () => {

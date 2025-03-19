@@ -65,21 +65,13 @@ h1 {
 	height: 90%;	
 }
 
-#chordpro,  #chatview {
+#chordpro, #lyrics, #chatview {
 	border:none; 
 	margin:0; 
 	padding:0; 
 	overflow:hidden;
-	width: 90%;
-	height: 700px;
-}
-
-#chordpro, #lyrics, #chatview {
-	height: 875px;	
-}
-
-#lyrics {
 	width: 98%;
+	height: 875px;	
 }
 
 
