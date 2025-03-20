@@ -378,6 +378,8 @@ var drum_loops = [
 	"assets/drums/pop-chill_108_2222_8889_2222_2222_4444.drum",
 	"assets/drums/pop-delight_80_3000_12000_3000_3000_6000.drum",	
 	"assets/drums/pop-enough_100_2400_9600_2400_2400_4800.drum",
+	"assets/drums/pop-funk_85_2824_11294_2824_2824_2824.drum",	
+	"assets/drums/pop-rock_85_2824_11294_2824_2824_5647.drum",	
 	"extra/assets/drums/pop-rock_80_3000_12000_3000_3000_12000.drum",	
 	"extra/assets/drums/pop-shape_96_2500_10000_2500_2500_5000.drum",	
 	"assets/drums/pop-swedish_80_3000_12000_3000_3000_6000.drum",
