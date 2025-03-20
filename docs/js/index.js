@@ -4778,9 +4778,13 @@ async function setupUI(config, err) {
 	realBassLoop.options[0] = new Option("NOT USED", "realBassLoop", false, false);		
 	realChordsLoop.options[0] = new Option("NOT USED", "realChordsLoop", false, false);
 	realRiffLoop.options[0] = new Option("NOT USED", "realRiffLoop", false, false);	
+	
+	let drumIndex = 0;
 			
 	for (var i=0; i<drum_loops.length; i++) {
 		const drumLoop = drum_loops[i];
+		if (drumLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+				
 		let selectedDrum = false;	
 		const loopData = drumLoop.substring(drumLoop.lastIndexOf("/") + 1).replace(".drum", "");
 		const metaData = loopData.split("_");		
@@ -4792,11 +4796,16 @@ async function setupUI(config, err) {
 			realInstrument.drum = metaData;				
 			realInstrument.drumUrl = drumLoop;		
 		}
-		realDrumsLoop.options[i + 1] = new Option(drumName, drumLoop, selectedDrum, selectedDrum);
+		realDrumsLoop.options[drumIndex + 1] = new Option(drumName, drumLoop, selectedDrum, selectedDrum);
+		drumIndex++;
 	}
 
+	let bassIndex = 0;
+	
 	for (var i=0; i<bass_loops.length; i++) {
 		const bassLoop = bass_loops[i];
+		if (bassLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		
 		let selectedBass = false;	
 		const loopData = bassLoop.substring(bassLoop.lastIndexOf("/") + 1).replace(".bass", "");
 		const metaData = loopData.split("_");		
@@ -4808,11 +4817,16 @@ async function setupUI(config, err) {
 			realInstrument.bass = metaData;	
 			realInstrument.bassUrl = bassLoop;				
 		}
-		realBassLoop.options[i + 1] = new Option(bassName, bassLoop, selectedBass, selectedBass);
+		realBassLoop.options[bassIndex + 1] = new Option(bassName, bassLoop, selectedBass, selectedBass);
+		bassIndex++;
 	}
+
+	let chordIndex = 0;
 	
 	for (var i=0; i<chord_loops.length; i++) {
 		const chordLoop = chord_loops[i];
+		if (chordLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		
 		let selectedChord = false;	
 		const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");
 		const metaData = loopData.split("_");		
@@ -4824,11 +4838,16 @@ async function setupUI(config, err) {
 			realInstrument.chord = metaData;	
 			realInstrument.chordUrl = chordLoop;				
 		}
-		realChordsLoop.options[i + 1] = new Option(chordName, chordLoop, selectedChord, selectedChord);
+		realChordsLoop.options[chordIndex + 1] = new Option(chordName, chordLoop, selectedChord, selectedChord);
+		chordIndex++;
 	}
+	
+	let riffIndex = 0;
 	
 	for (var i=0; i<riff_loops.length; i++) {
 		const riffLoop = riff_loops[i];
+		if (riffLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		
 		let selectedRiff = false;	
 		const loopData = riffLoop.substring(riffLoop.lastIndexOf("/") + 1).replace(".riff", "");
 		const metaData = loopData.split("_");		
@@ -4840,18 +4859,16 @@ async function setupUI(config, err) {
 			realInstrument.riff = metaData;	
 			realInstrument.riffUrl = riffLoop;				
 		}
-		realRiffLoop.options[i + 1] = new Option(riffName, riffLoop, selectedRiff, selectedRiff);
+		realRiffLoop.options[riffIndex + 1] = new Option(riffName, riffLoop, selectedRiff, selectedRiff);
+		riffIndex++;
 	}	
-
-	let drumIndex = drum_loops.length + 1;
-	let chordIndex = chord_loops.length + 1;
-	let bassIndex = bass_loops.length + 1;
-	let riffIndex = riff_loops.length + 1;
 	
 	indexedDB.databases().then(function (databases) 
 	{
 		databases.forEach(function (db) {				
 			const loop = db.name;
+			//console.debug("IndexedDB file", loop);
+			
 			let selectedLoop = false;			
 		
 			if (db.name.toLowerCase().endsWith(".drum")) {
@@ -9057,7 +9074,7 @@ function fetchLoopSample(url) {
 
 	console.debug("fetchLoopSample", url);
 	
-	if (url.startsWith("assets")) 	{
+	if (url.startsWith("assets") || url.startsWith("extra")) 	{
 		fetch(url, {cache: "force-cache"})
 			.then(response => response.arrayBuffer())
 			.then(buffer => this.audioContext.decodeAudioData(buffer))
