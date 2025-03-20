@@ -1166,14 +1166,16 @@ function startXMPP() {
 	let domain = localStorage.getItem("collaboration_server.domain");
 	let username = localStorage.getItem("collaboration_server.username");
 	let password = localStorage.getItem("collaboration_server.password");
+	let roomName = localStorage.getItem("collaboration_server.room");	
 	
 	console.debug("startXMPP", conURI, username, domain);
-	if (isNull(username) || isNull(password )|| isNull(conURI) || isNull(domain)) return;
+	if (isNull(username) || isNull(password )|| isNull(conURI) || isNull(domain) || isNull(roomName)) return;
 	
 	username = JSON.parse(username);
 	password = JSON.parse(password);	
 	conURI = JSON.parse(conURI);
-	domain = JSON.parse(domain);	
+	domain = JSON.parse(domain);
+	roomName = JSON.parse(roomName);
 	
 	const streamSong = document.querySelector("#stream_song");	
 	const streamsList = document.querySelector("#streams_list");
@@ -1276,9 +1278,7 @@ function startXMPP() {
 		MUC_INFO_CODES.affiliation_changes,
 		MUC_INFO_CODES.join_leave_events,
 		MUC_INFO_CODES.role_changes,
-	]
-	
-	const roomName = JSON.parse(localStorage.getItem("collaboration_server.room"));	
+	]	
 		
 	const options = {
 		persistent_store: "localStorage", // TODO location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				

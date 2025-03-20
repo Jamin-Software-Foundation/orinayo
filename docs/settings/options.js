@@ -37,7 +37,7 @@ orinayo_config.options.addTab('Collaboration Server', [
     { name: 'password', 'default': '', type: 'password', desc: 'Password', singleline: true },
     { name: 'domain', 'default': '', type: 'text', desc: 'XMPP Domain', singleline: true },	
     { name: 'server_url', 'default': '', type: 'url', desc: 'Connection URI', singleline: true },
-    { name: 'room', type: 'text', desc: 'Meeting Room Name', singleline: true },	
+    { name: 'room', 'default': '', type: 'text', desc: 'Meeting Room Name', singleline: true },	
     
 	{ type: 'html', html: '<hr/>' },
 	
