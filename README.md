@@ -14,7 +14,7 @@ Now it can work standalone without depending on an external musical hardware dev
 - It has internal keyboard sampler implemeted with [smplr by danigb](https://github.com/danigb/smplr) that provides multi-layed acoustic and electric pianos with a warm pad synth.
 - It supports the [extended ChordPro format proposed by Paul J. Drongowski](https://sandsoftwaresound.net/chordpro-for-yamaha-accompaniment/). 
 A ChordPro [editor](https://github.com/Jus-Be/chordpro-pdf-online) based on the chordpro-pdf-online project by [Ruth Wong](https://github.com/woshibiantai) is provided to edit a song and add extra directives for precise timing, section changes, tempo, etc.
-- It uses the [Java code provided by Paul J. Drongowski](https://sandsoftwaresound.net/chordpro-auto-accompaniment-midi-messages/) to generate a midi file that can be played on OrinAyo and any compatible Yamaha keyboard like the PSR-SX600 with a different style each time. The song lyrics and chord symbols can be viewed live just like karoke. The user can learn or play along live with the song by muting the recorded chord progression.
+- It can play arranger MIDI files from any compatible Yamaha keyboard like the PSR-SX600 with a different style each time. The song lyrics and chord symbols can be viewed live just like karoke. The user can learn or play along live with the song by muting the recorded chord progression.
 - It can record a live perfomanmce as an audio file or as a video with lyrics file when playing a ChordPro generated midi file.
 
 # In use

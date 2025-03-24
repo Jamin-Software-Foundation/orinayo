@@ -85,6 +85,7 @@ var lyricsY = 18;
 var displayShape = null;
 var lyricsCanvas = null;
 var lyricsContext = null;
+var lyricsImage = null;
 var recorderFilename = null;
 var mediaRecorder = null;
 var recordMode = false;
@@ -2247,8 +2248,8 @@ async function onloadHandler() {
 		}
 	});		
 	
-	lyricsCanvas = document.querySelector("#lyrics");
-	lyricsContext = lyricsCanvas.getContext('2d');	
+	lyricsCanvas = document.querySelector("#lyrics");	
+	lyricsContext = lyricsCanvas.getContext('2d');		
 	
 	const chordpro = document.querySelector("#chordpro");
 	chordpro.src = "https://pade.chat:5443/orinayo/chordpro-pdf-online/";
@@ -2261,22 +2262,32 @@ async function onloadHandler() {
 	
 	const gameCanvas = document.querySelector("#gameCanvas");
 	const toggleChat = document.querySelector("#toggle_chat");
-	const settings = document.querySelector("#settings");		
+	const settings = document.querySelector("#settings");	
+
+	function setMenuDefaults() {
+		chatViewEle.style.display = "none";	
+		toggleChat.style.setProperty("--accent-fill-rest", "#0066cc");		
+		
+		board.style.display = "none";
+		pedalBoard.style.setProperty("--accent-fill-rest", "#0066cc");
+			
+		chordpro.style.display = "none";	
+		chordPro.style.setProperty("--accent-fill-rest", "#0066cc");
+			
+		lyricsCanvas.style.display = "none";	
+		showLyrics.style.setProperty("--accent-fill-rest", "#0066cc");			
+	}
 	
 	toggleChat.addEventListener('click', function(event) {	
-		chatViewEle.style.display = "none";	
-		board.style.display = "none";
-		chordpro.style.display = "none";	
-		lyricsCanvas.style.display = "none";		
+		setMenuDefaults();		
 			
 		if (settings.style.display == "none") {
 			settings.style.display = "";
 			mobileBody.style.display = "";
-			gameCanvas.style.display = "";
-			chatViewEle.style.display = "none";
-	
+			gameCanvas.style.display = "";	
 			
 		} else {
+			toggleChat.style.setProperty("--accent-fill-rest", "gray");	
 			chatViewEle.style.display = "";
 			settings.style.display = "none";
 			mobileBody.style.display = "none";
@@ -2285,18 +2296,14 @@ async function onloadHandler() {
 	});
 	
 	pedalBoard.addEventListener('click', function(event) {	
-		chatViewEle.style.display = "none";		
-		board.style.display = "none";
-		chordpro.style.display = "none";	
-		lyricsCanvas.style.display = "none";		
+		setMenuDefaults();		
 			
 		if (settings.style.display == "none") {
 			settings.style.display = "";
-			mobileBody.style.display = "";			
-			board.style.display = "none";
-	
+			mobileBody.style.display = "";				
 			
 		} else if (guitarReverb?.checked) {
+			pedalBoard.style.setProperty("--accent-fill-rest", "gray");				
 			board.style.display = "";
 			settings.style.display = "none";	
 			mobileBody.style.display = "none";
@@ -2306,18 +2313,15 @@ async function onloadHandler() {
 	const chordPro = document.querySelector("#chord_pro");
 	
 	chordPro.addEventListener('click', function(event) {
-		chatViewEle.style.display = "none";			
-		board.style.display = "none";
-		chordpro.style.display = "none";	
-		lyricsCanvas.style.display = "none";		
+		setMenuDefaults();			
 		
 		if (settings.style.display == "none") {
 			settings.style.display = "";
 			mobileBody.style.display = "";	
-			gameCanvas.style.display = "";			
-			chordpro.style.display = "none";		
+			gameCanvas.style.display = "";							
 			
 		} else {
+			chordPro.style.setProperty("--accent-fill-rest", "gray");				
 			chordpro.style.display = "";
 			settings.style.display = "none";	
 			mobileBody.style.display = "none";	
@@ -2328,20 +2332,18 @@ async function onloadHandler() {
 	const showLyrics = document.querySelector("#show_lyrics");
 	lyricsContext.fillStyle = "#000000";	
     lyricsContext.fillRect(0, 0, lyricsCanvas.width, lyricsCanvas.height);	
+	setupLyrics();
 	
 	showLyrics.addEventListener('click', function(event) {
-		chatViewEle.style.display = "none";		
-		board.style.display = "none";
-		chordpro.style.display = "none";	
-		lyricsCanvas.style.display = "none";	
+		setMenuDefaults();		
 		
 		if (settings.style.display == "none") {
 			settings.style.display = "";
 			mobileBody.style.display = "";	
-			gameCanvas.style.display = "";			
-			lyricsCanvas.style.display = "none";	
+			gameCanvas.style.display = "";						
 			
 		} else {
+			showLyrics.style.setProperty("--accent-fill-rest", "gray");					
 			lyricsCanvas.style.display = "";
 			settings.style.display = "none";	
 			mobileBody.style.display = "none";
@@ -8354,28 +8356,28 @@ function scheduleSongNote() {
 			if (event.section == 0x08) {
 				 sectionChange = 0; 
 				 changeArrSection(true);	
-				 clearLyrics(lyricsContext);					 
+				 clearLyrics();					 
 			}
 			else 
 				
 			if (event.section == 0x09) {
 				sectionChange = 1;
 				changeArrSection(true);	
-				clearLyrics(lyricsContext);					
+				clearLyrics();					
 			}			
 			else 
 				
 			if (event.section == 0x0A) {
 				sectionChange = 2;
 				changeArrSection(true);	
-				clearLyrics(lyricsContext);					
+				clearLyrics();					
 			}	
 			else 
 				
 			if (event.section == 0x0B) {
 				sectionChange = 3;
 				changeArrSection(true);
-				clearLyrics(lyricsContext);	
+				clearLyrics();	
 			}
 			else 
 				
@@ -8443,7 +8445,7 @@ function scheduleSongNote() {
 			
 		if (event?.sysexType == "start-sequence") {
 			console.debug("scheduleSongNote - start-sequence", event);	
-			clearLyrics(lyricsContext);				
+			clearLyrics();				
 		}
 		else
 			
@@ -8456,7 +8458,7 @@ function scheduleSongNote() {
 			
 			if (event.text == "\n") {
 				console.debug("scheduleSongNote page break");
-				clearLyrics(lyricsContext);					
+				clearLyrics();					
 			
 			} else {
 				console.debug("scheduleSongNote lyrics", event.text);
@@ -8483,7 +8485,7 @@ function scheduleSongNote() {
 						}
 						
 						if (lyricsY > lyricsCanvas.height) {
-							clearLyrics(lyricsContext);				
+							clearLyrics();				
 						}
 
 						lyricsContext.fillStyle = "#ffffff";
@@ -8513,7 +8515,7 @@ function displayChordAndLyrics(chord, lyrics) {
 	}
 
 	if (lyricsY > lyricsCanvas.height) {
-		clearLyrics(lyricsContext);				
+		clearLyrics();				
 	}
 
 	lyricsContext.fillStyle = "#ffffff";
@@ -8522,11 +8524,30 @@ function displayChordAndLyrics(chord, lyrics) {
 	lyricsX = lyricsX + width;	
 }
 
-function clearLyrics(lyricsContext) {
+function clearLyrics() {
 	lyricsX = 2;					
 	lyricsY = 18;
 	lyricsContext.fillStyle = "#000000";
-	lyricsContext.fillRect(0, 0, lyricsCanvas.width, lyricsCanvas.height);		
+	lyricsContext.fillRect(0, 0, lyricsCanvas.width, lyricsCanvas.height);	
+	lyricsContext.drawImage(lyricsImage, 0, 0, lyricsImage.width, lyricsImage.height, 0, 0, lyricsCanvas.width, lyricsCanvas.height);
+}
+
+function setupLyrics() {
+	lyricsImage = new Image;
+
+	lyricsImage.onload = function() {
+		lyricsContext.drawImage(lyricsImage, 0, 0, lyricsImage.width, lyricsImage.height, 0, 0, lyricsCanvas.width, lyricsCanvas.height);				
+	};
+	
+	let wallPaperUrl = localStorage.getItem("songs.wall_paper");
+	
+	if (!wallPaperUrl) {
+		wallPaperUrl = "assets/backgrounds/wheat.png";
+	} else {
+		wallPaperUrl = JSON.parse(wallPaperUrl);
+	}
+	
+	lyricsImage.src = wallPaperUrl;	
 }
 
 function scheduleArrNote() {

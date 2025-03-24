@@ -26,10 +26,11 @@ orinayo_config.options.opts.about = "<b>Introduction</b><p><a target=_blank href
 orinayo_config.options.opts.autoSave = true;
 orinayo_config.options.opts.saveDefaults = false;
 
-orinayo_config.options.addTab('General', [
-    { type: 'h3', desc: 'Features' },
-    { type: 'h3', desc: 'Dashboard' },	
-    { type: 'h3', desc: 'Actions' },	
+orinayo_config.options.addTab('Songs', [
+    { name: 'wall_paper', type: 'select', desc: 'The background image shown when projecting song lyrics', options: [
+      {value: 'assets/backgrounds/blank.png',  desc: 'Blank black backround'}, 
+	  {value: 'assets/backgrounds/wheat.png', desc: 'Wheat farmland'}
+    ]},	
 ]);
 
 orinayo_config.options.addTab('Collaboration Server', [
