@@ -2799,10 +2799,11 @@ function updatePitch() {
 			console.debug("updatePitch - confident", Math.round( pitch ), noteString);	
 			
 		} else {
-			if (detune < 0)
+			if (detune < 0) {
 				//console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
-			else
-				//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));				
+			} else {
+				//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
+			}				
 		}
 		
 		startPlayingLeadInstrument(note, detune);		
