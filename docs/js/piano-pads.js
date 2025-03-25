@@ -41,7 +41,20 @@ window.setupPianos = function(context) {
 				smplrPads[wp] = {name, sf2: true, instrument: stringPad}
 				smplrPads[wp].instrument.output.addEffect('reverb', reverberator, 0.25);
 				wp++;
-			}			
+			}
+
+			let lead = 0;
+			const leadInstr = new Soundfont2Sampler(context, { url: "./assets/leads/iceman.sf2",  createSoundfont: (data) => new SoundFont2(data), decayTime: 1.25});
+			
+			leadInstr.load.then(() => {
+				leadInstr.loadInstrument(leadInstr.instrumentNames[lead]);
+			  
+				for (let name of leadInstr.instrumentNames) {
+					smplrLeads[lead] = {name, sf2: true, instrument: leadInstr}
+					smplrLeads[lead].instrument.output.addEffect('reverb', reverberator, 0.25);
+					lead++;
+				}		
+			})				
 		});		
 	})
 		
@@ -59,7 +72,7 @@ window.addDbKeysAndPads = function(context, f, h) {
 	{
 		databases.forEach(function (db) 
 		{				
-			if ((db.name.toLowerCase().endsWith(".keys") && f == 0) || (db.name.toLowerCase().endsWith(".pads") && f == 1)) {
+			if ((db.name.toLowerCase().endsWith(".keys") && f == 0) || (db.name.toLowerCase().endsWith(".pads") && f == 1) || (db.name.toLowerCase().endsWith(".leads") && f == 2)) {
 				console.debug("found keys/pads", db.name);	
 
 				const store = new idbKeyval.Store(db.name, db.name);		
@@ -88,7 +101,10 @@ window.addDbKeysAndPads = function(context, f, h) {
 								}
 								keys++;	
 							}									
-						} else {
+						}
+						else 
+						
+						if (f == 1) {
 							const soundfont = new SoundFont2(new Uint8Array(data));
 							const instrument = new Soundfont2Sampler(context, {soundfont, decayTime: 1.25});							
 							let pads = smplrPads.length;
@@ -108,6 +124,29 @@ window.addDbKeysAndPads = function(context, f, h) {
 								pads++;																		
 							}											
 						}
+						
+						else 
+						
+						if (f == 2) {
+							const soundfont = new SoundFont2(new Uint8Array(data));
+							const instrument = new Soundfont2Sampler(context, {soundfont, decayTime: 1.25});							
+							let leads = smplrLeads.length;
+							
+							for (let name of instrument.instrumentNames) {
+								smplrLeads[leads] = {name, sf2: true, instrument}
+								smplrLeads[leads].instrument.output.addEffect('reverb', reverberator, 0.25);
+								
+								const optn = document.createElement("option");
+								optn.textContent = name;
+								h.appendChild(optn);
+								
+								if (config["instrument" + f] == leads) {
+									h.selectedIndex = config["instrument" + f];								
+									instrument.loadInstrument(name);										
+								}
+								leads++;																		
+							}											
+						}						
 						
 		
 					}			

@@ -27,7 +27,12 @@ const CONTROL = 100;
 
 var smplrKeys = [];
 var smplrPads = [];
+var smplrLeads = [];
+var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
+var analyser = null;
+var mediaStreamSource = null;
+var leadInstrument = null;
 var droneActive = false;
 var tempoEle = null;
 var chatViewEle = null;
@@ -64,6 +69,7 @@ var watchConnection = null;
 var lavaGenieWaitout = 1000;
 var keysSound1 = null;
 var keysSound2 = null;
+var keysSound3 = null;
 var savedDrumVol = 100;
 var savedBassVol = 100;
 var savedChordVol = 100;
@@ -79,6 +85,7 @@ var chordVol = 40;
 var drumVol = 85;
 var keysSound1Vol = 100;
 var keysSound2Vol = 50;
+var keysSound3Vol = 90;
 var chordproParser = new ChordSheetJS.ChordProParser();
 var lyricsX = 2;
 var lyricsY = 18;
@@ -136,6 +143,7 @@ var orinayo_section = null;
 var orinayo_strum = null;
 var orinayo_pad = null;
 var orinayo_reg = null;
+var orinayo_pitch = null;
 
 var base = BASE;
 var key = "C"
@@ -186,6 +194,7 @@ var timerWorker = null;     		// The Web Worker used to fire timer messages
 var keysPlayer = new WebAudioFontPlayer();
 var keysSelectedEle1 = null;
 var keysSelectedEle2 = null;
+var keysSelectedEle3 = null;
 
 var guitarName = "none";
 var player = new WebAudioFontPlayer();
@@ -1823,7 +1832,7 @@ function handleChordaMidiMessage(evt) {
 }
 
 function loadMidiSynth() {
-	if (smplrPads.length < 2) {
+	if (smplrPads.length < 2 || smplrLeads.length < 1) {
 		setTimeout(loadMidiSynth, 1000);	// we need to wait until smplrkeys and smplrPads (ch1 & ch2) are loaded.
 		return;
 	}
@@ -1921,6 +1930,7 @@ function saveConfig() {
 	config.bassVol = savedBassVol;
 	config.keysSound1Vol = keysSound1Vol;
 	config.keysSound2Vol = keysSound2Vol;
+	config.keysSound3Vol = keysSound3Vol;
 	
 	for (let i=0; i<19; i++) {
 		config["channel" + i] = document.getElementById("arr-instrument-" + i)?.checked;
@@ -1980,6 +1990,7 @@ function getDefaultData() {
 		"bassVol": 60,
 		"keysSound1Vol": 100,
 		"keysSound2Vol": 50,
+		"keysSound3Vol": 90,
 		"channel0": true,
 		"instrument0": 4,
 		"channel1": true,
@@ -2046,6 +2057,7 @@ async function onloadHandler() {
 	orinayo_strum = document.querySelector('#orinayo-strum');
 	orinayo_pad = document.querySelector('#orinayo-pad');
 	orinayo_reg = document.querySelector('#orinayo-reg');	
+	orinayo_pitch = document.querySelector('#orinayo-pitch');	
 	guitarReverb = document.querySelector("#reverb");
 	
   	keySign = document.getElementById("ll-keysign");	
@@ -2679,7 +2691,149 @@ async function setupMicrophone() {
 	
 	if (microphone.checked) {	
 		console.debug("setupMicrophone");
+		
+		const stream = await navigator.mediaDevices.getUserMedia({
+			"audio": {
+				"mandatory": {
+					"googEchoCancellation": "false",
+					"googAutoGainControl": "false",
+					"googNoiseSuppression": "false",
+					"googHighpassFilter": "false"
+				},
+				"optional": []
+			}
+		});
+		
+        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+	    analyser = audioContext.createAnalyser();
+	    analyser.fftSize = 2048;
+	    mediaStreamSource.connect( analyser );
+	    updatePitch();		
+	}	
+}
 
+function noteFromPitch( frequency ) {
+	var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+	return Math.round( noteNum ) + 69;
+}
+
+function frequencyFromNoteNumber( note ) {
+	return 440 * Math.pow(2,(note-69)/12);
+}
+
+function centsOffFromPitch( frequency, note ) {
+	return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
+}
+
+function autoCorrelate( buf, sampleRate ) {
+	// Implements the ACF2+ algorithm
+	var SIZE = buf.length;
+	var rms = 0;
+
+	for (var i=0;i<SIZE;i++) {
+		var val = buf[i];
+		rms += val*val;
+	}
+	rms = Math.sqrt(rms/SIZE);
+	
+	if (rms<0.01) // not enough signal
+		return -1;
+
+	var r1=0, r2=SIZE-1, thres=0.2;
+	
+	for (var i=0; i<SIZE/2; i++)
+		if (Math.abs(buf[i])<thres) { r1=i; break; }
+	
+	for (var i=1; i<SIZE/2; i++)
+		if (Math.abs(buf[SIZE-i])<thres) { r2=SIZE-i; break; }
+
+	buf = buf.slice(r1,r2);
+	SIZE = buf.length;
+
+	var c = new Array(SIZE).fill(0);
+	
+	for (var i=0; i<SIZE; i++)
+		for (var j=0; j<SIZE-i; j++)
+			c[i] = c[i] + buf[j]*buf[j+i];
+
+	var d=0; while (c[d]>c[d+1]) d++;
+	var maxval=-1, maxpos=-1;
+	
+	for (var i=d; i<SIZE; i++) {
+		if (c[i] > maxval) {
+			maxval = c[i];
+			maxpos = i;
+		}
+	}
+	
+	var T0 = maxpos;
+
+	var x1=c[T0-1], x2=c[T0], x3=c[T0+1];
+	a = (x1 + x3 - 2*x2)/2;
+	b = (x3 - x1)/2;
+	if (a) T0 = T0 - b/(2*a);
+
+	return sampleRate/T0;
+}
+
+function updatePitch() {
+	var cycles = new Array;
+	var buflen = 2048;
+	var buf = new Float32Array( buflen );
+	
+	stopPlayingLeadInstrument();	
+	
+	analyser.getFloatTimeDomainData( buf );
+	var ac = autoCorrelate( buf, audioContext.sampleRate );
+
+ 	if (ac == -1) {
+		orinayo_pitch.innerHTML = "Pitch --";
+				
+ 	} else {
+	 	const pitch = ac;	
+	 	const note =  noteFromPitch( pitch );
+		const noteString = noteStrings[note%12];
+		const detune = centsOffFromPitch( pitch, note );		
+		
+		if (detune == 0 ) {
+			console.debug("updatePitch - confident", Math.round( pitch ), noteString);	
+			
+		} else {
+			if (detune < 0)
+				//console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
+			else
+				//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));				
+		}
+		
+		startPlayingLeadInstrument(note, detune);		
+		orinayo_pitch.innerHTML = "Pitch " + noteString;		
+	}
+
+	if (microphone.checked) {
+		window.requestAnimationFrame( updatePitch );
+	}
+}
+
+function startPlayingLeadInstrument(note, detune) {
+	//console.debug("startPlayingLeadInstrument", note, detune);
+	// TODO use active chord and key to set midi note
+				
+	if (midiInstrCheckedEle[2]?.checked) {
+		leadInstrument = smplrLeads[keysSelectedEle2.selectedIndex].instrument;					
+		leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
+		const midiNote = 60 + (note % 12);
+		leadInstrument.start({ note: midiNote, velocity: 100 }); 
+		leadInstrument.stopId = midiNote;				
+	}		
+	
+}
+
+function stopPlayingLeadInstrument() {
+	//console.debug("stopPlayingLeadInstrument", leadInstrument?.stopId);
+	
+	if (leadInstrument?.stopId) {
+		leadInstrument.stop({ stopId: leadInstrument.stopId });	
+		leadInstrument.stopId = null;
 	}	
 }
 
@@ -2692,7 +2846,7 @@ function handleFileContent(event) {
 
 		reader.onload = function(event)	
 		{
-			if (file.name.toLowerCase().endsWith(".mid") || file.name.toLowerCase().endsWith(".sf2") || file.name.toLowerCase().endsWith(".kst") || file.name.toLowerCase().endsWith(".sty") || file.name.toLowerCase().endsWith(".prs") || file.name.toLowerCase().endsWith(".bcs") || file.name.toLowerCase().endsWith(".ac7") || file.name.toLowerCase().endsWith(".sas") || file.name.toLowerCase().endsWith(".bass") || file.name.toLowerCase().endsWith(".drum") || file.name.toLowerCase().endsWith(".chord") || file.name.toLowerCase().endsWith(".keys") || file.name.toLowerCase().endsWith(".pads")) {
+			if (file.name.toLowerCase().endsWith(".mid") || file.name.toLowerCase().endsWith(".sf2") || file.name.toLowerCase().endsWith(".kst") || file.name.toLowerCase().endsWith(".sty") || file.name.toLowerCase().endsWith(".prs") || file.name.toLowerCase().endsWith(".bcs") || file.name.toLowerCase().endsWith(".ac7") || file.name.toLowerCase().endsWith(".sas") || file.name.toLowerCase().endsWith(".bass") || file.name.toLowerCase().endsWith(".drum") || file.name.toLowerCase().endsWith(".chord") || file.name.toLowerCase().endsWith(".keys") || file.name.toLowerCase().endsWith(".pads") || file.name.toLowerCase().endsWith(".leads")) {
 				handleBinaryFile(file.name, event.target.result);
 			}	
 			else
@@ -2742,7 +2896,7 @@ function handleBinaryFile(filename, data) {
 		}
 		else
 			
-		if (filename.toLowerCase().endsWith(".keys") || filename.toLowerCase().endsWith(".pads")) {		
+		if (filename.toLowerCase().endsWith(".keys") || filename.toLowerCase().endsWith(".pads") || filename.toLowerCase().endsWith(".leads")) {		
 			// do nothing. handle on reload
 		}
 		else
@@ -3280,8 +3434,8 @@ function handleNoteOn(note, device, velocity, channel) {
 	
 	if (keysSound2?.checked) 
 	{
-		if (keysSelectedEle2.selectedIndex == 1) {
-			thePad = f[keysSelectedEle2.selectedIndex].instrument;
+		if (keysSelectedEle2.selectedIndex > 0) {
+			thePad = smplrPads[keysSelectedEle2.selectedIndex].instrument;
 		}
 		
 		envelope2 = thePad;
@@ -4037,7 +4191,8 @@ async function setupUI(config, err) {
 	chordVol = config.chordVol ? config.chordVol : chordVol;
 	keysSound1Vol = config.keysSound1Vol ? config.keysSound1Vol : keysSound1Vol;
 	keysSound2Vol = config.keysSound2Vol ? config.keysSound2Vol : keysSound2Vol;	
-
+	keysSound3Vol = config.keysSound3Vol ? config.keysSound3Vol : keysSound3Vol;	
+	
 	savedDrumVol = drumVol;
 	savedBassVol = bassVol;	
 	savedChordVol = chordVol;
@@ -5492,7 +5647,22 @@ function setupMidiChannels() {
 		if (smplrPads[keysSelectedEle2.selectedIndex]?.sf2) {			
 			smplrPads[keysSelectedEle2.selectedIndex].instrument.loadInstrument(smplrPads[keysSelectedEle2.selectedIndex].name);
 		}
-	});			
+	});		
+
+	keysSelectedEle3 = document.getElementById("midi-channel-2");	
+	keysSelectedEle3.selectedIndex = config["instrument2"];	
+	
+	if (keysSelectedEle3.selectedIndex && smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {
+		smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
+	}
+		
+	keysSelectedEle3.addEventListener("change", function(event) {
+		console.debug("Switching pads SF", smplrLeads[keysSelectedEle3.selectedIndex]);		
+		
+		if (smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {			
+			smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
+		}
+	});		
 	
 	drumCheckedEle = document.getElementById("arr-instrument-16");
 	bassCheckedEle = document.getElementById("arr-instrument-17");
@@ -5533,13 +5703,18 @@ function setupMidiChannels() {
 	
 	midiVolumeEle[0].value = keysSound1Vol;
 	midiVolumeEle[1].value = keysSound2Vol;	
-
+	midiVolumeEle[2].value = keysSound3Vol;	
+	
 	midiVolumeEle[0].addEventListener("input", function(event) {
 		keysSound1Vol = +event.target.value; 			
 	});
 
 	midiVolumeEle[1].addEventListener("input", function(event) {
 		keysSound2Vol = +event.target.value; 			
+	});
+
+	midiVolumeEle[2].addEventListener("input", function(event) {
+		keysSound3Vol = +event.target.value; 			
 	});
 	
 	if (drumKnob) drumKnob.setValue(midiVolumeEle[16].value);
@@ -5655,7 +5830,7 @@ function getArrSequence(arrName, callback) {
 }
 
 function getArrSynth(sf2Name) {
-	if (smplrPads.length < 2) {
+	if (smplrPads.length < 2 || smplrLeads.length < 1) {
 		setTimeout(() => getArrSynth(sf2Name), 1000);	// we need to wait until smplrkeys and smplrPads (ch1 & ch2) are loaded.
 		return;
 	}
