@@ -34,6 +34,7 @@ orinayo_config.options.addTab('Songs', [
 ]);
 
 orinayo_config.options.addTab('Collaboration Server', [
+    { name: 'enable_xmpp', desc: 'Enable connection to XMPP collaboration server' },
     { name: 'username', 'default': '', type: 'text', desc: 'XMPP Username', singleline: true },
     { name: 'password', 'default': '', type: 'password', desc: 'Password', singleline: true },
     { name: 'domain', 'default': '', type: 'text', desc: 'XMPP Domain', singleline: true },	

@@ -350,13 +350,10 @@ async function messageHandler(evt) {
 
 	playButton.innerText = "Wait..";
 	playButton.style.setProperty("--accent-fill-rest", "red");
-		
-	let url = location.origin + "/orinayo/cp2midi";
-	
-	if (location.origin.startsWith("chrome-extension") || location.origin.startsWith("https://jus-be.github.io")) {
-		url = "https://pade.chat:5443/orinayo/cp2midi";
-	}
-	
+
+	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
+	const url = "https://" + parts[2] + "/orinayo/cp2midi";	
+
 	const response = await fetch(url, {method: "POST", body: evt.data});
 	const blob = await response.blob();	
 	const buffer = await blob.arrayBuffer();		
@@ -1180,7 +1177,9 @@ function startXMPP() {
 	
 	const streamSong = document.querySelector("#stream_song");	
 	const streamsList = document.querySelector("#streams_list");
-	const toggleChat = document.querySelector("#toggle_chat");		
+	const toggleChat = document.querySelector("#toggle_chat");	
+	const chordPro = document.querySelector("#chord_pro");		
+	const chordpro = document.querySelector("#chordpro");		
 	
 	streamSong.addEventListener("click", async (evt) => {
 		const streamStarted = streamSong.innerText == "Stop Stream";
@@ -1246,6 +1245,11 @@ function startXMPP() {
 				streamSong.style.display = "";
 				streamsList.style.display = "";
 				toggleChat.style.display = "";
+				
+				const parts = conURI.split("/");
+				chordpro.src = "https://" + parts[2] + "/orinayo/chordpro-pdf-online/";					
+				chordPro.style.display = "";
+				
 				streamSong.style.setProperty("--accent-fill-rest", "green");
 				setTimeout(fetchStreams);	
 			});
@@ -2251,13 +2255,6 @@ async function onloadHandler() {
 	lyricsCanvas = document.querySelector("#lyrics");	
 	lyricsContext = lyricsCanvas.getContext('2d');		
 	
-	const chordpro = document.querySelector("#chordpro");
-	chordpro.src = "https://pade.chat:5443/orinayo/chordpro-pdf-online/";
-	
-	if (!location.origin.startsWith("chrome-extension") && !location.origin.startsWith("https://jus-be.github.io")) {
-		chordpro.src = "/orinayo/chordpro-pdf-online/";
-	}		
-	
 	chatViewEle = document.querySelector("#chatview");
 	
 	const gameCanvas = document.querySelector("#gameCanvas");
@@ -2682,68 +2679,7 @@ async function setupMicrophone() {
 	
 	if (microphone.checked) {	
 		console.debug("setupMicrophone");
-		/*	
-		const audioCtx = new AudioContext();	
-		let audioMidiConfig = {tempo: 80,  maxTempo: 720,  resolution: 16,  channel: 2,  sampleRate: 32000};		
-		const midiCreator = new MidiCreator({audioMidiConfig});
-		
-		midiCreator.onPreviewNote = (data) => {
-			//console.debug("midiCreator.onPreviewNote", data);		
-		};	
-		*/
-		const basicPitch = new basic_pitch.BasicPitch("./model/model.json");		
-		const audioCtx = new AudioContext({ sampleRate: 22050 });	
-		const frames = [];
-		const onsets = [];
-		const contours = [];
-  
-		const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-		console.debug("setupMicrophone", stream);		
-			
-		const inputNode = audioCtx.createMediaStreamSource(stream);
-		await audioCtx.audioWorklet.addModule('/js/audio-midi.js')
-		const processorNode = new AudioWorkletNode(audioCtx, 'audio-midi');
-		
-		processorNode.port.onmessage = async (event) => {
-			//console.debug("processorNode.port.onmessage", event.data.channel);
-			/*
-			let pitchInfo = midiCreator.autoCorrelate(event.data.channel, audioCtx.sampleRate);
-			
-			if (pitchInfo?.pitch > -1) {	
-				//console.debug("processorNode.port.onmessage", pitchInfo);			
-				midiCreator.addNote(pitchInfo.pitch, pitchInfo.velocity);				
-			}
-			*/
-			
-			/*
-			await basicPitch.evaluateModel(event.data.channel,  (frame, onset, contour) => {
-				frames.push(...frame);
-				onsets.push(...onset);
-				contours.push(...contour);
-				
-			  }, (pct) => {
-				console.debug("basicPitch - progress", pct);
-			  });
 
-			const onsetThresh = 0.5, frameThresh = 0.3, minNoteLen = 5, inferOnsets = true, maxFreq = null,  minFreq = null,  melodiaTrick = true, energyTolerance = 11;
-			const notes = basic_pitch.noteFramesToTime(basic_pitch.addPitchBendsToNoteEvents(contours, basic_pitch.outputToNotesPoly(frames, onsets, onsetThresh, frameThresh, minNoteLen, inferOnsets, maxFreq, minFreq, melodiaTrick, energyTolerance)));
-			
-			const noteEvents = notes.map((n) => ({
-			  pitch: n.pitchMidi,
-			  duration: n.durationSeconds,
-			  onset: n.startTimeSeconds,
-			  pitchBends: n.pitchBends,
-			  velocity: n.amplitude,
-			}));
-
-			// Sort the note events by onset time and pitch
-			noteEvents.sort((a, b) => a.onset - b.onset || a.pitch - b.pitch);	
-			console.debug("basicPitch - completed", noteEvents);
-			*/
-		};
-  
-		inputNode.connect(processorNode).connect(audioCtx.destination);
-		console.debug("setupMicrophone - processorNode active");
 	}	
 }
 
@@ -2784,12 +2720,8 @@ async function handleChordPro(file, data) {
 	const song = chordproParser.parse(body);	// TODO - Implement server-side chord to midi
 	console.debug("handleChordPro", file.name, song);	
 	
-	let url = location.origin + "/orinayo/cp2midi";
-	
-	if (location.origin.startsWith("chrome-extension") || location.origin.startsWith("https://jus-be.github.io")) {
-		url = "https://pade.chat:5443/orinayo/cp2midi";
-	}
-	
+	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
+	const url = "https://" + parts[2] + "/orinayo/cp2midi";	
 	const response = await fetch(url, {method: "POST", body});
 	const blob = await response.blob();	
 	const buffer = await blob.arrayBuffer();
@@ -4030,8 +3962,12 @@ function letsGo(config) {
         alert("Orin Ayo - " + err);
 	  }
 	  
-	  setupUI(config, err);	
-	  startXMPP();  
+	  setupUI(config, err);		  
+	  const enable_xmpp = localStorage.getItem("collaboration_server.enable_xmpp");
+	  
+	  if (enable_xmpp && JSON.parse(enable_xmpp) == true) {
+		startXMPP();  
+	  }
 	  
     }, true);
 }

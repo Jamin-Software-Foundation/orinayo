@@ -91,9 +91,9 @@
 				<fluent-button appearance="accent" title='Pair/Unpair LiberLive/Lava Genie Guitar' style="display: none;" id="bluetooth">BT</fluent-button>					
 				<fluent-button appearance="accent" title="" style="display: none;" id="chorda_bluetooth">BT OFF</fluent-button>	
 				<fluent-button appearance="accent" title="" style="display: none;" id="delete_style">Delete Style</fluent-button>				
-				<fluent-button appearance="accent" title="" style="display: none;" id="toggle_chat">Chat</fluent-button>					
+				<fluent-button appearance="accent" title="Chat with other users and collaborate" style="display: none;" id="toggle_chat">Chat</fluent-button>	
+				<fluent-button appearance="accent" title='Edit Extended ChordPro song' style="display: none;" id="chord_pro">ChordPro</fluent-button>				
 				<fluent-button appearance="accent" title='Toggle Pedalboard Display' id="pedal_board">Pedal Board</fluent-button>			
-				<fluent-button appearance="accent" title='Edit Extended ChordPro song' id="chord_pro">ChordPro</fluent-button>
 				<fluent-button appearance="accent" title='Display song lyrics' id="show_lyrics">Lyrics</fluent-button>				
 				<fluent-button appearance="accent" title='Save all settings as a registration (1-7)' style="margin-right: 1px;" id="save_reg">Save</fluent-button>
 				<fluent-button appearance="accent" title='Record performance as video or audio file' style="display: none;" id="record_song">Record</fluent-button>				
@@ -107,7 +107,7 @@
 					<span style="font-size: 14px;margin-left:2px;cursor:pointer;" id="tempo-label">Tempo:<span id="showTempo">100</span></span>	
 					<input title='Overall Tempo control' id="tempo" type="range" min="-6" max="6" step="1" value="0" style="height: 20px; width: 150px">
 				</span>
-				<span style="display: none;"><input title='Enable microphone' style="margin-left: 10px;margin-right: 10px;" id="microphone" type="checkbox">Mic</span>
+				<span style=""><input title='Enable microphone' style="margin-left: 10px;margin-right: 10px;" id="microphone" type="checkbox">Mic</span>
 				<span id="control-fill"><input title='Play Drum Fills automatically when variation changes' style="margin-left: 10px;margin-right: 10px;" id="autoFill" type="checkbox" checked>Auto Fill</span>
 				<span id="control-intro"><input title='Play Intro end Ending' style="margin-left: 10px;margin-right: 10px;" id="introEnd" type="checkbox" checked>Intro/Outro</span>
 				<span id="control-start"><input title='Start playing with first chord' style="margin-left: 10px;margin-right: 10px;" id="syncStart" type="checkbox">Sync Start</span>
@@ -237,8 +237,7 @@
   <script src="./js/piano-pads.js" type="module"></script>   
 
   <script src="./js/soundfont2.js"></script>
-  <script src="./js/pureknob.js"></script>  
-  <script src="./js/basic-pitch.js"></script>    
+  <script src="./js/pureknob.js"></script>    
   <script src="./js/tonal.min.js"></script>    
   <script src="./js/stream-deck.js"></script>  
   <script src="./js/chordsheet.js"></script>  
