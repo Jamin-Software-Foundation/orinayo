@@ -2207,6 +2207,7 @@ async function onloadHandler() {
 	microphone = document.querySelector("#microphone");
 	
 	microphone.addEventListener('click', function(event) {
+		stopPlayingLeadInstrument();
 		if (microphone?.checked) setupMicrophone();
 	});	
 
@@ -2805,9 +2806,11 @@ function updatePitch() {
 				//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
 			}				
 		}
-		
-		startPlayingLeadInstrument(note, detune);		
-		orinayo_pitch.innerHTML = "Pitch " + noteString;		
+
+		if (midiInstrCheckedEle[2]?.checked && activeChord) {		
+			startPlayingLeadInstrument(note, detune);		
+			orinayo_pitch.innerHTML = "Pitch " + noteString;	
+		}			
 	}
 
 	if (microphone.checked) {
@@ -2819,14 +2822,14 @@ function startPlayingLeadInstrument(note, detune) {
 	//console.debug("startPlayingLeadInstrument", note, detune);
 	// TODO use active chord and key to set midi note
 				
-	if (midiInstrCheckedEle[2]?.checked) {
-		leadInstrument = smplrLeads[keysSelectedEle2.selectedIndex].instrument;					
-		leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
-		const midiNote = 60 + (note % 12);
-		leadInstrument.start({ note: midiNote, velocity: 100 }); 
-		leadInstrument.stopId = midiNote;				
-	}		
+
+	leadInstrument = smplrLeads[keysSelectedEle3.selectedIndex].instrument;					
+	leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
 	
+	const pos = parseInt(guitarPosition.value);		
+	const midiNote = 48 + (pos * 12) + (note % 12);
+	leadInstrument.start({ note: midiNote, velocity: 100 }); 
+	leadInstrument.stopId = midiNote;				
 }
 
 function stopPlayingLeadInstrument() {
@@ -6969,7 +6972,11 @@ function resetArrToA() {
 function stopChord() {			
 	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) {
 
-		if (padsDevice?.stopNote || padsDevice?.name == "soundfont") stopPads();
+		stopPlayingLeadInstrument();
+		
+		if (padsDevice?.stopNote || padsDevice?.name == "soundfont") {
+			stopPads();
+		}
 		
 		if (activeChord) {
 			console.debug("stopChord", pad);

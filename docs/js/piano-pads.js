@@ -29,7 +29,7 @@ window.setupPianos = function(context) {
 	  
 		for (let name of warmPad.instrumentNames) {
 			smplrPads[wp] = {name, sf2: true, instrument: warmPad}
-			smplrPads[wp].instrument.output.addEffect('reverb', reverberator, 0.25);
+			//smplrPads[wp].instrument.output.addEffect('reverb', reverberator, 0.15);
 			wp++;
 		}
 
@@ -39,19 +39,19 @@ window.setupPianos = function(context) {
 		{
 			for (let name of stringPad.instrumentNames) {
 				smplrPads[wp] = {name, sf2: true, instrument: stringPad}
-				smplrPads[wp].instrument.output.addEffect('reverb', reverberator, 0.25);
+				//smplrPads[wp].instrument.output.addEffect('reverb', reverberator, 0.15);
 				wp++;
 			}
 
 			let lead = 0;
-			const leadInstr = new Soundfont2Sampler(context, { url: "./assets/leads/iceman.sf2",  createSoundfont: (data) => new SoundFont2(data), decayTime: 1.25});
+			const leadInstr = new Soundfont2Sampler(context, { url: "./assets/leads/synth_calliope.sf2",  createSoundfont: (data) => new SoundFont2(data), decayTime: 1.25});
 			
 			leadInstr.load.then(() => {
 				leadInstr.loadInstrument(leadInstr.instrumentNames[lead]);
 			  
 				for (let name of leadInstr.instrumentNames) {
 					smplrLeads[lead] = {name, sf2: true, instrument: leadInstr}
-					smplrLeads[lead].instrument.output.addEffect('reverb', reverberator, 0.25);
+					//smplrLeads[lead].instrument.output.addEffect('reverb', reverberator, 0.05);
 					lead++;
 				}		
 			})				
