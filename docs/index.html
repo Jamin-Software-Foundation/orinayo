@@ -5,6 +5,8 @@
     <title>Orin Ayo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">	
     <link rel="stylesheet" href="./dist/converse.min.css" />	
+    <link rel="stylesheet" href="./packages/voicechat/voicechat.css">	
+	
     <link rel="stylesheet" href="./css/bootstrap.css">		
     <link rel="stylesheet" href="./css/synth.css">	
     <link rel="stylesheet" href="./css/main.css">	
@@ -212,7 +214,7 @@
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-reg">Slot 0</span></td>	  
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-pitch">Pitch --</span></td>	  
 	  </tr>
-	  <tr> <td colspan="5"><canvas id="tempoCanvas" width="1150" height="50" style="margin: 0px; display:none"></canvas></td></tr>
+	  <tr> <td colspan="6"><canvas id="tempoCanvas" width="1200" height="50" style="margin: 0px; display:none"></canvas></td></tr>
 	</table>	
   </div>
 
@@ -257,6 +259,11 @@
   <script src="./js/sf2.synth.min.js"></script>	 
   <script src="./js/midi.ble.js"></script>	
   <script src="./js/midi-creator.js"></script>	
+  
+  <script src="./packages/screencast/screencast.js"></script>
+  <script src="./packages/voicechat/hark.js"></script>
+  <script src="./packages/voicechat/voicechat.js"></script>
+  
   <script src="./js/index.js"></script>   
   <audio id="audioPlayer" autoplay style="display: none"> </audio>
   </div>

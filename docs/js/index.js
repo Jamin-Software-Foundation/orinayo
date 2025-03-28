@@ -29,6 +29,7 @@ var smplrKeys = [];
 var smplrPads = [];
 var smplrLeads = [];
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+var whitelistedPlugins = [];
 
 var analyser = null;
 var mediaStreamSource = null;
@@ -1197,11 +1198,42 @@ function startXMPP() {
 		await handleMediaStream(streamStarted);
 		streamSong.style.setProperty("--accent-fill-rest", !streamStarted ? "red" : "green");			
 	});	
+
+
+	const MUC_AFFILIATION_CHANGES_LIST = ['owner', 'admin', 'member', 'exowner', 'exadmin', 'exmember', 'exoutcast']
+	const MUC_ROLE_CHANGES_LIST = ['op', 'deop', 'voice', 'mute'];
+	const MUC_TRAFFIC_STATES_LIST = ['entered', 'exited'];
+
+	const MUC_INFO_CODES = {
+		'visibility_changes': ['100', '102', '103', '172', '173', '174'],
+		'self': ['110'],
+		'non_privacy_changes': ['104', '201'],
+		'muc_logging_changes': ['170', '171'],
+		'nickname_changes': ['210', '303'],
+		'disconnect_messages': ['301', '307', '321', '322', '332', '333'],
+		'affiliation_changes': [MUC_AFFILIATION_CHANGES_LIST],
+		'join_leave_events': [MUC_TRAFFIC_STATES_LIST],
+		'role_changes': [MUC_ROLE_CHANGES_LIST],
+	};
+
+	const mucShowInfoMessages = [
+		MUC_INFO_CODES.visibility_changes,
+		MUC_INFO_CODES.self,
+		MUC_INFO_CODES.non_privacy_changes,
+		MUC_INFO_CODES.muc_logging_changes,
+		MUC_INFO_CODES.nickname_changes,
+		MUC_INFO_CODES.disconnect_messages,
+		MUC_INFO_CODES.affiliation_changes,
+		MUC_INFO_CODES.join_leave_events,
+		MUC_INFO_CODES.role_changes,
+	]	
+	
 	
 	converse.plugins.add("orinayo", {
 		dependencies: [],
 
 		initialize: function () {
+			console.debug("orinayo plugin initialize");				
 			_converse = this._converse;
 			const __ = _converse.__;
 			const html = converse.env.html;
@@ -1266,33 +1298,10 @@ function startXMPP() {
 		}
 	});	
 
-	const MUC_AFFILIATION_CHANGES_LIST = ['owner', 'admin', 'member', 'exowner', 'exadmin', 'exmember', 'exoutcast']
-	const MUC_ROLE_CHANGES_LIST = ['op', 'deop', 'voice', 'mute'];
-	const MUC_TRAFFIC_STATES_LIST = ['entered', 'exited'];
+	whitelistedPlugins.push("orinayo");	
+	whitelistedPlugins.push("screencast");		
+	whitelistedPlugins.push("voicechat");	
 
-	const MUC_INFO_CODES = {
-		'visibility_changes': ['100', '102', '103', '172', '173', '174'],
-		'self': ['110'],
-		'non_privacy_changes': ['104', '201'],
-		'muc_logging_changes': ['170', '171'],
-		'nickname_changes': ['210', '303'],
-		'disconnect_messages': ['301', '307', '321', '322', '332', '333'],
-		'affiliation_changes': [MUC_AFFILIATION_CHANGES_LIST],
-		'join_leave_events': [MUC_TRAFFIC_STATES_LIST],
-		'role_changes': [MUC_ROLE_CHANGES_LIST],
-	};
-
-	const mucShowInfoMessages = [
-		MUC_INFO_CODES.visibility_changes,
-		MUC_INFO_CODES.self,
-		MUC_INFO_CODES.non_privacy_changes,
-		MUC_INFO_CODES.muc_logging_changes,
-		MUC_INFO_CODES.nickname_changes,
-		MUC_INFO_CODES.disconnect_messages,
-		MUC_INFO_CODES.affiliation_changes,
-		MUC_INFO_CODES.join_leave_events,
-		MUC_INFO_CODES.role_changes,
-	]	
 		
 	const options = {
 		persistent_store: "localStorage", // TODO location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
@@ -1326,7 +1335,7 @@ function startXMPP() {
 		muc_show_logs_before_join: true,	
 		muc_show_info_messages: [], //mucShowInfoMessages,
 		loglevel: 'info',
-		whitelisted_plugins: ['orinayo']					
+		whitelisted_plugins: whitelistedPlugins					
 	};
 	console.debug("startXMPP - converse options", options);
 	converse.initialize(options);	
@@ -9716,6 +9725,25 @@ function hideChat(ev) {
 	if (roomName && domain) {
 		_converse.api.rooms.open(JSON.parse(roomName) + '@conference.' + JSON.parse(domain), {'bring_to_foreground': true}, true);	
 	}
+}
+
+function loadJS(name) {
+	console.debug("loadJS", name);
+	var head  = document.getElementsByTagName('head')[0];
+	var s1 = document.createElement('script');
+	s1.src = name;
+	s1.async = false;
+	head.appendChild(s1);
+}
+
+function loadCSS(name) {
+	console.debug("loadCSS", name);
+	var head  = document.getElementsByTagName('head')[0];
+	var link  = document.createElement('link');
+	link.rel  = 'stylesheet';
+	link.type = 'text/css';
+	link.href = name;
+	head.appendChild(link);
 }
 
 // -------------------------------------------------------
