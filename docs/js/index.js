@@ -1321,6 +1321,7 @@ function startXMPP() {
 		],
 		websocket_url: conURI, 
 		jid: username + "@" + domain,
+		nickname: username,
 		password: password,
 		keepalive: true,
 		hide_muc_server: true, 
@@ -9695,7 +9696,7 @@ async function trashHistory(ev) {
 	ev.stopPropagation();
 	ev.preventDefault();
 
-	const result = confirm(__('Are you sure you want to clear the messages from this conversation?'));
+	const result = confirm(_converse.__('Are you sure you want to clear the messages from this conversation?'));
 
 	if (result === true) {		
 		const toolbar_el = converse.env.utils.ancestor(ev.target, 'converse-chat-toolbar');

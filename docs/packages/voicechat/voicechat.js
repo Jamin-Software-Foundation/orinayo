@@ -5,7 +5,7 @@
         factory(converse);
     }
 }(this, function (converse) {
-    let _converse, html, __, model, harker, pcListen = {}, pcSpeak, button, recognition, recognitionActive, stopSpeaking, startSpeaking, myself, me;
+    let _converse, html, __, model, harker, pcListen = {}, pcSpeak, button, recognition, recognitionActive, stopSpeaking, startSpeaking, myJid, myself, me, startTime;
 
 	converse.plugins.add("voicechat", {
 		dependencies: [],
@@ -29,10 +29,11 @@
 				stopSpeaking = await _converse.api.user.settings.get('voicechat_stopped');
 				startSpeaking = await _converse.api.user.settings.get('voicechat_started');	
 				
-				const myJid = await _converse.api.connection.get().jid;
+				myJid = await _converse.api.connection.get().jid;
 				myself = converse.env.Strophe.getBareJidFromJid(myJid);	
 				me = converse.env.Strophe.getNodeFromJid(myJid);
 				
+				startTime = new Date();
 			});	
 
 			_converse.api.listen.on('parseMessage', (stanza, attrs) => {
@@ -97,7 +98,7 @@
 	}
 
 	async function stopVoiceChat() {	
-		console.debug("stopVoiceChat");
+		console.debug("stopVoiceChat", model);
 		
 		if (pcSpeak){
 			pcSpeak.close();
@@ -106,7 +107,8 @@
 		if (button && button.classList.contains('blink_me')) {
 			button.classList.remove('blink_me');
 			button.title = await _converse.api.user.settings.get('voicechat_start');
-			model.sendMessage({body: '/me ' + stopSpeaking});			
+			const nick = model.get('nick');	
+			model.sendMessage({body: '/me ' + stopSpeaking});	
 		}
 		
 		if (recognitionActive && recognition)
@@ -118,10 +120,14 @@
 		if (harker) {
 			harker.stop();
 		}
+		
+		// notify subscribers
+		_converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whip', {xmlns: 'urn:xmpp:whip:0'}));
+		
 	}
 	
 	async function startVoiceChat() {
-		console.debug("startVoiceChat");		
+		console.debug("startVoiceChat", model);		
 		
 		if (pcSpeak) {		
 			pcSpeak.close();
@@ -178,19 +184,23 @@
 		if (button) {
 			button.classList.add('blink_me');	
 			button.title = await _converse.api.user.settings.get('voicechat_stop');
+			const nick = model.get('nick');	
 			model.sendMessage({body: '/me ' + startSpeaking});			
 		}		
 	}
-
 	
-	function newElement(el, id, html, className) {
-		const ele = document.createElement(el);
-		if (id) ele.id = id;
-		if (html) ele.innerHTML = html;
-		if (className) ele.classList.add(className);
-		document.body.appendChild(ele);
-		return ele;
-	}
+	function getTargetJidFromMessageModel(model) {
+		const type = model.get("type");	
+		let target = model.get('from_muc');
+		
+		if (type === "chat")  {
+			target = model.get('jid');
+			if (model.get('sender') === 'them') {
+				target = model.get('from');
+			}		
+		}
+		return target;
+	}	
 	
     async function setupSpeechRecognition() {
         console.debug("setupSpeechRecognition");
@@ -244,38 +254,27 @@
     }
 
 	async function parseStanza(stanza, attrs) {
-		const body = stanza.querySelector('body');	
+		const whip = stanza.querySelector('whip');	
 			
-		if (body) {				
-			const startedSpeaking = body.innerHTML.indexOf(startSpeaking) > -1;
-			const stoppedSpeaking = body.innerHTML.indexOf(stopSpeaking) > -1;	
-
-			if (startedSpeaking || stoppedSpeaking) {
-				const res = await _converse.api.sendIQ(converse.env.$iq({type: 'get', to: _converse.api.domain}).c('whep', {xmlns: 'urn:xmpp:whep:0'}));				
-				const items = res.querySelectorAll('item');
+		if (whip && startTime < (new Date(attrs.time))) {	
+			const username = whip.getAttribute("id");
+			const action = whip.getAttribute("action");
+			
+			if (username != me)	{		
 				
-				for (let item of items) {
-					const username = item.getAttribute("id");
-					console.debug("remote streams", username, me);
-					
-					if (username != me) 
-					{
-						if (pcListen[username]) {
-							pcListen[username].close();						
-							delete pcListen[username];
-						}							
-						
-						if (startedSpeaking) {
-							handleStream(username);
-						}
-						else
-							
-						if (stoppedSpeaking) {
-							document.getElementById("voicechat-" + username)?.remove();
-						}						
-					}
+				if (action == "start" && !pcListen[username]) {
+					console.debug("remote add stream", username);				
+					handleStream(username);				
 				}
-			}
+				else
+					
+				if (action == "stop" && pcListen[username]) {
+					console.debug("remote remove stream", username);					
+					pcListen[username].close();						
+					delete pcListen[username];							
+					document.getElementById("voicechat-" + username)?.remove();				
+				}	
+			}				
 		}
 		
 		return attrs;
