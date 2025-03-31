@@ -2197,18 +2197,16 @@ async function onloadHandler() {
 	}
 	
 	document.body.addEventListener('click', function(event) 	{
-		// TODO
+		// TODO			
 		if (!audioContext) {
 			audioContext = new AudioContext();
 			guitarContext = audioContext;
 			guitarSource = guitarContext.destination;
 			setupPianos(audioContext);	
 			
-			if (!sessionStorage.getItem("refresh")) {
-				letsGo(config);
-			}
+			letsGo(config);
 		}
-		
+
 		if (inputDeviceType == "liberlivec1") initLiberLive();
 		if (inputDeviceType == "lavagenie") initLavaGenie();		
 	})
@@ -2411,7 +2409,6 @@ async function onloadHandler() {
 			
 	resetApp.addEventListener('click', function(event) {
 		registration = 0;
-		sessionStorage.setItem("refresh", true);
 		reloadApp();
 	});	
 		
@@ -2526,7 +2523,7 @@ async function onloadHandler() {
 		console.error("stream deck fail", e);
 	}
 	
-	if (sessionStorage.getItem("refresh")) {
+	if (sessionStorage.getItem("refresh") && !mobileCheck()) {
 		sessionStorage.removeItem("refresh");
 		
 		audioContext = new AudioContext();
