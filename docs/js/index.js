@@ -174,7 +174,7 @@ var tempoCanvas = null;
 var nextBeatTime = 0;
 var playStartTime = 0;
 var songStartTime = 0;
-var audioContext = new AudioContext();
+var audioContext = null
 var unlocked = false;
 var arrangerBeat;
 var current16thNote;        		// What note is currently last scheduled?
@@ -203,8 +203,8 @@ var midiGuitar = null;
 var guitarVolume = 0.25;
 var savedGuitarVolume = 0.25;
 var guitarReverb = null;
-var guitarContext = audioContext; //new AudioContext();
-var guitarSource = guitarContext.destination;
+var guitarContext = null;
+var guitarSource = null;
 var strum1 = "3-2-1-2";
 var strum2 = "[3+2+1]";
 var strum3 = "3-2-4-1-4-2-4";
@@ -1884,7 +1884,7 @@ function getConfig() {
 	let config = {};
 	
 	if (!data) {
-		//config = getDefaultData();	
+		config = getDefaultData();	
 	} else {
 		config = JSON.parse(data);
 	}
@@ -2048,9 +2048,7 @@ async function onloadHandler() {
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
     navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
-	  				
-	setupPianos(audioContext);
-	
+	  					
 	let version = "1.0.0";
 	if (!!chrome.runtime?.getManifest) version = chrome.runtime.getManifest().version;
 	document.title = "Orin Ayo | " + version;
@@ -2200,8 +2198,19 @@ async function onloadHandler() {
 	
 	document.body.addEventListener('click', function(event) 	{
 		// TODO
+		if (!audioContext) {
+			audioContext = new AudioContext();
+			guitarContext = audioContext;
+			guitarSource = guitarContext.destination;
+			setupPianos(audioContext);	
+			
+			if (!sessionStorage.getItem("refresh")) {
+				letsGo(config);
+			}
+		}
+		
 		if (inputDeviceType == "liberlivec1") initLiberLive();
-		if (inputDeviceType == "lavagenie") initLavaGenie();			
+		if (inputDeviceType == "lavagenie") initLavaGenie();		
 	})
 	
 	
@@ -2402,6 +2411,7 @@ async function onloadHandler() {
 			
 	resetApp.addEventListener('click', function(event) {
 		registration = 0;
+		sessionStorage.setItem("refresh", true);
 		location.reload();
 	});	
 		
@@ -2509,14 +2519,22 @@ async function onloadHandler() {
 		  
 		if (enableStreamDeck && JSON.parse(enableStreamDeck) == true) {	
 			getStreamDeck();
-			console.console("stream deck enabled");			
+			console.debug("stream deck enabled");			
 		}
 		
 	} catch (e) {
 		console.error("stream deck fail", e);
 	}
 	
-	letsGo(config);
+	if (sessionStorage.getItem("refresh")) {
+		sessionStorage.removeItem("refresh");
+		
+		audioContext = new AudioContext();
+		guitarContext = audioContext;
+		guitarSource = guitarContext.destination;
+		setupPianos(audioContext);			
+		letsGo(config);
+	}	
 }
 
 async function getStreamDeck() {
