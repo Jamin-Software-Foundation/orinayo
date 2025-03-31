@@ -2198,15 +2198,7 @@ async function onloadHandler() {
 	
 	document.body.addEventListener('click', function(event) 	{
 		// TODO			
-		if (!audioContext) {
-			audioContext = new AudioContext();
-			guitarContext = audioContext;
-			guitarSource = guitarContext.destination;
-			setupPianos(audioContext);	
-			
-			letsGo(config);
-		}
-
+		if (audioContext) audioContext.resume();
 		if (inputDeviceType == "liberlivec1") initLiberLive();
 		if (inputDeviceType == "lavagenie") initLavaGenie();		
 	})
@@ -2522,20 +2514,15 @@ async function onloadHandler() {
 	} catch (e) {
 		console.error("stream deck fail", e);
 	}
-	
-	if (sessionStorage.getItem("refresh") && !mobileCheck()) {
-		sessionStorage.removeItem("refresh");
-		
-		audioContext = new AudioContext();
-		guitarContext = audioContext;
-		guitarSource = guitarContext.destination;
-		setupPianos(audioContext);		
-		letsGo(config);
-	}	
+			
+	audioContext = new AudioContext();
+	guitarContext = audioContext;
+	guitarSource = guitarContext.destination;
+	setupPianos(audioContext);		
+	letsGo(config);	
 }
 
 function reloadApp() {
-	sessionStorage.setItem("refresh", true);
 	location.reload();	
 }
 
