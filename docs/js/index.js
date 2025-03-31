@@ -326,7 +326,7 @@ var idbKeyval = (function (exports) {
 window.loopCache = {};
 window.requestAnimFrame = window.requestAnimationFrame;
 window.addEventListener("load", onloadHandler);
-window.addEventListener("beforeunload", () => {if (!registration) saveConfig(); });
+window.addEventListener("beforeunload", () => {/*if (!registration) saveConfig();*/ });
 window.addEventListener('message', messageHandler);
 window.addEventListener('resize', (event) =>	{setup()});	
 			
