@@ -338,6 +338,7 @@ const assets = [
   "/orinayo/assets/bass/wild-rock_120_8000.bass"	
 ];
 
+/*
 self.addEventListener("install", installEvent => {
   console.debug("[Service Worker] Install", location.protocol);
   
@@ -374,3 +375,4 @@ self.addEventListener("fetch", (e) => {
 	  );
   }
 });
+*/
