@@ -65,6 +65,11 @@ orinayo_config.options.addTab('Collaboration Server', [
 
 ]);
 
+orinayo_config.options.addTab('Devices', [
+    { type: 'h3', desc: 'Stream Deck ' },
+    { name: 'enable_streamdeck', desc: 'Enable' },
+]);
+
 orinayo_config.options.addTab('Contacts', [
 
     { name: 'allow_non_roster_messaging', desc: 'Determines whether you will receive messages from users that are not in your roster' },

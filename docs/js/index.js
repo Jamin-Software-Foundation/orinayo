@@ -2047,7 +2047,7 @@ async function onloadHandler() {
 	
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
-    //navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
+    navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
 	  				
 	setupPianos(audioContext);
 	
@@ -2504,7 +2504,18 @@ async function onloadHandler() {
 	muteChords = document.getElementById("mute-chords");
 	vocalistMode = document.getElementById("vocalist-mode");
 	
-	getStreamDeck();
+	try {
+		const enableStreamDeck = localStorage.getItem("devices.enable_streamdeck");
+		  
+		if (enableStreamDeck && JSON.parse(enableStreamDeck) == true) {	
+			getStreamDeck();
+			console.console("stream deck enabled");			
+		}
+		
+	} catch (e) {
+		console.error("stream deck fail", e);
+	}
+	
 	letsGo(config);
 }
 
