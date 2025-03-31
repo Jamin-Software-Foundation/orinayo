@@ -326,7 +326,7 @@ var idbKeyval = (function (exports) {
 window.loopCache = {};
 window.requestAnimFrame = window.requestAnimationFrame;
 window.addEventListener("load", onloadHandler);
-window.addEventListener("beforeunload", () => {/*if (!registration) saveConfig();*/ });
+window.addEventListener("beforeunload", () => {if (!registration) saveConfig(); });
 window.addEventListener('message', messageHandler);
 window.addEventListener('resize', (event) =>	{setup()});	
 			
@@ -1884,7 +1884,7 @@ function getConfig() {
 	let config = {};
 	
 	if (!data) {
-		config = getDefaultData();	
+		//config = getDefaultData();	
 	} else {
 		config = JSON.parse(data);
 	}
@@ -2037,7 +2037,7 @@ function getDefaultData() {
 		"channel17": true,
 		"channel18": true
 	};
-	
+    localStorage.setItem("orin.ayo.config", JSON.stringify(data));	
 	return data;
 }
 
@@ -9251,7 +9251,7 @@ function fetchLoopSample(url) {
 	console.debug("fetchLoopSample", url);
 	
 	if (url.startsWith("assets") || url.startsWith("extra")) 	{
-		fetch(url, /*{cache: "force-cache"}*/)
+		fetch(url, {cache: "force-cache"})
 			.then(response => response.arrayBuffer())
 			.then(buffer => this.audioContext.decodeAudioData(buffer))
 			.then(sample => {
