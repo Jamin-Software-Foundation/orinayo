@@ -2047,7 +2047,7 @@ async function onloadHandler() {
 	
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
-    navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
+    //navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
 	  				
 	setupPianos(audioContext);
 	
