@@ -5694,15 +5694,15 @@ function setupMidiChannels() {
 	}
 	
 	drumCheckedEle.addEventListener("click", function(event) {
-		pressFootSwitch(7);
+		pressFootSwitch(7, true);
 	});
 
 	bassCheckedEle.addEventListener("click", function(event) {
-		pressFootSwitch(8);		
+		pressFootSwitch(8, true);		
 	});
 	
 	chordCheckedEle.addEventListener("click", function(event) {
-		pressFootSwitch(9);		
+		pressFootSwitch(9, true);		
 	});	
 	
 	for (let i=0; i<19; i++) {
@@ -6814,48 +6814,63 @@ function sendKetronSysex(code) {
 	}	
 }
 
-function pressFootSwitch(code) {
+function pressFootSwitch(code, noupdate) {
 	console.debug("pressFootSwitch", code)	
 
 	if (arranger == "sff") 
 	{				
 		if (code == 6) {	// drum toggle
 			const instrumentNode = midiInstrCheckedEle[9];		
-			instrumentNode.checked = !instrumentNode.checked;			
+			if (!noupdate) instrumentNode.checked = !instrumentNode.checked;			
 		}
 		else
 			
 		if (code == 7) {	// drum toggle
 			const instrumentNode = midiInstrCheckedEle[10];		
-			instrumentNode.checked = !instrumentNode.checked;			
+			if (!noupdate) instrumentNode.checked = !instrumentNode.checked;			
 		}
 		
 		if (code == 8 || code == 9) {	// chord toggle
 			const chord1 = midiInstrCheckedEle[11];		
-			chord1.checked = !chord1.checked;
+			if (!noupdate) chord1.checked = !chord1.checked;
 
 			const chord2 = midiInstrCheckedEle[12];		
-			chord2.checked = !chord2.checked;
+			if (!noupdate) chord2.checked = !chord2.checked;
 
 			const chord3 = midiInstrCheckedEle[13];		
-			chord3.checked = !chord3.checked;
+			if (!noupdate) chord3.checked = !chord3.checked;
 
 			const chord4 = midiInstrCheckedEle[14];		
-			chord4.checked = !chord4.checked;
+			if (!noupdate) chord4.checked = !chord4.checked;
 
 			const chord5 = midiInstrCheckedEle[15];		
-			chord5.checked = !chord5.checked;			
+			if (!noupdate) chord5.checked = !chord5.checked;			
 		}		
 		
 	} 	
 	else 
 		
 	if (arranger == "webaudio" && realInstrument) {
-		if (code == 7 && drumLoop?.gainNode) drumLoop.muteToggle();
-		if (code == 6 && chordLoop?.gainNode) chordLoop.muteToggle();		
-		if (code == 6 && bassLoop?.gainNode) bassLoop.muteToggle();	
-		if (code == 9 && chordLoop?.gainNode) chordLoop.muteToggle();		
-		if (code == 8 && bassLoop?.gainNode) bassLoop.muteToggle();		
+		
+		if (code == 7 && drumLoop?.gainNode) {		
+			if (!noupdate) drumCheckedEle.checked = !drumCheckedEle.checked;
+			drumLoop.muteToggle();
+			if (input?.name == "X-TOUCH MINI") setXTouchSpeaker(encoder, !drumCheckedEle.checked ? "flash": "off");			
+		}
+		else
+
+		if ((code == 6 || code == 8) && bassLoop?.gainNode) {		
+			if (!noupdate) bassCheckedEle.checked = !bassCheckedEle.checked;	
+			bassLoop.muteToggle();	
+			if (input?.name == "X-TOUCH MINI") setXTouchSpeaker(encoder, !bassCheckedEle.checked ? "flash": "off");		
+		}
+		else
+
+		if ((code == 6 || code == 9) && chordLoop?.gainNode) {		
+			if (!noupdate) chordCheckedEle.checked = !chordCheckedEle.checked;	
+			chordLoop.muteToggle();
+			if (input?.name == "X-TOUCH MINI") setXTouchSpeaker(encoder, !chordCheckedEle.checked ? "flash": "off");		
+		}			
 	}
 	else	
 		
