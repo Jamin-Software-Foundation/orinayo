@@ -2179,7 +2179,7 @@ async function onloadHandler() {
 		mobileLogo.addEventListener("click", function() {
 			mobileViewpoint = false;
 			saveConfig();
-			location.reload();
+			reloadApp();
 		});		
 
 	} else {
@@ -2192,7 +2192,7 @@ async function onloadHandler() {
 		desktopLogo.addEventListener("click", function() {
 			mobileViewpoint = true;
 			saveConfig();
-			location.reload();
+			reloadApp();
 		});		
 	}
 	
@@ -2279,7 +2279,7 @@ async function onloadHandler() {
 		if (arrSequence?.name) {
 			indexedDB.deleteDatabase(arrSequence.name);
 			setTimeout(() => {
-				location.reload();	
+				reloadApp();	
 			}, 1000)				
 		}
 	});		
@@ -2412,7 +2412,7 @@ async function onloadHandler() {
 	resetApp.addEventListener('click', function(event) {
 		registration = 0;
 		sessionStorage.setItem("refresh", true);
-		location.reload();
+		reloadApp();
 	});	
 		
 	loadFile.addEventListener('click', function(event) {
@@ -2532,9 +2532,14 @@ async function onloadHandler() {
 		audioContext = new AudioContext();
 		guitarContext = audioContext;
 		guitarSource = guitarContext.destination;
-		setupPianos(audioContext);			
+		setupPianos(audioContext);		
 		letsGo(config);
 	}	
+}
+
+function reloadApp() {
+	sessionStorage.setItem("refresh", true);
+	location.reload();	
 }
 
 async function getStreamDeck() {
@@ -2968,7 +2973,7 @@ function handleBinaryFile(filename, data) {
 		}
 
 		saveConfig();
-		location.reload();			
+		reloadApp();			
 		
 	}).catch(function (err) {
 		console.error('handleBinaryFile set failed!', err)
@@ -4151,14 +4156,10 @@ function handleSongMode() {
 }
 
 function letsGo(config) {
-	console.debug("letsGo", config, WebMidi);		
+	console.debug("letsGo", config, WebMidi);
+	playButton.innerHTML = "On";	
 	
-    WebMidi.enable(async function (err)
-    {
-      if (err) {
-        alert("Orin Ayo - " + err);
-	  }
-	  
+    WebMidi.enable(async function (err) {	  
 	  setupUI(config, err);		  
 	  const enable_xmpp = localStorage.getItem("collaboration_server.enable_xmpp");
 	  
@@ -7633,7 +7634,7 @@ function toggleStartStop() {
 		
 	if (((midiRealGuitar || guitarName != "none") && realGuitarStyle != "none" && window[realGuitarStyle]) || songSequence || (arrSequence && arranger == "sff")) 
 	{
-		if (playButton.innerText != "On") {
+		if (playButton.innerText != "On" && playButton.innerText != "Off") {
 			startStopSequencer();
 
 			if (songSequence || arranger == "sff") {
@@ -9387,7 +9388,7 @@ function recallRegistration(slot) {
 	if (data) {
 		registration = parseInt(slot);		
 		localStorage.setItem("orin.ayo.config", data);
-		setTimeout(() => location.reload(), 500 );		
+		setTimeout(() => reloadApp(), 500 );		
 	}
 
 }
