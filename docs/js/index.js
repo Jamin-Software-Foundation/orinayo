@@ -2047,7 +2047,7 @@ async function onloadHandler() {
 	
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
-    navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.debug("service worker not registered", err));	
+    //navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.error("service worker not registered", err));	
 	  					
 	let version = "1.0.0";
 	if (!!chrome.runtime?.getManifest) version = chrome.runtime.getManifest().version;
@@ -9254,7 +9254,7 @@ function fetchLoopSample(url) {
 	console.debug("fetchLoopSample", url);
 	
 	if (url.startsWith("assets") || url.startsWith("extra")) 	{
-		fetch(url, {cache: "force-cache"})
+		fetch(url/*, {cache: "force-cache"}*/)
 			.then(response => response.arrayBuffer())
 			.then(buffer => this.audioContext.decodeAudioData(buffer))
 			.then(sample => {
