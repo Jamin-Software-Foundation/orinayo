@@ -2019,9 +2019,7 @@ async function onloadHandler() {
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
 	
-	if (!mobileCheck()) {
-		navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.error("service worker not registered", err));	
-	}
+	navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.error("service worker not registered", err));	
 	  					
 	let version = "1.0.0";
 	if (!!chrome.runtime?.getManifest) version = chrome.runtime.getManifest().version;
@@ -9381,7 +9379,7 @@ function mobileCheck() {
 };
 
 function createKnob(id, value, valMin, valMax, color) {
-	const knob = pureknob.createKnob(200, 200);
+	const knob = pureknob.createKnob(175, 175);
 
 	knob.setProperty('angleStart', -0.75 * Math.PI);
 	knob.setProperty('angleEnd', 0.75 * Math.PI);
