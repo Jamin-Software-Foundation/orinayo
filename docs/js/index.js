@@ -9379,7 +9379,7 @@ function mobileCheck() {
 };
 
 function createKnob(id, value, valMin, valMax, color) {
-	const knob = pureknob.createKnob(175, 175);
+	const knob = pureknob.createKnob(150, 150);
 
 	knob.setProperty('angleStart', -0.75 * Math.PI);
 	knob.setProperty('angleEnd', 0.75 * Math.PI);
