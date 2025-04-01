@@ -2,8 +2,7 @@ const staticOrinAyo = "orinayo-v4";
 const assets = [
 
   "/orinayo/index.html",
-  "/orinayo/assets/icon_16.png",
-/*    
+  "/orinayo/assets/icon_16.png",  
   "/orinayo/css/bootstrap.css",
   "/orinayo/dist/converse.min.css",
   "/orinayo/css/synth.css",
@@ -336,7 +335,7 @@ const assets = [
   "/orinayo/assets/bass/sweet-pop_85_11294.bass",
   "/orinayo/assets/bass/u2-guitar_105_18286.bass",
   "/orinayo/assets/bass/wild-rock_120_8000.bass"
- */
+
 ];
 
 self.addEventListener("install", e => {
