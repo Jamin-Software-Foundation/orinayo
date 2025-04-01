@@ -9224,7 +9224,7 @@ function fetchLoopSample(url) {
 	console.debug("fetchLoopSample", url);
 	
 	if (url.startsWith("assets") || url.startsWith("extra")) 	{
-		fetch(url/*, {cache: "force-cache"}*/)
+		fetch(url, {cache: "force-cache"})
 			.then(response => response.arrayBuffer())
 			.then(buffer => this.audioContext.decodeAudioData(buffer))
 			.then(sample => {

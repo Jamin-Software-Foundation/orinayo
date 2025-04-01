@@ -1,16 +1,14 @@
-const staticOrinAyo = "orinayo-v2";
+const staticOrinAyo = "orinayo-v3";
 const assets = [
-  "/orinayo/",
   "/orinayo/index.html",
   "/orinayo/assets/icon_16.png",
-  
+    
   "/orinayo/css/bootstrap.css",
   "/orinayo/dist/converse.min.css",
   "/orinayo/css/synth.css",
   "/orinayo/css/main.css",
-  "/orinayo/assets/chordpro.css",
   "/orinayo/assets/style.css",
-  
+
   "/orinayo/js/0270_EGuitar_FSBS_SF2_file.js",
   "/orinayo/js/0250_RG_Acoustic_SF2_file.js",
   "/orinayo/js/0250_Aspirin_sf2_file.js",
@@ -42,7 +40,8 @@ const assets = [
   "/orinayo/js/midi.ble.js",	
   "/orinayo/js/midi-creator.js",	  
   "/orinayo/js/main.js",  
-  
+ 
+
   "/orinayo/assets/chords/8beat_94_20425.chord",
   "/orinayo/assets/chords/8beat_100_19200_19200_2.chord",	
   "/orinayo/assets/chords/16beat_082_23414.chord",	
@@ -175,7 +174,7 @@ const assets = [
   "/orinayo/assets/chords/village-pop_107_8972_8972_4.chord",
   "/orinayo/assets/chords/way-pop_75_12800.chord",
   "/orinayo/assets/chords/wild-rock_120_8000.chord",
-  
+
   "/orinayo/assets/drums/acoustic-strum-6-8_48_2500_10000_2500_2500_5000.drum",
   "/orinayo/assets/drums/acoustic-strum-6-8_60_2000_8000_2000_2000_4000.drum",	
   "/orinayo/assets/drums/8beat_90_2667_21333_2667_2667_8000.drum",
@@ -305,7 +304,7 @@ const assets = [
   "/orinayo/assets/drums/wonderfull_94_2553_10213_2553_2553_5106.drum",
 
   "/orinayo/assets/bass/acoustic-guitar_75_25600.bass",	
-  "/orinayo/assets/bass/acoustic-strum_145_6621_6621_2.bass",
+  "/orinayo/assets/bass/acoustic-strum_145_6621_2.bass",
   "/orinayo/assets/bass/acoustic-strum-6-8_60_8000.bass",
   "/orinayo/assets/bass/ballad-rock_75_12800.bass",
   "/orinayo/assets/bass/bluey_88_21818.bass",	
@@ -313,7 +312,7 @@ const assets = [
   "/orinayo/assets/bass/country-beat_124_15484.bass",
   "/orinayo/assets/bass/country-rock_180_10667.bass",
   "/orinayo/assets/bass/desert-pop_97_19794.bass",
-  "/orinayo/assets/bass/disco-pop_116_8276_8276_2.bass",
+  "/orinayo/assets/bass/disco-pop_116_8276_2.bass",
   "/orinayo/assets/bass/dream_85_22588.bass",
   "/orinayo/assets/bass/flow-pop_110_8727.bass",
   "/orinayo/assets/bass/funk_130_14769.bass",
@@ -321,14 +320,14 @@ const assets = [
   "/orinayo/assets/bass/funky-groove_108_8889_4.bass",
   "/orinayo/assets/bass/funky-pop_105_9143.bass",
   "/orinayo/assets/bass/gospel-funk_90_21333.bass",
-  "/orinayo/assets/bass/gospel-latin-1_98_9796_9796_2.bass",
-  "/orinayo/assets/bass/gospel-latin-2_98_9796_9796_2.bass",	
+  "/orinayo/assets/bass/gospel-latin-1_98_9796_2.bass",
+  "/orinayo/assets/bass/gospel-latin-2_98_9796_2.bass",	
   "/orinayo/assets/bass/jazzy-funk_110_17455.bass",
   "/orinayo/extra/assets/bass/miami-rock_85_11294.bass",
   "/orinayo/assets/bass/mystic-acoustic_75_12800.bass",
   "/orinayo/assets/bass/pop_90_10667.bass",
   "/orinayo/assets/bass/pop_100_19200_2.bass",
-  "/orinayo/extra/assets/bass/pop-rock_80_12000_12000_2.bass",	
+  "/orinayo/extra/assets/bass/pop-rock_80_12000_2.bass",	
   "/orinayo/assets/bass/rock_120_8000.bass",
   "/orinayo/assets/bass/rock-ballad_80_24000.bass",
   "/orinayo/extra/assets/bass/soft-ballad_75_12800.bass",  
@@ -339,7 +338,7 @@ const assets = [
 ];
 
 self.addEventListener("install", e => {
-  console.debug("[Service Worker] Install", location.protocol);
+  console.debug("[Service Worker] Install", location.protocol, assets);
   
   if (location.protocol != "chrome-extension:") {	
 	  e.waitUntil(
@@ -376,7 +375,7 @@ self.addEventListener("fetch", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
-  console.debug("[Service Worker] Activate", location.protocol, e.request.url);
+  console.debug("[Service Worker] Activate", location.protocol);
   
   if (location.protocol != "chrome-extension:") {		
 	  e.waitUntil(
