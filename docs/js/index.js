@@ -239,12 +239,6 @@ var canvas = {
 
 var game = null;
 var pad = {buttons: [], axis: []};
-
-var timeoutId = 0;
-var timeouts = {};
-
-var timeoutWorker = new Worker("./js/timeout-worker.js");
-timeoutWorker.addEventListener("message", myWorkerTimer);
 var textDecoder = null;
 
 var idbKeyval = (function (exports) {
@@ -329,31 +323,6 @@ window.addEventListener("load", onloadHandler);
 window.addEventListener("beforeunload", () => {if (!registration) saveConfig(); });
 window.addEventListener('message', messageHandler);
 window.addEventListener('resize', (event) =>	{setup()});	
-			
-function myWorkerTimer(evt) {
-  var data = evt.data,
-      id = data.id,
-      fn = timeouts[id].fn,
-      args = timeouts[id].args;
-
-  fn.apply(null, args);
-  delete timeouts[id];
-};
-
-function myclearTimeout(id) {
-  timeoutWorker.postMessage({command: "clearTimeout", id: id});
-  delete timeouts[id];
-};
-
-function mysetTimeout(fn, delay) {
-  var args = Array.prototype.slice.call(arguments, 2);
-  timeoutId += 1;
-  delay = delay || 0;
-  var id = timeoutId;
-  timeouts[id] = {fn: fn, args: args};
-  timeoutWorker.postMessage({command: "setTimeout", id: id, timeout: delay});
-  return id;
-};
 
 async function messageHandler(evt) {
 	console.debug("messageHandler", evt.data);	
@@ -2047,7 +2016,8 @@ async function onloadHandler() {
 	
 	droneActive = config.droneActive || droneActive;
 	mobileViewpoint = config.mobileViewpoint || mobileViewpoint;
-    //navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.error("service worker not registered", err));	
+	
+    navigator.serviceWorker.register("./js/main-sw.js").then(res => console.debug("service worker registered")).catch(err => console.error("service worker not registered", err));	
 	  					
 	let version = "1.0.0";
 	if (!!chrome.runtime?.getManifest) version = chrome.runtime.getManifest().version;

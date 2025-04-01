@@ -1,4 +1,4 @@
-const staticOrinAyo = "orinayo-v1";
+const staticOrinAyo = "orinayo-v2";
 const assets = [
   "/orinayo/",
   "/orinayo/index.html",
@@ -338,24 +338,24 @@ const assets = [
   "/orinayo/assets/bass/wild-rock_120_8000.bass"	
 ];
 
-self.addEventListener("install", installEvent => {
+self.addEventListener("install", e => {
   console.debug("[Service Worker] Install", location.protocol);
   
-  installEvent.waitUntil(
-    caches.open(staticOrinAyo).then(cache => {
-      
-	  if (location.protocol != "chrome-extension:") {
-		  console.debug("[Service Worker] Caching all");		  
-		  cache.addAll(assets);
-	  }
-    })
-  );
+  if (location.protocol != "chrome-extension:") {	
+	  e.waitUntil(
+		(async () => {
+		  const cache = await caches.open(staticOrinAyo);
+		  console.log("[Service Worker] Caching all");
+		  await cache.addAll(assets);
+		})(),
+	  );
+  }  
 });
 
 self.addEventListener("fetch", (e) => {
   console.debug("[Service Worker] Fetch", location.protocol, e.request.url);
   
-  if (location.protocol != "chrome-extension:") {		
+	if (location.protocol != "chrome-extension:") {		
 	  e.respondWith(
 		(async () => {
 		  const r = await caches.match(e.request);
@@ -372,5 +372,25 @@ self.addEventListener("fetch", (e) => {
 		  return response;
 		})(),
 	  );
-  }
+	}
+});
+
+self.addEventListener("activate", (e) => {
+  console.debug("[Service Worker] Activate", location.protocol, e.request.url);
+  
+  if (location.protocol != "chrome-extension:") {		
+	  e.waitUntil(
+		caches.keys().then((keyList) => {
+		  return Promise.all(
+			keyList.map((key) => 
+			{
+			  if (key === staticOrinAyo) {
+				return;
+			  }
+			  return caches.delete(key);
+			}),
+		  );
+		}),
+	  );
+	}  
 });
