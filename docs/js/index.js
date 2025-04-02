@@ -44,6 +44,7 @@ var mobileContainer = null;
 var midiInstrCheckedEle = [];
 var midiVolumeEle = [];
 var programChangeEle = null;
+var bluetoothEle = null;
 var drumCheckedEle = null;
 var bassCheckedEle = null;
 var chordCheckedEle = null;
@@ -350,18 +351,18 @@ async function messageHandler(evt) {
 }
 
 function handleLiberLive(selected) {
-	const bluetooth = document.querySelector("#bluetooth");
-	bluetooth.style.display = selected ? "" : "none";	
+	bluetoothEle.style.display = selected ? "" : "none";	
 	let device;
 	
 	if (selected) 
 	{	
 		if (mobileCheck() || mobileViewpoint) {
 			const mobileToolbar = document.getElementById("mobile-toolbar");
-			mobileToolbar.append(bluetooth);			
+			mobileToolbar.append(bluetoothEle);			
 		}
 	
-		bluetooth.addEventListener("click", async (evt) => {
+		bluetoothEle.addEventListener("click", async (evt) => {
+			bluetoothEle.style.display = "none";
 			device = await navigator.bluetooth.requestDevice({filters: [{services: ["000000ff-0000-1000-8000-00805f9b34fb"]}]});
 
 			if (device) {
@@ -380,19 +381,18 @@ function handleLiberLive(selected) {
 }
 
 function handleLavaGenie(selected) {
-	const bluetooth = document.querySelector("#bluetooth");
-	bluetooth.style.display = selected ? "" : "none";	
+	bluetoothEle.style.display = selected ? "" : "none";	
 	let device;
 	
 	if (selected) 
 	{
 		if (mobileCheck() || mobileViewpoint) {
 			const mobileToolbar = document.getElementById("mobile-toolbar");
-			mobileToolbar.append(bluetooth);			
+			mobileToolbar.append(bluetoothEle);			
 		}
 		
-		bluetooth.addEventListener("click", async (evt) => {
-			console.debug('handleLavaGenie - click');	
+		bluetoothEle.addEventListener("click", async (evt) => {	
+			bluetoothEle.style.display = "none";			
 		
 			device = await navigator.bluetooth.requestDevice({		
 				filters: [{
@@ -2048,9 +2048,9 @@ async function onloadHandler() {
 	autoFillCheckedEle = document.querySelector("#autoFill");
 	introEndCheckedEle = document.querySelector("#introEnd");	
 	syncStartCheckedEle = document.querySelector("#syncStart");			
-	loadFile = document.querySelector("#load_file")
-	resetApp = document.querySelector("#reset_app")	
-	bluetoothEle = document.querySelector("#bluetooth")		
+	loadFile = document.querySelector("#load_file");
+	resetApp = document.querySelector("#reset_app");	
+	bluetoothEle = document.querySelector("#bluetooth");		
   	tempoEle = document.querySelector("#tempo");
 	
 	const saveReg = document.querySelector("#save_reg");
@@ -4668,6 +4668,11 @@ async function setupUI(config, err) {
 		initLavaGenie();
 		handleLavaGenie(inputDeviceType == "lavagenie");		
 	}	
+
+	midiInType.addEventListener("click", function()
+	{
+		bluetoothEle.style.display = (midiInType.value == "liberlivec1" || midiInType.value == "lavagenie") ? "" : "none";
+	});
 	
 	midiInType.addEventListener("change", function()
 	{
@@ -4675,8 +4680,7 @@ async function setupUI(config, err) {
 		console.debug("selected midi device type", inputDeviceType, midiInType.value);				
 		saveConfig();
 		
-		const bluetooth = document.querySelector("#bluetooth");
-		bluetooth.style.display = "none";			
+		bluetoothEle.style.display = "none";			
 		
 		if (inputDeviceType == "liberlivec1") {
 			handleLiberLive(inputDeviceType == "liberlivec1");
@@ -9379,7 +9383,7 @@ function mobileCheck() {
 };
 
 function createKnob(id, value, valMin, valMax, color) {
-	const knob = pureknob.createKnob(150, 150);
+	const knob = pureknob.createKnob(125, 125);
 
 	knob.setProperty('angleStart', -0.75 * Math.PI);
 	knob.setProperty('angleEnd', 0.75 * Math.PI);
