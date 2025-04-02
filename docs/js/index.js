@@ -362,7 +362,6 @@ function handleLiberLive(selected) {
 		}
 	
 		bluetoothEle.addEventListener("click", async (evt) => {
-			bluetoothEle.style.display = "none";
 			device = await navigator.bluetooth.requestDevice({filters: [{services: ["000000ff-0000-1000-8000-00805f9b34fb"]}]});
 
 			if (device) {
@@ -391,8 +390,7 @@ function handleLavaGenie(selected) {
 			mobileToolbar.append(bluetoothEle);			
 		}
 		
-		bluetoothEle.addEventListener("click", async (evt) => {	
-			bluetoothEle.style.display = "none";			
+		bluetoothEle.addEventListener("click", async (evt) => {			
 		
 			device = await navigator.bluetooth.requestDevice({		
 				filters: [{
@@ -567,7 +565,8 @@ async function onLiberLiveClick() {
 async function doLavaGenieSetup(device) {
 	console.debug('doLavaGenieSetup', device);	
 	
-	if (device) {	
+	if (device) {
+		bluetoothEle.style.display = "none";		
 		const ui = document.getElementById("lyrics");
 
 		device.addEventListener('gattserverdisconnected', (event) => {
@@ -1346,7 +1345,8 @@ async function getSelectedChatBox() {
 async function doLiberLiveSetup(device) {
 	console.debug('doLiberLiveSetup', device);
 
-	if (device) {	
+	if (device) {
+		bluetoothEle.style.display = "none";
 		const ui = document.getElementById("lyrics");
 
 		device.addEventListener('gattserverdisconnected', (event) => {
@@ -4678,9 +4678,7 @@ async function setupUI(config, err) {
 	{
 		inputDeviceType = midiInType.value;
 		console.debug("selected midi device type", inputDeviceType, midiInType.value);				
-		saveConfig();
-		
-		bluetoothEle.style.display = "none";			
+		saveConfig();			
 		
 		if (inputDeviceType == "liberlivec1") {
 			handleLiberLive(inputDeviceType == "liberlivec1");
