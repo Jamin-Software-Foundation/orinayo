@@ -63,7 +63,7 @@ const assets = [
   "/orinayo/assets/chords/afro-beat_96_10000_10000_4.chord",
   "/orinayo/assets/chords/afro-highlife_134_3582.chord",
   "/orinayo/assets/chords/afro-juju_125_3840.chord",
-  "/orinayo/assets/chords/afro-juju_128_3750.chord",	
+  "/orinayo/assets/chords/afro-juju_128_15000_3750_2.chord",	
   "/orinayo/assets/chords/afro-juju_140_3429.chord",	
   "/orinayo/assets/chords/afro-pop_111_8649_8649_4.chord",
   "/orinayo/assets/chords/afro-pop_126_7619_7619_4.chord",	
