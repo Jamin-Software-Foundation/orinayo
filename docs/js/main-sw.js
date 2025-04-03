@@ -158,11 +158,13 @@ const assets = [
   "/orinayo/extra/assets/chords/soft-ballad_75_12800_12800_2.chord",	
   "/orinayo/assets/chords/soft-rock_120_8000.chord",
   "/orinayo/assets/chords/soul-band_90_21333.chord",	
+  "/orinayo/assets/chords/steel-pop_115_8348_8348_2.chord",	  
   "/orinayo/assets/chords/strum_94_20425.chord",	
   "/orinayo/assets/chords/strum_96_20000.chord",
   "/orinayo/assets/chords/strum_100_9600_9600_2.chord",	
   "/orinayo/assets/chords/strum2_96_10000.chord",	
-  "/orinayo/assets/chords/surf_170_11294.chord",	
+  "/orinayo/assets/chords/super-disco_125_7680_7680_2.chord",	
+  "/orinayo/assets/chords/surf_170_11294.chord",  
   "/orinayo/assets/chords/sweet-pop_85_11294_11294_2.chord",
   "/orinayo/assets/chords/sweet-pop_114_8421.chord",
   "/orinayo/assets/chords/tight-eight_110_8727.chord",	
@@ -291,9 +293,10 @@ const assets = [
   "/orinayo/extra/assets/drums/soft-ballad_75_3200_12800_3200_3200_12800.drum",  
   "/orinayo/assets/drums/soul_75_3200_12800_3200_3200_6400.drum",
   "/orinayo/assets/drums/soul_114_2105_8421_2105_2105_4211.drum",	
-  "/orinayo/assets/drums/strum1_96_2500_10000_2500_2500_5000.drum",
+  "/orinayo/assets/drums/steel-pop_115_2087_8348_2087_2087_8348.drum",
   "/orinayo/assets/drums/strum2_96_10000_10000_2500_2500_12500.drum",
   "/orinayo/assets/drums/strum3_96_5385_10000_2500_2500_5000.drum",	
+  "/orinayo/assets/drums/super-disco_125_1920_15354_1920_1920_7676.drum",  
   "/orinayo/assets/drums/surf_170_2824_11294_1412_1412_8471.drum",	
   "/orinayo/assets/drums/sweet-pop_85_2824_11294_2824_2824_11294.drum",
   "/orinayo/assets/drums/triple-hop_85_2824_11294_2824_2824_5647.drum",		
@@ -331,6 +334,8 @@ const assets = [
   "/orinayo/assets/bass/rock-ballad_80_24000.bass",
   "/orinayo/extra/assets/bass/soft-ballad_75_12800.bass",  
   "/orinayo/assets/bass/soul-band_90_21333.bass",
+  "/orinayo/assets/bass/steel-pop_115_8348.bass",
+  "/orinayo/assets/bass/super-disco_125_7680_2.bass",
   "/orinayo/assets/bass/sweet-pop_85_11294.bass",
   "/orinayo/assets/bass/u2-guitar_105_18286.bass",
   "/orinayo/assets/bass/wild-rock_120_8000.bass"
@@ -344,7 +349,7 @@ self.addEventListener("install", e => {
 	  e.waitUntil(
 		(async () => {
 		  const cache = await caches.open(staticOrinAyo);
-		  console.log("[Service Worker] Caching all");
+		  console.debug("[Service Worker] Caching all");
 		  await cache.addAll(assets);
 		})(),
 	  );
