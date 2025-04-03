@@ -3,6 +3,7 @@ const KEYS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 const SECTIONS = ["Arr A", "Arr B", "Arr C", "Arr D", "Intro 1", "End 1"];
 const SECTION_IDS = ["arra", "arrb", "arrc", "arrd"]
 
+const CHROME_EXTN_ID = "oileglflkhgmeabhodafmhahdbfbekdh";
 const STRUM_NEUTRAL =  1.2857;
 const STRUM_UP = -1.0000;
 const STRUM_DOWN = 0.1429;
@@ -4883,7 +4884,7 @@ async function setupUI(config, err) {
 			
 	for (var i=0; i<drum_loops.length; i++) {
 		const drumLoop = drum_loops[i];
-		if (drumLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		if (drumLoop.startsWith("extra") && (location.protocol == "chrome-extension:" && chrome.runtime.id != CHROME_EXTN_ID)) continue;
 				
 		let selectedDrum = false;	
 		const loopData = drumLoop.substring(drumLoop.lastIndexOf("/") + 1).replace(".drum", "");
@@ -4904,7 +4905,7 @@ async function setupUI(config, err) {
 	
 	for (var i=0; i<bass_loops.length; i++) {
 		const bassLoop = bass_loops[i];
-		if (bassLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		if (bassLoop.startsWith("extra") && (location.protocol == "chrome-extension:" && chrome.runtime.id != CHROME_EXTN_ID)) continue;
 		
 		let selectedBass = false;	
 		const loopData = bassLoop.substring(bassLoop.lastIndexOf("/") + 1).replace(".bass", "");
@@ -4925,7 +4926,7 @@ async function setupUI(config, err) {
 	
 	for (var i=0; i<chord_loops.length; i++) {
 		const chordLoop = chord_loops[i];
-		if (chordLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		if (chordLoop.startsWith("extra") && (location.protocol == "chrome-extension:" && chrome.runtime.id != CHROME_EXTN_ID)) continue;
 		
 		let selectedChord = false;	
 		const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");
@@ -4946,7 +4947,7 @@ async function setupUI(config, err) {
 	
 	for (var i=0; i<riff_loops.length; i++) {
 		const riffLoop = riff_loops[i];
-		if (riffLoop.startsWith("extra") && location.protocol == "chrome-extension:") continue;
+		if (riffLoop.startsWith("extra") && (location.protocol == "chrome-extension:" && chrome.runtime.id != CHROME_EXTN_ID)) continue;
 		
 		let selectedRiff = false;	
 		const loopData = riffLoop.substring(riffLoop.lastIndexOf("/") + 1).replace(".riff", "");
