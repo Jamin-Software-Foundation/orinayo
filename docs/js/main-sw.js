@@ -19,8 +19,7 @@ const assets = [
   "/orinayo/js/0260_JCLive_sf2_file.js",
   "/orinayo/dist/converse.js",  
   "/orinayo/assets/pedalboard.js",   
-  "/orinayo/js/pureknob.js",  
-  "/orinayo/js/basic-pitch.js",    
+  "/orinayo/js/pureknob.js",     
   "/orinayo/js/tonal.min.js",    
   "/orinayo/js/stream-deck.js",  
   "/orinayo/js/chordsheet.js",  
@@ -39,7 +38,7 @@ const assets = [
   "/orinayo/js/sf2.synth.min.js",	 
   "/orinayo/js/midi.ble.js",	
   "/orinayo/js/midi-creator.js",	  
-  "/orinayo/js/main.js",  
+  "/orinayo/js/index.js",  
  
 
   "/orinayo/assets/chords/8beat_94_20425.chord",
