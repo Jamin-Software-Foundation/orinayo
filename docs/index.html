@@ -24,7 +24,7 @@
 			</td>
 			<td>
 			  <div id="mobile-toolbar"></div>
-			  <div style="margin-top: 5px;" id="mobile-controller"></div>			  
+			  <div style="margin-top: 10px;" id="mobile-controller"></div>			  
 			</td>
 			<td>
 			  <div id="mobile-chord-view" style="margin-right: 3px; position: absolute; top: 5px; right: 0;"></div>			
@@ -64,15 +64,29 @@
 			</center></td>				
 		</tr>	
 		<tr valign="top">
-			<td><center>
-				<b><span style="margin-right: 20px" id="play-control"></span>Guitar Control</b>	
+			<td>
+				<b><div style="margin-top: 5px" id="play-control"></div>Guitar Control</b>	
 				<div id="control-items"></div>
-			</center></td>
-			<td><center>
-				<b><span style="margin-right: 20px" id="extern-device">External Controller</span></b>
+			</td>
+			<td rowspan="3">
+				<b><div style="margin-top: 5px" id="extern-device">External Controller</div></b>
 				<div id="control-device"></div>			
-			</center></td>				
-		</tr>			
+			</td>				
+		</tr>		
+		<tr valign="top">
+			<td>
+				<b><div  style="margin-top: 5px" id="arranger-control"></div>Arranger Control</b>
+				<div id="arranger-items"></div>
+			</td>
+			<td></td>				
+		</tr>
+		<tr valign="top">
+			<td>
+				<b><div style="margin-top: 5px" id="song-control">Song Control</div></b>
+				<div id="song-items"></div>			
+			</td>	
+			<td></td>				
+		</tr>		
 		</table>
 	</div>	
   </div>
@@ -96,7 +110,7 @@
 				<fluent-button appearance="accent" title='Edit Extended ChordPro song' style="display: none;" id="chord_pro">ChordPro</fluent-button>				
 				<fluent-button appearance="accent" title='Toggle Pedalboard Display' id="pedal_board">Pedal Board</fluent-button>			
 				<fluent-button appearance="accent" title='Display song lyrics' id="show_lyrics">Lyrics</fluent-button>				
-				<fluent-button appearance="accent" title='Save all settings as a registration (1-7)' style="margin-right: 1px;" id="save_reg">Save</fluent-button>
+				<fluent-button appearance="accent" title='Save all settings as a registration (1-7)' style="margin-right: 1px;" id="save_reg">Store</fluent-button>
 				<fluent-button appearance="accent" title='Record performance as video or audio file' style="display: none;" id="record_song">Record</fluent-button>				
 				<fluent-button appearance="accent" title='Stream performance to hosted server' style="display: none;" id="stream_song">Start Stream</fluent-button>					
 				<fluent-button appearance="accent" title='Refresh application for new settings to take effect' style="margin-right: 1px;" id="reset_app">Refresh</fluent-button>			

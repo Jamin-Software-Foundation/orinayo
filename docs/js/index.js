@@ -2138,13 +2138,19 @@ async function onloadHandler() {
 		controlItems.append(document.getElementById("guitarStrum3"));				
 		controlItems.append(document.getElementById("guitarPosition"));
 		controlItems.append(document.getElementById("guitarIRDef"));
-		controlItems.append(document.getElementById("control-fill"));
-		controlItems.append(document.getElementById("control-intro"));	
+		
+		const arrangerItems = document.getElementById("arranger-items");		
+		arrangerItems.append(document.getElementById("control-fill"));
+		arrangerItems.append(document.getElementById("control-intro"));	
 		
 		const controlDevice = document.getElementById("control-device");
 		controlDevice.append(document.getElementById("midiInSel"));	
 		// TODO volume control for keyboard voices 1 & 2
-		//controlDevice.append(document.getElementById("midiPadsSel"));		
+		//controlDevice.append(document.getElementById("midiPadsSel"));	
+		
+		const songItems = document.getElementById("song-items");
+		songItems.append(document.getElementById("songSequence"));	
+		songItems.append(document.getElementById("song_control"));	
 
 		const mobileLogo = document.querySelector("#mobile_logo");
 	
