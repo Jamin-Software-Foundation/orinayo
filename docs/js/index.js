@@ -4030,7 +4030,7 @@ function updateStatus() {
 					}													
 				}	
 
-				if (guitar.axis[3] >= -0.7) {
+				/*if (guitar.axis[3] >= -0.7) {
 					pad.axis[TOUCH] = -0.7;	
 					updated = true;
 				}
@@ -4053,7 +4053,7 @@ function updateStatus() {
 				if (guitar.axis[3] >= 0.9) {
 					pad.axis[TOUCH] = 1.0;					
 					updated = true;
-				}
+				}*/
 				
 			} else {
 		  
