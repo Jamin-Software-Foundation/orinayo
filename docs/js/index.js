@@ -3983,7 +3983,7 @@ function updateStatus() {
 			}			  
 			
 			if (mobileCheck()) {				
-				let j = RED;
+				let j = i;
 				
 				if (i == 0) j = YELLOW;
 				if (i == 1) j = GREEN;	
@@ -4013,37 +4013,34 @@ function updateStatus() {
 
 					if (i == 6 || i == 7 || i == 16) {			// style action
 						updated = true;
+						pad.buttons[j] = touched;							
 					}					
+					else
+						
+					if (i == 0 || i == 1 || i == 2 || i == 3) {
+						pad.buttons[j] = touched;						
+					}
 					else
 						
 					if (i == 8) 	// Lower keys
 					{
-						if (pad.buttons[GREEN]) {
-							pad.buttons[LOGO] = touched;
-						}
-						else
-
-						if (pad.buttons[RED]) {						
-							pad.axis[TOUCH] = -0.7;
-							pad.axis[STRUM] = STRUM_DOWN;		// fill
-						}
-						else
-
-						if (pad.buttons[YELLOW]) {						
-							pad.axis[TOUCH] = -0.7;
-							pad.axis[STRUM] = STRUM_UP;			// break
+						pad.axis[TOUCH] = 0;
+						
+						if (pad.buttons[8]) {
+							if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
+							if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
+							if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
+							if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
+							if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
+							
+							pad.buttons[GREEN] = false;
+							pad.buttons[RED] = false;
+							pad.buttons[YELLOW] = false;
+							pad.buttons[BLUE] = false;
+							pad.buttons[ORANGE] = false;					
 						}					
-						
-						updated = true;					
-						
-						pad.buttons[GREEN] = false;
-						pad.buttons[RED] = false;
-						pad.buttons[YELLOW] = false;
-						pad.buttons[BLUE] = false;
-						pad.buttons[ORANGE] = false;					
 					} 									
-					
-					pad.buttons[j] = touched;				
+									
 				}				
 				
 			} else {
@@ -4167,7 +4164,12 @@ function updateStatus() {
 			
 		if (mobileCheck()) {
 			pad.buttons[LOGO] = false;
-			pad.buttons[RED] = false;			
+			pad.buttons[GREEN] = false;
+			pad.buttons[RED] = false;
+			pad.buttons[YELLOW] = false;
+			pad.buttons[BLUE] = false;
+			pad.buttons[ORANGE] = false;
+						
 			pad.axis[TOUCH] = 0;
 			pad.axis[STRUM] = 0;
 		}
