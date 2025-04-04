@@ -3928,7 +3928,7 @@ function updateStatus() {
 				} 
 				else
 					
-				if (i == 10) 
+				if (i == 10) 	// Lower keys
 				{
 					if (pad.buttons[GREEN]) {
 						pad.buttons[LOGO] = touched;
@@ -3971,20 +3971,85 @@ function updateStatus() {
 		for (var i=0; i<guitar.buttons.length; i++) 
 		{
 			var val = guitar.buttons[i];
-			var touched = false;							
-		  
+			var touched = false;
+			
 			if (typeof(val) == "object") 
 			{	  			
 				if ('touched' in val) {
 				  touched = val.touched;
 				}			
-			}
+			}			  
+			
+			if (mobileCheck()) {				
+				let j = RED;
+				
+				if (i == 0) j = BLUE;
+				if (i == 1) j = GREEN;	
+				if (i == 2) j = YELLOW;					
+				if (i == 3) j = ORANGE;	
+				
+				if (i == 7) j = START;			
+				if (i == 6) j = STARPOWER;			
+				
+				if (i == 12) j = 112;				
+				if (i == 13) j = 113;					
+				if (i == 14) j = 114;				
+				if (i == 15) j = 115;		
+
+				if (pad.buttons[j] != touched) {
+					console.debug("button " + j, touched);	
+					
+					if (i == 12 || i == 13 || i == 14 || i == 15) 
+					{			
+						if (touched) {
+							pad.axis[STRUM] = (i == 12) ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT));
+							updated = true;						
+						}						
+					} 
+					else
+						
+					if (i == 8) 	// Lower keys
+					{
+						if (pad.buttons[GREEN]) {
+							pad.buttons[LOGO] = touched;
+						}
+						else
+
+						if (pad.buttons[RED]) {						
+							pad.axis[TOUCH] = -0.7;
+							pad.axis[STRUM] = STRUM_DOWN;			// fill
+						}
+						else
+
+						if (pad.buttons[YELLOW]) {						
+							pad.axis[TOUCH] = -0.7;
+							pad.axis[STRUM] = STRUM_UP;			// break
+						}					
+						
+						updated = true;					
+						
+						pad.buttons[GREEN] = false;
+						pad.buttons[RED] = false;
+						pad.buttons[YELLOW] = false;
+						pad.buttons[BLUE] = false;
+						pad.buttons[ORANGE] = false;					
+					} 				
+					
+					else {
+						updated = true;
+					}
+					
+					pad.buttons[j] = touched;				
+				}				
+				
+			} else {
 		  
-			if (pad.buttons[i] != touched) {
-				//console.debug("button " + i, touched);									
-				pad.buttons[i] = touched;
-				updated = true;
-			}			
+				if (pad.buttons[i] != touched) {
+					//console.debug("button " + i, touched);									
+					pad.buttons[i] = touched;
+					updated = true;
+				}	
+			}				
 		}
 		
 		if (guitar.axes.length > STRUM) 
