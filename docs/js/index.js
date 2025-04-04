@@ -4030,11 +4030,30 @@ function updateStatus() {
 					}													
 				}	
 
-				if (pad.axis[3] >= -0.7) pad.axis[TOUCH] = -0.7;	
-				if (pad.axis[3] >= -0.3) pad.axis[TOUCH] = -0.4; 	
-				if (pad.axis[3] >= 0.1) pad.axis[TOUCH] = 0.2;	
-				if (pad.axis[3] >= 0.4) pad.axis[TOUCH] = 0.4; 				
-				if (pad.axis[3] >= 0.9) pad.axis[TOUCH] = 1.0;					
+				if (guitar.axis[3] >= -0.7) {
+					pad.axis[TOUCH] = -0.7;	
+					updated = true;
+				}
+				
+				if (guitar.axis[3] >= -0.3) {
+					pad.axis[TOUCH] = -0.4; 	
+					updated = true;					
+				}
+				
+				if (guitar.axis[3] >= 0.1) {
+					pad.axis[TOUCH] = 0.2;	
+					updated = true;					
+				}
+				
+				if (guitar.axis[3] >= 0.4) {
+					pad.axis[TOUCH] = 0.4; 				
+					updated = true;
+				}
+					
+				if (guitar.axis[3] >= 0.9) {
+					pad.axis[TOUCH] = 1.0;					
+					updated = true;
+				}
 				
 			} else {
 		  
