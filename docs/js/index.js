@@ -4163,12 +4163,11 @@ function updateStatus() {
 		else
 			
 		if (mobileCheck()) {
-			pad.buttons[LOGO] = false;
-			pad.buttons[GREEN] = false;
+			/*pad.buttons[GREEN] = false;
 			pad.buttons[RED] = false;
 			pad.buttons[YELLOW] = false;
 			pad.buttons[BLUE] = false;
-			pad.buttons[ORANGE] = false;
+			pad.buttons[ORANGE] = false;*/
 						
 			pad.axis[TOUCH] = 0;
 			pad.axis[STRUM] = 0;
