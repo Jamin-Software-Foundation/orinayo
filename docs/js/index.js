@@ -3969,10 +3969,7 @@ function updateStatus() {
   
 	if (guitar) {				
 		//console.debug("using guitar" + guitar.id, guitar);
-		
-		pad.axis[STRUM] = 0;
-		pad.axis[TOUCH] = 0;		
-		
+				
 		for (var i=0; i<guitar.buttons.length; i++) 
 		{
 			var val = guitar.buttons[i];
@@ -4026,7 +4023,7 @@ function updateStatus() {
 					}					
 					else
 						
-					if (i == 0 || i == 1 || i == 2 || i == 3 || i == 112 || i == 113 || i == 114 || i == 115) {
+					if (i == 0 || i == 1 || i == 2 || i == 3 || i == 12 || i == 13 || i == 14 || i == 15) {
 						pad.buttons[j] = touched;						
 					}
 					else
@@ -4167,7 +4164,7 @@ function updateStatus() {
 			pad.buttons[LOGO] = false;
 			pad.axis[TOUCH] = 0;
 		}
-		else		
+		else			
 			
 		if (riffMasterPS) {	
 			pad.buttons[LOGO] = false;		
