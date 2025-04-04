@@ -3970,6 +3970,9 @@ function updateStatus() {
 	if (guitar) {				
 		//console.debug("using guitar" + guitar.id, guitar);
 		
+		pad.axis[STRUM] = 0;
+		pad.axis[TOUCH] = 0;		
+		
 		for (var i=0; i<guitar.buttons.length; i++) 
 		{
 			var val = guitar.buttons[i];
@@ -4022,23 +4025,21 @@ function updateStatus() {
 					}
 					else
 						
-					if (i == 8) 	// Lower keys
-					{
+					if (i == 8) {	// Lower keys
+						updated = true;
 						pad.axis[TOUCH] = 0;
 						
-						if (pad.buttons[8]) {
-							if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
-							if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
-							if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
-							if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
-							if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
-							
-							pad.buttons[GREEN] = false;
-							pad.buttons[RED] = false;
-							pad.buttons[YELLOW] = false;
-							pad.buttons[BLUE] = false;
-							pad.buttons[ORANGE] = false;					
-						}					
+						if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
+						if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
+						if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
+						if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
+						if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
+						
+						pad.buttons[GREEN] = false;
+						pad.buttons[RED] = false;
+						pad.buttons[YELLOW] = false;
+						pad.buttons[BLUE] = false;
+						pad.buttons[ORANGE] = false;										
 					} 									
 									
 				}				
@@ -4159,18 +4160,6 @@ function updateStatus() {
 		if (riffMasterXbox) {
 			pad.buttons[LOGO] = false;
 			pad.axis[TOUCH] = 0;
-		}
-		else
-			
-		if (mobileCheck()) {
-			/*pad.buttons[GREEN] = false;
-			pad.buttons[RED] = false;
-			pad.buttons[YELLOW] = false;
-			pad.buttons[BLUE] = false;
-			pad.buttons[ORANGE] = false;*/
-						
-			pad.axis[TOUCH] = 0;
-			pad.axis[STRUM] = 0;
 		}
 		else		
 			
