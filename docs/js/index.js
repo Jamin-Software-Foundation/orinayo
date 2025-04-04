@@ -3995,8 +3995,12 @@ function updateStatus() {
 				
 				if (i == 7) j = START;			
 				if (i == 6) j = STARPOWER;								
-				if (i == 16) j = LOGO;					
-				
+				if (i == 16) j = LOGO;	
+
+				if (i == 12) j = 112;				
+				if (i == 13) j = 113;				
+				if (i == 14) j = 114;				
+				if (i == 15) j = 115;				
 
 				if (pad.buttons[j] != touched) {
 					console.debug("button " + j, touched);	
@@ -4004,11 +4008,13 @@ function updateStatus() {
 					if (i == 12 || i == 13 || i == 14 || i == 15) // stum action
 					{			
 						if (touched) {
-							pad.axis[STRUM] = (i == 12) ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT));
+							pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
 							updated = true;	
 
 							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
 								pad.buttons[RED] = true;
+							} else {
+								pad.buttons[RED] = false;
 							}
 						}						
 					} 
@@ -4020,7 +4026,7 @@ function updateStatus() {
 					}					
 					else
 						
-					if (i == 0 || i == 1 || i == 2 || i == 3) {
+					if (i == 0 || i == 1 || i == 2 || i == 3 || i == 112 || i == 113 || i == 114 || i == 115) {
 						pad.buttons[j] = touched;						
 					}
 					else
