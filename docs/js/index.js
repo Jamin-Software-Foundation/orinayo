@@ -4008,7 +4008,7 @@ function updateStatus() {
 							pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
 							updated = true;	
 							
-							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
+							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE] && pad.axis[STRUM] != STRUM_LEFT && pad.axis[STRUM] != STRUM_RIGHT ) {
 								pad.buttons[RED] = true;
 							} else {
 								pad.buttons[RED] = false;
