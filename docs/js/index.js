@@ -3985,29 +3985,35 @@ function updateStatus() {
 			if (mobileCheck()) {				
 				let j = RED;
 				
-				if (i == 0) j = BLUE;
+				if (i == 0) j = YELLOW;
 				if (i == 1) j = GREEN;	
-				if (i == 2) j = YELLOW;					
+				if (i == 2) j = BLUE;					
 				if (i == 3) j = ORANGE;	
 				
 				if (i == 7) j = START;			
-				if (i == 6) j = STARPOWER;			
+				if (i == 6) j = STARPOWER;								
+				if (i == 16) j = LOGO;					
 				
-				if (i == 12) j = 112;				
-				if (i == 13) j = 113;					
-				if (i == 14) j = 114;				
-				if (i == 15) j = 115;		
 
 				if (pad.buttons[j] != touched) {
 					console.debug("button " + j, touched);	
 					
-					if (i == 12 || i == 13 || i == 14 || i == 15) 
+					if (i == 12 || i == 13 || i == 14 || i == 15) // stum action
 					{			
 						if (touched) {
 							pad.axis[STRUM] = (i == 12) ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT));
-							updated = true;						
+							updated = true;	
+
+							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
+								pad.buttons[RED] = true;
+							}
 						}						
 					} 
+					else
+
+					if (i == 6 || i == 7 || i == 16) {			// style action
+						updated = true;
+					}					
 					else
 						
 					if (i == 8) 	// Lower keys
@@ -4019,7 +4025,7 @@ function updateStatus() {
 
 						if (pad.buttons[RED]) {						
 							pad.axis[TOUCH] = -0.7;
-							pad.axis[STRUM] = STRUM_DOWN;			// fill
+							pad.axis[STRUM] = STRUM_DOWN;		// fill
 						}
 						else
 
@@ -4035,11 +4041,7 @@ function updateStatus() {
 						pad.buttons[YELLOW] = false;
 						pad.buttons[BLUE] = false;
 						pad.buttons[ORANGE] = false;					
-					} 				
-					
-					else {
-						updated = true;
-					}
+					} 									
 					
 					pad.buttons[j] = touched;				
 				}				
@@ -4162,6 +4164,14 @@ function updateStatus() {
 			pad.axis[TOUCH] = 0;
 		}
 		else
+			
+		if (mobileCheck()) {
+			pad.buttons[LOGO] = false;
+			pad.buttons[RED] = false;			
+			pad.axis[TOUCH] = 0;
+			pad.axis[STRUM] = 0;
+		}
+		else		
 			
 		if (riffMasterPS) {	
 			pad.buttons[LOGO] = false;		
