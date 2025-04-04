@@ -4003,7 +4003,6 @@ function updateStatus() {
 					console.debug("button " + j, touched);	
 					
 					if (i == 12 || i == 13 || i == 14 || i == 15) { // stum action
-						pad.buttons[j] = touched;	
 						
 						if (touched) {
 							pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
@@ -4014,38 +4013,21 @@ function updateStatus() {
 							} else {
 								pad.buttons[RED] = false;
 							}
-						}						
+						}
+
+						pad.buttons[j] = touched;							
 					} 
 					else
 
-					if (i == 6 || i == 7 || i == 16) {			// style action
+					if (touched && (i == 6 || i == 7 || i == 16)) {			// style action
 						updated = true;
 						pad.buttons[j] = touched;							
 					}					
 					else
 						
-					if (i == 0 || i == 1 || i == 2 || i == 3) {
+					if (touched && (i == 0 || i == 1 || i == 2 || i == 3)) {
 						pad.buttons[j] = touched;						
-					}
-					else
-						
-					if (i == 8) {	// Lower keys
-						updated = true;
-						pad.axis[TOUCH] = 0;
-						
-						if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
-						if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
-						if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
-						if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
-						if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
-						
-						pad.buttons[GREEN] = false;
-						pad.buttons[RED] = false;
-						pad.buttons[YELLOW] = false;
-						pad.buttons[BLUE] = false;
-						pad.buttons[ORANGE] = false;										
-					} 									
-									
+					}													
 				}				
 				
 			} else {
