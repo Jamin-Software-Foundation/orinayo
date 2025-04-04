@@ -2352,7 +2352,9 @@ async function onloadHandler() {
 	const configDlg = document.querySelector("#settings-dialog");
 	
 	configButton.addEventListener("click", function(event) {
-		//ettings.style.display = "none";
+		setMenuDefaults();
+		
+		settings.style.display = "";		
 		configDlg.style.display = "";
 		configDlg.hidden = false;		
 		
