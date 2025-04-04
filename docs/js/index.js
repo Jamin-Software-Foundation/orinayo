@@ -4005,7 +4005,7 @@ function updateStatus() {
 					if (i == 12 || i == 13 || i == 14 || i == 15) { // stum action						
 						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
 						updated = true;	
-
+						
 						if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
 							pad.buttons[RED] = true;
 						} else {
@@ -4144,7 +4144,16 @@ function updateStatus() {
 			pad.buttons[LOGO] = false;
 			pad.axis[TOUCH] = 0;
 		}
-		else			
+		else	
+
+		if (mobileCheck()) {
+			pad.buttons[GREEN] = false;
+			pad.buttons[RED] = false;
+			pad.buttons[YELLOW] = false;
+			pad.buttons[BLUE] = false;
+			pad.buttons[ORANGE] = false;
+		}
+		else	
 			
 		if (riffMasterPS) {	
 			pad.buttons[LOGO] = false;		
