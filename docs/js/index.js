@@ -4028,7 +4028,13 @@ function updateStatus() {
 					if (i == 0 || i == 1 || i == 2 || i == 3) {
 						pad.buttons[j] = touched;						
 					}													
-				}				
+				}	
+
+				if (pad.axis[3] >= -0.7) pad.axis[TOUCH] = -0.7;	
+				if (pad.axis[3] >= -0.3) pad.axis[TOUCH] = -0.4; 	
+				if (pad.axis[3] >= 0.1) pad.axis[TOUCH] = 0.2;	
+				if (pad.axis[3] >= 0.4) pad.axis[TOUCH] = 0.4; 				
+				if (pad.axis[3] >= 0.9) pad.axis[TOUCH] = 1.0;					
 				
 			} else {
 		  
@@ -4037,28 +4043,29 @@ function updateStatus() {
 					pad.buttons[i] = touched;
 					updated = true;
 				}	
-			}				
-		}
+				
 		
-		if (guitar.axes.length > STRUM) 
-		{			
-			if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
-				//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
-				pad.axis[STRUM] = guitar.axes[STRUM].toFixed(4);
-				updated = true;
-			}
+				if (guitar.axes.length > STRUM) 
+				{			
+					if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
+						//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
+						pad.axis[STRUM] = guitar.axes[STRUM].toFixed(4);
+						updated = true;
+					}
 
-			if (pad.axis[TOUCH] != guitar.axes[TOUCH].toFixed(1)) {
-				//console.debug("touch", guitar.axes[TOUCH].toFixed(1));							
-				pad.axis[TOUCH] = guitar.axes[TOUCH].toFixed(1);
-				updated = true;				
-			}	
+					if (pad.axis[TOUCH] != guitar.axes[TOUCH].toFixed(1)) {
+						//console.debug("touch", guitar.axes[TOUCH].toFixed(1));							
+						pad.axis[TOUCH] = guitar.axes[TOUCH].toFixed(1);
+						updated = true;				
+					}	
 
-			if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
-				//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
-				pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
-				updated = true;				
-			}			
+					if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
+						//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
+						pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
+						updated = true;				
+					}			
+				}				
+			}				
 		}				
 	}
 	else
