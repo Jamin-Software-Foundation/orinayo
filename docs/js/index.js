@@ -4002,14 +4002,17 @@ function updateStatus() {
 				if (pad.buttons[j] != touched) {
 					console.debug("button " + j, touched);	
 					
-					if (i == 12 || i == 13 || i == 14 || i == 15) { // stum action						
-						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
-						updated = true;	
-						
-						if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
-							pad.buttons[RED] = true;
-						} else {
-							pad.buttons[RED] = false;
+					if (i == 12 || i == 13 || i == 14 || i == 15) { // stum action	
+
+						if (touched) {
+							pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
+							updated = true;	
+							
+							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE]) {
+								pad.buttons[RED] = true;
+							} else {
+								pad.buttons[RED] = false;
+							}
 						}
 
 						pad.buttons[j] = touched;							
