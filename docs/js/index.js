@@ -4030,30 +4030,30 @@ function updateStatus() {
 					}													
 				}	
 
-				/*if (guitar.axis[3] >= -0.7) {
+				if (guitar.axis[3].toFixed(4) == -0.7 || guitar.axis[3].toFixed(4) == -0.5) {
 					pad.axis[TOUCH] = -0.7;	
 					updated = true;
 				}
 				
-				if (guitar.axis[3] >= -0.3) {
+				if (guitar.axis[3].toFixed(4) == -0.3 || guitar.axis[3].toFixed(4) == -0.4) {
 					pad.axis[TOUCH] = -0.4; 	
 					updated = true;					
 				}
 				
-				if (guitar.axis[3] >= 0.1) {
+				if (guitar.axis[3].toFixed(4) == 0.1 || guitar.axis[3].toFixed(4) == 0.2) {
 					pad.axis[TOUCH] = 0.2;	
 					updated = true;					
 				}
 				
-				if (guitar.axis[3] >= 0.4) {
+				if (guitar.axis[3].toFixed(4) == 0.4 || guitar.axis[3].toFixed(4) == 0.5) {
 					pad.axis[TOUCH] = 0.4; 				
 					updated = true;
 				}
 					
-				if (guitar.axis[3] >= 0.9) {
+				if (guitar.axis[3].toFixed(4) == 0.9 || guitar.axis[3].toFixed(4) == 1.0) {
 					pad.axis[TOUCH] = 1.0;					
 					updated = true;
-				}*/
+				}
 				
 			} else {
 		  
@@ -4161,7 +4161,8 @@ function updateStatus() {
 		}				
 	}	
 		
-	if (updated) {
+	if (updated) 
+	{
 		if (styleStarted && songSequence) {
 			handleSongMode();
 		} else {
@@ -4181,6 +4182,7 @@ function updateStatus() {
 			pad.buttons[YELLOW] = false;
 			pad.buttons[BLUE] = false;
 			pad.buttons[ORANGE] = false;
+			pad.axis[STRUM] = STRUM_NEUTRAL;
 		}
 		else	
 			
