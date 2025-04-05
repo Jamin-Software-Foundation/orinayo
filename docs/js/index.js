@@ -4030,7 +4030,7 @@ function updateStatus() {
 					}													
 				}	
 
-				if (guitar.axis[3].toFixed(4) == -0.7 || guitar.axis[3].toFixed(4) == -0.5) {
+				/*if (guitar.axis[3].toFixed(4) == -0.7 || guitar.axis[3].toFixed(4) == -0.5) {
 					pad.axis[TOUCH] = -0.7;	
 					updated = true;
 				}
@@ -4053,7 +4053,7 @@ function updateStatus() {
 				if (guitar.axis[3].toFixed(4) == 0.9 || guitar.axis[3].toFixed(4) == 1.0) {
 					pad.axis[TOUCH] = 1.0;					
 					updated = true;
-				}
+				}*/
 				
 			} else {
 		  
