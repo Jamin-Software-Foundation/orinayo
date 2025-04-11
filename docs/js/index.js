@@ -4030,6 +4030,8 @@ function updateStatus() {
 					}													
 				}	
 
+				// TODO debug axis[3] messages
+				
 				/*if (guitar.axis[3].toFixed(4) == -0.7 || guitar.axis[3].toFixed(4) == -0.5) {
 					pad.axis[TOUCH] = -0.7;	
 					updated = true;
@@ -4652,6 +4654,8 @@ async function setupUI(config, err) {
 	guitarType.options[6] = new Option("Electric Bass Guitar (pick)", "0341_Aspirin_sf2_file", config.guitarName == "0341_Aspirin_sf2_file", config.guitarName == "0341_Aspirin_sf2_file");	
 	guitarType.options[7] = new Option("Electric Guitar FSBS", "0270_EGuitar_FSBS_SF2_file", config.guitarName == "0270_EGuitar_FSBS_SF2_file", config.guitarName == "0270_EGuitar_FSBS_SF2_file");	
 	guitarType.options[8] = new Option("JC Live", "0260_JCLive_sf2_file", config.guitarName == "0260_JCLive_sf2_file", config.guitarName == "0260_JCLive_sf2_file");	
+	guitarType.options[9] = new Option("Electric Guitar", "0270_Aspirin_sf2_file", config.guitarName == "0270_Aspirin_sf2_file", config.guitarName == "0270_Aspirin_sf2_file");	
+	guitarType.options[10] = new Option("Muted Electric", "0280_JCLive_sf2_file", config.guitarName == "0280_JCLive_sf2_file", config.guitarName == "0280_JCLive_sf2_file");	
 
 	guitarType.addEventListener("change", function() {
 		guitarStrum[1].style.display = "none";		
@@ -6484,7 +6488,9 @@ function playChord(chord, root, type, bass) {
 			if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN)	
 			{
 				if (padsMode == 1) {
-					if (pad.axis[STRUM] == STRUM_UP) player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+					if (pad.axis[STRUM]   == STRUM_UP) player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume * 0.5, undefined, guitarReverb.checked);								
+					// TODO more dynamics with muted guitar (explore dutune)
+					//if (pad.axis[STRUM] == STRUM_UP) player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
 					if (pad.axis[STRUM] == STRUM_DOWN) player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
 				}		
 				else

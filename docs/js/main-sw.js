@@ -17,6 +17,9 @@ const assets = [
   "/orinayo/js/0253_Acoustic_Guitar_sf2_file.js",
   "/orinayo/js/0341_Aspirin_sf2_file.js",  
   "/orinayo/js/0260_JCLive_sf2_file.js",
+  "/orinayo/js/0270_Aspirin_sf2_file.js",  
+  "/orinayo/js/0280_JCLive_sf2_file.js", 
+  
   "/orinayo/dist/converse.js",  
   "/orinayo/assets/pedalboard.js",   
   "/orinayo/js/pureknob.js",     
