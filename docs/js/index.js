@@ -6470,9 +6470,10 @@ function playChord(chord, root, type, bass) {
 	if (!activeChord) {
 		lastChord = firstChord;	
 		firstChord = chord;
+		const autoStrumCode = autoStrumUpDown();
 		
 		if (inputDeviceType == "lavagenie" || inputDeviceType == "keyboard" || songSequence?.data?.music) {
-			pad.axis[STRUM] = autoStrumUpDown();
+			pad.axis[STRUM] = autoStrumCode;
 		}
 			
 		const arrChord = (firstChord.length == 4 ? firstChord[1] : firstChord[0]) % 12;
@@ -6488,10 +6489,22 @@ function playChord(chord, root, type, bass) {
 			if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN)	
 			{
 				if (padsMode == 1) {
-					if (pad.axis[STRUM]   == STRUM_UP) player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume * 0.5, undefined, guitarReverb.checked);								
-					// TODO more dynamics with muted guitar (explore dutune)
-					//if (pad.axis[STRUM] == STRUM_UP) player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
-					if (pad.axis[STRUM] == STRUM_DOWN) player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+					if (pad.axis[STRUM]  == STRUM_UP) {
+						player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume * 0.5, undefined, guitarReverb.checked);								
+						// TODO more dynamics with muted guitar (explore dutune)
+						//if (pad.axis[STRUM] == STRUM_UP) 
+					}
+					else {
+
+						if (autoStrumCode == STRUM_UP) {
+							player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);					
+						}
+						else 
+							
+						if (autoStrumCode == STRUM_DOWN) {
+							player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+						}
+					}
 				}		
 				else
 					
