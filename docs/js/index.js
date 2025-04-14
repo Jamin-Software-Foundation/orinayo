@@ -6457,7 +6457,7 @@ function playChord(chord, root, type, bass) {
 	console.debug("playChord", chord, root, type, bass);
 
 	const guitarPos = guitarPosition.selectedIndex;	
-	const guitarDuration = 240 / tempo; 
+	const guitarDuration = 960 / tempo; 
 	const bassNote = (chord.length == 4 ? chord[0] : chord[0] - 12);
 	const rootNote = (chord.length == 4 ? chord[0] : chord[0] - 12) + (guitarPos * 12);	
 	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);	
