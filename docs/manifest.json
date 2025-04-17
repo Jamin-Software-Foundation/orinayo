@@ -3,7 +3,7 @@
 	"name": "OrinAyo",  
 	"short_name": "OrinAyo",
 	"description": "The Live Music Producer",
-	"version": "0.9.21",
+	"version": "0.9.22",
 	"homepage_url": "https://jus-be.github.io/orinayo/help.html",
 	"background": {
 		"service_worker": "./js/background.js"
