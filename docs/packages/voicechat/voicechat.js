@@ -16,6 +16,8 @@
             __ = _converse.__;
 			
 			_converse.api.listen.on('connected', async function() {
+	            console.debug("voicechat - connected");	
+				
 				await _converse.api.user.settings.set({
 						voicechat_prefix: 'VC',					
 						voicechat_transcribe: false,

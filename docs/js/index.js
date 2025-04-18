@@ -333,7 +333,7 @@ async function messageHandler(evt) {
 	playButton.style.setProperty("--accent-fill-rest", "red");
 
 	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
-	const url = "https://" + parts[2] + "/orinayo/cp2midi";	
+	const url = (parts[0] == "ws:" ? "http:" : "https:") + parts[2] + "/orinayo/cp2midi";	
 
 	const response = await fetch(url, {method: "POST", body: evt.data});
 	const blob = await response.blob();	
@@ -1257,7 +1257,7 @@ function startXMPP() {
 				toggleChat.style.display = "";
 				
 				const parts = conURI.split("/");
-				chordpro.src = "https://" + parts[2] + "/orinayo/chordpro-pdf-online/";					
+				chordpro.src =  (parts[0] == "ws:" ? "http:" : "https:") + "//" + parts[2] + "/orinayo/chordpro-pdf-online/";					
 				chordPro.style.display = "";
 				
 				streamSong.style.setProperty("--accent-fill-rest", "green");
@@ -2886,7 +2886,7 @@ async function handleChordPro(file, data) {
 	console.debug("handleChordPro", file.name, song);	
 	
 	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
-	const url = "https://" + parts[2] + "/orinayo/cp2midi";	
+	const url = (parts[0] == "ws:" ? "http:" : "https:") + parts[2] + "/orinayo/cp2midi";	
 	const response = await fetch(url, {method: "POST", body});
 	const blob = await response.blob();	
 	const buffer = await blob.arrayBuffer();
