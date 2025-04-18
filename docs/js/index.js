@@ -1291,6 +1291,7 @@ function startXMPP() {
 		loglevel: 'debug',
 		muc_show_info_messages: [], //mucShowInfoMessages,
 		muc_show_logs_before_join: true,	
+		muc_history_max_stanzas: 50,
 		nickname: username,
 		notification_icon: "./assets/icon_128.png",
 		password: password,
@@ -1311,7 +1312,6 @@ function startXMPP() {
 }
 
 function parseStanza(stanza, attrs) {
-	console.debug("parseStanza", stanza, attrs);	
     const json = stanza.querySelector('json');	
 		
     if (json) {	

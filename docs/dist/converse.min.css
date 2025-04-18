@@ -50,28 +50,28 @@
   --converse-danger-rgb: 220, 53, 69;
   --converse-light-rgb: 248, 249, 250;
   --converse-dark-rgb: 33, 37, 41;
-  --converse-primary-text-emphasis: #052c65;
-  --converse-secondary-text-emphasis: #2b2f32;
-  --converse-success-text-emphasis: #0a3622;
-  --converse-info-text-emphasis: #055160;
-  --converse-warning-text-emphasis: #664d03;
-  --converse-danger-text-emphasis: #58151c;
+  --converse-primary-text-emphasis: rgb(5.2, 44, 101.2);
+  --converse-secondary-text-emphasis: rgb(43.2, 46.8, 50);
+  --converse-success-text-emphasis: rgb(10, 54, 33.6);
+  --converse-info-text-emphasis: rgb(5.2, 80.8, 96);
+  --converse-warning-text-emphasis: rgb(102, 77.2, 2.8);
+  --converse-danger-text-emphasis: rgb(88, 21.2, 27.6);
   --converse-light-text-emphasis: #495057;
   --converse-dark-text-emphasis: #495057;
-  --converse-primary-bg-subtle: #cfe2ff;
-  --converse-secondary-bg-subtle: #e2e3e5;
-  --converse-success-bg-subtle: #d1e7dd;
-  --converse-info-bg-subtle: #cff4fc;
-  --converse-warning-bg-subtle: #fff3cd;
-  --converse-danger-bg-subtle: #f8d7da;
-  --converse-light-bg-subtle: #fcfcfd;
+  --converse-primary-bg-subtle: rgb(206.6, 226, 254.6);
+  --converse-secondary-bg-subtle: rgb(225.6, 227.4, 229);
+  --converse-success-bg-subtle: rgb(209, 231, 220.8);
+  --converse-info-bg-subtle: rgb(206.6, 244.4, 252);
+  --converse-warning-bg-subtle: rgb(255, 242.6, 205.4);
+  --converse-danger-bg-subtle: rgb(248, 214.6, 217.8);
+  --converse-light-bg-subtle: rgb(251.5, 252, 252.5);
   --converse-dark-bg-subtle: #ced4da;
-  --converse-primary-border-subtle: #9ec5fe;
-  --converse-secondary-border-subtle: #c4c8cb;
-  --converse-success-border-subtle: #a3cfbb;
-  --converse-info-border-subtle: #9eeaf9;
-  --converse-warning-border-subtle: #ffe69c;
-  --converse-danger-border-subtle: #f1aeb5;
+  --converse-primary-border-subtle: rgb(158.2, 197, 254.2);
+  --converse-secondary-border-subtle: rgb(196.2, 199.8, 203);
+  --converse-success-border-subtle: rgb(163, 207, 186.6);
+  --converse-info-border-subtle: rgb(158.2, 233.8, 249);
+  --converse-warning-border-subtle: rgb(255, 230.2, 155.8);
+  --converse-danger-border-subtle: rgb(241, 174.2, 180.6);
   --converse-light-border-subtle: #e9ecef;
   --converse-dark-border-subtle: #adb5bd;
   --converse-white-rgb: 255, 255, 255;
@@ -101,11 +101,11 @@
   --converse-link-color: #0d6efd;
   --converse-link-color-rgb: 13, 110, 253;
   --converse-link-decoration: underline;
-  --converse-link-hover-color: #0a58ca;
+  --converse-link-hover-color: rgb(10.4, 88, 202.4);
   --converse-link-hover-color-rgb: 10, 88, 202;
   --converse-code-color: #d63384;
   --converse-highlight-color: #212529;
-  --converse-highlight-bg: #fff3cd;
+  --converse-highlight-bg: rgb(255, 242.6, 205.4);
   --converse-border-width: 1px;
   --converse-border-style: solid;
   --converse-border-color: #dee2e6;
@@ -144,46 +144,46 @@
   --converse-secondary-bg-rgb: 52, 58, 64;
   --converse-tertiary-color: rgba(222, 226, 230, 0.5);
   --converse-tertiary-color-rgb: 222, 226, 230;
-  --converse-tertiary-bg: #2b3035;
+  --converse-tertiary-bg: rgb(42.5, 47.5, 52.5);
   --converse-tertiary-bg-rgb: 43, 48, 53;
-  --converse-primary-text-emphasis: #6ea8fe;
-  --converse-secondary-text-emphasis: #a7acb1;
-  --converse-success-text-emphasis: #75b798;
-  --converse-info-text-emphasis: #6edff6;
-  --converse-warning-text-emphasis: #ffda6a;
-  --converse-danger-text-emphasis: #ea868f;
+  --converse-primary-text-emphasis: rgb(109.8, 168, 253.8);
+  --converse-secondary-text-emphasis: rgb(166.8, 172.2, 177);
+  --converse-success-text-emphasis: rgb(117, 183, 152.4);
+  --converse-info-text-emphasis: rgb(109.8, 223.2, 246);
+  --converse-warning-text-emphasis: rgb(255, 217.8, 106.2);
+  --converse-danger-text-emphasis: rgb(234, 133.8, 143.4);
   --converse-light-text-emphasis: #f8f9fa;
   --converse-dark-text-emphasis: #dee2e6;
-  --converse-primary-bg-subtle: #031633;
-  --converse-secondary-bg-subtle: #161719;
-  --converse-success-bg-subtle: #051b11;
-  --converse-info-bg-subtle: #032830;
-  --converse-warning-bg-subtle: #332701;
-  --converse-danger-bg-subtle: #2c0b0e;
+  --converse-primary-bg-subtle: rgb(2.6, 22, 50.6);
+  --converse-secondary-bg-subtle: rgb(21.6, 23.4, 25);
+  --converse-success-bg-subtle: rgb(5, 27, 16.8);
+  --converse-info-bg-subtle: rgb(2.6, 40.4, 48);
+  --converse-warning-bg-subtle: rgb(51, 38.6, 1.4);
+  --converse-danger-bg-subtle: rgb(44, 10.6, 13.8);
   --converse-light-bg-subtle: #343a40;
   --converse-dark-bg-subtle: #1a1d20;
-  --converse-primary-border-subtle: #084298;
-  --converse-secondary-border-subtle: #41464b;
-  --converse-success-border-subtle: #0f5132;
-  --converse-info-border-subtle: #087990;
-  --converse-warning-border-subtle: #997404;
-  --converse-danger-border-subtle: #842029;
+  --converse-primary-border-subtle: rgb(7.8, 66, 151.8);
+  --converse-secondary-border-subtle: rgb(64.8, 70.2, 75);
+  --converse-success-border-subtle: rgb(15, 81, 50.4);
+  --converse-info-border-subtle: rgb(7.8, 121.2, 144);
+  --converse-warning-border-subtle: rgb(153, 115.8, 4.2);
+  --converse-danger-border-subtle: rgb(132, 31.8, 41.4);
   --converse-light-border-subtle: #495057;
   --converse-dark-border-subtle: #343a40;
   --converse-heading-color: inherit;
-  --converse-link-color: #6ea8fe;
-  --converse-link-hover-color: #8bb9fe;
+  --converse-link-color: rgb(109.8, 168, 253.8);
+  --converse-link-hover-color: rgb(138.84, 185.4, 254.04);
   --converse-link-color-rgb: 110, 168, 254;
   --converse-link-hover-color-rgb: 139, 185, 254;
-  --converse-code-color: #e685b5;
+  --converse-code-color: rgb(230.4, 132.6, 181.2);
   --converse-highlight-color: #dee2e6;
-  --converse-highlight-bg: #664d03;
+  --converse-highlight-bg: rgb(102, 77.2, 2.8);
   --converse-border-color: #495057;
   --converse-border-color-translucent: rgba(255, 255, 255, 0.15);
-  --converse-form-valid-color: #75b798;
-  --converse-form-valid-border-color: #75b798;
-  --converse-form-invalid-color: #ea868f;
-  --converse-form-invalid-border-color: #ea868f;
+  --converse-form-valid-color: rgb(117, 183, 152.4);
+  --converse-form-valid-border-color: rgb(117, 183, 152.4);
+  --converse-form-invalid-color: rgb(234, 133.8, 143.4);
+  --converse-form-invalid-border-color: rgb(234, 133.8, 143.4);
 }
 
 .conversejs, converse-bg {
@@ -522,8 +522,8 @@ converse-bg [type=submit]:not(:disabled) {
   width: 100%;
   padding: 0;
   margin-bottom: 0.5rem;
-  font-size: calc(1.275rem + 0.3vw);
   line-height: inherit;
+  font-size: calc(1.275rem + 0.3vw);
 }
 @media (min-width: 1200px) {
   .conversejs legend, converse-bg legend {
@@ -586,9 +586,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   font-weight: 300;
 }
 .conversejs .display-1, converse-bg .display-1 {
-  font-size: calc(1.625rem + 4.5vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.625rem + 4.5vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-1, converse-bg .display-1 {
@@ -596,9 +596,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   }
 }
 .conversejs .display-2, converse-bg .display-2 {
-  font-size: calc(1.575rem + 3.9vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.575rem + 3.9vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-2, converse-bg .display-2 {
@@ -606,9 +606,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   }
 }
 .conversejs .display-3, converse-bg .display-3 {
-  font-size: calc(1.525rem + 3.3vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.525rem + 3.3vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-3, converse-bg .display-3 {
@@ -616,9 +616,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   }
 }
 .conversejs .display-4, converse-bg .display-4 {
-  font-size: calc(1.475rem + 2.7vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.475rem + 2.7vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-4, converse-bg .display-4 {
@@ -626,9 +626,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   }
 }
 .conversejs .display-5, converse-bg .display-5 {
-  font-size: calc(1.425rem + 2.1vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.425rem + 2.1vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-5, converse-bg .display-5 {
@@ -636,9 +636,9 @@ converse-bg ::-webkit-datetime-edit-year-field {
   }
 }
 .conversejs .display-6, converse-bg .display-6 {
-  font-size: calc(1.375rem + 1.5vw);
   font-weight: 300;
   line-height: 1.2;
+  font-size: calc(1.375rem + 1.5vw);
 }
 @media (min-width: 1200px) {
   .conversejs .display-6, converse-bg .display-6 {
@@ -774,7 +774,7 @@ converse-bg .container-sm {
   margin-top: var(--converse-gutter-y);
 }
 .conversejs .col, converse-bg .col {
-  flex: 1 0 0%;
+  flex: 1 0 0;
 }
 .conversejs .row-cols-auto > *, converse-bg .row-cols-auto > * {
   flex: 0 0 auto;
@@ -951,7 +951,7 @@ converse-bg .gy-5 {
 }
 @media (min-width: 576px) {
   .conversejs .col-sm, converse-bg .col-sm {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .conversejs .row-cols-sm-auto > *, converse-bg .row-cols-sm-auto > * {
     flex: 0 0 auto;
@@ -1132,7 +1132,7 @@ converse-bg .gy-5 {
 }
 @media (min-width: 768px) {
   .conversejs .col-md, converse-bg .col-md {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .conversejs .row-cols-md-auto > *, converse-bg .row-cols-md-auto > * {
     flex: 0 0 auto;
@@ -1313,7 +1313,7 @@ converse-bg .gy-5 {
 }
 @media (min-width: 992px) {
   .conversejs .col-lg, converse-bg .col-lg {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .conversejs .row-cols-lg-auto > *, converse-bg .row-cols-lg-auto > * {
     flex: 0 0 auto;
@@ -1494,7 +1494,7 @@ converse-bg .gy-5 {
 }
 @media (min-width: 1200px) {
   .conversejs .col-xl, converse-bg .col-xl {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .conversejs .row-cols-xl-auto > *, converse-bg .row-cols-xl-auto > * {
     flex: 0 0 auto;
@@ -1675,7 +1675,7 @@ converse-bg .gy-5 {
 }
 @media (min-width: 1400px) {
   .conversejs .col-xxl, converse-bg .col-xxl {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .conversejs .row-cols-xxl-auto > *, converse-bg .row-cols-xxl-auto > * {
     flex: 0 0 auto;
@@ -1926,78 +1926,78 @@ converse-bg .gy-5 {
 }
 .conversejs .table-primary, converse-bg .table-primary {
   --converse-table-color: #000;
-  --converse-table-bg: #cfe2ff;
-  --converse-table-border-color: #a6b5cc;
-  --converse-table-striped-bg: #c5d7f2;
+  --converse-table-bg: rgb(206.6, 226, 254.6);
+  --converse-table-border-color: rgb(165.28, 180.8, 203.68);
+  --converse-table-striped-bg: rgb(196.27, 214.7, 241.87);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #bacbe6;
+  --converse-table-active-bg: rgb(185.94, 203.4, 229.14);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #bfd1ec;
+  --converse-table-hover-bg: rgb(191.105, 209.05, 235.505);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
 }
 .conversejs .table-secondary, converse-bg .table-secondary {
   --converse-table-color: #000;
-  --converse-table-bg: #e2e3e5;
-  --converse-table-border-color: #b5b6b7;
-  --converse-table-striped-bg: #d7d8da;
+  --converse-table-bg: rgb(225.6, 227.4, 229);
+  --converse-table-border-color: rgb(180.48, 181.92, 183.2);
+  --converse-table-striped-bg: rgb(214.32, 216.03, 217.55);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #cbccce;
+  --converse-table-active-bg: rgb(203.04, 204.66, 206.1);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #d1d2d4;
+  --converse-table-hover-bg: rgb(208.68, 210.345, 211.825);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
 }
 .conversejs .table-success, converse-bg .table-success {
   --converse-table-color: #000;
-  --converse-table-bg: #d1e7dd;
-  --converse-table-border-color: #a7b9b1;
-  --converse-table-striped-bg: #c7dbd2;
+  --converse-table-bg: rgb(209, 231, 220.8);
+  --converse-table-border-color: rgb(167.2, 184.8, 176.64);
+  --converse-table-striped-bg: rgb(198.55, 219.45, 209.76);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #bcd0c7;
+  --converse-table-active-bg: rgb(188.1, 207.9, 198.72);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #c1d6cc;
+  --converse-table-hover-bg: rgb(193.325, 213.675, 204.24);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
 }
 .conversejs .table-info, converse-bg .table-info {
   --converse-table-color: #000;
-  --converse-table-bg: #cff4fc;
-  --converse-table-border-color: #a6c3ca;
-  --converse-table-striped-bg: #c5e8ef;
+  --converse-table-bg: rgb(206.6, 244.4, 252);
+  --converse-table-border-color: rgb(165.28, 195.52, 201.6);
+  --converse-table-striped-bg: rgb(196.27, 232.18, 239.4);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #badce3;
+  --converse-table-active-bg: rgb(185.94, 219.96, 226.8);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #bfe2e9;
+  --converse-table-hover-bg: rgb(191.105, 226.07, 233.1);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
 }
 .conversejs .table-warning, converse-bg .table-warning {
   --converse-table-color: #000;
-  --converse-table-bg: #fff3cd;
-  --converse-table-border-color: #ccc2a4;
-  --converse-table-striped-bg: #f2e7c3;
+  --converse-table-bg: rgb(255, 242.6, 205.4);
+  --converse-table-border-color: rgb(204, 194.08, 164.32);
+  --converse-table-striped-bg: rgb(242.25, 230.47, 195.13);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #e6dbb9;
+  --converse-table-active-bg: rgb(229.5, 218.34, 184.86);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #ece1be;
+  --converse-table-hover-bg: rgb(235.875, 224.405, 189.995);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
 }
 .conversejs .table-danger, converse-bg .table-danger {
   --converse-table-color: #000;
-  --converse-table-bg: #f8d7da;
-  --converse-table-border-color: #c6acae;
-  --converse-table-striped-bg: #eccccf;
+  --converse-table-bg: rgb(248, 214.6, 217.8);
+  --converse-table-border-color: rgb(198.4, 171.68, 174.24);
+  --converse-table-striped-bg: rgb(235.6, 203.87, 206.91);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #dfc2c4;
+  --converse-table-active-bg: rgb(223.2, 193.14, 196.02);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #e5c7ca;
+  --converse-table-hover-bg: rgb(229.4, 198.505, 201.465);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
@@ -2005,12 +2005,12 @@ converse-bg .gy-5 {
 .conversejs .table-light, converse-bg .table-light {
   --converse-table-color: #000;
   --converse-table-bg: #f8f9fa;
-  --converse-table-border-color: #c6c7c8;
-  --converse-table-striped-bg: #ecedee;
+  --converse-table-border-color: rgb(198.4, 199.2, 200);
+  --converse-table-striped-bg: rgb(235.6, 236.55, 237.5);
   --converse-table-striped-color: #000;
-  --converse-table-active-bg: #dfe0e1;
+  --converse-table-active-bg: rgb(223.2, 224.1, 225);
   --converse-table-active-color: #000;
-  --converse-table-hover-bg: #e5e6e7;
+  --converse-table-hover-bg: rgb(229.4, 230.325, 231.25);
   --converse-table-hover-color: #000;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
@@ -2018,12 +2018,12 @@ converse-bg .gy-5 {
 .conversejs .table-dark, converse-bg .table-dark {
   --converse-table-color: #fff;
   --converse-table-bg: #212529;
-  --converse-table-border-color: #4d5154;
-  --converse-table-striped-bg: #2c3034;
+  --converse-table-border-color: rgb(77.4, 80.6, 83.8);
+  --converse-table-striped-bg: rgb(44.1, 47.9, 51.7);
   --converse-table-striped-color: #fff;
-  --converse-table-active-bg: #373b3e;
+  --converse-table-active-bg: rgb(55.2, 58.8, 62.4);
   --converse-table-active-color: #fff;
-  --converse-table-hover-bg: #323539;
+  --converse-table-hover-bg: rgb(49.65, 53.35, 57.05);
   --converse-table-hover-color: #fff;
   color: var(--converse-table-color);
   border-color: var(--converse-table-border-color);
@@ -2118,7 +2118,7 @@ converse-bg .gy-5 {
 .conversejs .form-control:focus, converse-bg .form-control:focus {
   color: var(--converse-body-color);
   background-color: var(--converse-body-bg);
-  border-color: #86b7fe;
+  border-color: rgb(134, 182.5, 254);
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
@@ -2263,7 +2263,7 @@ converse-bg .gy-5 {
   }
 }
 .conversejs .form-select:focus, converse-bg .form-select:focus {
-  border-color: #86b7fe;
+  border-color: rgb(134, 182.5, 254);
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
@@ -2344,7 +2344,7 @@ converse-bg .gy-5 {
   filter: brightness(90%);
 }
 .conversejs .form-check-input:focus, converse-bg .form-check-input:focus {
-  border-color: #86b7fe;
+  border-color: rgb(134, 182.5, 254);
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
@@ -2390,7 +2390,7 @@ converse-bg .gy-5 {
   }
 }
 .conversejs .form-switch .form-check-input:focus, converse-bg .form-switch .form-check-input:focus {
-  --converse-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%2386b7fe'/%3e%3c/svg%3e");
+  --converse-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgb%28134, 182.5, 254%29'/%3e%3c/svg%3e");
 }
 .conversejs .form-switch .form-check-input:checked, converse-bg .form-switch .form-check-input:checked {
   background-position: right center;
@@ -2461,7 +2461,7 @@ converse-bg .gy-5 {
   }
 }
 .conversejs .form-range::-webkit-slider-thumb:active, converse-bg .form-range::-webkit-slider-thumb:active {
-  background-color: #b6d4fe;
+  background-color: rgb(182.4, 211.5, 254.4);
 }
 .conversejs .form-range::-webkit-slider-runnable-track, converse-bg .form-range::-webkit-slider-runnable-track {
   width: 100%;
@@ -2490,7 +2490,7 @@ converse-bg .gy-5 {
   }
 }
 .conversejs .form-range::-moz-range-thumb:active, converse-bg .form-range::-moz-range-thumb:active {
-  background-color: #b6d4fe;
+  background-color: rgb(182.4, 211.5, 254.4);
 }
 .conversejs .form-range::-moz-range-track, converse-bg .form-range::-moz-range-track {
   width: 100%;
@@ -2527,9 +2527,11 @@ converse-bg .form-floating > .form-select {
   top: 0;
   left: 0;
   z-index: 2;
+  max-width: 100%;
   height: 100%;
   padding: 1rem 0.75rem;
   overflow: hidden;
+  color: rgba(var(--converse-body-color-rgb), 0.65);
   text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2556,7 +2558,7 @@ converse-bg .form-floating > .form-control-plaintext {
 converse-bg .form-floating > .form-control-plaintext::placeholder {
   color: transparent;
 }
-.conversejs .form-floating > .form-control:not(:-moz-placeholder-shown), .conversejs .form-floating > .form-control-plaintext:not(:-moz-placeholder-shown), converse-bg .form-floating > .form-control:not(:-moz-placeholder-shown), converse-bg .form-floating > .form-control-plaintext:not(:-moz-placeholder-shown) {
+.conversejs .form-floating > .form-control:not(:-moz-placeholder), .conversejs .form-floating > .form-control-plaintext:not(:-moz-placeholder), converse-bg .form-floating > .form-control:not(:-moz-placeholder), converse-bg .form-floating > .form-control-plaintext:not(:-moz-placeholder) {
   padding-top: 1.625rem;
   padding-bottom: 0.625rem;
 }
@@ -2577,9 +2579,9 @@ converse-bg .form-floating > .form-control-plaintext:-webkit-autofill {
 .conversejs .form-floating > .form-select, converse-bg .form-floating > .form-select {
   padding-top: 1.625rem;
   padding-bottom: 0.625rem;
+  padding-left: 0.75rem;
 }
-.conversejs .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label, converse-bg .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label {
-  color: rgba(var(--converse-body-color-rgb), 0.65);
+.conversejs .form-floating > .form-control:not(:-moz-placeholder) ~ label, converse-bg .form-floating > .form-control:not(:-moz-placeholder) ~ label {
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
 }
 .conversejs .form-floating > .form-control:focus ~ label,
@@ -2589,36 +2591,33 @@ converse-bg .form-floating > .form-control-plaintext:-webkit-autofill {
 converse-bg .form-floating > .form-control:not(:placeholder-shown) ~ label,
 converse-bg .form-floating > .form-control-plaintext ~ label,
 converse-bg .form-floating > .form-select ~ label {
-  color: rgba(var(--converse-body-color-rgb), 0.65);
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
-}
-.conversejs .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label::after, converse-bg .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label::after {
-  position: absolute;
-  inset: 1rem 0.375rem;
-  z-index: -1;
-  height: 1.5em;
-  content: "";
-  background-color: var(--converse-body-bg);
-  border-radius: var(--converse-border-radius);
-}
-.conversejs .form-floating > .form-control:focus ~ label::after,
-.conversejs .form-floating > .form-control:not(:placeholder-shown) ~ label::after,
-.conversejs .form-floating > .form-control-plaintext ~ label::after,
-.conversejs .form-floating > .form-select ~ label::after, converse-bg .form-floating > .form-control:focus ~ label::after,
-converse-bg .form-floating > .form-control:not(:placeholder-shown) ~ label::after,
-converse-bg .form-floating > .form-control-plaintext ~ label::after,
-converse-bg .form-floating > .form-select ~ label::after {
-  position: absolute;
-  inset: 1rem 0.375rem;
-  z-index: -1;
-  height: 1.5em;
-  content: "";
-  background-color: var(--converse-body-bg);
-  border-radius: var(--converse-border-radius);
 }
 .conversejs .form-floating > .form-control:-webkit-autofill ~ label, converse-bg .form-floating > .form-control:-webkit-autofill ~ label {
-  color: rgba(var(--converse-body-color-rgb), 0.65);
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+.conversejs .form-floating > textarea:not(:-moz-placeholder) ~ label::after, converse-bg .form-floating > textarea:not(:-moz-placeholder) ~ label::after {
+  position: absolute;
+  inset: 1rem 0.375rem;
+  z-index: -1;
+  height: 1.5em;
+  content: "";
+  background-color: var(--converse-body-bg);
+  border-radius: var(--converse-border-radius);
+}
+.conversejs .form-floating > textarea:focus ~ label::after,
+.conversejs .form-floating > textarea:not(:placeholder-shown) ~ label::after, converse-bg .form-floating > textarea:focus ~ label::after,
+converse-bg .form-floating > textarea:not(:placeholder-shown) ~ label::after {
+  position: absolute;
+  inset: 1rem 0.375rem;
+  z-index: -1;
+  height: 1.5em;
+  content: "";
+  background-color: var(--converse-body-bg);
+  border-radius: var(--converse-border-radius);
+}
+.conversejs .form-floating > textarea:disabled ~ label::after, converse-bg .form-floating > textarea:disabled ~ label::after {
+  background-color: var(--converse-secondary-bg);
 }
 .conversejs .form-floating > .form-control-plaintext ~ label, converse-bg .form-floating > .form-control-plaintext ~ label {
   border-width: var(--converse-border-width) 0;
@@ -2627,11 +2626,6 @@ converse-bg .form-floating > .form-select ~ label::after {
 .conversejs .form-floating > .form-control:disabled ~ label, converse-bg .form-floating > :disabled ~ label,
 converse-bg .form-floating > .form-control:disabled ~ label {
   color: #6c757d;
-}
-.conversejs .form-floating > :disabled ~ label::after,
-.conversejs .form-floating > .form-control:disabled ~ label::after, converse-bg .form-floating > :disabled ~ label::after,
-converse-bg .form-floating > .form-control:disabled ~ label::after {
-  background-color: var(--converse-secondary-bg);
 }
 .conversejs .input-group, converse-bg .input-group {
   position: relative;
@@ -2726,7 +2720,7 @@ converse-bg .input-group.has-validation > .form-floating:nth-last-child(n+3) > .
   border-bottom-right-radius: 0;
 }
 .conversejs .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback), converse-bg .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-  margin-left: calc(var(--converse-border-width) * -1);
+  margin-left: calc(-1 * var(--converse-border-width));
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -2766,7 +2760,7 @@ converse-bg.is-valid ~ .valid-tooltip {
 .was-validated .conversejs .form-control:valid, .conversejs .form-control.is-valid, .was-validated converse-bg .form-control:valid, converse-bg .form-control.is-valid {
   border-color: var(--converse-form-valid-border-color);
   padding-right: calc(1.5em + 0.75rem);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
@@ -2783,7 +2777,7 @@ converse-bg.is-valid ~ .valid-tooltip {
   border-color: var(--converse-form-valid-border-color);
 }
 .was-validated .conversejs .form-select:valid:not([multiple]):not([size]), .was-validated .conversejs .form-select:valid:not([multiple])[size="1"], .conversejs .form-select.is-valid:not([multiple]):not([size]), .conversejs .form-select.is-valid:not([multiple])[size="1"], .was-validated converse-bg .form-select:valid:not([multiple]):not([size]), .was-validated converse-bg .form-select:valid:not([multiple])[size="1"], converse-bg .form-select.is-valid:not([multiple]):not([size]), converse-bg .form-select.is-valid:not([multiple])[size="1"] {
-  --converse-form-select-bg-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  --converse-form-select-bg-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1'/%3e%3c/svg%3e");
   padding-right: 4.125rem;
   background-position: right 0.75rem center, center right 2.25rem;
   background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
@@ -2991,12 +2985,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #0d6efd;
   --converse-btn-border-color: #0d6efd;
   --converse-btn-hover-color: #fff;
-  --converse-btn-hover-bg: #0b5ed7;
-  --converse-btn-hover-border-color: #0a58ca;
+  --converse-btn-hover-bg: rgb(11.05, 93.5, 215.05);
+  --converse-btn-hover-border-color: rgb(10.4, 88, 202.4);
   --converse-btn-focus-shadow-rgb: 49, 132, 253;
   --converse-btn-active-color: #fff;
-  --converse-btn-active-bg: #0a58ca;
-  --converse-btn-active-border-color: #0a53be;
+  --converse-btn-active-bg: rgb(10.4, 88, 202.4);
+  --converse-btn-active-border-color: rgb(9.75, 82.5, 189.75);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #fff;
   --converse-btn-disabled-bg: #0d6efd;
@@ -3007,12 +3001,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #6c757d;
   --converse-btn-border-color: #6c757d;
   --converse-btn-hover-color: #fff;
-  --converse-btn-hover-bg: #5c636a;
-  --converse-btn-hover-border-color: #565e64;
+  --converse-btn-hover-bg: rgb(91.8, 99.45, 106.25);
+  --converse-btn-hover-border-color: rgb(86.4, 93.6, 100);
   --converse-btn-focus-shadow-rgb: 130, 138, 145;
   --converse-btn-active-color: #fff;
-  --converse-btn-active-bg: #565e64;
-  --converse-btn-active-border-color: #51585e;
+  --converse-btn-active-bg: rgb(86.4, 93.6, 100);
+  --converse-btn-active-border-color: rgb(81, 87.75, 93.75);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #fff;
   --converse-btn-disabled-bg: #6c757d;
@@ -3023,12 +3017,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #198754;
   --converse-btn-border-color: #198754;
   --converse-btn-hover-color: #fff;
-  --converse-btn-hover-bg: #157347;
-  --converse-btn-hover-border-color: #146c43;
+  --converse-btn-hover-bg: rgb(21.25, 114.75, 71.4);
+  --converse-btn-hover-border-color: rgb(20, 108, 67.2);
   --converse-btn-focus-shadow-rgb: 60, 153, 110;
   --converse-btn-active-color: #fff;
-  --converse-btn-active-bg: #146c43;
-  --converse-btn-active-border-color: #13653f;
+  --converse-btn-active-bg: rgb(20, 108, 67.2);
+  --converse-btn-active-border-color: rgb(18.75, 101.25, 63);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #fff;
   --converse-btn-disabled-bg: #198754;
@@ -3039,12 +3033,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #0dcaf0;
   --converse-btn-border-color: #0dcaf0;
   --converse-btn-hover-color: #000;
-  --converse-btn-hover-bg: #31d2f2;
-  --converse-btn-hover-border-color: #25cff2;
+  --converse-btn-hover-bg: rgb(49.3, 209.95, 242.25);
+  --converse-btn-hover-border-color: rgb(37.2, 207.3, 241.5);
   --converse-btn-focus-shadow-rgb: 11, 172, 204;
   --converse-btn-active-color: #000;
-  --converse-btn-active-bg: #3dd5f3;
-  --converse-btn-active-border-color: #25cff2;
+  --converse-btn-active-bg: rgb(61.4, 212.6, 243);
+  --converse-btn-active-border-color: rgb(37.2, 207.3, 241.5);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #000;
   --converse-btn-disabled-bg: #0dcaf0;
@@ -3055,12 +3049,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #ffc107;
   --converse-btn-border-color: #ffc107;
   --converse-btn-hover-color: #000;
-  --converse-btn-hover-bg: #ffca2c;
-  --converse-btn-hover-border-color: #ffc720;
+  --converse-btn-hover-bg: rgb(255, 202.3, 44.2);
+  --converse-btn-hover-border-color: rgb(255, 199.2, 31.8);
   --converse-btn-focus-shadow-rgb: 217, 164, 6;
   --converse-btn-active-color: #000;
-  --converse-btn-active-bg: #ffcd39;
-  --converse-btn-active-border-color: #ffc720;
+  --converse-btn-active-bg: rgb(255, 205.4, 56.6);
+  --converse-btn-active-border-color: rgb(255, 199.2, 31.8);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #000;
   --converse-btn-disabled-bg: #ffc107;
@@ -3071,12 +3065,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #dc3545;
   --converse-btn-border-color: #dc3545;
   --converse-btn-hover-color: #fff;
-  --converse-btn-hover-bg: #bb2d3b;
-  --converse-btn-hover-border-color: #b02a37;
+  --converse-btn-hover-bg: rgb(187, 45.05, 58.65);
+  --converse-btn-hover-border-color: rgb(176, 42.4, 55.2);
   --converse-btn-focus-shadow-rgb: 225, 83, 97;
   --converse-btn-active-color: #fff;
-  --converse-btn-active-bg: #b02a37;
-  --converse-btn-active-border-color: #a52834;
+  --converse-btn-active-bg: rgb(176, 42.4, 55.2);
+  --converse-btn-active-border-color: rgb(165, 39.75, 51.75);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #fff;
   --converse-btn-disabled-bg: #dc3545;
@@ -3087,12 +3081,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #f8f9fa;
   --converse-btn-border-color: #f8f9fa;
   --converse-btn-hover-color: #000;
-  --converse-btn-hover-bg: #d3d4d5;
-  --converse-btn-hover-border-color: #c6c7c8;
+  --converse-btn-hover-bg: rgb(210.8, 211.65, 212.5);
+  --converse-btn-hover-border-color: rgb(198.4, 199.2, 200);
   --converse-btn-focus-shadow-rgb: 211, 212, 213;
   --converse-btn-active-color: #000;
-  --converse-btn-active-bg: #c6c7c8;
-  --converse-btn-active-border-color: #babbbc;
+  --converse-btn-active-bg: rgb(198.4, 199.2, 200);
+  --converse-btn-active-border-color: rgb(186, 186.75, 187.5);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #000;
   --converse-btn-disabled-bg: #f8f9fa;
@@ -3103,12 +3097,12 @@ converse-bg .input-group > .form-floating:not(:focus-within).is-invalid {
   --converse-btn-bg: #212529;
   --converse-btn-border-color: #212529;
   --converse-btn-hover-color: #fff;
-  --converse-btn-hover-bg: #424649;
-  --converse-btn-hover-border-color: #373b3e;
+  --converse-btn-hover-bg: rgb(66.3, 69.7, 73.1);
+  --converse-btn-hover-border-color: rgb(55.2, 58.8, 62.4);
   --converse-btn-focus-shadow-rgb: 66, 70, 73;
   --converse-btn-active-color: #fff;
-  --converse-btn-active-bg: #4d5154;
-  --converse-btn-active-border-color: #373b3e;
+  --converse-btn-active-bg: rgb(77.4, 80.6, 83.8);
+  --converse-btn-active-border-color: rgb(55.2, 58.8, 62.4);
   --converse-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --converse-btn-disabled-color: #fff;
   --converse-btn-disabled-bg: #212529;
@@ -3669,7 +3663,7 @@ converse-bg .btn-group-vertical > .btn.active {
 .conversejs .btn-group > :not(.btn-check:first-child) + .btn,
 .conversejs .btn-group > .btn-group:not(:first-child), converse-bg .btn-group > :not(.btn-check:first-child) + .btn,
 converse-bg .btn-group > .btn-group:not(:first-child) {
-  margin-left: calc(var(--converse-border-width) * -1);
+  margin-left: calc(-1 * var(--converse-border-width));
 }
 .conversejs .btn-group > .btn:not(:last-child):not(.dropdown-toggle),
 .conversejs .btn-group > .btn.dropdown-toggle-split:first-child,
@@ -3718,7 +3712,7 @@ converse-bg .btn-group-vertical > .btn-group {
 .conversejs .btn-group-vertical > .btn:not(:first-child),
 .conversejs .btn-group-vertical > .btn-group:not(:first-child), converse-bg .btn-group-vertical > .btn:not(:first-child),
 converse-bg .btn-group-vertical > .btn-group:not(:first-child) {
-  margin-top: calc(var(--converse-border-width) * -1);
+  margin-top: calc(-1 * var(--converse-border-width));
 }
 .conversejs .btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle),
 .conversejs .btn-group-vertical > .btn-group:not(:last-child) > .btn, converse-bg .btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle),
@@ -3726,8 +3720,10 @@ converse-bg .btn-group-vertical > .btn-group:not(:last-child) > .btn {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.conversejs .btn-group-vertical > .btn ~ .btn,
-.conversejs .btn-group-vertical > .btn-group:not(:first-child) > .btn, converse-bg .btn-group-vertical > .btn ~ .btn,
+.conversejs .btn-group-vertical > .btn:nth-child(n+3),
+.conversejs .btn-group-vertical > :not(.btn-check) + .btn,
+.conversejs .btn-group-vertical > .btn-group:not(:first-child) > .btn, converse-bg .btn-group-vertical > .btn:nth-child(n+3),
+converse-bg .btn-group-vertical > :not(.btn-check) + .btn,
 converse-bg .btn-group-vertical > .btn-group:not(:first-child) > .btn {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -3849,8 +3845,8 @@ converse-bg .nav-fill .nav-item {
 .conversejs .nav-justified > .nav-link,
 .conversejs .nav-justified .nav-item, converse-bg .nav-justified > .nav-link,
 converse-bg .nav-justified .nav-item {
-  flex-basis: 0;
   flex-grow: 1;
+  flex-basis: 0;
   text-align: center;
 }
 .conversejs .nav-fill .nav-item .nav-link,
@@ -3954,8 +3950,8 @@ converse-bg .navbar-text a:focus {
   color: var(--converse-navbar-active-color);
 }
 .conversejs .navbar-collapse, converse-bg .navbar-collapse {
-  flex-basis: 100%;
   flex-grow: 1;
+  flex-basis: 100%;
   align-items: center;
 }
 .conversejs .navbar-toggler, converse-bg .navbar-toggler {
@@ -4435,7 +4431,7 @@ converse-bg .card-img-bottom {
     flex-flow: row wrap;
   }
   .conversejs .card-group > .card, converse-bg .card-group > .card {
-    flex: 1 0 0%;
+    flex: 1 0 0;
     margin-bottom: 0;
   }
   .conversejs .card-group > .card + .card, converse-bg .card-group > .card + .card {
@@ -4581,7 +4577,7 @@ converse-bg .card-img-bottom {
 }
 @keyframes progress-bar-stripes {
   0% {
-    background-position-x: 1rem;
+    background-position-x: var(--converse-progress-height);
   }
 }
 .conversejs .progress,
@@ -4668,21 +4664,6 @@ converse-bg .progress-stacked {
   content: counters(section, ".") ". ";
   counter-increment: section;
 }
-.conversejs .list-group-item-action, converse-bg .list-group-item-action {
-  width: 100%;
-  color: var(--converse-list-group-action-color);
-  text-align: inherit;
-}
-.conversejs .list-group-item-action:hover, .conversejs .list-group-item-action:focus, converse-bg .list-group-item-action:hover, converse-bg .list-group-item-action:focus {
-  z-index: 1;
-  color: var(--converse-list-group-action-hover-color);
-  text-decoration: none;
-  background-color: var(--converse-list-group-action-hover-bg);
-}
-.conversejs .list-group-item-action:active, converse-bg .list-group-item-action:active {
-  color: var(--converse-list-group-action-active-color);
-  background-color: var(--converse-list-group-action-active-bg);
-}
 .conversejs .list-group-item, converse-bg .list-group-item {
   position: relative;
   display: block;
@@ -4717,6 +4698,21 @@ converse-bg .progress-stacked {
 .conversejs .list-group-item + .list-group-item.active, converse-bg .list-group-item + .list-group-item.active {
   margin-top: calc(-1 * var(--converse-list-group-border-width));
   border-top-width: var(--converse-list-group-border-width);
+}
+.conversejs .list-group-item-action, converse-bg .list-group-item-action {
+  width: 100%;
+  color: var(--converse-list-group-action-color);
+  text-align: inherit;
+}
+.conversejs .list-group-item-action:not(.active):hover, .conversejs .list-group-item-action:not(.active):focus, converse-bg .list-group-item-action:not(.active):hover, converse-bg .list-group-item-action:not(.active):focus {
+  z-index: 1;
+  color: var(--converse-list-group-action-hover-color);
+  text-decoration: none;
+  background-color: var(--converse-list-group-action-hover-bg);
+}
+.conversejs .list-group-item-action:not(.active):active, converse-bg .list-group-item-action:not(.active):active {
+  color: var(--converse-list-group-action-active-color);
+  background-color: var(--converse-list-group-action-active-bg);
 }
 .conversejs .list-group-horizontal, converse-bg .list-group-horizontal {
   flex-direction: row;
@@ -4967,19 +4963,19 @@ converse-bg .progress-stacked {
 }
 .conversejs .btn-close, converse-bg .btn-close {
   --converse-btn-close-color: #000;
-  --converse-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+  --converse-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414'/%3e%3c/svg%3e");
   --converse-btn-close-opacity: 0.5;
   --converse-btn-close-hover-opacity: 0.75;
   --converse-btn-close-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --converse-btn-close-focus-opacity: 1;
   --converse-btn-close-disabled-opacity: 0.25;
-  --converse-btn-close-white-filter: invert(1) grayscale(100%) brightness(200%);
   box-sizing: content-box;
   width: 1em;
   height: 1em;
   padding: 0.25em 0.25em;
   color: var(--converse-btn-close-color);
   background: transparent var(--converse-btn-close-bg) center/1em auto no-repeat;
+  filter: var(--converse-btn-close-filter);
   border: 0;
   border-radius: 0.375rem;
   opacity: var(--converse-btn-close-opacity);
@@ -5002,17 +4998,22 @@ converse-bg .progress-stacked {
   opacity: var(--converse-btn-close-disabled-opacity);
 }
 .conversejs .btn-close-white, converse-bg .btn-close-white {
-  filter: var(--converse-btn-close-white-filter);
+  --converse-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
-.conversejs [data-bs-theme=dark] .btn-close, converse-bg [data-bs-theme=dark] .btn-close {
-  filter: var(--converse-btn-close-white-filter);
+.conversejs :root,
+.conversejs [data-bs-theme=light], converse-bg :root,
+converse-bg [data-bs-theme=light] {
+  --converse-btn-close-filter: ;
+}
+.conversejs [data-bs-theme=dark], converse-bg [data-bs-theme=dark] {
+  --converse-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
 .conversejs .modal, converse-bg .modal {
   --converse-modal-zindex: 1055;
   --converse-modal-width: 500px;
   --converse-modal-padding: 1rem;
   --converse-modal-margin: 0.5rem;
-  --converse-modal-color: ;
+  --converse-modal-color: var(--converse-body-color);
   --converse-modal-bg: var(--converse-body-bg);
   --converse-modal-border-color: var(--converse-border-color-translucent);
   --converse-modal-border-width: var(--converse-border-width);
@@ -5047,8 +5048,8 @@ converse-bg .progress-stacked {
   pointer-events: none;
 }
 .modal.fade .conversejs .modal-dialog, .modal.fade converse-bg .modal-dialog {
-  transition: transform 0.3s ease-out;
   transform: translate(0, -50px);
+  transition: transform 0.3s ease-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .modal.fade .conversejs .modal-dialog, .modal.fade converse-bg .modal-dialog {
@@ -5118,7 +5119,10 @@ converse-bg .progress-stacked {
 }
 .conversejs .modal-header .btn-close, converse-bg .modal-header .btn-close {
   padding: calc(var(--converse-modal-header-padding-y) * 0.5) calc(var(--converse-modal-header-padding-x) * 0.5);
-  margin: calc(-0.5 * var(--converse-modal-header-padding-y)) calc(-0.5 * var(--converse-modal-header-padding-x)) calc(-0.5 * var(--converse-modal-header-padding-y)) auto;
+  margin-top: calc(-0.5 * var(--converse-modal-header-padding-y));
+  margin-right: calc(-0.5 * var(--converse-modal-header-padding-x));
+  margin-bottom: calc(-0.5 * var(--converse-modal-header-padding-y));
+  margin-left: auto;
 }
 .conversejs .modal-title, converse-bg .modal-title {
   margin-bottom: 0;
@@ -10390,6 +10394,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --danger-color: var(--red);
   --warning-color: var(--orange);
   --info-color: var(--purple);
+  --converse-body-bg: var(--background-color);
+  --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--red);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
@@ -10423,6 +10429,13 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=nordic] .popover, .conversejs[data-bs-theme=nordic] .popover, converse-bg[data-converse-theme=nordic] .popover, converse-bg[data-bs-theme=nordic] .popover {
+  --converse-popover-header-color: var(--background-color) !important;
+  --converse-popover-header-bg: var(--info-color) !important;
+}
+.conversejs[data-converse-theme=nordic] .modal, .conversejs[data-bs-theme=nordic] .modal, converse-bg[data-converse-theme=nordic] .modal, converse-bg[data-bs-theme=nordic] .modal {
+  --converse-modal-color: var(--foreground-color) !important;
+}
 .conversejs[data-converse-theme=classic], .conversejs[data-bs-theme=classic], converse-bg[data-converse-theme=classic], converse-bg[data-bs-theme=classic] {
   --blue: #387592;
   --dark-blue: #397491;
@@ -10442,6 +10455,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --danger-color: var(--dark-red);
   --warning-color: var(--orange);
   --info-color: var(--light-blue);
+  --converse-body-bg: var(--background-color);
+  --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--dark-red);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
@@ -10475,6 +10490,13 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: #d2842b;
 }
+.conversejs[data-converse-theme=classic] .popover, .conversejs[data-bs-theme=classic] .popover, converse-bg[data-converse-theme=classic] .popover, converse-bg[data-bs-theme=classic] .popover {
+  --converse-popover-header-color: var(--background-color) !important;
+  --converse-popover-header-bg: var(--info-color) !important;
+}
+.conversejs[data-converse-theme=classic] .modal, .conversejs[data-bs-theme=classic] .modal, converse-bg[data-converse-theme=classic] .modal, converse-bg[data-bs-theme=classic] .modal {
+  --converse-modal-color: var(--foreground-color) !important;
+}
 .conversejs[data-converse-theme=dracula], .conversejs[data-bs-theme=dracula], converse-bg[data-converse-theme=dracula], converse-bg[data-bs-theme=dracula] {
   --cyan: #8be9fd;
   --green: #50fa7b;
@@ -10494,6 +10516,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --warning-color: var(--orange);
   --info-color: var(--yellow);
   --converse-body-bg: var(--background-color);
+  --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--yellow) !important;
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
@@ -10527,6 +10550,13 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=dracula] .popover, .conversejs[data-bs-theme=dracula] .popover, converse-bg[data-converse-theme=dracula] .popover, converse-bg[data-bs-theme=dracula] .popover {
+  --converse-popover-header-color: var(--background-color) !important;
+  --converse-popover-header-bg: var(--info-color) !important;
+}
+.conversejs[data-converse-theme=dracula] .modal, .conversejs[data-bs-theme=dracula] .modal, converse-bg[data-converse-theme=dracula] .modal, converse-bg[data-bs-theme=dracula] .modal {
+  --converse-modal-color: var(--foreground-color) !important;
+}
 .conversejs[data-converse-theme=dracula] .list-group-item, .conversejs[data-bs-theme=dracula] .list-group-item, converse-bg[data-converse-theme=dracula] .list-group-item, converse-bg[data-bs-theme=dracula] .list-group-item {
   --converse-list-group-color: var(--foreground-color);
 }
@@ -10554,6 +10584,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --danger-color: var(--red);
   --warning-color: var(--orange);
   --info-color: var(--yellow);
+  --converse-body-bg: var(--background-color);
+  --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--yellow);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
@@ -10586,6 +10618,19 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --secondary-color-hover: var(--secondary-color);
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
+}
+.conversejs[data-converse-theme=cyberpunk] .popover, .conversejs[data-bs-theme=cyberpunk] .popover, converse-bg[data-converse-theme=cyberpunk] .popover, converse-bg[data-bs-theme=cyberpunk] .popover {
+  --converse-popover-header-color: var(--background-color) !important;
+  --converse-popover-header-bg: var(--info-color) !important;
+}
+.conversejs[data-converse-theme=cyberpunk] .modal, .conversejs[data-bs-theme=cyberpunk] .modal, converse-bg[data-converse-theme=cyberpunk] .modal, converse-bg[data-bs-theme=cyberpunk] .modal {
+  --converse-modal-color: var(--foreground-color) !important;
+}
+.conversejs[data-converse-theme=cyberpunk] .list-group-item, .conversejs[data-bs-theme=cyberpunk] .list-group-item, converse-bg[data-converse-theme=cyberpunk] .list-group-item, converse-bg[data-bs-theme=cyberpunk] .list-group-item {
+  --converse-list-group-color: var(--foreground-color);
+}
+.conversejs[data-converse-theme=cyberpunk] .list-group-item.active, .conversejs[data-bs-theme=cyberpunk] .list-group-item.active, converse-bg[data-converse-theme=cyberpunk] .list-group-item.active, converse-bg[data-bs-theme=cyberpunk] .list-group-item.active {
+  --converse-list-group-active-color: var(--background-color) !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .toggle-controlbox, .conversejs[data-bs-theme=cyberpunk] .toggle-controlbox, converse-bg[data-converse-theme=cyberpunk] .toggle-controlbox, converse-bg[data-bs-theme=cyberpunk] .toggle-controlbox {
   color: var(--foreground-color) !important;
@@ -11047,22 +11092,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   margin: 0 auto;
   clear: both;
 }
-.conversejs .error {
-  color: var(--error-color) !important;
-}
-.conversejs .info {
-  color: var(--info-color);
-}
-.conversejs .reg-feedback {
-  font-size: 85%;
-  margin-bottom: 1em;
-}
-.conversejs .reg-feedback,
-.conversejs #converse-login .conn-feedback {
-  display: block;
-  text-align: center;
-  width: 100%;
-}
 .conversejs .avatar-autocomplete {
   margin-inline-end: 0.5em;
   vertical-align: middle;
@@ -11370,6 +11399,12 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   font-size: 80%;
   font-weight: normal;
 }
+.conversejs form .form-check .form-check-input {
+  margin-top: 0.05em;
+}
+.conversejs form .form-check .form-check-input {
+  margin-top: 0.05em;
+}
 .conversejs form .invalid-feedback {
   display: block;
 }
@@ -11514,21 +11549,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   content: counters(section, ".") ". ";
   counter-increment: section;
 }
-.conversejs .list-group-item-action {
-  width: 100%;
-  color: var(--converse-list-group-action-color);
-  text-align: inherit;
-}
-.conversejs .list-group-item-action:hover, .conversejs .list-group-item-action:focus {
-  z-index: 1;
-  color: var(--converse-list-group-action-hover-color);
-  text-decoration: none;
-  background-color: var(--converse-list-group-action-hover-bg);
-}
-.conversejs .list-group-item-action:active {
-  color: var(--converse-list-group-action-active-color);
-  background-color: var(--converse-list-group-action-active-bg);
-}
 .conversejs .list-group-item {
   position: relative;
   display: block;
@@ -11563,6 +11583,21 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs .list-group-item + .list-group-item.active {
   margin-top: calc(-1 * var(--converse-list-group-border-width));
   border-top-width: var(--converse-list-group-border-width);
+}
+.conversejs .list-group-item-action {
+  width: 100%;
+  color: var(--converse-list-group-action-color);
+  text-align: inherit;
+}
+.conversejs .list-group-item-action:not(.active):hover, .conversejs .list-group-item-action:not(.active):focus {
+  z-index: 1;
+  color: var(--converse-list-group-action-hover-color);
+  text-decoration: none;
+  background-color: var(--converse-list-group-action-hover-bg);
+}
+.conversejs .list-group-item-action:not(.active):active {
+  color: var(--converse-list-group-action-active-color);
+  background-color: var(--converse-list-group-action-active-bg);
 }
 .conversejs .list-group-horizontal {
   flex-direction: row;
@@ -12018,7 +12053,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   display: inline-flex;
   width: 100%;
   flex-direction: row;
-  padding: 0 1rem;
+  padding: 0.25rem 1rem;
 }
 .conversejs .message.chat-msg.onload {
   animation: colorchange-chatmessage 1s;
@@ -12105,6 +12140,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   clear: right;
 }
 .conversejs .message.chat-msg .chat-msg__text--larger {
+  line-height: 1.6em;
   font-size: 1.6em;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
@@ -12328,9 +12364,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   max-height: 45vh;
   overflow-y: auto;
 }
-.conversejs #converse-modals .role-form, .conversejs #converse-modals .affiliation-form {
-  padding: 2em 0 1em 0;
-}
 .conversejs #converse-modals .set-xmpp-status {
   margin: 1em;
 }
@@ -12346,13 +12379,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/modal/styles/popover.scss ***!
   \**************************************************************************************************************************************************************************************************************************************************************/
-converse-root#conversejs .popover-header {
-  color: var(--background-color);
-  background-color: var(--secondary-color);
-}
-converse-root#conversejs .popover-body {
-  color: var(--foreground-color);
-  background-color: var(--background-color);
+converse-root#conversejs converse-popover {
+  margin-left: 0.5em;
 }
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/autocomplete/styles/_autocomplete.scss ***!
@@ -12489,13 +12517,6 @@ converse-root#conversejs .popover-body {
 .conversejs.converse-overlayed .suggestion-box__results--above {
   bottom: 3.5em;
 }
-/*!********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/audio.scss ***!
-  \********************************************************************************************************************************************************************************************************************************************************/
-.conversejs .audio-element figcaption {
-  padding-bottom: 0.5em;
-  padding-inline-start: 1em;
-}
 /*!**********************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/spinner.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************************/
@@ -12524,6 +12545,12 @@ converse-avatar .avatar-initials {
   border-radius: var(--avatar-border-radius);
   text-align: center;
   display: inline-block;
+}
+/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/modals/styles/occupant.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************/
+converse-muc-occupant-modal .text-occupant-id {
+  font-size: 0.75rem;
 }
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/moderator-tools.scss ***!
@@ -12633,9 +12660,16 @@ converse-image-modal .chat-image--modal {
   max-height: 99%;
   max-width: 100%;
 }
-/*!**************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/gif.scss ***!
-  \**************************************************************************************************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/texture/styles/audio.scss ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
+.conversejs .audio-element figcaption {
+  padding-bottom: 0.5em;
+  padding-inline-start: 1em;
+}
+/*!***************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/gif/styles.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************/
 converse-gif {
   display: block;
 }
@@ -12774,6 +12808,10 @@ a converse-icon:hover svg, .clickable converse-icon:hover svg {
   background: var(--background-color);
   margin-top: -0.2em !important;
   box-shadow: var(--raised-el-shadow);
+}
+.conversejs converse-emoji-dropdown .dropdown-menu .selected,
+.conversejs converse-dropdown .dropdown-menu .selected {
+  background: var(--highlight-color-hover);
 }
 .conversejs converse-emoji-dropdown .dropdown-item,
 .conversejs converse-dropdown .dropdown-item {
@@ -13541,6 +13579,9 @@ converse-chat-content {
   margin: 0;
   padding: 0.25em;
 }
+.conversejs .chatbox .chat-body .error {
+  color: var(--error-color);
+}
 .conversejs .chatbox .new-msgs-indicator {
   position: relative;
   width: 100%;
@@ -13819,7 +13860,7 @@ converse-chat-content {
   }
   .conversejs converse-chats.converse-overlayed .chat-head converse-controlbox-navback .fa-arrow-left svg,
   .conversejs converse-chats.converse-fullscreen .chat-head converse-controlbox-navback .fa-arrow-left svg {
-    fill: var(--chat-color);
+    fill: var(--chat-header-fg-color);
   }
 }
 /*!*********************************************************************************************************************************************************************************************************************************************************************!*\
@@ -14042,17 +14083,9 @@ converse-chat-content {
   padding-inline-start: 2em;
   font-weight: bold;
 }
-.conversejs #controlbox .conn-feedback {
-  color: var(--controlbox-color);
-}
-.conversejs #controlbox .conn-feedback.error {
-  color: var(--error-color);
-}
-.conversejs #controlbox .conn-feedback p {
-  padding-bottom: 1em;
-}
-.conversejs #controlbox .conn-feedback p.feedback-subject.error {
-  font-weight: bold;
+.conversejs #controlbox #converse-login .conn-feedback {
+  text-align: center;
+  width: 100%;
 }
 .conversejs #controlbox #chatrooms {
   padding: 0;
@@ -14385,6 +14418,22 @@ converse-chat-content {
   background-repeat: repeat-x;
   background-size: 1em 1em;
 }
+/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/affiliation-form.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************/
+converse-muc-affiliation-form {
+  background-color: var(--highlight-color);
+  padding: 1em 0 1em 0;
+  border-radius: 0.25em;
+}
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/role-form.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+converse-muc-role-form {
+  background-color: var(--highlight-color);
+  padding: 1em 0 1em 0;
+  border-radius: 0.25em;
+}
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/split-resize.scss ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
@@ -14411,11 +14460,14 @@ converse-muc-nickname-form {
   text-align: center;
   font-size: var(--font-size-small);
   background-color: var(--background-color);
-  color: white;
+  color: var(--foreground-color);
 }
 .conversejs converse-muc .muc-bottom-panel.muc-bottom-panel--muted,
 .conversejs converse-muc converse-muc-bottom-panel.muc-bottom-panel--muted {
-  height: 4em;
+  border-top: 0.25em solid var(--muc-color) !important;
+  display: block;
+  height: 6em;
+  padding-top: 2em;
   width: 100%;
 }
 .conversejs converse-muc .muc-bottom-panel.muc-bottom-panel--nickname,
@@ -14800,9 +14852,9 @@ converse-muc-details-modal .chatroom-features .features-list .feature {
 converse-muc-details-modal .chatroom-features .features-list .feature converse-icon {
   margin-inline-end: 0.5em;
 }
-/*!********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/texture/texture.scss ***!
-  \********************************************************************************************************************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/texture/styles/texture.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
 converse-rich-text {
   display: block;
 }
@@ -15123,6 +15175,9 @@ converse-rich-text {
   margin: 0;
   padding: 0.25em;
 }
+.conversejs .chatbox .chat-body .error {
+  color: var(--error-color);
+}
 .conversejs .chatbox .new-msgs-indicator {
   position: relative;
   width: 100%;
@@ -15334,6 +15389,7 @@ converse-rich-text {
 .conversejs converse-muc.chatroom .box-flyout .chatroom-body .chat-info {
   color: var(--info-color);
   line-height: normal;
+  margin-bottom: 0.3em;
 }
 .conversejs converse-muc.chatroom .box-flyout .chatroom-body .chat-info.badge {
   color: var(--muc-color);
@@ -15676,8 +15732,7 @@ converse-add-muc-modal .add-chatroom converse-autocomplete .suggestion-box ul li
   flex-direction: row;
 }
 .conversejs #chatrooms converse-rooms-list .list-item .open-room span {
-  padding-top: 0.5em;
-  padding-inline-end: 0.5em;
+  padding-top: 0.25em;
 }
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rootview/styles/root.scss ***!

@@ -17,8 +17,9 @@
 
             _converse.api.listen.on('getToolbarButtons', function(toolbar_el, buttons)
             {
-                let color = "fill:var(--chat-toolbar-btn-color);";
-                if (toolbar_el.model.get("type") == "chatroom") color = "fill:var(--muc-toolbar-btn-color);";
+                let color = "fill:var(--secondary-color);";
+                if (toolbar_el.model.get("type") == "chatbox") color = "fill:var(--chat-color);";
+                if (toolbar_el.model.get("type") == "chatroom") color = "fill:var(--muc-color);";				
 
                 buttons.push(html`
                     <button class="plugin-screencast" title="${__('ScreenCast. Click to start and stop')}" @click=${performScreenCast} .chatview=${this.chatview}/>
