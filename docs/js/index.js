@@ -2462,7 +2462,9 @@ async function onloadHandler() {
 		}			
 	});		
 
-	document.querySelector("#stream_deck").addEventListener('click', async (event) => {	
+	const streamDeckBtn = document.querySelector("#stream_deck");
+	
+	streamDeckBtn.addEventListener('click', async (event) => {	
 		const devices = await navigator.hid.requestDevice({ filters: [{vendorId: 4057}] });	
 		
 		if (devices.length > 0) {
@@ -2486,6 +2488,7 @@ async function onloadHandler() {
 		const enableStreamDeck = localStorage.getItem("devices.enable_streamdeck");
 		  
 		if (enableStreamDeck && JSON.parse(enableStreamDeck) == true) {	
+			streamDeckBtn.style.display = "";
 			getStreamDeck();
 			console.debug("stream deck enabled");			
 		}
