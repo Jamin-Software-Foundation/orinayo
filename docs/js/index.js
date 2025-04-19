@@ -4068,7 +4068,7 @@ function updateStatus() {
 			}				
 		}
 		
-		if (guitar.axes.length > STRUM) 
+		if (!mobileCheck() && guitar.axes.length > STRUM) // double notes on mobile
 		{			
 			if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
 				//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
@@ -4187,7 +4187,7 @@ function updateStatus() {
 			}				
 		}
 		
-		if (riffMasterPS.axes.length > STRUM) 
+		if (!mobileCheck() && riffMasterPS.axes.length > STRUM) // double notes on mobile
 		{			
 			if (pad.axis[STRUM] != riffMasterPS.axes[STRUM].toFixed(4)) {
 				console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
