@@ -3972,8 +3972,7 @@ function updateStatus() {
 	if (guitar) {				
 		//console.debug("using guitar" + guitar.id, guitar);
 				
-		for (var i=0; i<guitar.buttons.length; i++) 
-		{
+		for (var i=0; i<guitar.buttons.length; i++) {
 			var val = guitar.buttons[i];
 			var touched = false;
 			
@@ -4065,39 +4064,37 @@ function updateStatus() {
 					//console.debug("button " + i, touched);									
 					pad.buttons[i] = touched;
 					updated = true;
-				}	
-				
-		
-				if (guitar.axes.length > STRUM) 
-				{			
-					if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
-						//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
-						pad.axis[STRUM] = guitar.axes[STRUM].toFixed(4);
-						updated = true;
-					}
-
-					if (pad.axis[TOUCH] != guitar.axes[TOUCH].toFixed(1)) {
-						//console.debug("touch", guitar.axes[TOUCH].toFixed(1));							
-						pad.axis[TOUCH] = guitar.axes[TOUCH].toFixed(1);
-						updated = true;				
-					}	
-
-					if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
-						//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
-						pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
-						updated = true;				
-					}			
-				}				
+				}					
 			}				
-		}				
+		}
+		
+		if (guitar.axes.length > STRUM) 
+		{			
+			if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
+				//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
+				pad.axis[STRUM] = guitar.axes[STRUM].toFixed(4);
+				updated = true;
+			}
+
+			if (pad.axis[TOUCH] != guitar.axes[TOUCH].toFixed(1)) {
+				//console.debug("touch", guitar.axes[TOUCH].toFixed(1));							
+				pad.axis[TOUCH] = guitar.axes[TOUCH].toFixed(1);
+				updated = true;				
+			}	
+
+			if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
+				//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
+				pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
+				updated = true;				
+			}			
+		}		
 	}
 	else
   
 	if (riffMasterPS) {				
 		//console.debug("using guitar" + riffMasterPS.id, riffMasterPS);
 		
-		for (var i=0; i<riffMasterPS.buttons.length; i++) 
-		{
+		for (var i=0; i<riffMasterPS.buttons.length; i++) {
 			var val = riffMasterPS.buttons[i];
 			var touched = false;							
 		  
@@ -4107,42 +4104,93 @@ function updateStatus() {
 				  touched = val.touched;
 				}			
 			}
-
-			let j = i;
-			if (i == BLUE) j = YELLOW;
-			if (i == YELLOW) j = BLUE;	
-			//if (i == 11) j = LOGO;
-			//if (i == LOGO) j = 11;
 			
-			if (pad.buttons[j] != touched) {
-				console.debug("button " + i, j, touched);									
-				pad.buttons[j] = touched;
-				updated = true;
-			}
-			
-			
-			if (i == 10) {
-				pad.axis[TOUCH] = 0;
+			if (mobileCheck()) {	
+				let j = i;
 				
-				if (pad.buttons[10]) {
-					if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
-					if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
-					if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
-					if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
-					if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
+				if (i == 0) j = YELLOW;
+				if (i == 1) j = GREEN;	
+				if (i == 2) j = BLUE;					
+				if (i == 3) j = ORANGE;	
+				
+				if (i == 7) j = START;			
+				if (i == 6) j = STARPOWER;								
+				if (i == 16) j = LOGO;	
+
+				if (i == 12) j = 112;				
+				if (i == 13) j = 113;				
+				if (i == 14) j = 114;				
+				if (i == 15) j = 115;				
+
+				if (pad.buttons[j] != touched) {
+					console.debug("button " + j, touched);	
 					
-					pad.buttons[GREEN] = false;
-					pad.buttons[RED] = false;
-					pad.buttons[YELLOW] = false;
-					pad.buttons[BLUE] = false;
-					pad.buttons[ORANGE] = false;					
-				}					
-			}			
-		}	
+					if (i == 12 || i == 13 || i == 14 || i == 15) { // stum action	
+
+						if (touched) {
+							pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));
+							updated = true;	
+							
+							if (!pad.buttons[YELLOW] && !pad.buttons[GREEN]	&& !pad.buttons[BLUE] && !pad.buttons[ORANGE] && pad.axis[STRUM] != STRUM_LEFT && pad.axis[STRUM] != STRUM_RIGHT ) {
+								pad.buttons[RED] = true;
+							} else {
+								pad.buttons[RED] = false;
+							}
+						}
+
+						pad.buttons[j] = touched;							
+					} 
+					else
+
+					if (i == 6 || i == 7 || i == 16) {			// style action
+						updated = true;
+						pad.buttons[j] = touched;							
+					}					
+					else
+						
+					if (i == 0 || i == 1 || i == 2 || i == 3) {
+						pad.buttons[j] = touched;						
+					}													
+				}
+			} else {		
+
+				let j = i;
+				if (i == BLUE) j = YELLOW;
+				if (i == YELLOW) j = BLUE;	
+				//if (i == 11) j = LOGO;
+				//if (i == LOGO) j = 11;
+				
+				if (pad.buttons[j] != touched) {
+					console.debug("button " + i, j, touched);									
+					pad.buttons[j] = touched;
+					updated = true;
+				}
+				
+				
+				if (i == 10) {
+					pad.axis[TOUCH] = 0;
+					
+					if (pad.buttons[10]) {
+						if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
+						if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
+						if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
+						if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
+						if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
+						
+						pad.buttons[GREEN] = false;
+						pad.buttons[RED] = false;
+						pad.buttons[YELLOW] = false;
+						pad.buttons[BLUE] = false;
+						pad.buttons[ORANGE] = false;					
+					}					
+				}	
+			}				
+		}
+		
 		if (riffMasterPS.axes.length > STRUM) 
 		{			
 			if (pad.axis[STRUM] != riffMasterPS.axes[STRUM].toFixed(4)) {
-				//console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
+				console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
 				pad.axis[STRUM] = riffMasterPS.axes[STRUM].toFixed(4);
 				updated = true;
 			}
