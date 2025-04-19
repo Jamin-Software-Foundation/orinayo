@@ -4150,10 +4150,29 @@ function updateStatus() {
 					}					
 					else
 						
-					if (i == 0 || i == 1 || i == 2 || i == 3) {
+					if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4) {
 						pad.buttons[j] = touched;						
 					}													
 				}
+				
+				if (i == 8) {
+					pad.axis[TOUCH] = 0;
+					
+					if (pad.buttons[8]) {
+						if (pad.buttons[GREEN]) pad.axis[TOUCH] = -0.7;	
+						if (pad.buttons[RED]) pad.axis[TOUCH] = -0.4; 	
+						if (pad.buttons[YELLOW]) pad.axis[TOUCH] = 0.2;	
+						if (pad.buttons[BLUE]) pad.axis[TOUCH] = 0.4; 				
+						if (pad.buttons[ORANGE]) pad.axis[TOUCH] = 1.0; 
+						
+						pad.buttons[GREEN] = false;
+						pad.buttons[RED] = false;
+						pad.buttons[YELLOW] = false;
+						pad.buttons[BLUE] = false;
+						pad.buttons[ORANGE] = false;					
+					}					
+				}
+				
 			} else {		
 
 				let j = i;
@@ -4188,31 +4207,22 @@ function updateStatus() {
 				}	
 			}				
 		}
-		
-		if (riffMasterPS.axes.length > STRUM) // double notes on mobile
-		{			
-			if (pad.axis[STRUM] != riffMasterPS.axes[STRUM].toFixed(4)) {
-				console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
-				pad.axis[STRUM] = riffMasterPS.axes[STRUM].toFixed(4);
-				updated = true;
-			}
 
-			if (pad.axis[JSTICKX] != riffMasterPS.axes[JSTICKX].toFixed(1)) {
-				console.debug("joy stick X", riffMasterPS.axes[JSTICKX].toFixed(1));							
-				pad.axis[JSTICKX] = riffMasterPS.axes[JSTICKX].toFixed(1);
-				
-				if (pad.axis[JSTICKX] == 1.0) {
-					pad.buttons[LOGO] = true;
-					updated = true;				
-				}
-			}	
-
-			if (pad.axis[JSTICKY] != riffMasterPS.axes[JSTICKY].toFixed(1)) {
-				console.debug("joy stick Y", riffMasterPS.axes[JSTICKY].toFixed(1));							
-				pad.axis[JSTICKY] = riffMasterPS.axes[JSTICKY].toFixed(1);
+		if (pad.axis[JSTICKX] != riffMasterPS.axes[JSTICKX].toFixed(1)) {
+			console.debug("joy stick X", riffMasterPS.axes[JSTICKX].toFixed(1));							
+			pad.axis[JSTICKX] = riffMasterPS.axes[JSTICKX].toFixed(1);
+			
+			if (pad.axis[JSTICKX] == 1.0) {
+				pad.buttons[LOGO] = true;
 				updated = true;				
-			}			
-		}				
+			}
+		}	
+
+		if (pad.axis[JSTICKY] != riffMasterPS.axes[JSTICKY].toFixed(1)) {
+			console.debug("joy stick Y", riffMasterPS.axes[JSTICKY].toFixed(1));							
+			pad.axis[JSTICKY] = riffMasterPS.axes[JSTICKY].toFixed(1);
+			updated = true;				
+		}							
 	}	
 		
 	if (updated) 
