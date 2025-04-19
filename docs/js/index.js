@@ -3990,6 +3990,7 @@ function updateStatus() {
 				if (i == 1) j = GREEN;	
 				if (i == 2) j = BLUE;					
 				if (i == 3) j = ORANGE;	
+				if (i == 4) j = RED;	
 				
 				if (i == 7) j = START;			
 				if (i == 6) j = STARPOWER;								
@@ -4108,10 +4109,11 @@ function updateStatus() {
 			if (mobileCheck()) {	
 				let j = i;
 				
-				if (i == 0) j = YELLOW;
+				if (i == 2) j = YELLOW;
 				if (i == 1) j = GREEN;	
-				if (i == 2) j = BLUE;					
+				if (i == 0) j = BLUE;					
 				if (i == 3) j = ORANGE;	
+				if (i == 4) j = RED;	
 				
 				if (i == 7) j = START;			
 				if (i == 6) j = STARPOWER;								
@@ -4187,7 +4189,7 @@ function updateStatus() {
 			}				
 		}
 		
-		if (!mobileCheck() && riffMasterPS.axes.length > STRUM) // double notes on mobile
+		if (riffMasterPS.axes.length > STRUM) // double notes on mobile
 		{			
 			if (pad.axis[STRUM] != riffMasterPS.axes[STRUM].toFixed(4)) {
 				console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
