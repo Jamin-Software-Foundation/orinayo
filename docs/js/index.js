@@ -4207,6 +4207,12 @@ function updateStatus() {
 				}	
 			}				
 		}
+		
+		if (pad.axis[STRUM] != riffMasterPS.axes[STRUM].toFixed(4)) {
+			console.debug("strum", riffMasterPS.axes[STRUM].toFixed(4));							
+			pad.axis[STRUM] = riffMasterPS.axes[STRUM].toFixed(4);
+			updated = true;
+		}		
 
 		if (pad.axis[JSTICKX] != riffMasterPS.axes[JSTICKX].toFixed(1)) {
 			console.debug("joy stick X", riffMasterPS.axes[JSTICKX].toFixed(1));							
@@ -4639,7 +4645,7 @@ async function setupUI(config, err) {
 		guitarStrum[i].options[20] = new Option("lower 3-str.chord", "[4+3+2]", config["strum" + i] == "[4+3+2]", config["strum" + i] == "[4+3+2]");
 		guitarStrum[i].options[21] = new Option("3-str.chord,BassII", "[3+2+1]-B2-[3+2+1]-B1", config["strum" + i] == "[3+2+1]-B2-[3+2+1]-B1", config["strum" + i] == "[3+2+1]-B2-[3+2+1]-B1");
 		guitarStrum[i].options[22] = new Option("3-str.chord,4th", "[3+2+1]-4-[3+2]", config["strum" + i] == "[3+2+1]-4-[3+2]", config["strum" + i] == "[3+2+1]-4-[3+2]");	
-		guitarStrum[i].options[22] = new Option("Bass", "B1", config["strum" + i] == "B1", config["strum" + i] == "B1");
+		guitarStrum[i].options[23] = new Option("Bass", "B1", config["strum" + i] == "B1", config["strum" + i] == "B1");
 	}
 	
 		
