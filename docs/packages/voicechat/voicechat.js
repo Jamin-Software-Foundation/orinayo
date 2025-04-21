@@ -5,7 +5,7 @@
         factory(converse);
     }
 }(this, function (converse) {
-    let _converse, html, __, model, harker, pcListen = {}, speakers = {}, chatsLoaded, streamUri, pcSpeak, button, recognition, recognitionActive, stopSpeaking, startSpeaking, myJid, myself, me, startTime;
+    let _converse, html, __, model, harker, pcListen = {}, speakers = {}, chatsLoaded, streamUri, pcSpeak, button, recognition, recognitionActive, stopSpeaking, startSpeaking, listening, myJid, myself, me, startTime;
 
 	converse.plugins.add("voicechat", {
 		dependencies: [],
@@ -24,10 +24,12 @@
 						voicechat_transcribeLanguage: 'en-GB',
 						voicechat_start:  __('Start Voice Chat'),
 						voicechat_stop: __('Stop Voice Chat'),
-						voicechat_started: __('has started speaking'),
+						voicechat_listen: __('is listening to'),
+						voicechat_started: __('has started speaking'),						
 						voicechat_stopped: __('has stopped speaking')					
 				});
 				
+				listening = await _converse.api.user.settings.get('voicechat_listen');
 				stopSpeaking = await _converse.api.user.settings.get('voicechat_stopped');
 				startSpeaking = await _converse.api.user.settings.get('voicechat_started');	
 				
@@ -69,18 +71,18 @@
                 return buttons;
             });			
 
-            _converse.api.listen.on('chatRoomViewInitialized', function (view) {
+            _converse.api.listen.on('chatRoomViewInitialized', async function (view) {
                 console.debug("chatRoomViewInitialized", view);
 				stopVoiceChat();
 			});
 			
-            _converse.api.listen.on('chatBoxViewInitialized', function (view)  {
-                console.debug("chatBoxViewInitialized", view);
+            _converse.api.listen.on('chatBoxViewInitialized', async function (view)  {
+                console.debug("chatBoxViewInitialized", view);			
 				stopVoiceChat();
 			});
 			
-            _converse.api.listen.on('chatBoxClosed', function (model)  {
-                console.debug("chatBoxClosed", model);
+            _converse.api.listen.on('chatBoxClosed', async function (model)  {
+                console.debug("chatBoxClosed", model);			
 				stopVoiceChat();
             });			
 			
@@ -308,7 +310,7 @@
 		return attrs;
 	}	
 	
-	async function handleStream(uri) {
+	async function handleStream(uri) {		
 		pcListen[uri] = new RTCPeerConnection();
 
 		pcListen[uri].oniceconnectionstatechange = () => {
@@ -341,7 +343,17 @@
 		
 		const answer = res.querySelector('sdp').innerHTML;
 		pcListen[uri].setRemoteDescription({sdp: answer,  type: 'answer'});	
-		console.debug('whep answer', uri, answer);		
+		console.debug('whep answer', uri, answer);	
+
+		const selectedModel = await getSelectedModel();
+		console.debug('whep accept', selectedModel);
+		
+		if (selectedModel) {			
+			const type = (selectedModel.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
+			const target = selectedModel.get('muc_jid') ? selectedModel.get('muc_jid') + "/" + selectedModel.get('nick') : selectedModel.get('jid');
+			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><accept xmlns='urn:xmpp:call-invites:0' id='${uri}' /></message>`;
+			_converse.api.send(msg);
+		}			
 	}	
 	
 	async function startListening() {
@@ -352,5 +364,18 @@
 			handleStream(uri)
 		}		
 	}
+	
+	async function getSelectedModel() {
+		var models = await _converse.api.chatboxes.get(); //_converse.chatboxes.models;
+		console.debug("getSelectedModel", models);
+
+		for (var i=0; i<models.length; i++) 
+		{
+			if (!models[i].get('hidden')) {
+				return models[i];
+			}
+		}
+		return null;
+	}	
 	
 }));

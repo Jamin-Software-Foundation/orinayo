@@ -1308,7 +1308,13 @@ function startXMPP() {
 		whitelisted_plugins: whitelistedPlugins					
 	};
 	console.debug("startXMPP - converse options", options);
-	converse.initialize(options);	
+	
+	try {
+		converse.initialize(options);	
+	} catch (e) {
+		localStorage.setItem("collaboration_server.enable_xmpp", "false");
+		console.error("startXMPP", e);
+	}
 }
 
 function parseStanza(stanza, attrs) {
@@ -6521,7 +6527,7 @@ function playPads(chords, opts) {
 	}
 }
 
-function playChord(chord, root, type, bass) {	
+async function playChord(chord, root, type, bass) {	
 	console.debug("playChord", chord, root, type, bass);
 
 	const guitarPos = guitarPosition.selectedIndex;	
@@ -6764,7 +6770,7 @@ function playChord(chord, root, type, bass) {
 		}
 
 		if (_converse) {
-			const jid = getSelectedChatBox();
+			const jid = await getSelectedChatBox();
 			
 			if (jid) {
 				const json = {bassNote, rootNote, firstNote, thirdNote, fifthNote, displaySymbol};
