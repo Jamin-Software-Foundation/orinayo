@@ -5,7 +5,7 @@
         factory(converse);
     }
 }(this, function (converse) {
-    let _converse, html, __, model, harker, pcListen = {}, speakers = {}, chatsLoaded, streamUri, pcSpeak, button, recognition, recognitionActive, stopSpeaking, startSpeaking, listening, myJid, myself, me, startTime;
+    let _converse, html, __, model, harker, pcListen = {}, speakers = {}, chatsLoaded, streamUri, pcSpeak, button, recognition, recognitionActive, myJid, myself, me, startTime;
 
 	converse.plugins.add("voicechat", {
 		dependencies: [],
@@ -23,16 +23,9 @@
 						voicechat_transcribe: false,
 						voicechat_transcribeLanguage: 'en-GB',
 						voicechat_start:  __('Start Voice Chat'),
-						voicechat_stop: __('Stop Voice Chat'),
-						voicechat_listen: __('is listening to'),
-						voicechat_started: __('has started speaking'),						
-						voicechat_stopped: __('has stopped speaking')					
+						voicechat_stop: __('Stop Voice Chat'),				
 				});
-				
-				listening = await _converse.api.user.settings.get('voicechat_listen');
-				stopSpeaking = await _converse.api.user.settings.get('voicechat_stopped');
-				startSpeaking = await _converse.api.user.settings.get('voicechat_started');	
-				
+								
 				myJid = await _converse.api.connection.get().jid;
 				myself = converse.env.Strophe.getBareJidFromJid(myJid);	
 				me = converse.env.Strophe.getNodeFromJid(myJid);
@@ -111,9 +104,8 @@
 	}
 
 	async function stopVoiceChat() {	
-		console.debug("stopVoiceChat", model);
-		
-		if (!model) return;
+		console.debug("stopVoiceChat", model);		
+		if (!model) return;	
 		
 		if (pcSpeak){
 			pcSpeak.close();
@@ -123,11 +115,11 @@
 		if (button && button.classList.contains('blink_me')) {
 			button.classList.remove('blink_me');
 			button.title = await _converse.api.user.settings.get('voicechat_start');
-		
-			const body = "/me " + stopSpeaking;				
+
+			const message = "/me stopped speaking";
+			const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
 			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-			const target = model.get('muc_jid') ? model.get('muc_jid') + "/" + model.get('nick') : model.get('jid');
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${body}</body><retract xmlns='urn:xmpp:call-invites:0' id='${streamUri}' /></message>`;
+			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><retract xmlns='urn:xmpp:call-invites:0' id='${streamUri}' /></message>`;
 			_converse.api.send(msg);
 		
 		}
@@ -143,8 +135,8 @@
 	}
 	
 	async function startVoiceChat() {
-		console.debug("startVoiceChat", model);		
-		
+		console.debug("startVoiceChat", model);	
+			
 		if (pcSpeak) {		
 			pcSpeak.close();
 			delete pcListen[streamUri];
@@ -204,11 +196,11 @@
 		if (button) {
 			button.classList.add('blink_me');	
 			button.title = await _converse.api.user.settings.get('voicechat_stop');
-			
-			const body = "/me " + startSpeaking;	
-			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-			const target = model.get('muc_jid') ? model.get('muc_jid') + "/" + model.get('nick') : model.get('jid');
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${body}</body><invite xmlns="urn:xmpp:call-invites:0"><external uri="${streamUri}" /></invite></message>`;
+
+			const message = "/me started speaking";				
+			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';	
+			const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
+			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><invite xmlns="urn:xmpp:call-invites:0"><external uri="${streamUri}" /></invite></message>`;
 			_converse.api.send(msg);				
 		}
 	}	
@@ -270,9 +262,10 @@
 		
 		if (!chatsLoaded && startTime < now) {
 			chatsLoaded = true;
-			startListening();
+			startListening(attrs);
 		}
-		
+
+		const accept = stanza.querySelector('accept');			
 		const invite = stanza.querySelector('invite');	
 		const retract = stanza.querySelector('retract');
 			
@@ -282,11 +275,24 @@
 			if (startTime < now) {	// live invite
 				console.debug("remote add stream", uri);				
 				
-				if (!pcListen[uri])  {					
-					handleStream(uri);				
+				if (!pcListen[uri])  {	
+					handleStream(uri, attrs);			
 				}	
 			} else { // history invite
+				console.debug("remote history add stream", uri);				
 				speakers[uri] = {};
+			}				
+		}
+		else
+			
+		if (accept) {	
+			const uri = accept.getAttribute("id");
+			
+			if (startTime < now) {	// live accept
+				console.debug("remote accept stream", uri);	
+				
+			} else {	// historical accept
+
 			}				
 		}
 		else
@@ -300,9 +306,10 @@
 				if (pcListen[uri])  {	// live retraction	
 					pcListen[uri].close();						
 					delete pcListen[uri];							
-					document.getElementById("voicechat-" + uri)?.remove();					
+					document.getElementById("voicechat-" + uri)?.remove();		
 				}
 			} else {	// historical retraction
+				console.debug("remote history remove stream", uri);			
 				delete speakers[uri];
 			}				
 		}		
@@ -310,7 +317,7 @@
 		return attrs;
 	}	
 	
-	async function handleStream(uri) {		
+	async function handleStream(uri, attrs) {		
 		pcListen[uri] = new RTCPeerConnection();
 
 		pcListen[uri].oniceconnectionstatechange = () => {
@@ -345,23 +352,20 @@
 		pcListen[uri].setRemoteDescription({sdp: answer,  type: 'answer'});	
 		console.debug('whep answer', uri, answer);	
 
-		const selectedModel = await getSelectedModel();
-		console.debug('whep accept', selectedModel);
-		
-		if (selectedModel) {			
-			const type = (selectedModel.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-			const target = selectedModel.get('muc_jid') ? selectedModel.get('muc_jid') + "/" + selectedModel.get('nick') : selectedModel.get('jid');
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><accept xmlns='urn:xmpp:call-invites:0' id='${uri}' /></message>`;
-			_converse.api.send(msg);
-		}			
+		const message = "/me listening to " + uri;
+		const type = attrs.type;
+		const target = (type == "chat") ? attrs.from : attrs.from_muc;
+		const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><accept xmlns='urn:xmpp:call-invites:0' id='${uri}' /></message>`;
+		_converse.api.send(msg);
+			
 	}	
 	
-	async function startListening() {
+	async function startListening(attrs) {
 		const speakerURIs = Object.getOwnPropertyNames(speakers);
-		console.debug("startListening", speakerURIs);
+		console.debug("startListening", speakerURIs, attrs);
 		
 		for (let uri of speakerURIs) {
-			handleStream(uri)
+			handleStream(uri, attrs)
 		}		
 	}
 	
@@ -376,6 +380,20 @@
 			}
 		}
 		return null;
+	}	
+	
+	function injectMessage(model, body, nick) {
+		const msgId = 'inject-' + Math.random().toString(36).substr(2,9);
+		const type = model.get("type") == "chatbox" ? "chat" : "groupchat";
+		const from = nick == me ? _converse.jid : model.get("jid");		
+
+		let attrs = {message: body, body, id: msgId, msgId, type, from}; 
+		
+		if (type == "groupchat") {
+			attrs = {message: body, body, id: msgId, msgId, type, from_muc: model.get("jid"), from: model.get("jid") + '/' + nick, nick};  
+		}
+		
+		model.queueMessage(attrs);		
 	}	
 	
 }));
