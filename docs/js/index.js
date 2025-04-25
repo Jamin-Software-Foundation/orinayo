@@ -1224,26 +1224,26 @@ function startXMPP() {
 					
 				} else {				
 					buttons.push(html`
-						<button class="toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
+						<button class="btn toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
 							<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
 						</button>
 					`);						
 				}
 							
 				buttons.push(html`
-					<button class="toolbar-utilities-scroll" title="${__('Scroll to the bottom')}" @click=${scrollToBottom}/>
+					<button class="btn toolbar-utilities-scroll" title="${__('Scroll to the bottom')}" @click=${scrollToBottom}/>
 						<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-angle-double-down" size="1em"></converse-icon>
 					</button>
 				`);
 
 				buttons.push(html`
-					<button class="toolbar-utilities-thrash" title="${__('Trash chat history')}" @click=${trashHistory}/>
+					<button class="btn toolbar-utilities-thrash" title="${__('Trash chat history')}" @click=${trashHistory}/>
 						<converse-icon style="width:18px; height:18px; ${color}" class="far fa-trash-alt" size="1em"></converse-icon>
 					</button>
 				`);
 
 				buttons.push(html`
-					<button class="toolbar-utilities-refresh" title="${__('Refresh chat history')}" @click=${refreshHistory}/>
+					<button class="btn toolbar-utilities-refresh" title="${__('Refresh chat history')}" @click=${refreshHistory}/>
 						<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-sync" size="1em"></converse-icon>
 					</button>
 				`);			
@@ -1267,8 +1267,7 @@ function startXMPP() {
 		}
 	});	
 
-	whitelistedPlugins.push("orinayo");	
-	whitelistedPlugins.push("screencast");		
+	whitelistedPlugins.push("orinayo");		
 	whitelistedPlugins.push("voicechat");	
 
 		
