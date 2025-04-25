@@ -10429,6 +10429,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=nordic] .navbar-nav, .conversejs[data-bs-theme=nordic] .navbar-nav, converse-bg[data-converse-theme=nordic] .navbar-nav, converse-bg[data-bs-theme=nordic] .navbar-nav {
+  --converse-nav-link-color: var(--link-color) !important;
+}
 .conversejs[data-converse-theme=nordic] .popover, .conversejs[data-bs-theme=nordic] .popover, converse-bg[data-converse-theme=nordic] .popover, converse-bg[data-bs-theme=nordic] .popover {
   --converse-popover-header-color: var(--background-color) !important;
   --converse-popover-header-bg: var(--info-color) !important;
@@ -10490,6 +10493,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: #d2842b;
 }
+.conversejs[data-converse-theme=classic] .navbar-nav, .conversejs[data-bs-theme=classic] .navbar-nav, converse-bg[data-converse-theme=classic] .navbar-nav, converse-bg[data-bs-theme=classic] .navbar-nav {
+  --converse-nav-link-color: var(--link-color) !important;
+}
 .conversejs[data-converse-theme=classic] .popover, .conversejs[data-bs-theme=classic] .popover, converse-bg[data-converse-theme=classic] .popover, converse-bg[data-bs-theme=classic] .popover {
   --converse-popover-header-color: var(--background-color) !important;
   --converse-popover-header-bg: var(--info-color) !important;
@@ -10509,8 +10515,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --darkgray: #212529;
   --background-color: #282a36;
   --foreground-color: #f8f8f2;
-  --primary-color: var(--purple) !important;
-  --secondary-color: var(--pink) !important;
+  --primary-color: var(--pink) !important;
+  --secondary-color: var(--purple) !important;
   --success-color: var(--green);
   --danger-color: var(--red);
   --warning-color: var(--orange);
@@ -10550,6 +10556,10 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
 }
+.conversejs[data-converse-theme=dracula] .navbar-nav, .conversejs[data-bs-theme=dracula] .navbar-nav, converse-bg[data-converse-theme=dracula] .navbar-nav, converse-bg[data-bs-theme=dracula] .navbar-nav {
+  --converse-nav-link-color: var(--link-color) !important;
+  --converse-nav-link-hover-color: var(--link-color-hover) !important;
+}
 .conversejs[data-converse-theme=dracula] .popover, .conversejs[data-bs-theme=dracula] .popover, converse-bg[data-converse-theme=dracula] .popover, converse-bg[data-bs-theme=dracula] .popover {
   --converse-popover-header-color: var(--background-color) !important;
   --converse-popover-header-bg: var(--info-color) !important;
@@ -10578,8 +10588,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --background-color: #1a0933;
   --background-color-lighter: #2C174C;
   --foreground-color: var(--white);
-  --primary-color: var(--purple) !important;
-  --secondary-color: var(--pink) !important;
+  --primary-color: var(--pink) !important;
+  --secondary-color: var(--purple) !important;
   --success-color: var(--green);
   --danger-color: var(--red);
   --warning-color: var(--orange);
@@ -10618,6 +10628,10 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --secondary-color-hover: var(--secondary-color);
   --success-color-hover: var(--success);
   --warning-color-hover: var(--orange);
+}
+.conversejs[data-converse-theme=cyberpunk] .navbar-nav, .conversejs[data-bs-theme=cyberpunk] .navbar-nav, converse-bg[data-converse-theme=cyberpunk] .navbar-nav, converse-bg[data-bs-theme=cyberpunk] .navbar-nav {
+  --converse-nav-link-color: var(--link-color) !important;
+  --converse-nav-link-hover-color: var(--link-color-hover) !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .popover, .conversejs[data-bs-theme=cyberpunk] .popover, converse-bg[data-converse-theme=cyberpunk] .popover, converse-bg[data-bs-theme=cyberpunk] .popover {
   --converse-popover-header-color: var(--background-color) !important;
@@ -11400,10 +11414,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   font-weight: normal;
 }
 .conversejs form .form-check .form-check-input {
-  margin-top: 0.05em;
-}
-.conversejs form .form-check .form-check-input {
-  margin-top: 0.05em;
+  margin-top: 0;
 }
 .conversejs form .invalid-feedback {
   display: block;
@@ -12282,9 +12293,169 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs .fa-info-circle, .converse-website .fa-info-circle {
   height: 1em;
 }
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/icon.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
+converse-icon {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+converse-icon svg {
+  fill: var(--secondary-color);
+}
+converse-icon.clickable:hover svg {
+  fill: var(--link-color);
+}
+
+a converse-icon:hover svg, .clickable converse-icon:hover svg {
+  fill: var(--link-color);
+}
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/dropdown.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-emoji-dropdown.dropup.dropup--left .dropdown-menu,
+.conversejs converse-dropdown.dropup.dropup--left .dropdown-menu {
+  right: 100%;
+  left: auto;
+}
+.conversejs converse-emoji-dropdown .btn--standalone,
+.conversejs converse-dropdown .btn--standalone {
+  padding: 0 0.2em;
+  margin: 0;
+}
+.conversejs converse-emoji-dropdown .dropdown-toggle--no-caret:before, .conversejs converse-emoji-dropdown .dropdown-toggle--no-caret:after,
+.conversejs converse-dropdown .dropdown-toggle--no-caret:before,
+.conversejs converse-dropdown .dropdown-toggle--no-caret:after {
+  display: none !important;
+}
+.conversejs converse-emoji-dropdown .dropdown-menu,
+.conversejs converse-dropdown .dropdown-menu {
+  background: var(--background-color);
+  margin-top: -0.2em !important;
+  box-shadow: var(--raised-el-shadow);
+}
+.conversejs converse-emoji-dropdown .dropdown-menu .selected,
+.conversejs converse-dropdown .dropdown-menu .selected {
+  background: var(--highlight-color-hover);
+}
+.conversejs converse-emoji-dropdown .dropdown-item,
+.conversejs converse-dropdown .dropdown-item {
+  text-align: start;
+  color: var(--text-color) !important;
+  font-size: var(--font-size);
+  padding: 0.5rem 1rem;
+}
+.conversejs converse-emoji-dropdown .dropdown-item converse-icon,
+.conversejs converse-dropdown .dropdown-item converse-icon {
+  margin-top: -0.1em;
+  width: 1.25em;
+  margin-inline-end: 0.25rem;
+  margin-inline-start: 0.25rem;
+}
+.conversejs converse-emoji-dropdown .dropdown-item:active, .conversejs converse-emoji-dropdown .dropdown-item.selected,
+.conversejs converse-dropdown .dropdown-item:active,
+.conversejs converse-dropdown .dropdown-item.selected {
+  background-color: var(--highlight-color);
+}
+.conversejs converse-emoji-dropdown .dropdown-item:hover,
+.conversejs converse-dropdown .dropdown-item:hover {
+  background-color: var(--highlight-color-hover);
+}
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/list-filter.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+converse-list-filter {
+  display: block;
+  margin-bottom: 1em;
+}
+converse-list-filter .items-filter-form {
+  width: 100%;
+}
+converse-list-filter .items-filter-form .button-group {
+  padding: 0.2em;
+}
+converse-list-filter .items-filter-form converse-icon {
+  padding: 0.25em;
+}
+converse-list-filter .items-filter-form .items-filter {
+  width: 100%;
+  margin: 0.2em;
+  font-size: calc(var(--font-size) - 2px);
+}
+converse-list-filter .items-filter-form .items-filter.form-control {
+  width: 100%;
+}
+converse-list-filter .items-filter-form select.state-type {
+  font-size: calc(var(--font-size) - 2px);
+  width: 100% !important;
+}
+
+.converse-overlayed .items-filter-form .button-group {
+  padding: 0.1em;
+}
+.converse-overlayed .items-filter-form converse-icon {
+  padding: 0.15em;
+}
+.converse-overlayed .items-filter-form .items-filter {
+  width: 100%;
+  margin: 0.1em;
+  font-size: calc(var(--font-size) - 4px);
+}
+.converse-overlayed .items-filter-form select.state-type {
+  font-size: calc(var(--font-size) - 4px);
+  width: 100% !important;
+}
+/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/message-versions.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-message-versions time {
+  font-weight: bold;
+}
+/*!**********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/spinner.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************/
+.vertically-centered > .spinner-grow {
+  margin-top: 30%;
+}
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/split-resize.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-split-resize {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  background-position: 50%;
+  background-repeat: no-repeat;
+  cursor: col-resize;
+  width: 0.25em !important;
+}
 /*!*************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/modal/styles/_modal.scss ***!
   \*************************************************************************************************************************************************************************************************************************************************************/
+@media (min-width: 576px) {
+  .conversejs.fullscreen .modal {
+    --converse-modal-width: 75vw;
+  }
+}
+@media (min-width: 992px) {
+  .conversejs.fullscreen .modal {
+    --converse-modal-width: 50vw;
+  }
+}
+@media (min-width: 1200px) {
+  .conversejs.fullscreen .modal {
+    --converse-modal-width: 30vw;
+  }
+}
+@media (min-width: 576px) {
+  .conversejs.fullscreen .modal-dialog {
+    margin-top: 5vh;
+  }
+}
+@media (min-width: 1200px) {
+  .conversejs.fullscreen .modal-dialog {
+    margin-top: 10vh;
+  }
+}
 .conversejs .modal-header {
   background-color: var(--primary-color);
   border-bottom: none;
@@ -12295,6 +12466,10 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   background-color: var(--error-color);
 }
 .conversejs .modal-header .modal-title {
+  line-break: anywhere;
+  color: var(--background-color);
+}
+.conversejs .modal-header .modal-title a {
   color: var(--background-color);
 }
 .conversejs .modal-header .btn-close {
@@ -12337,6 +12512,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 }
 .conversejs #converse-modals .modal .modal-body p {
   padding: 0.25rem 0;
+  line-height: 1.5em;
 }
 .conversejs #converse-modals .modal .modal-body p.form-help {
   padding: 0;
@@ -12446,6 +12622,7 @@ converse-root#conversejs converse-popover {
   padding: 1em;
   position: relative;
   text-overflow: ellipsis;
+  white-space: pre;
 }
 .conversejs .suggestion-box .suggestion-box__results > li:hover mark,
 .conversejs .suggestion-box > ul > li:hover mark {
@@ -12498,7 +12675,7 @@ converse-root#conversejs converse-popover {
   }
 }
 .conversejs .suggestion-box > ul > li[aria-selected=true] {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--foreground-color);
 }
 .conversejs .suggestion-box li:hover mark {
@@ -12516,12 +12693,6 @@ converse-root#conversejs converse-popover {
 
 .conversejs.converse-overlayed .suggestion-box__results--above {
   bottom: 3.5em;
-}
-/*!**********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/spinner.scss ***!
-  \**********************************************************************************************************************************************************************************************************************************************************/
-.vertically-centered > .spinner-grow {
-  margin-top: 30%;
 }
 /*!******************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/avatar/avatar.scss ***!
@@ -12766,81 +12937,6 @@ converse-chat-message-body video {
 .converse-overlayed converse-chat-message-body video {
   display: block;
   max-width: 100%;
-}
-/*!***************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/icon.scss ***!
-  \***************************************************************************************************************************************************************************************************************************************************************/
-converse-icon {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
-converse-icon svg {
-  fill: var(--secondary-color);
-}
-converse-icon.clickable:hover svg {
-  fill: var(--link-color);
-}
-
-a converse-icon:hover svg, .clickable converse-icon:hover svg {
-  fill: var(--link-color);
-}
-/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/dropdown.scss ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************/
-.conversejs converse-emoji-dropdown.dropup.dropup--left .dropdown-menu,
-.conversejs converse-dropdown.dropup.dropup--left .dropdown-menu {
-  right: 100%;
-  left: auto;
-}
-.conversejs converse-emoji-dropdown .btn--standalone,
-.conversejs converse-dropdown .btn--standalone {
-  padding: 0 0.2em;
-  margin: 0;
-}
-.conversejs converse-emoji-dropdown .dropdown-toggle--no-caret:before, .conversejs converse-emoji-dropdown .dropdown-toggle--no-caret:after,
-.conversejs converse-dropdown .dropdown-toggle--no-caret:before,
-.conversejs converse-dropdown .dropdown-toggle--no-caret:after {
-  display: none !important;
-}
-.conversejs converse-emoji-dropdown .dropdown-menu,
-.conversejs converse-dropdown .dropdown-menu {
-  background: var(--background-color);
-  margin-top: -0.2em !important;
-  box-shadow: var(--raised-el-shadow);
-}
-.conversejs converse-emoji-dropdown .dropdown-menu .selected,
-.conversejs converse-dropdown .dropdown-menu .selected {
-  background: var(--highlight-color-hover);
-}
-.conversejs converse-emoji-dropdown .dropdown-item,
-.conversejs converse-dropdown .dropdown-item {
-  text-align: start;
-  color: var(--text-color) !important;
-  font-size: var(--font-size);
-  padding: 0.5rem 1rem;
-}
-.conversejs converse-emoji-dropdown .dropdown-item converse-icon,
-.conversejs converse-dropdown .dropdown-item converse-icon {
-  margin-top: -0.1em;
-  width: 1.25em;
-  margin-inline-end: 0.25rem;
-  margin-inline-start: 0.25rem;
-}
-.conversejs converse-emoji-dropdown .dropdown-item:active, .conversejs converse-emoji-dropdown .dropdown-item.selected,
-.conversejs converse-dropdown .dropdown-item:active,
-.conversejs converse-dropdown .dropdown-item.selected {
-  background-color: var(--highlight-color);
-}
-.conversejs converse-emoji-dropdown .dropdown-item:hover,
-.conversejs converse-dropdown .dropdown-item:hover {
-  background-color: var(--highlight-color-hover);
-}
-/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/message-versions.scss ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************/
-.conversejs converse-message-versions time {
-  font-weight: bold;
 }
 /*!*******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/modals/styles/user-details.scss ***!
@@ -13840,7 +13936,7 @@ converse-chat-content {
   .conversejs converse-chats:not(.converse-embedded) > .row {
     flex-direction: row-reverse;
   }
-  .conversejs converse-chats:not(.converse-embedded) #converse-login-panel .converse-form {
+  .conversejs converse-chats:not(.converse-embedded) converse-login-form .converse-form {
     padding: 3em 2em 3em;
   }
   .conversejs converse-chats:not(.converse-embedded) .chatbox {
@@ -13866,36 +13962,46 @@ converse-chat-content {
 /*!*********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/controlbox/styles/loginform.scss ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
-.conversejs #controlbox #converse-login-panel {
-  padding-top: 0;
-  padding-bottom: 0;
+.conversejs #controlbox converse-login-form {
   flex-direction: row;
+  height: 100%;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.conversejs #controlbox converse-login-form .btn {
+  color: var(--button-text-color);
+}
+.conversejs #controlbox converse-login-form .login-trusted .form-check-input {
+  margin-top: 0.35em;
 }
 .conversejs #controlbox .toggle-register-login {
   font-weight: bold;
 }
 .conversejs #controlbox .controlbox-pane .switch-form {
+  color: var(--subdued-color);
   text-align: center;
-  padding: 0.5em 0;
+  padding: 2em 0;
 }
 
 .conversejs converse-chats.converse-overlayed #controlbox converse-login-form fieldset {
   margin-bottom: 0.5em;
+}
+.conversejs converse-chats.converse-overlayed #controlbox converse-brand-logo {
+  padding-bottom: 1em;
 }
 .conversejs converse-chats.converse-overlayed #controlbox .login-trusted {
   white-space: nowrap;
   font-size: 90%;
   margin: 1em 0;
 }
-.conversejs converse-chats.converse-overlayed #controlbox #converse-login-panel {
-  height: 100%;
-}
 .conversejs converse-chats.converse-overlayed #controlbox #converse-login-trusted {
   margin-top: 0.5em;
 }
-.conversejs converse-chats.converse-overlayed #controlbox #converse-register, .conversejs converse-chats.converse-overlayed #controlbox #converse-login {
+.conversejs converse-chats.converse-overlayed #controlbox #converse-register,
+.conversejs converse-chats.converse-overlayed #controlbox #converse-login {
   flex: 0 0 auto;
   width: 100%;
+  padding-top: 0;
   padding-bottom: 0;
 }
 .conversejs converse-chats.converse-overlayed #controlbox #converse-register .button-cancel {
@@ -13904,8 +14010,39 @@ converse-chat-content {
 .conversejs converse-chats.converse-embedded #controlbox .toggle-register-login, .conversejs converse-chats.converse-fullscreen #controlbox .toggle-register-login {
   line-height: var(--line-height-huge);
 }
-.conversejs converse-chats.converse-embedded #controlbox #converse-register, .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+.conversejs converse-chats.converse-embedded #controlbox converse-brand-logo, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo {
+  padding-bottom: 1em;
+}
+@media (min-width: 768px) {
+  .conversejs converse-chats.converse-embedded #controlbox converse-brand-logo, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo {
+    padding-bottom: 2em;
+  }
+}
+@media (min-width: 1200px) {
+  .conversejs converse-chats.converse-embedded #controlbox converse-brand-logo, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo {
+    padding-bottom: 5em;
+  }
+}
+.conversejs converse-chats.converse-embedded #controlbox converse-footer, .conversejs converse-chats.converse-fullscreen #controlbox converse-footer {
+  display: none;
+  font-size: 100%;
+  text-align: center;
+  font-size: 90%;
+}
+@media (min-width: 576px) {
+  .conversejs converse-chats.converse-embedded #controlbox converse-footer, .conversejs converse-chats.converse-fullscreen #controlbox converse-footer {
+    display: block;
+    margin-bottom: 2em;
+  }
+}
+.conversejs converse-chats.converse-embedded #controlbox converse-login-form, .conversejs converse-chats.converse-fullscreen #controlbox converse-login-form {
+  display: block;
+}
+.conversejs converse-chats.converse-embedded #controlbox #converse-register,
+.conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
   margin: auto;
+  padding: 1em 1em;
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
@@ -13916,30 +14053,59 @@ converse-chat-content {
   width: 66.66666667%;
 }
 @media (min-width: 576px) {
-  .conversejs converse-chats.converse-embedded #controlbox #converse-register, .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+  .conversejs converse-chats.converse-embedded #controlbox #converse-register,
+  .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+  .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+    padding: 3em 2em 3em;
+  }
+}
+@media (min-width: 576px) {
+  .conversejs converse-chats.converse-embedded #controlbox #converse-register,
+  .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+  .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
     flex: 0 0 auto;
     width: 66.66666667%;
   }
 }
 @media (min-width: 768px) {
-  .conversejs converse-chats.converse-embedded #controlbox #converse-register, .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+  .conversejs converse-chats.converse-embedded #controlbox #converse-register,
+  .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+  .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
     flex: 0 0 auto;
     width: 66.66666667%;
   }
 }
 @media (min-width: 992px) {
-  .conversejs converse-chats.converse-embedded #controlbox #converse-register, .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+  .conversejs converse-chats.converse-embedded #controlbox #converse-register,
+  .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+  .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
     flex: 0 0 auto;
-    width: 50%;
+    width: 33.33333333%;
   }
 }
-.conversejs converse-chats.converse-embedded #controlbox #converse-register .title, .conversejs converse-chats.converse-embedded #controlbox #converse-register .instructions, .conversejs converse-chats.converse-embedded #controlbox #converse-login .title, .conversejs converse-chats.converse-embedded #controlbox #converse-login .instructions, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register .title, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register .instructions, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login .title, .conversejs converse-chats.converse-fullscreen #controlbox #converse-login .instructions {
+@media (min-width: 1200px) {
+  .conversejs converse-chats.converse-embedded #controlbox #converse-register,
+  .conversejs converse-chats.converse-embedded #controlbox #converse-login, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register,
+  .conversejs converse-chats.converse-fullscreen #controlbox #converse-login {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+}
+.conversejs converse-chats.converse-embedded #controlbox #converse-register .title,
+.conversejs converse-chats.converse-embedded #controlbox #converse-register .instructions,
+.conversejs converse-chats.converse-embedded #controlbox #converse-login .title,
+.conversejs converse-chats.converse-embedded #controlbox #converse-login .instructions, .conversejs converse-chats.converse-fullscreen #controlbox #converse-register .title,
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-register .instructions,
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-login .title,
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-login .instructions {
   margin: 0.5em 0;
 }
 .conversejs converse-chats.converse-embedded #controlbox #converse-register input[type=submit],
-.conversejs converse-chats.converse-embedded #controlbox #converse-register input[type=button], .conversejs converse-chats.converse-embedded #controlbox #converse-login input[type=submit],
+.conversejs converse-chats.converse-embedded #controlbox #converse-register input[type=button],
+.conversejs converse-chats.converse-embedded #controlbox #converse-login input[type=submit],
 .conversejs converse-chats.converse-embedded #controlbox #converse-login input[type=button], .conversejs converse-chats.converse-fullscreen #controlbox #converse-register input[type=submit],
-.conversejs converse-chats.converse-fullscreen #controlbox #converse-register input[type=button], .conversejs converse-chats.converse-fullscreen #controlbox #converse-login input[type=submit],
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-register input[type=button],
+.conversejs converse-chats.converse-fullscreen #controlbox #converse-login input[type=submit],
 .conversejs converse-chats.converse-fullscreen #controlbox #converse-login input[type=button] {
   width: auto;
 }
@@ -14233,10 +14399,16 @@ converse-chat-content {
   z-index: 1;
 }
 .conversejs converse-chats.converse-embedded #controlbox converse-brand-logo, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo {
+  margin-top: 2em;
+  margin-bottom: 0;
   flex: 0 0 auto;
   width: 100%;
-  margin-top: 5em;
-  margin-bottom: 1em;
+}
+@media (min-width: 1200px) {
+  .conversejs converse-chats.converse-embedded #controlbox converse-brand-logo, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo {
+    margin-top: 5em;
+    margin-bottom: 1em;
+  }
 }
 .conversejs converse-chats.converse-embedded #controlbox converse-brand-logo .brand-heading, .conversejs converse-chats.converse-fullscreen #controlbox converse-brand-logo .brand-heading {
   width: 100%;
@@ -14283,6 +14455,7 @@ converse-chat-content {
   }
 }
 .conversejs converse-chats.converse-fullscreen .controlbox-pane {
+  height: 100%;
   padding-top: 2em;
   padding-bottom: 1em;
 }
@@ -14434,16 +14607,6 @@ converse-muc-role-form {
   padding: 1em 0 1em 0;
   border-radius: 0.25em;
 }
-/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/split-resize.scss ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************/
-.conversejs converse-split-resize {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-  background-position: 50%;
-  background-repeat: no-repeat;
-  cursor: col-resize;
-  width: 0.25em !important;
-}
 /*!************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/nickname-form.scss ***!
   \************************************************************************************************************************************************************************************************************************************************************************/
@@ -14504,50 +14667,6 @@ converse-muc-nickname-form {
   border: none;
   border-bottom-right-radius: 0;
   field-sizing: content;
-}
-/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/list-filter.scss ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************/
-converse-list-filter {
-  display: block;
-  margin-bottom: 1em;
-}
-converse-list-filter .items-filter-form {
-  width: 100%;
-}
-converse-list-filter .items-filter-form .button-group {
-  padding: 0.2em;
-}
-converse-list-filter .items-filter-form converse-icon {
-  padding: 0.25em;
-}
-converse-list-filter .items-filter-form .items-filter {
-  width: 100%;
-  margin: 0.2em;
-  font-size: calc(var(--font-size) - 2px);
-}
-converse-list-filter .items-filter-form .items-filter.form-control {
-  width: 100%;
-}
-converse-list-filter .items-filter-form select.state-type {
-  font-size: calc(var(--font-size) - 2px);
-  width: 100% !important;
-}
-
-.converse-overlayed .items-filter-form .button-group {
-  padding: 0.1em;
-}
-.converse-overlayed .items-filter-form converse-icon {
-  padding: 0.15em;
-}
-.converse-overlayed .items-filter-form .items-filter {
-  width: 100%;
-  margin: 0.1em;
-  font-size: calc(var(--font-size) - 4px);
-}
-.converse-overlayed .items-filter-form select.state-type {
-  font-size: calc(var(--font-size) - 4px);
-  width: 100% !important;
 }
 /*!********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/muc-views/styles/occupant-bottom-panel.scss ***!
@@ -15654,6 +15773,7 @@ converse-omemo-fingerprints .fingerprint {
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/register/styles/register.scss ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
 converse-registration-form {
+  height: 100%;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -15834,6 +15954,12 @@ converse-bg .converse-brand__heading {
 }
 converse-bg .converse-brand__heading svg {
   margin-top: 0.4em;
+}
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/modals/styles/add-contact.scss ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-add-contact-modal .modal-body {
+  overflow-y: visible !important;
 }
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/styles/roster.scss ***!

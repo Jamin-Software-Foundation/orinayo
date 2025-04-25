@@ -22041,6 +22041,33 @@ ___CSS_LOADER_EXPORT___.push([module.id, ``, "",{"version":3,"sources":[],"names
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/modals/styles/add-contact.scss":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/modals/styles/add-contact.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ``, "",{"version":3,"sources":[],"names":[],"mappings":"","sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/styles/roster.scss":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/styles/roster.scss ***!
@@ -56774,6 +56801,9 @@ class DiscoEntity extends _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model 
     id = `converse.fields-${this.get('jid')}`;
     this.fields.browserStorage = (0,_utils_storage_js__WEBPACK_IMPORTED_MODULE_8__.createStore)(id, 'session');
     this.listenTo(this.fields, 'add', this.onFieldAdded);
+    this.items = new _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Collection();
+    id = `converse.items-${this.get('jid')}`;
+    this.items.browserStorage = (0,_utils_storage_js__WEBPACK_IMPORTED_MODULE_8__.createStore)(id, 'session');
     this.identities = new _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Collection();
     id = `converse.identities-${this.get('jid')}`;
     this.identities.browserStorage = (0,_utils_storage_js__WEBPACK_IMPORTED_MODULE_8__.createStore)(id, 'session');
@@ -56832,23 +56862,42 @@ class DiscoEntity extends _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model 
   }
   async fetchFeatures(options) {
     if (options.ignore_cache) {
-      this.queryInfo();
+      await this.queryInfo();
     } else {
       const store_id = this.features.browserStorage.name;
+
+      // Checking only whether features have been cached, even though
+      // there are other things that should be cached as well. We assume
+      // that if features have been cached, everything else has been also.
       const result = await this.features.browserStorage.store.getItem(store_id);
       if (result && result.length === 0 || result === null) {
-        this.queryInfo();
+        await this.queryInfo();
       } else {
-        this.features.fetch({
+        await new Promise(resolve => this.fetch({
+          success: resolve,
+          error: resolve
+        }));
+        await new Promise(resolve => this.features.fetch({
           add: true,
           success: () => {
             this.waitUntilFeaturesDiscovered.resolve(this);
             this.trigger('featuresDiscovered');
-          }
-        });
-        this.identities.fetch({
-          add: true
-        });
+            resolve();
+          },
+          error: resolve
+        }));
+        await new Promise(resolve => this.identities.fetch({
+          add: true,
+          success: resolve,
+          error: resolve
+        }));
+        const items = this.get('items');
+        if (Array.isArray(items)) {
+          await Promise.all(items.map(/** @param {string} jid */async jid => await _shared_api_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].disco.entities.get(jid, true)));
+        } else {
+          await this.queryForItems();
+        }
+        this.waitUntilItemsFetched.resolve();
       }
     }
   }
@@ -56868,26 +56917,32 @@ class DiscoEntity extends _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model 
    * @param {Element} stanza
    */
   onDiscoItems(stanza) {
-    sizzle__WEBPACK_IMPORTED_MODULE_7___default()(`query[xmlns="${Strophe.NS.DISCO_ITEMS}"] item`, stanza).forEach(item => {
+    const item_els = sizzle__WEBPACK_IMPORTED_MODULE_7___default()(`query[xmlns="${Strophe.NS.DISCO_ITEMS}"] item`, stanza);
+    const item_jids = [];
+    item_els.forEach(item => {
       if (item.getAttribute('node')) {
         // XXX: Ignore nodes for now.
         // See: https://xmpp.org/extensions/xep-0030.html#items-nodes
         return;
       }
       const jid = item.getAttribute('jid');
-      const entity = _shared_converse_js__WEBPACK_IMPORTED_MODULE_2__["default"].state.disco_entities.get(jid);
+      let entity = _shared_converse_js__WEBPACK_IMPORTED_MODULE_2__["default"].state.disco_entities.get(jid);
       if (entity) {
         const parent_jids = entity.get('parent_jids');
         entity.set({
           parent_jids: [...parent_jids, this.get('jid')]
         });
       } else {
-        _shared_api_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].disco.entities.create({
+        entity = _shared_api_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].disco.entities.create({
           jid,
-          'parent_jids': [this.get('jid')],
-          'name': item.getAttribute('name')
+          parent_jids: [this.get('jid')],
+          name: item.getAttribute('name')
         });
       }
+      item_jids.push(entity.get('jid'));
+    });
+    this.save({
+      items: item_jids
     });
   }
   async queryForItems() {
@@ -71385,8 +71440,12 @@ function getOpenGraphMetadata(stanza) {
         }
         return acc;
       }, {
-        'ogp_for_id': applies_to_id
+        ogp_for_id: applies_to_id
       });
+      const url = data['og:url'];
+      if (url?.startsWith('/') && data['og:site_name']?.toLowerCase() === 'github') {
+        data['og:url'] = `https://github.com${url}`;
+      }
       if ("og:description" in data || "og:title" in data || "og:image" in data) {
         return data;
       }
@@ -74747,37 +74806,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var shared_styles_index_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! shared/styles/index.scss */ "./src/shared/styles/index.scss");
-/* harmony import */ var _i18n_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./i18n/index.js */ "./src/i18n/index.js");
+/* harmony import */ var i18n_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n/index.js */ "./src/i18n/index.js");
 /* harmony import */ var shared_registry_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/registry.js */ "./src/shared/registry.js");
-/* harmony import */ var shared_components_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! shared/components/element */ "./src/shared/components/element.js");
-/* harmony import */ var _shared_constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared/constants.js */ "./src/shared/constants.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _plugins_modal_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./plugins/modal/index.js */ "./src/plugins/modal/index.js");
-/* harmony import */ var _plugins_adhoc_views_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./plugins/adhoc-views/index.js */ "./src/plugins/adhoc-views/index.js");
-/* harmony import */ var _plugins_bookmark_views_index_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./plugins/bookmark-views/index.js */ "./src/plugins/bookmark-views/index.js");
-/* harmony import */ var _plugins_chatview_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins/chatview/index.js */ "./src/plugins/chatview/index.js");
-/* harmony import */ var _plugins_controlbox_index_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./plugins/controlbox/index.js */ "./src/plugins/controlbox/index.js");
-/* harmony import */ var _plugins_headlines_view_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./plugins/headlines-view/index.js */ "./src/plugins/headlines-view/index.js");
-/* harmony import */ var _plugins_mam_views_index_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./plugins/mam-views/index.js */ "./src/plugins/mam-views/index.js");
-/* harmony import */ var _plugins_muc_views_index_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./plugins/muc-views/index.js */ "./src/plugins/muc-views/index.js");
-/* harmony import */ var _plugins_minimize_index_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./plugins/minimize/index.js */ "./src/plugins/minimize/index.js");
-/* harmony import */ var _plugins_notifications_index_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./plugins/notifications/index.js */ "./src/plugins/notifications/index.js");
-/* harmony import */ var _plugins_profile_index_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./plugins/profile/index.js */ "./src/plugins/profile/index.js");
-/* harmony import */ var _plugins_omemo_index_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./plugins/omemo/index.js */ "./src/plugins/omemo/index.js");
-/* harmony import */ var _plugins_push_index_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./plugins/push/index.js */ "./src/plugins/push/index.js");
-/* harmony import */ var _plugins_register_index_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./plugins/register/index.js */ "./src/plugins/register/index.js");
-/* harmony import */ var _plugins_roomslist_index_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./plugins/roomslist/index.js */ "./src/plugins/roomslist/index.js");
-/* harmony import */ var _plugins_rootview_index_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./plugins/rootview/index.js */ "./src/plugins/rootview/index.js");
-/* harmony import */ var _plugins_rosterview_index_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./plugins/rosterview/index.js */ "./src/plugins/rosterview/index.js");
-/* harmony import */ var _plugins_singleton_index_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./plugins/singleton/index.js */ "./src/plugins/singleton/index.js");
-/* harmony import */ var _plugins_dragresize_index_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./plugins/dragresize/index.js */ "./src/plugins/dragresize/index.js");
-/* harmony import */ var _plugins_fullscreen_index_js__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./plugins/fullscreen/index.js */ "./src/plugins/fullscreen/index.js");
+/* harmony import */ var shared_components_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! shared/components/index.js */ "./src/shared/components/index.js");
+/* harmony import */ var shared_components_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! shared/components/element */ "./src/shared/components/element.js");
+/* harmony import */ var _shared_constants_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./shared/constants.js */ "./src/shared/constants.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _plugins_modal_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./plugins/modal/index.js */ "./src/plugins/modal/index.js");
+/* harmony import */ var _plugins_adhoc_views_index_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./plugins/adhoc-views/index.js */ "./src/plugins/adhoc-views/index.js");
+/* harmony import */ var _plugins_bookmark_views_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins/bookmark-views/index.js */ "./src/plugins/bookmark-views/index.js");
+/* harmony import */ var _plugins_chatview_index_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./plugins/chatview/index.js */ "./src/plugins/chatview/index.js");
+/* harmony import */ var _plugins_controlbox_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./plugins/controlbox/index.js */ "./src/plugins/controlbox/index.js");
+/* harmony import */ var _plugins_headlines_view_index_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./plugins/headlines-view/index.js */ "./src/plugins/headlines-view/index.js");
+/* harmony import */ var _plugins_mam_views_index_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./plugins/mam-views/index.js */ "./src/plugins/mam-views/index.js");
+/* harmony import */ var _plugins_muc_views_index_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./plugins/muc-views/index.js */ "./src/plugins/muc-views/index.js");
+/* harmony import */ var _plugins_minimize_index_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./plugins/minimize/index.js */ "./src/plugins/minimize/index.js");
+/* harmony import */ var _plugins_notifications_index_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./plugins/notifications/index.js */ "./src/plugins/notifications/index.js");
+/* harmony import */ var _plugins_profile_index_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./plugins/profile/index.js */ "./src/plugins/profile/index.js");
+/* harmony import */ var _plugins_omemo_index_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./plugins/omemo/index.js */ "./src/plugins/omemo/index.js");
+/* harmony import */ var _plugins_push_index_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./plugins/push/index.js */ "./src/plugins/push/index.js");
+/* harmony import */ var _plugins_register_index_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./plugins/register/index.js */ "./src/plugins/register/index.js");
+/* harmony import */ var _plugins_roomslist_index_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./plugins/roomslist/index.js */ "./src/plugins/roomslist/index.js");
+/* harmony import */ var _plugins_rootview_index_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./plugins/rootview/index.js */ "./src/plugins/rootview/index.js");
+/* harmony import */ var _plugins_rosterview_index_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./plugins/rosterview/index.js */ "./src/plugins/rosterview/index.js");
+/* harmony import */ var _plugins_singleton_index_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./plugins/singleton/index.js */ "./src/plugins/singleton/index.js");
+/* harmony import */ var _plugins_dragresize_index_js__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./plugins/dragresize/index.js */ "./src/plugins/dragresize/index.js");
+/* harmony import */ var _plugins_fullscreen_index_js__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./plugins/fullscreen/index.js */ "./src/plugins/fullscreen/index.js");
 /**
  * @description Converse.js (A browser based XMPP chat client)
  * @copyright 2021, The Converse developers
  * @license Mozilla Public License (MPLv2)
  */
+
 
 
 
@@ -74812,17 +74873,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /* END: Removable components */
 
-_converse_headless__WEBPACK_IMPORTED_MODULE_5__._converse.exports.CustomElement = shared_components_element__WEBPACK_IMPORTED_MODULE_3__.CustomElement;
-const initialize = _converse_headless__WEBPACK_IMPORTED_MODULE_5__.converse.initialize;
-_converse_headless__WEBPACK_IMPORTED_MODULE_5__.converse.initialize = function (settings, callback) {
+_converse_headless__WEBPACK_IMPORTED_MODULE_6__._converse.exports.CustomElement = shared_components_element__WEBPACK_IMPORTED_MODULE_4__.CustomElement;
+const initialize = _converse_headless__WEBPACK_IMPORTED_MODULE_6__.converse.initialize;
+_converse_headless__WEBPACK_IMPORTED_MODULE_6__.converse.initialize = function (settings, callback) {
   if (Array.isArray(settings.whitelisted_plugins)) {
-    settings.whitelisted_plugins = settings.whitelisted_plugins.concat(_shared_constants_js__WEBPACK_IMPORTED_MODULE_4__.VIEW_PLUGINS);
+    settings.whitelisted_plugins = settings.whitelisted_plugins.concat(_shared_constants_js__WEBPACK_IMPORTED_MODULE_5__.VIEW_PLUGINS);
   } else {
-    settings.whitelisted_plugins = _shared_constants_js__WEBPACK_IMPORTED_MODULE_4__.VIEW_PLUGINS;
+    settings.whitelisted_plugins = _shared_constants_js__WEBPACK_IMPORTED_MODULE_5__.VIEW_PLUGINS;
   }
   return initialize(settings, callback);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_converse_headless__WEBPACK_IMPORTED_MODULE_5__.converse);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_converse_headless__WEBPACK_IMPORTED_MODULE_6__.converse);
 
 /***/ }),
 
@@ -75332,14 +75393,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ad_hoc_command_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ad-hoc-command.js */ "./src/plugins/adhoc-views/templates/ad-hoc-command.js");
-/* harmony import */ var templates_spinner_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! templates/spinner.js */ "./src/templates/spinner.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
-/* harmony import */ var plugins_muc_views_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! plugins/muc-views/utils.js */ "./src/plugins/muc-views/utils.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var plugins_muc_views_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/muc-views/utils.js */ "./src/plugins/muc-views/utils.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 /**
  * @typedef {import('../adhoc-commands').default} AdHocCommands
  */
-
 
 
 
@@ -75349,13 +75408,13 @@ __webpack_require__.r(__webpack_exports__);
  * @param {AdHocCommands} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  const i18n_choose_service = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('On which entity do you want to run commands?');
-  const i18n_choose_service_instructions = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Certain XMPP services and entities allow privileged users to execute ad-hoc commands on them.');
-  const i18n_commands_found = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Commands found');
-  const i18n_fetch_commands = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('List available commands');
-  const i18n_jid_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('XMPP Address');
-  const i18n_no_commands_found = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('No commands found');
-  return (0,lit__WEBPACK_IMPORTED_MODULE_4__.html)`${el.alert ? (0,lit__WEBPACK_IMPORTED_MODULE_4__.html)`<div class="alert alert-${el.alert_type}" role="alert">${el.alert}</div>` : ''} ${el.note ? (0,lit__WEBPACK_IMPORTED_MODULE_4__.html)`<p class="form-help">${el.note}</p>` : ''}<form class="converse-form" @submit="${el.fetchCommands}"><fieldset><label class="form-label">${i18n_choose_service}<p class="form-help">${i18n_choose_service_instructions}</p><converse-autocomplete .getAutoCompleteList="${plugins_muc_views_utils_js__WEBPACK_IMPORTED_MODULE_3__.getAutoCompleteList}" required placeholder="${i18n_jid_placeholder}" name="jid"></converse-autocomplete></label></fieldset><fieldset>${el.fetching ? (0,templates_spinner_js__WEBPACK_IMPORTED_MODULE_1__["default"])() : (0,lit__WEBPACK_IMPORTED_MODULE_4__.html)`<input type="submit" class="btn btn-primary" value="${i18n_fetch_commands}">`}</fieldset>${el.view === 'list-commands' ? (0,lit__WEBPACK_IMPORTED_MODULE_4__.html)`<fieldset><ul class="list-group"><li class="list-group-item active">${el.commands.length ? i18n_commands_found : i18n_no_commands_found}:</li>${el.commands.map(cmd => (0,_ad_hoc_command_js__WEBPACK_IMPORTED_MODULE_0__["default"])(el, cmd))}</ul></fieldset>` : ''}</form>`;
+  const i18n_choose_service = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('On which entity do you want to run commands?');
+  const i18n_choose_service_instructions = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Certain XMPP services and entities allow privileged users to execute ad-hoc commands on them.');
+  const i18n_commands_found = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Commands found');
+  const i18n_fetch_commands = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('List available commands');
+  const i18n_jid_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('XMPP Address');
+  const i18n_no_commands_found = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('No commands found');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`${el.alert ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<div class="alert alert-${el.alert_type}" role="alert">${el.alert}</div>` : ''} ${el.note ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<p class="form-help">${el.note}</p>` : ''}<form class="converse-form" @submit="${el.fetchCommands}"><fieldset><label class="form-label">${i18n_choose_service}<p class="form-help">${i18n_choose_service_instructions}</p><converse-autocomplete .getAutoCompleteList="${plugins_muc_views_utils_js__WEBPACK_IMPORTED_MODULE_2__.getAutoCompleteList}" required placeholder="${i18n_jid_placeholder}" name="jid"></converse-autocomplete></label></fieldset><fieldset>${el.fetching ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<converse-spinner></converse-spinner>` : (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<input type="submit" class="btn btn-primary" value="${i18n_fetch_commands}">`}</fieldset>${el.view === 'list-commands' ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<fieldset><ul class="list-group"><li class="list-group-item active">${el.commands.length ? i18n_commands_found : i18n_no_commands_found}:</li>${el.commands.map(cmd => (0,_ad_hoc_command_js__WEBPACK_IMPORTED_MODULE_0__["default"])(el, cmd))}</ul></fieldset>` : ''}</form>`;
 });
 
 /***/ }),
@@ -76682,13 +76741,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ MessageForm)
 /* harmony export */ });
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
-/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
-/* harmony import */ var _templates_message_form_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./templates/message-form.js */ "./src/plugins/chatview/templates/message-form.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/chatview/utils.js");
+/* harmony import */ var _converse_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/log */ "./src/log/index.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
+/* harmony import */ var _templates_message_form_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./templates/message-form.js */ "./src/plugins/chatview/templates/message-form.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/chatview/utils.js");
 /**
  * @typedef {import('shared/chat/emoji-dropdown.js').default} EmojiDropdown
  */
+
 
 
 
@@ -76698,7 +76759,7 @@ const {
   ACTIVE,
   COMPOSING
 } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.constants;
-class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
+class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_3__.CustomElement {
   static get properties() {
     return {
       model: {
@@ -76712,12 +76773,12 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
   }
   async initialize() {
     await this.model.initialized;
-    this.listenTo(this.model, "change:composing_spoiler", () => this.requestUpdate());
-    this.listenTo(this.model, "change:draft", () => this.requestUpdate());
-    this.listenTo(this.model, "change:hidden", () => {
-      if (this.model.get("hidden")) {
-        const draft_hint = /** @type {HTMLInputElement} */this.querySelector(".spoiler-hint")?.value;
-        const draft_message = /** @type {HTMLTextAreaElement} */this.querySelector(".chat-textarea")?.value;
+    this.listenTo(this.model, 'change:composing_spoiler', () => this.requestUpdate());
+    this.listenTo(this.model, 'change:draft', () => this.requestUpdate());
+    this.listenTo(this.model, 'change:hidden', () => {
+      if (this.model.get('hidden')) {
+        const draft_hint = /** @type {HTMLInputElement} */this.querySelector('.spoiler-hint')?.value;
+        const draft_message = /** @type {HTMLTextAreaElement} */this.querySelector('.chat-textarea')?.value;
         _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.safeSave(this.model, {
           draft: draft_message,
           draft_hint
@@ -76727,19 +76788,19 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
     this.handleEmojiSelection = (/** @type { CustomEvent } */{
       detail
     }) => {
-      if (this.model.get("jid") === detail.jid) {
+      if (this.model.get('jid') === detail.jid) {
         this.insertIntoTextArea(detail.value, detail.autocompleting, detail.ac_position);
       }
     };
-    document.addEventListener("emojiSelected", this.handleEmojiSelection);
+    document.addEventListener('emojiSelected', this.handleEmojiSelection);
     this.requestUpdate();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("emojiSelected", this.handleEmojiSelection);
+    document.removeEventListener('emojiSelected', this.handleEmojiSelection);
   }
   render() {
-    return (0,_templates_message_form_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
+    return (0,_templates_message_form_js__WEBPACK_IMPORTED_MODULE_4__["default"])(this);
   }
 
   /**
@@ -76752,11 +76813,11 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
    * @param {number} [position] - The end index of the string to be
    *  replaced with the new value.
    */
-  insertIntoTextArea(value, replace = false, position, separator = " ") {
-    const textarea = /** @type {HTMLTextAreaElement} */this.querySelector(".chat-textarea");
+  insertIntoTextArea(value, replace = false, position, separator = ' ') {
+    const textarea = /** @type {HTMLTextAreaElement} */this.querySelector('.chat-textarea');
     if (replace) {
-      if (position && typeof replace == "string") {
-        textarea.value = textarea.value.replace(new RegExp(replace, "g"), (match, offset) => offset == position - replace.length ? value + separator : match);
+      if (position && typeof replace == 'string') {
+        textarea.value = textarea.value.replace(new RegExp(replace, 'g'), (match, offset) => offset == position - replace.length ? value + separator : match);
       } else {
         textarea.value = value;
       }
@@ -76767,7 +76828,7 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
       }
       textarea.value = existing + value + separator;
     }
-    const ev = new Event("change", {
+    const ev = new Event('change', {
       bubbles: false,
       cancelable: true
     });
@@ -76780,11 +76841,11 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
    * @param {KeyboardEvent} ev
    */
   onEscapePressed(ev) {
-    const idx = this.model.messages.findLastIndex("correcting");
+    const idx = this.model.messages.findLastIndex('correcting');
     const message = idx >= 0 ? this.model.messages.at(idx) : null;
     if (message) {
       ev.preventDefault();
-      message.save("correcting", false);
+      message.save('correcting', false);
     }
   }
 
@@ -76793,15 +76854,35 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
    * @param {ClipboardEvent} ev
    */
   onPaste(ev) {
-    ev.stopPropagation();
     if (ev.clipboardData.files.length !== 0) {
+      ev.stopPropagation();
       ev.preventDefault();
       this.model.sendFiles(Array.from(ev.clipboardData.files));
       return;
     }
+    const textarea = /** @type {HTMLTextAreaElement} */this.querySelector('.chat-textarea');
+    if (!textarea) {
+      _converse_log__WEBPACK_IMPORTED_MODULE_1__["default"].error("onPaste: could not find textarea to paste in to!");
+      return;
+    }
+    ev.preventDefault();
+    ev.stopPropagation();
+    const draft = textarea.value ?? '';
+    const pasted_text = ev.clipboardData.getData('text/plain');
+    const cursor_pos = textarea.selectionStart;
+
+    // Insert text at cursor position
+    const before = draft.substring(0, cursor_pos);
+    const after = draft.substring(textarea.selectionEnd);
+    const separator = before.endsWith(' ') || before.length === 0 ? '' : ' ';
+    const end_separator = after.startsWith(' ') || after.length === 0 ? '' : ' ';
     this.model.save({
-      draft: ev.clipboardData.getData("text/plain")
+      draft: `${before}${separator}${pasted_text}${end_separator}${after}`
     });
+
+    // Set cursor position after the pasted text
+    const new_pos = before.length + separator.length + pasted_text.length + end_separator.length;
+    setTimeout(() => textarea.setSelectionRange(new_pos, new_pos), 0);
   }
 
   /**
@@ -76838,10 +76919,10 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
       const target = /** @type {HTMLInputElement|HTMLTextAreaElement} */ev.target;
       if (ev.key === _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.TAB) {
         const value = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.getCurrentWord(target, null, /(:.*?:)/g);
-        if (value.startsWith(":")) {
+        if (value.startsWith(':')) {
           ev.preventDefault();
           ev.stopPropagation();
-          this.model.trigger("emoji-picker-autocomplete", {
+          this.model.trigger('emoji-picker-autocomplete', {
             target,
             value
           });
@@ -76854,7 +76935,7 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
       } else if (ev.key === _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.ENTER) {
         return this.onFormSubmitted(ev);
       } else if (ev.key === _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.UP_ARROW && !target.selectionEnd) {
-        const textarea = /** @type {HTMLTextAreaElement} */this.querySelector(".chat-textarea");
+        const textarea = /** @type {HTMLTextAreaElement} */this.querySelector('.chat-textarea');
         if (!textarea.value || this.model.get('correcting')) {
           return this.model.editEarlierMessage();
         }
@@ -76865,7 +76946,7 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
     if ([_converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.SHIFT, _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.META, _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.ESCAPE, _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.keycodes.ALT].includes(ev.key)) {
       return;
     }
-    if (this.model.get("chat_state") !== COMPOSING) {
+    if (this.model.get('chat_state') !== COMPOSING) {
       // Set chat state to composing if key is not a forward-slash
       // (which would imply an internal command and not a message).
       this.model.setChatState(COMPOSING);
@@ -76880,64 +76961,64 @@ class MessageForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_
     const {
       chatboxviews
     } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state;
-    const textarea = /** @type {HTMLTextAreaElement} */this.querySelector(".chat-textarea");
+    const textarea = /** @type {HTMLTextAreaElement} */this.querySelector('.chat-textarea');
     const message_text = textarea.value.trim();
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get("message_limit") && message_text.length > _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get("message_limit") || !message_text.replace(/\s/g, "").length) {
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('message_limit') && message_text.length > _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('message_limit') || !message_text.replace(/\s/g, '').length) {
       return;
     }
     if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.connection.get().authenticated) {
-      const err_msg = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Sorry, the connection has been lost, and your message could not be sent");
-      _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.alert("error", (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Error"), err_msg);
+      const err_msg = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Sorry, the connection has been lost, and your message could not be sent');
+      _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.alert('error', (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Error'), err_msg);
       _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.connection.reconnect();
       return;
     }
     let spoiler_hint,
       hint_el = {};
-    if (this.model.get("composing_spoiler")) {
-      hint_el = /** @type {HTMLInputElement} */this.querySelector("form.chat-message-form input.spoiler-hint");
+    if (this.model.get('composing_spoiler')) {
+      hint_el = /** @type {HTMLInputElement} */this.querySelector('form.chat-message-form input.spoiler-hint');
       spoiler_hint = hint_el.value;
     }
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.addClass("disabled", textarea);
-    textarea.setAttribute("disabled", "disabled");
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.addClass('disabled', textarea);
+    textarea.setAttribute('disabled', 'disabled');
     /** @type {EmojiDropdown} */
-    this.querySelector("converse-emoji-dropdown")?.dropdown.hide();
-    const is_command = await (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.parseMessageForCommands)(this.model, message_text);
+    this.querySelector('converse-emoji-dropdown')?.dropdown.hide();
+    const is_command = await (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.parseMessageForCommands)(this.model, message_text);
     const message = is_command ? null : await this.model.sendMessage({
-      "body": message_text,
+      'body': message_text,
       spoiler_hint
     });
     if (is_command || message) {
-      hint_el.value = "";
-      textarea.value = "";
-      textarea.style.height = "auto";
+      hint_el.value = '';
+      textarea.value = '';
+      textarea.style.height = 'auto';
       this.model.save({
-        "draft": ""
+        'draft': ''
       });
     }
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get("view_mode") === "overlayed") {
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('view_mode') === 'overlayed') {
       // XXX: Chrome flexbug workaround. The .chat-content area
       // doesn't resize when the textarea is resized to its original size.
-      const chatview = chatboxviews.get(this.model.get("jid"));
-      const msgs_container = chatview.querySelector(".chat-content__messages");
-      msgs_container.parentElement.style.display = "none";
+      const chatview = chatboxviews.get(this.model.get('jid'));
+      const msgs_container = chatview.querySelector('.chat-content__messages');
+      msgs_container.parentElement.style.display = 'none';
     }
-    textarea.removeAttribute("disabled");
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.removeClass("disabled", textarea);
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get("view_mode") === "overlayed") {
+    textarea.removeAttribute('disabled');
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.removeClass('disabled', textarea);
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('view_mode') === 'overlayed') {
       // XXX: Chrome flexbug workaround.
-      const chatview = chatboxviews.get(this.model.get("jid"));
-      const msgs_container = chatview.querySelector(".chat-content__messages");
-      msgs_container.parentElement.style.display = "";
+      const chatview = chatboxviews.get(this.model.get('jid'));
+      const msgs_container = chatview.querySelector('.chat-content__messages');
+      msgs_container.parentElement.style.display = '';
     }
     // Suppress events, otherwise superfluous CSN gets set
     // immediately after the message, causing rate-limiting issues.
     this.model.setChatState(ACTIVE, {
-      "silent": true
+      'silent': true
     });
     textarea.focus();
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define("converse-message-form", MessageForm);
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-message-form', MessageForm);
 
 /***/ }),
 
@@ -77473,6 +77554,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
 /* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
 /* harmony import */ var _templates_controlbox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./templates/controlbox.js */ "./src/plugins/controlbox/templates/controlbox.js");
+/* harmony import */ var _navbar_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./navbar.js */ "./src/plugins/controlbox/navbar.js");
+
 
 
 
@@ -77562,16 +77645,16 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-co
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var shared_components_brand_heading_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! shared/components/brand-heading.js */ "./src/shared/components/brand-heading.js");
-/* harmony import */ var _chatview_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../chatview/index.js */ "./src/plugins/chatview/index.js");
-/* harmony import */ var _loginform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loginform.js */ "./src/plugins/controlbox/loginform.js");
-/* harmony import */ var _navback_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./navback.js */ "./src/plugins/controlbox/navback.js");
-/* harmony import */ var _buttons_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./buttons.js */ "./src/plugins/controlbox/buttons.js");
-/* harmony import */ var _model_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./model.js */ "./src/plugins/controlbox/model.js");
-/* harmony import */ var _toggle_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./toggle.js */ "./src/plugins/controlbox/toggle.js");
-/* harmony import */ var _controlbox_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./controlbox.js */ "./src/plugins/controlbox/controlbox.js");
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./api.js */ "./src/plugins/controlbox/api.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/controlbox/utils.js");
+/* harmony import */ var _loginform_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loginform.js */ "./src/plugins/controlbox/loginform.js");
+/* harmony import */ var _model_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./model.js */ "./src/plugins/controlbox/model.js");
+/* harmony import */ var _toggle_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./toggle.js */ "./src/plugins/controlbox/toggle.js");
+/* harmony import */ var _controlbox_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./controlbox.js */ "./src/plugins/controlbox/controlbox.js");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./api.js */ "./src/plugins/controlbox/api.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/controlbox/utils.js");
+/* harmony import */ var shared_components_brand_heading_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! shared/components/brand-heading.js */ "./src/shared/components/brand-heading.js");
+/* harmony import */ var _chatview_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../chatview/index.js */ "./src/plugins/chatview/index.js");
+/* harmony import */ var _navback_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./navback.js */ "./src/plugins/controlbox/navback.js");
+/* harmony import */ var _buttons_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./buttons.js */ "./src/plugins/controlbox/buttons.js");
 /* harmony import */ var _styles_controlbox_scss__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./styles/_controlbox.scss */ "./src/plugins/controlbox/styles/_controlbox.scss");
 /**
  * @copyright 2022, the Converse.js contributors
@@ -77616,19 +77699,20 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.plugins.add('converse-c
       sticky_controlbox: false
     });
     _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.promises.add('controlBoxInitialized', false);
-    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api, _api_js__WEBPACK_IMPORTED_MODULE_9__["default"]);
+    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api, _api_js__WEBPACK_IMPORTED_MODULE_5__["default"]);
     const exports = {
-      ControlBox: _model_js__WEBPACK_IMPORTED_MODULE_6__["default"],
-      ControlBoxView: _controlbox_js__WEBPACK_IMPORTED_MODULE_8__["default"],
-      ControlBoxToggle: _toggle_js__WEBPACK_IMPORTED_MODULE_7__["default"]
+      ControlBox: _model_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+      ControlBoxView: _controlbox_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+      ControlBoxToggle: _toggle_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+      LoginForm: _loginform_js__WEBPACK_IMPORTED_MODULE_1__["default"]
     };
     Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse, exports); // DEPRECATED
     Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.exports, exports);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.chatboxes.registry.add(CONTROLBOX_TYPE, _model_js__WEBPACK_IMPORTED_MODULE_6__["default"]);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('chatBoxesFetched', _utils_js__WEBPACK_IMPORTED_MODULE_10__.onChatBoxesFetched);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('clearSession', _utils_js__WEBPACK_IMPORTED_MODULE_10__.clearSession);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('will-reconnect', _utils_js__WEBPACK_IMPORTED_MODULE_10__.disconnect);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.waitUntil('chatBoxViewsInitialized').then(_utils_js__WEBPACK_IMPORTED_MODULE_10__.addControlBox).catch(e => _converse_headless__WEBPACK_IMPORTED_MODULE_0__.log.fatal(e));
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.chatboxes.registry.add(CONTROLBOX_TYPE, _model_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('chatBoxesFetched', _utils_js__WEBPACK_IMPORTED_MODULE_6__.onChatBoxesFetched);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('clearSession', _utils_js__WEBPACK_IMPORTED_MODULE_6__.clearSession);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('will-reconnect', _utils_js__WEBPACK_IMPORTED_MODULE_6__.disconnect);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.waitUntil('chatBoxViewsInitialized').then(_utils_js__WEBPACK_IMPORTED_MODULE_6__.addControlBox).catch(e => _converse_headless__WEBPACK_IMPORTED_MODULE_0__.log.fatal(e));
   }
 });
 
@@ -77645,13 +77729,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var bootstrap_js_src_popover_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap/js/src/popover.js */ "./node_modules/bootstrap/js/src/popover.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/controlbox/utils.js");
-/* harmony import */ var _templates_loginform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./templates/loginform.js */ "./src/plugins/controlbox/templates/loginform.js");
-/* harmony import */ var _styles_loginform_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./styles/loginform.scss */ "./src/plugins/controlbox/styles/loginform.scss");
-
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/controlbox/utils.js");
+/* harmony import */ var _templates_loginform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./templates/loginform.js */ "./src/plugins/controlbox/templates/loginform.js");
+/* harmony import */ var _styles_loginform_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./styles/loginform.scss */ "./src/plugins/controlbox/styles/loginform.scss");
 
 
 
@@ -77659,27 +77741,27 @@ __webpack_require__.r(__webpack_exports__);
 
 const {
   Strophe
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.env;
+} = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.env;
 const {
   ANONYMOUS
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.constants;
-class LoginForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
+} = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.constants;
+class LoginForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_1__.CustomElement {
   initialize() {
-    const settings = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get();
+    const settings = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get();
     this.listenTo(settings, 'change:show_connection_url_input', () => this.requestUpdate());
-    this.listenTo(_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.connfeedback, 'change', () => this.requestUpdate());
+    this.listenTo(_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.connfeedback, 'change', () => this.requestUpdate());
     this.handler = () => this.requestUpdate();
   }
   connectedCallback() {
     super.connectedCallback();
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.listen.on('change', this.handler);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.listen.on('change', this.handler);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.listen.not('change', this.handler);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.listen.not('change', this.handler);
   }
   render() {
-    return (0,_templates_loginform_js__WEBPACK_IMPORTED_MODULE_4__["default"])(this);
+    return (0,_templates_loginform_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
   }
 
   /**
@@ -77687,26 +77769,26 @@ class LoginForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2_
    */
   async onLoginFormSubmitted(ev) {
     ev?.preventDefault();
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('authentication') === ANONYMOUS) {
-      const jid = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.session.get('jid');
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('authentication') === ANONYMOUS) {
+      const jid = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.session.get('jid');
       return this.connect(jid);
     }
     const form = /** @type {HTMLFormElement} */ev.target;
-    if (!(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.validateJID)(form)) {
+    if (!(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.validateJID)(form)) {
       return;
     }
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.updateSettingsWithFormData)(form);
-    if (!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('bosh_service_url') && !_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('websocket_url')) {
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.updateSettingsWithFormData)(form);
+    if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('bosh_service_url') && !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('websocket_url')) {
       // We don't have a connection URL available, so we try here to discover
       // XEP-0156 connection methods now, and if not found we present the user
       // with the option to enter their own connection URL
       await this.discoverConnectionMethods(form);
     }
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('bosh_service_url') || _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('websocket_url')) {
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('bosh_service_url') || _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('websocket_url')) {
       // FIXME: The connection class will still try to discover XEP-0156 connection methods
       this.connect();
     } else {
-      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.set('show_connection_url_input', true);
+      _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.set('show_connection_url_input', true);
     }
   }
 
@@ -77714,15 +77796,15 @@ class LoginForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2_
    * @param {HTMLFormElement} form
    */
   discoverConnectionMethods(form) {
-    if (!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("discover_connection_methods")) {
+    if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get("discover_connection_methods")) {
       return;
     }
     const form_data = new FormData(form);
     const jid = form_data.get('jid');
     if (jid instanceof File) throw new Error('Found file instead of string for "jid" field in form');
     const domain = Strophe.getDomainFromJid(jid);
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.connection.init(jid);
-    return _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.connection.get().discoverConnectionMethods(domain);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.connection.init(jid);
+    return _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.connection.get().discoverConnectionMethods(domain);
   }
 
   /**
@@ -77732,12 +77814,40 @@ class LoginForm extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2_
     if (['converse/login', 'converse/register'].includes(location.hash)) {
       history.pushState(null, '', window.location.pathname);
     }
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.connection.get()?.reset();
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.user.login(jid);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.connection.get()?.reset();
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.user.login(jid);
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-login-form', LoginForm);
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-login-form', LoginForm);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LoginForm);
+
+/***/ }),
+
+/***/ "./src/plugins/controlbox/modals/about.js":
+/*!************************************************!*\
+  !*** ./src/plugins/controlbox/modals/about.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+
+
+
+
+class AboutModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
+  getModalTitle() {
+    return (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('About Converse');
+  }
+  renderModal() {
+    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<p>Converse is an open-source <a href="https://xmpp.org" target="_blank" rel="noopener">XMPP</a> chat app written in JavaScript.</p><p>Just like the XMPP protocol, Converse is built with extensibility in mind.</p><p>Because it is open source, integrators and developers can use it to add chat functionality to their websites.</p><p>Converse is also <a href="https://conversejs.org/docs/html/configuration.html" target="_blank" rel="noopener">configurable</a>, built with modern web technologies and <a href="https://conversejs.org/docs/html/plugin_development.html" target="_blank" rel="noopener">extensible with plugins</a>. It has different modes, which means it can be a full page app, an embedded chat widget, or an overlayed chat box. For a list of supported features and XMPP extensions, please see the <a href="https://github.com/conversejs/converse.js?tab=readme-ov-file#features" target="_blank" rel="noopener">README</a>.</p><p>Converse is translated into over 30 languages. You can <a target="_blank" rel="nofollow" href="https://hosted.weblate.org/projects/conversejs/#languages">translate</a> it into your own language.</p><p>Converse was created by <a target="_blank" rel="nofollow" href="https://opkode.com">JC Brand</a>. You can <a target="_blank" rel="nofollow" href="https://opkode.com/contact.html">hire me</a> for customizations, support or to build your next project.</p><p>If you're interested in sponsoring Converse, please visit: <a href="https://github.com/sponsors/jcbrand" target="_blank" rel="noopener">Github</a>, <a href="https://www.patreon.com/jcbrand" target="_blank" rel="noopener">Patreon</a>, <a href="https://liberapay.com/jcbrand" target="_blank" rel="noopener">Liberapay</a> or <a href="https://opkode.com/contact.html" target="_blank" rel="noopener">contact us</a>.</p>`;
+  }
+}
+_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-about-modal', AboutModal);
 
 /***/ }),
 
@@ -77847,6 +77957,43 @@ class ControlBoxNavback extends shared_components_element_js__WEBPACK_IMPORTED_M
 }
 _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.elements.define('converse-controlbox-navback', ControlBoxNavback);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ControlBoxNavback);
+
+/***/ }),
+
+/***/ "./src/plugins/controlbox/navbar.js":
+/*!******************************************!*\
+  !*** ./src/plugins/controlbox/navbar.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
+/* harmony import */ var _templates_navbar_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./templates/navbar.js */ "./src/plugins/controlbox/templates/navbar.js");
+/* harmony import */ var _modals_about_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modals/about.js */ "./src/plugins/controlbox/modals/about.js");
+
+
+
+
+class NavBar extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_1__.CustomElement {
+  render() {
+    return (0,_templates_navbar_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this);
+  }
+
+  /**
+   * @param {Event} ev
+   */
+  openAboutDialog(ev) {
+    ev.preventDefault();
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.modal.show('converse-about-modal');
+  }
+}
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-controlbox-navbar', NavBar);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NavBar);
 
 /***/ }),
 
@@ -78070,40 +78217,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var templates_spinner_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! templates/spinner.js */ "./src/templates/spinner.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
-
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 
 
 const {
   Strophe
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.env;
+} = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.env;
 const {
   ANONYMOUS
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.constants;
+} = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.constants;
 
 /**
  * @param {import('../controlbox').default} el
  */
 function whenNotConnected(el) {
-  const connection_status = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.connfeedback.get('connection_status');
-  if ([Strophe.Status.RECONNECTING, Strophe.Status.CONNECTING].includes(connection_status)) {
-    return (0,templates_spinner_js__WEBPACK_IMPORTED_MODULE_0__["default"])({
-      class: 'vertically-centered'
-    });
-  }
-  if (el.model.get('active-form') === 'register') {
-    return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-registration-form></converse-registration-form>`;
-  }
-  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-login-form id="converse-login-panel" class="controlbox-pane fade-in"></converse-login-form>`;
+  const is_fullscreen = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('view_mode') === 'fullscreen';
+  const connection_status = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.connfeedback.get('connection_status');
+  const connecting = [Strophe.Status.RECONNECTING, Strophe.Status.CONNECTING].includes(connection_status);
+  return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div class="controlbox-pane d-flex flex-column justify-content-between">${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-controlbox-navbar></converse-controlbox-navbar>` : ''}<converse-brand-logo></converse-brand-logo>${connecting ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-spinner class="vertically-centered fade-in">` : el.model.get('active-form') === 'register' ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-registration-form class="fade-in">` : (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-login-form class="fade-in">`} ${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-footer></converse-footer>` : ''}</div>`;
 }
 
 /**
  * @param {import('../controlbox').default} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="flyout box-flyout"><converse-dragresize></converse-dragresize>${el.model.get('connected') ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-user-profile></converse-user-profile>` : (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-controlbox-buttons class="controlbox-padded"></converse-controlbox-buttons>`}<div class="controlbox-pane">${el.model.get('connected') ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-headlines-feeds-list class="controlbox-section"></converse-headlines-feeds-list><div id="chatrooms" class="controlbox-section"><converse-rooms-list></converse-rooms-list></div>${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('authentication') === ANONYMOUS ? '' : (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div id="converse-roster" class="controlbox-section"><converse-roster></converse-roster></div>`}` : whenNotConnected(el)}</div></div>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div class="flyout box-flyout"><converse-dragresize></converse-dragresize>${el.model.get('connected') ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-user-profile>` : (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<converse-controlbox-buttons class="controlbox-padded">`} ${el.model.get('connected') ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div class="controlbox-pane"><converse-headlines-feeds-list class="controlbox-section"></converse-headlines-feeds-list><div id="chatrooms" class="controlbox-section"><converse-rooms-list></div>${_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('authentication') === ANONYMOUS ? '' : (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div id="converse-roster" class="controlbox-section"><converse-roster></div>`}</div>` : whenNotConnected(el)}</div>`;
 });
 
 /***/ }),
@@ -78122,10 +78261,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var shared_components_brand_heading_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/components/brand-heading.js */ "./src/shared/components/brand-heading.js");
-/* harmony import */ var templates_spinner_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! templates/spinner.js */ "./src/templates/spinner.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/plugins/controlbox/constants.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var templates_spinner_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! templates/spinner.js */ "./src/templates/spinner.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants.js */ "./src/plugins/controlbox/constants.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var shared_components_brand_heading_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! shared/components/brand-heading.js */ "./src/shared/components/brand-heading.js");
+/* harmony import */ var shared_components_footer_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! shared/components/footer.js */ "./src/shared/components/footer.js");
+
 
 
 
@@ -78144,43 +78285,43 @@ const {
  * @param {boolean} checked
  */
 function tplTrustCheckbox(checked) {
-  const i18n_hint_trusted = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("To improve performance, we cache your data in this browser. " + "Uncheck this box if this is a public computer or if you want your data to be deleted when you log out. " + "It's important that you explicitly log out, otherwise not all cached data might be deleted. " + "Please note, when using an untrusted device, OMEMO encryption is NOT available.");
-  const i18n_trusted = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("This is a trusted device");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="form-check login-trusted"><input id="converse-login-trusted" type="checkbox" class="form-check-input p-1 me-1" name="trusted" ?checked="${checked}"> <label for="converse-login-trusted" class="form-check-label login-trusted__desc">${i18n_trusted}</label><converse-popover title="${(0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Info")}" text="${i18n_hint_trusted}"></converse-popover></div>`;
+  const i18n_hint_trusted = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('To improve performance, we cache your data in this browser. ' + 'Uncheck this box if this is a public computer or if you want your data to be deleted when you log out. ' + "It's important that you explicitly log out, otherwise not all cached data might be deleted. " + 'Please note, when using an untrusted device, OMEMO encryption is NOT available.');
+  const i18n_trusted = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('This is a trusted device');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="form-check mb-2 login-trusted"><input id="converse-login-trusted" type="checkbox" class="form-check-input" name="trusted" ?checked="${checked}"> <label for="converse-login-trusted" class="form-check-label login-trusted__desc">${i18n_trusted}</label><converse-popover title="${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Info')}" text="${i18n_hint_trusted}"></converse-popover></div>`;
 }
 function tplConnectionURLInput() {
-  const i18n_connection_url = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Connection URL");
-  const i18n_form_help = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("HTTP or websocket URL that is used to connect to your XMPP server");
-  const i18n_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("e.g. wss://example.org/xmpp-websocket");
+  const i18n_connection_url = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Connection URL');
+  const i18n_form_help = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('HTTP or websocket URL that is used to connect to your XMPP server');
+  const i18n_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('e.g. wss://example.org/xmpp-websocket');
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3 fade-in"><label for="converse-conn-url" class="form-label">${i18n_connection_url}</label><p class="form-help instructions">${i18n_form_help}</p><input required id="converse-conn-url" class="form-control" type="url" name="connection-url" placeholder="${i18n_placeholder}"></div>`;
 }
 function tplPasswordInput() {
-  const i18n_password = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Password");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label for="converse-login-password" class="form-label">${i18n_password}</label> <input id="converse-login-password" class="form-control" required="required" value="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("password") ?? ""}" type="password" name="password" placeholder="${i18n_password}"></div>`;
+  const i18n_password = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Password');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label for="converse-login-password" class="form-label">${i18n_password}</label> <input id="converse-login-password" class="form-control" required="required" value="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('password') ?? ''}" type="password" name="password" placeholder="${i18n_password}"></div>`;
 }
 function tplRegisterLink() {
-  const i18n_create_account = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Create an account");
-  const i18n_hint_no_account = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Don't have a chat account?");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<fieldset class="switch-form"><p>${i18n_hint_no_account}</p><p><a class="register-account toggle-register-login" href="#converse/register">${i18n_create_account}</a></p></fieldset>`;
+  const i18n_create_account = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Create an account');
+  const i18n_hint_no_account = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Don't have a chat account?");
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mt-3 text-center switch-form"><p class="mb-1">${i18n_hint_no_account}</p><a class="register-account toggle-register-login" href="#converse/register">${i18n_create_account}</a></div>`;
 }
 function tplShowRegisterLink() {
-  return _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("allow_registration") && !_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("auto_login") && _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.pluggable.plugins["converse-register"].enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse);
+  return _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('allow_registration') && !_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('auto_login') && _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.pluggable.plugins['converse-register'].enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse);
 }
 function tplAuthFields() {
-  const authentication = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("authentication");
-  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Log in");
-  const i18n_xmpp_address = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("XMPP Address");
-  const locked_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("locked_domain");
-  const default_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("default_domain");
-  const placeholder_username = (locked_domain || default_domain) && (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Username") || (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("user@domain");
-  const show_trust_checkbox = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("allow_user_trust_override");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<fieldset class="form-group"><div class="mb-3"><label for="converse-login-jid" class="form-label">${i18n_xmpp_address}:</label> <input id="converse-login-jid" ?autofocus="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("auto_focus") ? true : false}" value="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("jid") ?? ""}" required class="form-control" type="text" name="jid" placeholder="${placeholder_username}"></div>${authentication !== EXTERNAL ? tplPasswordInput() : ""} ${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("show_connection_url_input") ? tplConnectionURLInput() : ""} ${show_trust_checkbox ? tplTrustCheckbox(show_trust_checkbox === "off" ? false : true) : ""}</fieldset><fieldset class="form-group buttons"><input class="btn btn-primary" type="submit" value="${i18n_login}"></fieldset>${tplShowRegisterLink() ? tplRegisterLink() : ""}`;
+  const authentication = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('authentication');
+  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Log in');
+  const i18n_xmpp_address = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('XMPP Address');
+  const locked_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('locked_domain');
+  const default_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('default_domain');
+  const placeholder_username = (locked_domain || default_domain) && (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Username') || (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('user@domain');
+  const show_trust_checkbox = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('allow_user_trust_override');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label for="converse-login-jid" class="form-label">${i18n_xmpp_address}:</label> <input id="converse-login-jid" ?autofocus="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('auto_focus') ? true : false}" value="${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('jid') ?? ''}" required class="form-control" type="text" name="jid" placeholder="${placeholder_username}"></div>${authentication !== EXTERNAL ? tplPasswordInput() : ''} ${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('show_connection_url_input') ? tplConnectionURLInput() : ''} ${show_trust_checkbox ? tplTrustCheckbox(show_trust_checkbox === 'off' ? false : true) : ''}<div class="text-center mb-3"><button class="btn btn-primary px-5 mx-auto" type="submit">${i18n_login}</button></div>${tplShowRegisterLink() ? tplRegisterLink() : ''}`;
 }
 function tplFormFields() {
-  const authentication = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("authentication");
-  const i18n_disconnected = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Disconnected");
-  const i18n_anon_login = (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Click here to log in anonymously");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`${authentication == LOGIN || authentication == EXTERNAL ? tplAuthFields() : ""} ${authentication == ANONYMOUS ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<input class="btn btn-primary login-anon" type="submit" value="${i18n_anon_login}">` : ""} ${authentication == PREBIND ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<p>${i18n_disconnected}</p>` : ""}`;
+  const authentication = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('authentication');
+  const i18n_disconnected = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Disconnected');
+  const i18n_anon_login = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Click here to log in anonymously');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`${authentication == LOGIN || authentication == EXTERNAL ? tplAuthFields() : ''} ${authentication == ANONYMOUS ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="text-center mb-3"><button class="btn btn-primary login-anon px-5 mx-auto" type="submit">${i18n_anon_login}</button></div>` : ''} ${authentication == PREBIND ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<p class="alert alert-warning">${i18n_disconnected}</p>` : ''}`;
 }
 
 /**
@@ -78190,10 +78331,10 @@ function tplFormFields() {
   const {
     connfeedback
   } = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state;
-  const connection_status = connfeedback.get("connection_status");
-  const feedback_class = _constants_js__WEBPACK_IMPORTED_MODULE_4__.CONNECTION_STATUS_CSS_CLASS?.[connection_status] ?? "none";
-  const conn_feedback_message = connfeedback.get("message");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-brand-heading></converse-brand-heading><form id="converse-login" class="converse-form" method="post" @submit="${el.onLoginFormSubmitted}"><div class="alert ${`alert-${feedback_class}`} fade-in conn-feedback ${!conn_feedback_message ? "d-none" : ""}" role="alert"><span class="feedback-message">${conn_feedback_message}</span></div>${CONNECTION_STATUS[connection_status] === "CONNECTING" ? (0,templates_spinner_js__WEBPACK_IMPORTED_MODULE_3__["default"])() : tplFormFields()}</form>`;
+  const connection_status = connfeedback.get('connection_status');
+  const feedback_class = _constants_js__WEBPACK_IMPORTED_MODULE_3__.CONNECTION_STATUS_CSS_CLASS?.[connection_status] ?? 'none';
+  const conn_feedback_message = connfeedback.get('message');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form id="converse-login" class="converse-form" method="post" @submit="${el.onLoginFormSubmitted}"><div class="alert ${`alert-${feedback_class}`} conn-feedback mb-3 ${!conn_feedback_message ? 'd-none' : ''}" role="alert"><span class="feedback-message">${conn_feedback_message}</span></div>${CONNECTION_STATUS[connection_status] === 'CONNECTING' ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="text-center my-3">${(0,templates_spinner_js__WEBPACK_IMPORTED_MODULE_2__["default"])()}</div>` : tplFormFields()}</form>`;
 });
 
 /***/ }),
@@ -78215,6 +78356,29 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (jid => {
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-icon size="1em" class="fa fa-arrow-left" @click="${() => (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.navigateToControlBox)(jid)}"></converse-icon>`;
+});
+
+/***/ }),
+
+/***/ "./src/plugins/controlbox/templates/navbar.js":
+/*!****************************************************!*\
+  !*** ./src/plugins/controlbox/templates/navbar.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+
+
+/**
+ * @param {import('../navbar.js').default} el
+ */
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<nav class="navbar navbar-expand-lg"><div class="container-fluid"><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ms-auto mb-2 mb-lg-0"><li class="nav-item"><a class="nav-link" href="#" @click="${el.openAboutDialog}">About</a></li><li class="nav-item"><a class="nav-link" target="_blank" rel="noopener" href="https://github.com/conversejs/converse.js">Github</a></li><li class="nav-item"><a class="nav-link" target="_blank" rel="noopener" href="https://conversejs.org/docs/html">Documentation</a></li><li class="nav-item"><a class="nav-link" target="_blank" rel="noopener" href="https://opkode.com/contact.html">Contact</a></li></ul></div></div></nav>`;
 });
 
 /***/ }),
@@ -78305,19 +78469,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateSettingsWithFormData: () => (/* binding */ updateSettingsWithFormData),
 /* harmony export */   validateJID: () => (/* binding */ validateJID)
 /* harmony export */ });
-/* harmony import */ var i18n_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! i18n/index.js */ "./src/i18n/index.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var i18n_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n/index.js */ "./src/i18n/index.js");
 
 
 const {
   Strophe,
   u
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.env;
+} = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.env;
 function addControlBox() {
-  const m = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxes.add(new _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.exports.ControlBox({
+  const m = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxes.add(new _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.exports.ControlBox({
     'id': 'controlbox'
   }));
-  _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxviews.get('controlbox')?.setModel();
+  _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxviews.get('controlbox')?.setModel();
   return m;
 }
 
@@ -78326,7 +78490,7 @@ function addControlBox() {
  */
 function showControlBox(ev) {
   ev?.preventDefault?.();
-  const controlbox = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxes.get('controlbox') || addControlBox();
+  const controlbox = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxes.get('controlbox') || addControlBox();
   u.safeSave(controlbox, {
     'closed': false
   });
@@ -78337,7 +78501,7 @@ function showControlBox(ev) {
  */
 function navigateToControlBox(jid) {
   showControlBox();
-  const model = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxes.get(jid);
+  const model = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxes.get(jid);
   u.safeSave(model, {
     'hidden': true
   });
@@ -78346,7 +78510,7 @@ function disconnect() {
   // Upon disconnection, set connected to `false`, so that if
   // we reconnect, "onConnected" will be called,
   // to fetch the roster again and to send out a presence stanza.
-  const model = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxes?.get('controlbox');
+  const model = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxes?.get('controlbox');
   if (model) u.safeSave(model, {
     'connected': false
   });
@@ -78354,7 +78518,7 @@ function disconnect() {
 function clearSession() {
   const {
     chatboxviews
-  } = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state;
+  } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state;
   const view = chatboxviews?.get('controlbox');
   if (view) {
     u.safeSave(view.model, {
@@ -78372,13 +78536,13 @@ function clearSession() {
  */
 async function logOut(ev) {
   ev?.preventDefault();
-  const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.confirm((0,i18n_index_js__WEBPACK_IMPORTED_MODULE_0__.__)("Are you sure you want to log out?"));
+  const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.confirm((0,i18n_index_js__WEBPACK_IMPORTED_MODULE_1__.__)('Confirm'), (0,i18n_index_js__WEBPACK_IMPORTED_MODULE_1__.__)('Are you sure you want to log out?'));
   if (result) {
-    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.user.logout();
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.user.logout();
   }
 }
 function onChatBoxesFetched() {
-  const controlbox = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.chatboxes.get('controlbox') || addControlBox();
+  const controlbox = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.chatboxes.get('controlbox') || addControlBox();
   controlbox.save({
     'connected': true
   });
@@ -78400,19 +78564,19 @@ function updateSettingsWithFormData(form, settings = {}) {
     settings['bosh_service_url'] = connection_url;
   }
   let jid = /** @type {string} */form_data.get('jid');
-  if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('locked_domain')) {
-    const last_part = '@' + _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('locked_domain');
+  if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('locked_domain')) {
+    const last_part = '@' + _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('locked_domain');
     if (jid.endsWith(last_part)) {
       jid = jid.substr(0, jid.length - last_part.length);
     }
     jid = Strophe.escapeNode(jid) + last_part;
-  } else if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('default_domain') && !jid.includes('@')) {
-    jid = jid + '@' + _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('default_domain');
+  } else if (_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('default_domain') && !jid.includes('@')) {
+    jid = jid + '@' + _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('default_domain');
   }
   settings['jid'] = jid;
   settings['password'] = form_data.get('password');
-  _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.set(settings);
-  _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.config.save({
+  _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.set(settings);
+  _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.config.save({
     'trusted': form_data.get('trusted') && true || false
   });
 }
@@ -78422,8 +78586,8 @@ function updateSettingsWithFormData(form, settings = {}) {
  */
 function validateJID(form) {
   const jid_element = /** @type {HTMLInputElement} */form.querySelector('input[name=jid]');
-  if (jid_element.value && !_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('locked_domain') && !_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('default_domain') && !u.isValidJID(jid_element.value)) {
-    jid_element.setCustomValidity((0,i18n_index_js__WEBPACK_IMPORTED_MODULE_0__.__)('Please enter a valid XMPP address'));
+  if (jid_element.value && !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('locked_domain') && !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('default_domain') && !u.isValidJID(jid_element.value)) {
+    jid_element.setCustomValidity((0,i18n_index_js__WEBPACK_IMPORTED_MODULE_1__.__)('Please enter a valid XMPP address'));
     return false;
   }
   jid_element.setCustomValidity('');
@@ -80528,10 +80692,11 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-co
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _modal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal.js */ "./src/plugins/modal/modal.js");
-/* harmony import */ var _popover_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popover.js */ "./src/plugins/modal/popover.js");
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api.js */ "./src/plugins/modal/api.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api.js */ "./src/plugins/modal/api.js");
+/* harmony import */ var _modal_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var _popover_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./popover.js */ "./src/plugins/modal/popover.js");
+/* harmony import */ var _modals_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modals.js */ "./src/plugins/modal/modals.js");
 /**
  * @copyright The Converse.js contributors
  * @license Mozilla Public License (MPLv2)
@@ -80540,20 +80705,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_converse_headless__WEBPACK_IMPORTED_MODULE_3__.converse.plugins.add("converse-modal", {
+
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.plugins.add("converse-modal", {
   initialize() {
-    _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.listen.on("disconnect", () => {
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on("disconnect", () => {
       const container = document.querySelector("#converse-modals");
       if (container) {
         container.innerHTML = "";
       }
     });
-    _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.listen.on("clearSession", () => _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.modal.removeAll());
-    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_3__._converse.exports, {
-      BaseModal: _modal_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-      Popover: _popover_js__WEBPACK_IMPORTED_MODULE_1__["default"]
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on("clearSession", () => _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.modal.removeAll());
+    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.exports, {
+      BaseModal: _modal_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+      Popover: _popover_js__WEBPACK_IMPORTED_MODULE_3__["default"]
     });
-    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_3__._converse.api, _api_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+    Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.api, _api_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
   }
 });
 
@@ -80702,6 +80868,34 @@ class BaseModal extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_4_
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BaseModal);
+
+/***/ }),
+
+/***/ "./src/plugins/modal/modals.js":
+/*!*************************************!*\
+  !*** ./src/plugins/modal/modals.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ModalsContainer: () => (/* binding */ ModalsContainer),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/components/element.js */ "./src/shared/components/element.js");
+
+
+
+class ModalsContainer extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
+  render() {
+    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-about-modal></converse-about-modal>`;
+  }
+}
+_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-modals', ModalsContainer);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ModalsContainer);
 
 /***/ }),
 
@@ -81780,8 +81974,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ AddMUCModal)
 /* harmony export */ });
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var _templates_add_muc_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./templates/add-muc.js */ "./src/plugins/muc-views/modals/templates/add-muc.js");
-/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var _templates_add_muc_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./templates/add-muc.js */ "./src/plugins/muc-views/modals/templates/add-muc.js");
 /* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
 /* harmony import */ var _styles_add_muc_modal_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../styles/add-muc-modal.scss */ "./src/plugins/muc-views/styles/add-muc-modal.scss");
 
@@ -81793,7 +81987,7 @@ const u = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.env.utils;
 const {
   Strophe
 } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.env;
-class AddMUCModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
+class AddMUCModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
   initialize() {
     super.initialize();
     this.requestUpdate();
@@ -81802,7 +81996,7 @@ class AddMUCModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["d
     }, false);
   }
   renderModal() {
-    return (0,_templates_add_muc_js__WEBPACK_IMPORTED_MODULE_1__["default"])(this);
+    return (0,_templates_add_muc_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this);
   }
   getModalTitle() {
     return (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Enter a new Groupchat');
@@ -89082,19 +89276,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UserSettingsModal)
 /* harmony export */ });
-/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
-/* harmony import */ var _templates_user_settings_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./templates/user-settings.js */ "./src/plugins/profile/modals/templates/user-settings.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var _templates_user_settings_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./templates/user-settings.js */ "./src/plugins/profile/modals/templates/user-settings.js");
 
 
 
 
-class UserSettingsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class UserSettingsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   constructor(options) {
     super(options);
-    const show_client_info = _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.settings.get('show_client_info');
-    const allow_adhoc_commands = _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.settings.get('allow_adhoc_commands');
+    const show_client_info = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('show_client_info');
+    const allow_adhoc_commands = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('allow_adhoc_commands');
     const show_both_tabs = show_client_info && allow_adhoc_commands;
     if (show_both_tabs || show_client_info) {
       this.tab = 'about';
@@ -89103,14 +89297,14 @@ class UserSettingsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_
     }
   }
   renderModal() {
-    return (0,_templates_user_settings_js__WEBPACK_IMPORTED_MODULE_1__["default"])(this);
+    return (0,_templates_user_settings_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
   }
   getModalTitle() {
     // eslint-disable-line class-methods-use-this
-    return (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings');
+    return (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings');
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.elements.define('converse-user-settings-modal', UserSettingsModal);
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-user-settings-modal', UserSettingsModal);
 
 /***/ }),
 
@@ -90030,7 +90224,7 @@ class RegistrationForm extends shared_components_element_js__WEBPACK_IMPORTED_MO
         fields
       } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.parsers.parseXForm(stanza);
       return fields?.map(f => _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.xFormField2TemplateResult(f, {
-        'domain': this.domain
+        domain: this.domain
       })) ?? [];
     } else {
       return this.getLegacyFormFields();
@@ -90368,7 +90562,6 @@ function tplFormRequest(el) {
     'classes': 'hor_centered'
   })} ${default_domain ? '' : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button class="btn btn-secondary button-cancel hor_centered" @click="${ev => el.renderProviderChoiceForm(ev)}">${i18n_cancel}</button>`}</form>`;
 }
-;
 
 /**
  * @param {import('../form.js').default} el
@@ -90380,14 +90573,12 @@ function tplDomainInput(el) {
   const href_providers = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('providers_link');
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<input class="form-control" required="required" type="text" name="domain" placeholder="${domain_placeholder}" value="${el.domain}"><p class="form-text text-muted">${i18n_providers} <a href="${href_providers}" class="url" target="_blank" rel="noopener">${i18n_providers_link}</a>.</p>${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('show_connection_url_input') ? (0,_controlbox_templates_loginform_js__WEBPACK_IMPORTED_MODULE_4__.tplConnectionURLInput)() : ''}`;
 }
-;
 function tplFetchFormButtons() {
   const i18n_register = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Fetch registration form');
   const i18n_existing_account = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Already have a chat account?');
-  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Log in here');
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<fieldset class="form-group buttons"><input class="btn btn-primary" type="submit" value="${i18n_register}"></fieldset><div class="switch-form"><p>${i18n_existing_account}</p><p><a class="login-here toggle-register-login" href="#converse/login">${i18n_login}</a></p></div>`;
+  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Go back to login');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<fieldset class="form-group buttons"><input class="btn btn-primary" type="submit" value="${i18n_register}"></fieldset><div class="switch-form"><p class="mb-1">${i18n_existing_account}</p><a class="login-here toggle-register-login" href="#converse/login">${i18n_login}</a></div>`;
 }
-;
 
 /**
  * @param {import('../form.js').default} el
@@ -90397,9 +90588,8 @@ function tplChooseProvider(el) {
   const i18n_create_account = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Create your account');
   const i18n_choose_provider = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Please enter the XMPP provider to register with:');
   const show_form_buttons = !default_domain && el.status === CHOOSE_PROVIDER;
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form id="converse-register" class="converse-form" @submit="${ev => el.onFormSubmission(ev)}"><legend class="col-form-label">${i18n_create_account}</legend><div><label class="form-label">${i18n_choose_provider}</label> ${default_domain ? default_domain : tplDomainInput(el)}</div>${show_form_buttons ? tplFetchFormButtons() : ''}</form>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form id="converse-register" class="converse-form" @submit="${ev => el.onFormSubmission(ev)}"><legend class="col-form-label">${i18n_create_account}</legend><div class="pt-3"><label class="form-label">${i18n_choose_provider}</label> ${default_domain ? default_domain : tplDomainInput(el)}</div>${show_form_buttons ? tplFetchFormButtons() : ''}</form>`;
 }
-;
 const CHOOSE_PROVIDER = 0;
 const FETCHING_FORM = 1;
 const REGISTRATION_FORM = 2;
@@ -90409,7 +90599,7 @@ const REGISTRATION_FORM_ERROR = 3;
  * @param {import('../form.js').default} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-brand-logo></converse-brand-logo>${el.alert_message ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="alert alert-${el.alert_type}" role="alert">${el.alert_message}</div>` : ''} ${el.status === CHOOSE_PROVIDER ? tplChooseProvider(el) : ''} ${el.status === FETCHING_FORM ? tplFormRequest(el) : ''} ${el.status === REGISTRATION_FORM ? (0,_registration_form_js__WEBPACK_IMPORTED_MODULE_6__["default"])(el) : ''} ${el.status === REGISTRATION_FORM_ERROR ? (0,_switch_form_js__WEBPACK_IMPORTED_MODULE_5__["default"])() : ''}`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`${el.alert_message ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="alert alert-${el.alert_type}" role="alert">${el.alert_message}</div>` : ''} ${el.status === CHOOSE_PROVIDER ? tplChooseProvider(el) : ''} ${el.status === FETCHING_FORM ? tplFormRequest(el) : ''} ${el.status === REGISTRATION_FORM ? (0,_registration_form_js__WEBPACK_IMPORTED_MODULE_6__["default"])(el) : ''} ${el.status === REGISTRATION_FORM_ERROR ? (0,_switch_form_js__WEBPACK_IMPORTED_MODULE_5__["default"])() : ''}`;
 });
 
 /***/ }),
@@ -90425,20 +90615,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _switch_form_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./switch_form.js */ "./src/plugins/register/templates/switch_form.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var _switch_form_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./switch_form.js */ "./src/plugins/register/templates/switch_form.js");
 
 
 
 
+
+/**
+ * @param {import('../form').default} el
+ */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  const i18n_choose_provider = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Choose a different provider');
-  const i18n_legend = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Account Registration:');
-  const i18n_register = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Register');
-  const registration_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.settings.get('registration_domain');
-  return (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<form id="converse-register" class="converse-form" @submit="${ev => el.onFormSubmission(ev)}"><legend class="col-form-label">${i18n_legend} ${el.domain}</legend><p class="title">${el.title}</p><p class="form-help instructions">${el.instructions}</p><div class="form-errors hidden"></div>${el.form_fields}<fieldset class="buttons form-group">${el.fields ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<input type="submit" class="btn btn-primary" value="${i18n_register}">` : ''} ${registration_domain ? '' : (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<input type="button" class="btn btn-secondary button-cancel" value="${i18n_choose_provider}" @click="${ev => el.renderProviderChoiceForm(ev)}">`} ${(0,_switch_form_js__WEBPACK_IMPORTED_MODULE_0__["default"])()}</fieldset></form>`;
+  const i18n_choose_provider = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Choose a different provider');
+  const i18n_legend = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Account Registration:');
+  const i18n_register = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Register');
+  const registration_domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('registration_domain');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form id="converse-register" class="converse-form" @submit="${ev => el.onFormSubmission(ev)}"><legend class="col-form-label">${i18n_legend} ${el.domain}</legend><p class="title">${el.title}</p><p class="form-help instructions">${el.instructions}</p><div class="form-errors hidden"></div>${el.form_fields}<fieldset class="buttons form-group">${el.fields ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<input type="submit" class="btn btn-primary" value="${i18n_register}">` : ''} ${registration_domain ? '' : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<input type="button" class="btn btn-secondary button-cancel" value="${i18n_choose_provider}" @click="${ev => el.renderProviderChoiceForm(ev)}">`} ${(0,_switch_form_js__WEBPACK_IMPORTED_MODULE_3__["default"])()}</fieldset></form>`;
 });
 
 /***/ }),
@@ -90460,8 +90654,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (() => {
   const i18n_has_account = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Already have a chat account?');
-  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Log in here');
-  return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div class="switch-form"><p>${i18n_has_account}</p><p><a class="login-here toggle-register-login" href="#converse/login">${i18n_login}</a></p></div>`;
+  const i18n_login = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Go back to login');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<div class="switch-form"><p class="mb-1">${i18n_has_account}</p><a class="login-here toggle-register-login" href="#converse/login">${i18n_login}</a></div>`;
 });
 
 /***/ }),
@@ -90945,33 +91139,34 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-bg
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _root_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./root.js */ "./src/plugins/rootview/root.js");
-/* harmony import */ var _background_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./background.js */ "./src/plugins/rootview/background.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/rootview/utils.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var _root_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./root.js */ "./src/plugins/rootview/root.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/rootview/utils.js");
+/* harmony import */ var _background_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./background.js */ "./src/plugins/rootview/background.js");
 
 
 
 
-_converse_headless__WEBPACK_IMPORTED_MODULE_2__.converse.plugins.add('converse-rootview', {
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.converse.plugins.add('converse-rootview', {
   initialize() {
     // Configuration values for this plugin
     // ====================================
     // Refer to docs/source/configuration.rst for explanations of these
     // configuration settings.
-    _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.settings.extend({
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.extend({
       auto_insert: true,
       dark_theme: 'dracula',
-      rtl_langs: ["ar", "fa", "he", "ur"],
+      // Languages for which the UI is right-to-left
+      rtl_langs: ["ar", "fa", "he", "ug"],
       show_background: false,
       theme: 'classic'
     });
-    _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.listen.on('chatBoxesInitialized', _utils_js__WEBPACK_IMPORTED_MODULE_3__.ensureElement);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.listen.on('chatBoxesInitialized', _utils_js__WEBPACK_IMPORTED_MODULE_2__.ensureElement);
 
     // Only define the element now, otherwise it it's already in the DOM
     // before `converse.initialized` has been called it will render too
     // early.
-    _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.elements.define('converse-root', _root_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-root', _root_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
   }
 });
 
@@ -91182,16 +91377,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var shared_components_font_awesome_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! shared/components/font-awesome.js */ "./src/shared/components/font-awesome.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var shared_components_font_awesome_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/components/font-awesome.js */ "./src/shared/components/font-awesome.js");
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (() => {
   const extra_classes = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('singleton') ? ['converse-singleton'] : [];
   extra_classes.push(`converse-${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('view_mode')}`);
-  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('show_background') ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-bg></converse-bg>` : ''}<converse-chats class="converse-chatboxes row justify-content-start g-0 ${extra_classes.join(' ')}"></converse-chats><div id="converse-modals" class="modals"></div><converse-fontawesome></converse-fontawesome>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`${_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('show_background') ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-bg></converse-bg>` : ''}<converse-chats class="converse-chatboxes row justify-content-start g-0 ${extra_classes.join(' ')}"></converse-chats><converse-modals id="converse-modals" class="modals"></converse-modals><converse-fontawesome></converse-fontawesome>`;
 });
 
 /***/ }),
@@ -91548,17 +91743,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var strophe_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! strophe.js */ "./node_modules/strophe.js/src/index.js");
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var shared_autocomplete_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/autocomplete/index.js */ "./src/shared/autocomplete/index.js");
-/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
-/* harmony import */ var _templates_add_contact_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./templates/add-contact.js */ "./src/plugins/rosterview/modals/templates/add-contact.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var _templates_add_contact_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./templates/add-contact.js */ "./src/plugins/rosterview/modals/templates/add-contact.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var _styles_add_contact_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./styles/add-contact.scss */ "./src/plugins/rosterview/modals/styles/add-contact.scss");
 
 
 
 
 
 
-class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
+class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
   initialize() {
     super.initialize();
     this.listenTo(this.model, "change", () => this.requestUpdate());
@@ -91566,10 +91761,10 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3_
     this.addEventListener("shown.bs.modal", () => /** @type {HTMLInputElement} */this.querySelector('input[name="jid"]')?.focus(), false);
   }
   renderModal() {
-    return (0,_templates_add_contact_js__WEBPACK_IMPORTED_MODULE_4__["default"])(this);
+    return (0,_templates_add_contact_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
   }
   getModalTitle() {
-    return (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Add a Contact");
+    return (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add a Contact");
   }
 
   /**
@@ -91577,10 +91772,10 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3_
    */
   validateSubmission(jid) {
     if (!jid || jid.split("@").filter(s => !!s).length < 2) {
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Please enter a valid XMPP address"));
+      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Please enter a valid XMPP address"));
       return false;
     } else if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.roster.get(strophe_js__WEBPACK_IMPORTED_MODULE_0__.Strophe.getBareJidFromJid(jid))) {
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("This contact has already been added"));
+      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This contact has already been added"));
       return false;
     }
     this.model.set("error", null);
@@ -91602,7 +91797,7 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3_
       });
     } catch (e) {
       _converse_headless__WEBPACK_IMPORTED_MODULE_1__.log.error(e);
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Sorry, something went wrong"));
+      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Sorry, something went wrong"));
       return;
     }
     this.model.clear();
@@ -91628,7 +91823,7 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3_
         name = match[1].trim();
         jid = match[2].trim();
       } else {
-        this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Invalid value for the name and XMPP address. Please use the format "Name <username@example.org>".'));
+        this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Invalid value for the name and XMPP address. Please use the format "Name <username@example.org>".'));
         return;
       }
     } else {
@@ -91722,6 +91917,59 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-ne
 
 /***/ }),
 
+/***/ "./src/plugins/rosterview/modals/styles/add-contact.scss":
+/*!***************************************************************!*\
+  !*** ./src/plugins/rosterview/modals/styles/add-contact.scss ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_5_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_5_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_5_use_3_add_contact_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!../../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./add-contact.scss */ "./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/rosterview/modals/styles/add-contact.scss");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_5_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_5_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_5_use_3_add_contact_scss__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_5_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_5_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_5_use_3_add_contact_scss__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_5_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_5_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_5_use_3_add_contact_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_5_use_1_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_5_use_2_node_modules_sass_loader_dist_cjs_js_ruleSet_1_rules_5_use_3_add_contact_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/plugins/rosterview/modals/templates/accept-contact-request.js":
 /*!***************************************************************************!*\
   !*** ./src/plugins/rosterview/modals/templates/accept-contact-request.js ***!
@@ -91765,11 +92013,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 /* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/plugins/rosterview/utils.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
-/* harmony import */ var shared_autocomplete_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! shared/autocomplete/utils */ "./src/shared/autocomplete/utils.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils.js */ "./src/plugins/rosterview/utils.js");
+/* harmony import */ var shared_autocomplete_index_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! shared/autocomplete/index.js */ "./src/shared/autocomplete/index.js");
+/* harmony import */ var shared_autocomplete_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! shared/autocomplete/utils.js */ "./src/shared/autocomplete/utils.js");
+
 
 
 
@@ -91780,15 +92030,15 @@ __webpack_require__.r(__webpack_exports__);
  * @param {import('../add-contact.js').default} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  const i18n_add = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Add");
-  const i18n_contact_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("name@example.org");
-  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Groups");
-  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Use commas to separate multiple values");
-  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Name");
+  const i18n_add = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add");
+  const i18n_contact_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("name@example.org");
+  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Groups");
+  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Use commas to separate multiple values");
+  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Name");
   const using_xhr = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url");
-  const i18n_xmpp_address = using_xhr ? (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Search name or XMPP address") : (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("XMPP Address");
+  const i18n_xmpp_address = using_xhr ? (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Search name or XMPP address") : (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("XMPP Address");
   const error = el.model.get("error");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ""}<form class="converse-form add-xmpp-contact" @submit="${ev => el.addContactFromForm(ev)}"><div class="mb-3"><label class="form-label clearfix" for="jid">${i18n_xmpp_address}:</label> ${using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<converse-autocomplete .getAutoCompleteList="${_utils_js__WEBPACK_IMPORTED_MODULE_2__.getNamesAutoCompleteList}" position="below" filter="${shared_autocomplete_utils__WEBPACK_IMPORTED_MODULE_4__.FILTER_CONTAINS}" ?required="${true}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>` : (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.getJIDsAutoCompleteList)()}" .data="${(text, input) => `${input.slice(0, input.indexOf("@"))}@${text}`}" position="below" filter="${shared_autocomplete_utils__WEBPACK_IMPORTED_MODULE_4__.FILTER_STARTSWITH}" ?required="${!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url")}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>`}</div>${!using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_3__.html)`<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.model.get("nickname") || ""}" class="form-control"></div>` : ""}<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${i18n_add}</button></form></div>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ""}<form class="converse-form add-xmpp-contact" @submit="${ev => el.addContactFromForm(ev)}"><div class="mb-3"><label class="form-label clearfix" for="jid">${i18n_xmpp_address}:</label> ${using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .getAutoCompleteList="${_utils_js__WEBPACK_IMPORTED_MODULE_3__.getNamesAutoCompleteList}" position="below" min_chars="2" filter="${shared_autocomplete_utils_js__WEBPACK_IMPORTED_MODULE_5__.FILTER_CONTAINS}" ?required="${true}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>` : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getJIDsAutoCompleteList)()}" .data="${(text, input) => `${input.slice(0, input.indexOf("@"))}@${text}`}" position="below" min_chars="2" filter="${shared_autocomplete_utils_js__WEBPACK_IMPORTED_MODULE_5__.FILTER_STARTSWITH}" ?required="${!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url")}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>`}</div>${!using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.model.get("nickname") || ""}" class="form-control"></div>` : ""}<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${i18n_add}</button></form></div>`;
 });
 
 /***/ }),
@@ -92368,7 +92618,7 @@ const {
  */
 async function removeContact(contact, unauthorize = false) {
   if (!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('allow_contact_removal')) return;
-  const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.confirm((0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to remove this contact?'));
+  const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.confirm((0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Confirm'), (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to remove this contact?'));
   if (!result) return false;
   const chat = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.chats.get(contact.get('jid'));
   chat?.close();
@@ -92637,7 +92887,7 @@ async function getNamesAutoCompleteList(query) {
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.log.error(e);
     return [];
   }
-  const json = response.json;
+  const json = await response.json();
   if (!Array.isArray(json)) {
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.log.error(`Invalid JSON returned"`);
     return [];
@@ -92804,34 +93054,34 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       this.container = el.querySelector('.suggestion-box');
     }
     this.input = /** @type {HTMLInputElement} */this.container.querySelector('.suggestion-box__input');
-    this.input.setAttribute("aria-autocomplete", "list");
+    this.input.setAttribute('aria-autocomplete', 'list');
     this.ul = this.container.querySelector('.suggestion-box__results');
     this.status = this.container.querySelector('.suggestion-box__additions');
     Object.assign(this, config);
     this.index = -1;
     this.bindEvents();
-    if (this.input.hasAttribute("list")) {
-      this.list = "#" + this.input.getAttribute("list");
-      this.input.removeAttribute("list");
+    if (this.input.hasAttribute('list')) {
+      this.list = '#' + this.input.getAttribute('list');
+      this.input.removeAttribute('list');
     } else {
-      this.list = this.input.getAttribute("data-list") || config.list || [];
+      this.list = this.input.getAttribute('data-list') || config.list || [];
     }
   }
   bindEvents() {
     this._events = {
       input: {
-        "blur": () => this.close({
-          'reason': 'blur'
+        'blur': () => this.close({
+          reason: 'blur'
         })
       },
       form: {
-        "submit": () => this.close({
-          'reason': 'submit'
+        'submit': () => this.close({
+          reason: 'submit'
         })
       },
       ul: {
-        "mousedown": ev => this.onMouseDown(ev),
-        "mouseover": ev => this.onMouseOver(ev)
+        'mousedown': ev => this.onMouseDown(ev),
+        'mouseover': ev => this.onMouseOver(ev)
       }
     };
     _utils_js__WEBPACK_IMPORTED_MODULE_3__.helpers.bind(this.input, this._events.input);
@@ -92839,9 +93089,9 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
     _utils_js__WEBPACK_IMPORTED_MODULE_3__.helpers.bind(this.ul, this._events.ul);
   }
   set list(list) {
-    if (Array.isArray(list) || typeof list === "function") {
+    if (Array.isArray(list) || typeof list === 'function') {
       this._list = list;
-    } else if (typeof list === "string" && list.includes(",")) {
+    } else if (typeof list === 'string' && list.includes(',')) {
       this._list = list.split(/\s*,\s*/);
     } else {
       // Element or CSS selector
@@ -92850,7 +93100,7 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
         const text = el.textContent.trim();
         const value = el.value || text;
         const label = el.label || text;
-        return value !== "" ? {
+        return value !== '' ? {
           label,
           value
         } : null;
@@ -92869,15 +93119,23 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
   get opened() {
     return this.is_opened;
   }
+
+  /**
+   * @param {import('./types').closeParam} o
+   */
   close(o) {
     if (!this.opened) {
       return;
     }
-    this.ul.setAttribute("hidden", "");
+    this.ul.setAttribute('hidden', '');
     this.is_opened = false;
     this.index = -1;
-    this.trigger("suggestion-box-close", o || {});
+    this.trigger('suggestion-box-close', o || {});
   }
+
+  /**
+   * @param {Suggestion} suggestion
+   */
   insertValue(suggestion) {
     if (this.match_current_word) {
       _converse_headless__WEBPACK_IMPORTED_MODULE_1__.u.replaceCurrentWord(this.input, suggestion.value);
@@ -92886,18 +93144,18 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
     }
   }
   open() {
-    this.ul.removeAttribute("hidden");
+    this.ul.removeAttribute('hidden');
     this.is_opened = true;
     if (this.auto_first && this.index === -1) {
       this.goto(0);
     }
-    this.trigger("suggestion-box-open");
+    this.trigger('suggestion-box-open');
   }
   destroy() {
     //remove events from the input and its form
     _utils_js__WEBPACK_IMPORTED_MODULE_3__.helpers.unbind(this.input, this._events.input);
     _utils_js__WEBPACK_IMPORTED_MODULE_3__.helpers.unbind(this.input.form, this._events.form);
-    this.input.removeAttribute("aria-autocomplete");
+    this.input.removeAttribute('aria-autocomplete');
   }
   next() {
     const count = this.ul.children.length;
@@ -92915,20 +93173,21 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
    */
   goto(i, scroll = true) {
     // Should not be used directly, highlights specific item without any checks!
-    const list = /** @type HTMLElement[] */Array.from(this.ul.children).filter(el => el instanceof HTMLElement);
+    const list = /** @type HTMLElement[] */
+    Array.from(this.ul.children).filter(el => el instanceof HTMLElement);
     if (this.selected) {
-      list[this.index].setAttribute("aria-selected", "false");
+      list[this.index].setAttribute('aria-selected', 'false');
     }
     this.index = i;
     if (i > -1 && list.length > 0) {
-      list[i].setAttribute("aria-selected", "true");
+      list[i].setAttribute('aria-selected', 'true');
       list[i].focus();
       this.status.textContent = list[i].textContent;
       if (scroll) {
         // scroll to highlighted element in case parent's height is fixed
         this.ul.scrollTop = list[i].offsetTop - this.ul.clientHeight + list[i].clientHeight;
       }
-      this.trigger("suggestion-box-highlight", {
+      this.trigger('suggestion-box-highlight', {
         'text': this.suggestions[this.index]
       });
     }
@@ -92943,14 +93202,18 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       const suggestion = this.suggestions[this.index];
       this.insertValue(suggestion);
       this.close({
-        'reason': 'select'
+        reason: 'select'
       });
       this.auto_completing = false;
-      this.trigger("suggestion-box-selectcomplete", {
+      this.trigger('suggestion-box-selectcomplete', {
         text: suggestion
       });
     }
   }
+
+  /**
+   * @param {Event} ev
+   */
   onMouseOver(ev) {
     const li = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.u.ancestor(ev.target, 'li');
     if (li) {
@@ -92958,6 +93221,10 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       this.goto(index, false);
     }
   }
+
+  /**
+   * @param {MouseEvent} ev
+   */
   onMouseDown(ev) {
     if (ev.button !== 0) {
       return; // Only select on left click
@@ -92987,7 +93254,7 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       } else if ([_converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.keycodes.UP_ARROW, _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.keycodes.DOWN_ARROW].includes(ev.key)) {
         ev.preventDefault();
         ev.stopPropagation();
-        this[ev.key === _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.keycodes.UP_ARROW ? "previous" : "next"]();
+        this[ev.key === _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.keycodes.UP_ARROW ? 'previous' : 'next']();
         return true;
       }
     }
@@ -92995,7 +93262,7 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       return;
     }
     if (this.ac_triggers.includes(ev.key)) {
-      if (ev.key === "Tab") {
+      if (ev.key === 'Tab') {
         if (ev.shiftKey) {
           // TAB + shift should give the focus to previous focusable element.
           return;
@@ -93007,7 +93274,7 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
         ev.preventDefault();
       }
       this.auto_completing = true;
-    } else if (ev.key === "Backspace") {
+    } else if (ev.key === 'Backspace') {
       const target = /** @type {HTMLInputElement} */ev.target;
       const word = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.u.getCurrentWord(target, target.selectionEnd - 1);
       if (_utils_js__WEBPACK_IMPORTED_MODULE_3__.helpers.isMention(word, this.ac_triggers)) {
@@ -93030,16 +93297,18 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
     const is_long_enough = value.length && value.length >= this.min_chars;
     if (contains_trigger || is_long_enough) {
       this.auto_completing = true;
-      const list = typeof this._list === "function" ? await this._list(value) : this._list;
+      const list = typeof this._list === 'function' ? await this._list(value) : this._list;
       if (list.length === 0 || !this.auto_completing) {
         this.close({
-          'reason': 'nomatches'
+          reason: 'nomatches'
         });
         return;
       }
       this.index = -1;
-      this.ul.innerHTML = "";
-      this.suggestions = list.map(item => new _suggestion_js__WEBPACK_IMPORTED_MODULE_2__["default"](this.data(item, value), value)).filter(item => this.filter(item, value));
+      this.ul.innerHTML = '';
+      this.suggestions = list.map(/** @param {import('./types').XHRResultItem} item */item => new _suggestion_js__WEBPACK_IMPORTED_MODULE_2__["default"](this.data(item, value), value)).filter(/** @param {Suggestion} item */({
+        value: text
+      }) => this.filter(text, value));
       if (this.sort) {
         this.suggestions = this.suggestions.sort(this.sort);
       }
@@ -93047,14 +93316,14 @@ class AutoComplete extends (0,_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Ev
       this.suggestions.forEach(text => this.ul.appendChild(this.item(text, value)));
       if (this.ul.children.length === 0) {
         this.close({
-          'reason': 'nomatches'
+          reason: 'nomatches'
         });
       } else {
         this.open();
       }
     } else {
       this.close({
-        'reason': 'nomatches'
+        reason: 'nomatches'
       });
       if (!contains_trigger) {
         this.auto_completing = false;
@@ -93216,15 +93485,15 @@ class AutoCompleteComponent extends shared_components_element_js__WEBPACK_IMPORT
   }
   firstUpdated() {
     this.auto_complete = new _autocomplete_js__WEBPACK_IMPORTED_MODULE_0__["default"](/** @type HTMLElement */this.firstElementChild, {
-      "ac_triggers": this.triggers.split(" "),
-      "auto_first": this.auto_first,
-      "filter": this.filter == "contains" ? _utils_js__WEBPACK_IMPORTED_MODULE_2__.FILTER_CONTAINS : _utils_js__WEBPACK_IMPORTED_MODULE_2__.FILTER_STARTSWITH,
-      "include_triggers": [],
-      "list": this.list ?? (q => this.getAutoCompleteList(q)),
-      "data": this.data,
-      "match_current_word": true,
-      "max_items": this.max_items,
-      "min_chars": this.min_chars
+      ac_triggers: this.triggers.split(" "),
+      auto_first: this.auto_first,
+      filter: this.filter == "contains" ? _utils_js__WEBPACK_IMPORTED_MODULE_2__.FILTER_CONTAINS : _utils_js__WEBPACK_IMPORTED_MODULE_2__.FILTER_STARTSWITH,
+      include_triggers: [],
+      list: this.list ?? (/** @param {string} q */q => this.getAutoCompleteList(q)),
+      data: this.data,
+      match_current_word: true,
+      max_items: this.max_items,
+      min_chars: this.min_chars
     });
     this.auto_complete.on("suggestion-box-selectcomplete", () => this.auto_completing = false);
   }
@@ -93419,12 +93688,26 @@ const helpers = {
     return ac_triggers.includes(word[0]) || u.isMentionBoundary(word[0]) && ac_triggers.includes(word[1]);
   }
 };
-const FILTER_CONTAINS = function (text, input) {
+
+/**
+ * @param {string} text
+ * @param {string} input
+ * @returns {boolean}
+ */
+function FILTER_CONTAINS(text, input) {
   return RegExp(helpers.regExpEscape(input.trim()), 'i').test(text);
-};
-const FILTER_STARTSWITH = function (text, input) {
+}
+;
+
+/**
+ * @param {string} text
+ * @param {string} input
+ * @returns {boolean}
+ */
+function FILTER_STARTSWITH(text, input) {
   return RegExp('^' + helpers.regExpEscape(input.trim()), 'i').test(text);
-};
+}
+;
 const SORT_BY_LENGTH = function (a, b) {
   if (a.length !== b.length) {
     return a.length - b.length;
@@ -96058,7 +96341,7 @@ const {
     if (!(0,_utils_url_js__WEBPACK_IMPORTED_MODULE_2__.shouldRenderMediaFromURL)(m['og:image'], 'image')) {
       return '';
     }
-    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-message-unfurl @animationend="${el.onUnfurlAnimationEnd}" class="${el.model.get('url_preview_transition')}" jid="${el.model_with_messages?.get('jid')}" description="${m['og:description'] || ''}" title="${m['og:title'] || ''}" image="${m['og:image'] || ''}" url="${m['og:url'] || ''}"></converse-message-unfurl>`;
+    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-message-unfurl @animationend="${el.onUnfurlAnimationEnd}" class="${el.model.get('url_preview_transition')}" jid="${el.model_with_messages?.get('jid')}" description="${m['og:description'] || ''}" title="${m['og:title'] || ''}" image="${m['og:image'] || ''}" site_name="${m['og:site_name'] || ''}" url="${m['og:url'] || ''}"></converse-message-unfurl>`;
   })}</div></div>`;
 });
 
@@ -96152,24 +96435,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var utils_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils/url.js */ "./src/utils/url.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
-/* harmony import */ var shared_texture_components_image_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! shared/texture/components/image.js */ "./src/shared/texture/components/image.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var _converse_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/log */ "./src/log/index.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var utils_url_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/url.js */ "./src/utils/url.js");
+/* harmony import */ var shared_texture_components_image_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! shared/texture/components/image.js */ "./src/shared/texture/components/image.js");
 
 
 
 
+
+
+/**
+ * @param {string} image
+ * @returns {boolean}
+ */
 function isValidImage(image) {
-  return image && (0,utils_url_js__WEBPACK_IMPORTED_MODULE_1__.isDomainAllowed)(image, 'allowed_image_domains') && _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.isValidURL(image);
+  return image && (0,utils_url_js__WEBPACK_IMPORTED_MODULE_3__.isDomainAllowed)(image, 'allowed_image_domains') && _converse_headless__WEBPACK_IMPORTED_MODULE_2__.u.isValidURL(image);
 }
-const tplUrlWrapper = (o, wrapped_template) => o.url && _converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.isValidURL(o.url) && !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.u.isGIFURL(o.image) ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<a href="${o.url}" target="_blank" rel="noopener">${wrapped_template(o)}</a>` : wrapped_template(o);
-const tplImage = o => (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<converse-image class="card-img-top hor_centered" href="${o.url}" src="${o.image}" .onImgLoad="${o.onload}"></converse-image>`;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (o => {
-  const show_image = isValidImage(o.image);
-  const has_body_info = o.title || o.description || o.url;
+
+/**
+ * @param {import('../unfurl').default} el
+ * @param {(title: string) => import('lit').TemplateResult} wrapped_template
+ */
+function tplUrlWrapper(el, wrapped_template) {
+  const image = el.image || '';
+  const url = el.url || '';
+  const title = el.title || '';
+  return url && _converse_headless__WEBPACK_IMPORTED_MODULE_2__.u.isValidURL(url) && !_converse_headless__WEBPACK_IMPORTED_MODULE_2__.u.isGIFURL(image) ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<a href="${url}" target="_blank" rel="noopener">${wrapped_template(title)}</a>` : wrapped_template(title ?? '');
+}
+
+/**
+ * @param {import('../unfurl').default} el
+ */
+function tplImage(el) {
+  const image = el.image || '';
+  const url = el.url || '';
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-image class="card-img-top hor_centered" href="${url}" src="${image}" .onImgLoad="${() => el.onImageLoad()}"></converse-image>`;
+}
+/**
+ * @param {import('../unfurl').default} el
+ */
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
+  const description = el.description || '';
+  const image = el.image || '';
+  const title = el.title || '';
+  const url = el.url || '';
+  const show_image = isValidImage(image);
+  const has_body_info = title || description || url;
   if (show_image || has_body_info) {
-    return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="card card--unfurl">${show_image ? tplImage(o) : ''} ${has_body_info ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="card-body">${o.title ? tplUrlWrapper(o, o => (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<h5 class="card-title">${o.title}</h5>`) : ''} ${o.description ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<p class="card-text"><converse-texture text="${o.description}"></converse-texture></p>` : ''} ${o.url ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<p class="card-text"><a href="${o.url}" target="_blank" rel="noopener">${new URL(o.url).hostname}</a></p>` : ''}</div>` : ''}</div>`;
+    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="card card--unfurl">${show_image ? tplImage(el) : ''} ${has_body_info ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="card-body">${title ? tplUrlWrapper(el, /** @param {string} title */title => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<h5 class="card-title">${title}</h5>`) : ''} ${description ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<p class="card-text"><converse-texture text="${description}"></converse-texture></p>` : ''} ${url && _converse_headless__WEBPACK_IMPORTED_MODULE_2__.u.isValidURL(url) ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<p class="card-text"><a href="${url}" target="_blank" rel="noopener">${new URL(url).hostname}</a></p>` : ''}</div>` : ''}</div>`;
   } else {
     return '';
   }
@@ -96404,6 +96719,9 @@ class MessageUnfurl extends shared_components_element_js__WEBPACK_IMPORTED_MODUL
       },
       url: {
         type: String
+      },
+      site_name: {
+        type: String
       }
     };
   }
@@ -96414,6 +96732,7 @@ class MessageUnfurl extends shared_components_element_js__WEBPACK_IMPORTED_MODUL
     this.title = null;
     this.image = null;
     this.description = null;
+    this.site_name = null;
   }
   initialize() {
     const settings = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get();
@@ -96421,19 +96740,12 @@ class MessageUnfurl extends shared_components_element_js__WEBPACK_IMPORTED_MODUL
     this.listenTo(settings, 'change:render_media', () => this.requestUpdate());
   }
   render() {
-    return (0,_templates_unfurl_js__WEBPACK_IMPORTED_MODULE_2__["default"])(Object.assign({
-      'onload': () => this.onImageLoad()
-    }, {
-      description: this.description || '',
-      image: this.image || '',
-      title: this.title || '',
-      url: this.url || ''
-    }));
+    return (0,_templates_unfurl_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this);
   }
   onImageLoad() {
     this.dispatchEvent(new CustomEvent('imageLoaded', {
       detail: this,
-      'bubbles': true
+      bubbles: true
     }));
   }
 }
@@ -96690,34 +97002,6 @@ Object.assign(u, {
 
 /***/ }),
 
-/***/ "./src/shared/components/brand-byline.js":
-/*!***********************************************!*\
-  !*** ./src/shared/components/brand-byline.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ConverseBrandByline: () => (/* binding */ ConverseBrandByline)
-/* harmony export */ });
-/* harmony import */ var _element_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./element.js */ "./src/shared/components/element.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
-
-
-
-class ConverseBrandByline extends _element_js__WEBPACK_IMPORTED_MODULE_0__.CustomElement {
-  render() {
-    // eslint-disable-line class-methods-use-this
-    const is_fullscreen = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('view_mode') === 'fullscreen';
-    return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<p class="brand-subtitle">${_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.VERSION_NAME}</p><p class="brand-subtitle"><a target="_blank" rel="nofollow" href="https://conversejs.org">Open Source</a> XMPP chat client brought to you by <a target="_blank" rel="nofollow" href="https://opkode.com">Opkode</a></p><p class="brand-subtitle"><a target="_blank" rel="nofollow" href="https://hosted.weblate.org/projects/conversejs/#languages">Translate</a> it into your own language</p>` : ''}`;
-  }
-}
-_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-brand-byline', ConverseBrandByline);
-
-/***/ }),
-
 /***/ "./src/shared/components/brand-heading.js":
 /*!************************************************!*\
   !*** ./src/shared/components/brand-heading.js ***!
@@ -96729,23 +97013,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ConverseBrandHeading: () => (/* binding */ ConverseBrandHeading)
 /* harmony export */ });
-/* harmony import */ var _brand_byline_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brand-byline.js */ "./src/shared/components/brand-byline.js");
-/* harmony import */ var _brand_logo_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./brand-logo.js */ "./src/shared/components/brand-logo.js");
+/* harmony import */ var lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit/html.js */ "./node_modules/lit/html.js");
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
 /* harmony import */ var _element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./element.js */ "./src/shared/components/element.js");
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var lit_html_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lit/html.js */ "./node_modules/lit/html.js");
-
+/* harmony import */ var _brand_logo_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./brand-logo.js */ "./src/shared/components/brand-logo.js");
 
 
 
 
 class ConverseBrandHeading extends _element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
   render() {
-    // eslint-disable-line class-methods-use-this
-    return (0,lit_html_js__WEBPACK_IMPORTED_MODULE_4__.html)`<converse-brand-logo></converse-brand-logo><converse-brand-byline></converse-brand-byline>`;
+    return (0,lit_html_js__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-brand-logo></converse-brand-logo>`;
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.elements.define('converse-brand-heading', ConverseBrandHeading);
+_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-brand-heading', ConverseBrandHeading);
 
 /***/ }),
 
@@ -97001,6 +97282,38 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.elements.define('converse-fo
 
 /***/ }),
 
+/***/ "./src/shared/components/footer.js":
+/*!*****************************************!*\
+  !*** ./src/shared/components/footer.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ConverseFooter: () => (/* binding */ ConverseFooter)
+/* harmony export */ });
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
+/* harmony import */ var _element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./element.js */ "./src/shared/components/element.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+
+
+
+
+class ConverseFooter extends _element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
+  render() {
+    const is_fullscreen = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('view_mode') === 'fullscreen';
+    const theme = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('theme');
+    const is_dark_theme = ['dracula', 'cyberpunk'].includes(theme);
+    const i18n_sponsors = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('A big thank you to our sponsors 🙏');
+    return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<footer class="footer mt-auto py-3 mb-2"><div class="container"><div class="row"><div class="col-12 text-center"><p class="brand-subtitle mb-2 subdued">Version: ${_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.VERSION_NAME}</p><p class="brand-subtitle mb-2"><a target="_blank" rel="nofollow" href="https://github.com/conversejs/converse.js">Open Source</a> XMPP chat client brought to you by <a target="_blank" rel="nofollow" href="https://opkode.com">Opkode</a>.</p><p class="brand-subtitle mb-4">You can <a target="_blank" rel="nofollow" href="https://opkode.com/contact.html">hire me</a> for customizations, support or to build your next project.</p><div class="sponsors text-center"><p class="byline mb-1">${i18n_sponsors}</p><div class="fs-6 d-flex flex-wrap justify-content-center align-items-center gap-4 mb-2"><div><a href="https://bairesdev.com/sponsoring-open-source-projects/?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:13em" src="/media/logos/bairesdev-primary.png" alt="BairesDev"></a></div><div><a href="https://blokt.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:12em" src="${is_dark_theme ? '/media/logos/blokt-invert.png' : '/media/logos/blokt.png'}" alt="Blokt Crypto & Privacy"></a></div><div><a href="https://www.keycdn.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="height:3em" src="/logo/keycdn.png" alt="KeyCDN"></a></div></div></div><p class="brand-subtitle mb-3">If you'd like to sponsor this project, please visit: <a href="https://github.com/sponsors/jcbrand" target="_blank" rel="noopener">Github</a>, <a href="https://www.patreon.com/jcbrand" target="_blank" rel="noopener">Patreon</a>, <a href="https://liberapay.com/jcbrand" target="_blank" rel="noopener">Liberapay</a> or <a href="https://opkode.com/contact.html" target="_blank" rel="noopener">contact us</a>.</p></div></div></div></footer>` : ''}`;
+  }
+}
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-footer', ConverseFooter);
+
+/***/ }),
+
 /***/ "./src/shared/components/icons.js":
 /*!****************************************!*\
   !*** ./src/shared/components/icons.js ***!
@@ -97145,6 +97458,39 @@ class ImagePicker extends _element_js__WEBPACK_IMPORTED_MODULE_3__.CustomElement
   }
 }
 _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.elements.define('converse-image-picker', ImagePicker);
+
+/***/ }),
+
+/***/ "./src/shared/components/index.js":
+/*!****************************************!*\
+  !*** ./src/shared/components/index.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _brand_heading_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brand-heading.js */ "./src/shared/components/brand-heading.js");
+/* harmony import */ var _brand_logo_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./brand-logo.js */ "./src/shared/components/brand-logo.js");
+/* harmony import */ var _dropdown_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dropdown.js */ "./src/shared/components/dropdown.js");
+/* harmony import */ var _font_awesome_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./font-awesome.js */ "./src/shared/components/font-awesome.js");
+/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons.js */ "./src/shared/components/icons.js");
+/* harmony import */ var _image_picker_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./image-picker.js */ "./src/shared/components/image-picker.js");
+/* harmony import */ var _list_filter_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./list-filter.js */ "./src/shared/components/list-filter.js");
+/* harmony import */ var _message_versions_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./message-versions.js */ "./src/shared/components/message-versions.js");
+/* harmony import */ var _observable_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./observable.js */ "./src/shared/components/observable.js");
+/* harmony import */ var _spinner_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./spinner.js */ "./src/shared/components/spinner.js");
+/* harmony import */ var _split_resize_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./split-resize.js */ "./src/shared/components/split-resize.js");
+
+
+
+
+
+
+
+
+
+
+
 
 /***/ }),
 
@@ -97440,6 +97786,32 @@ class ObservableElement extends _element__WEBPACK_IMPORTED_MODULE_1__.CustomElem
     // override this method in your subclass
   }
 }
+
+/***/ }),
+
+/***/ "./src/shared/components/spinner.js":
+/*!******************************************!*\
+  !*** ./src/shared/components/spinner.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Spinner)
+/* harmony export */ });
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var templates_spinner_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! templates/spinner.js */ "./src/templates/spinner.js");
+/* harmony import */ var _element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./element.js */ "./src/shared/components/element.js");
+
+
+
+class Spinner extends _element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElement {
+  render() {
+    return (0,templates_spinner_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  }
+}
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-spinner', Spinner);
 
 /***/ }),
 
