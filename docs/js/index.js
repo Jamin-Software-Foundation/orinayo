@@ -1269,6 +1269,7 @@ function startXMPP() {
 
 	whitelistedPlugins.push("orinayo");		
 	whitelistedPlugins.push("voicechat");	
+	whitelistedPlugins.push("notation");		
 
 		
 	const options = {

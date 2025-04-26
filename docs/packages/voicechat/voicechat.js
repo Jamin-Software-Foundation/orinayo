@@ -15,6 +15,42 @@
             html = converse.env.html;
             __ = _converse.__;
 			
+            _converse.api.listen.on('getToolbarButtons', async function(toolbar_el, buttons) {
+                console.debug("getToolbarButtons", toolbar_el.model);	
+
+				const view = _converse.chatboxviews.get(toolbar_el.model.get('jid'));
+
+				if (view) {
+					msgDiv = view.querySelector(".chat-content__messages");
+					videoDiv = document.createElement('div');
+					// TODO 
+					//videoDiv.classList.add('DishScenary');											
+					msgDiv.parentNode.appendChild(videoDiv);
+				}				
+				
+				const voiceChatStart = await _converse.api.user.settings.get('voicechat_start');
+				const screenCastStart = await _converse.api.user.settings.get('screenshare_start');				
+				
+                let color = "fill:var(--secondary-color);";
+                if (toolbar_el.model.get("type") == "chatbox") color = "fill:var(--chat-color);";
+                if (toolbar_el.model.get("type") === "chatroom") color = "fill:var(--muc-color);";
+
+                buttons.push(html`
+                    <button class="btn plugin-voicechat" title="${voiceChatStart}" @click=${performAudio}/>
+						<svg style="width:18px; height:18px; ${color}" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-up" class="svg-inline--fa fa-volume-up fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.54 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"></path></svg>					
+                    </button>
+                `);
+				
+				// TODO
+				/*buttons.push(html`
+					<button class="btn plugin-screencast" title="${screenCastStart}" @click=${performScreenCast} />
+						<svg style="width:18px; height:18px; ${color}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g><path d="M 30,2L 2,2 C 0.896,2,0,2.896,0,4l0,18 c0,1.104, 0.896,2, 2,2l 9.998,0 c-0.004,1.446-0.062,3.324-0.61,4L 10.984,28 C 10.44,28, 10,28.448, 10,29C 10,29.552, 10.44,30, 10.984,30l 10.030,0 C 21.56,30, 22,29.552, 22,29c0-0.552-0.44-1-0.984-1l-0.404,0 c-0.55-0.676-0.606-2.554-0.61-4L 30,24 c 1.104,0, 2-0.896, 2-2L 32,4 C 32,2.896, 31.104,2, 30,2z M 14,24l-0.002,0.004 C 13.998,24.002, 13.998,24.002, 14,24L 14,24z M 18.002,24.004L 18,24l 0.002,0 C 18.002,24.002, 18.002,24.002, 18.002,24.004z M 30,20L 2,20 L 2,4 l 28,0 L 30,20 z"></path></g></svg>
+					</button>
+				`);	*/			
+			
+                return buttons;
+            });	
+
 			_converse.api.listen.on('connected', async function() {
 	            console.debug("voicechat - connected");	
 				
@@ -49,42 +85,7 @@
 			_converse.api.listen.on('parseMUCPresence', (stanza, attrs) => {
 				console.debug("parseMUCPresence", stanza, attrs);
 				return attrs;
-			});			
-						
-            _converse.api.listen.on('getToolbarButtons', async function(toolbar_el, buttons) {
-                console.debug("getToolbarButtons", toolbar_el.model);	
-
-				const view = _converse.chatboxviews.get(toolbar_el.model.get('jid'));
-
-				if (view) {
-					msgDiv = view.querySelector(".chat-content__messages");
-					videoDiv = document.createElement('div');
-					videoDiv.classList.add('DishScenary');											
-					msgDiv.parentNode.appendChild(videoDiv);
-				}				
-		
-				const voiceChatStart = await _converse.api.user.settings.get('voicechat_start');
-				const screenCastStart = await _converse.api.user.settings.get('screenshare_start');				
-				
-                let color = "fill:var(--secondary-color);";
-                if (toolbar_el.model.get("type") == "chatbox") color = "fill:var(--chat-color);";
-                if (toolbar_el.model.get("type") === "chatroom") color = "fill:var(--muc-color);";
-
-                buttons.push(html`
-                    <button class="btn plugin-voicechat" title="${voiceChatStart}" @click=${performAudio}/>
-						<svg style="width:18px; height:18px; ${color}" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-up" class="svg-inline--fa fa-volume-up fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.54 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"></path></svg>					
-                    </button>
-                `);
-				
-				// TODO
-				buttons.push(html`
-					<button class="btn plugin-screencast" title="${screenCastStart}" @click=${performScreenCast} />
-						<svg style="width:18px; height:18px; ${color}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g><path d="M 30,2L 2,2 C 0.896,2,0,2.896,0,4l0,18 c0,1.104, 0.896,2, 2,2l 9.998,0 c-0.004,1.446-0.062,3.324-0.61,4L 10.984,28 C 10.44,28, 10,28.448, 10,29C 10,29.552, 10.44,30, 10.984,30l 10.030,0 C 21.56,30, 22,29.552, 22,29c0-0.552-0.44-1-0.984-1l-0.404,0 c-0.55-0.676-0.606-2.554-0.61-4L 30,24 c 1.104,0, 2-0.896, 2-2L 32,4 C 32,2.896, 31.104,2, 30,2z M 14,24l-0.002,0.004 C 13.998,24.002, 13.998,24.002, 14,24L 14,24z M 18.002,24.004L 18,24l 0.002,0 C 18.002,24.002, 18.002,24.002, 18.002,24.004z M 30,20L 2,20 L 2,4 l 28,0 L 30,20 z"></path></g></svg>
-					</button>
-				`);				
-				
-                return buttons;
-            });			
+			});						
 
             _converse.api.listen.on('chatRoomViewInitialized', async function (view) {
                 console.debug("chatRoomViewInitialized", view);
