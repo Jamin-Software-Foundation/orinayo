@@ -226,7 +226,7 @@ function parseAc7(data) {
   var tempo = ac7.readAtom(); 
   var volume = ac7.readAtom();   
   
-  console.debug("parseMidi ac7 header", id, eleCount, rhythmName, tempo, volume);
+  console.debug("parseAc7 ac7 header", id, eleCount, rhythmName, tempo, volume);
   var style = [];
   
   for (let i=0; i<eleCount; i++) {
@@ -246,11 +246,11 @@ function parseAc7(data) {
 	  for (let j=0; j<style[i].elemNoOfTracks; j++) {
 		  style[i].mixerIndex[j] = style[i].mixerIndex[j] - 0x8000;
 		  style[i].trackIndex[j] = style[i].trackIndex[j] - 0x8000;
-		  //console.debug("parseMidi ac7 element part/track", i, j, style[i].partIndicator[j], style[i].mixerIndex[j] - 0x8000, style[i].trackIndex[j] - 0x8000);
+		  //console.debug("parseAc7 ac7 element part/track", i, j, style[i].partIndicator[j], style[i].mixerIndex[j] - 0x8000, style[i].trackIndex[j] - 0x8000);
 	  }
   }
   
-  console.debug("parseMidi ac7 element segment", style);  
+  console.debug("parseAc7 ac7 element segment", style);  
 
   var mixer = [];  	
   ac7.pos = mixrOffset;
@@ -275,7 +275,7 @@ function parseAc7(data) {
 	  mixer[i].chorus = ac7.readUInt8();	  
   }   
 
-  console.debug("parseMidi ac7 element mixer segment", mixrId, mixrEntries, mixer);  
+  console.debug("parseAc7 ac7 element mixer segment", mixrId, mixrEntries, mixer);  
 
   var drum = [];  	
   ac7.pos = drumOffset;
@@ -301,7 +301,7 @@ function parseAc7(data) {
 	  }
   }   
 
-  console.debug("parseMidi ac7 element drum segment", drumId, drum);   
+  console.debug("parseAc7 ac7 element drum segment", drumId, drum);   
   
   var other = [];  	
   ac7.pos = otherOffset;
@@ -329,7 +329,7 @@ function parseAc7(data) {
 	  }
   }   
 
-  console.debug("parseMidi ac7 element other segment", otherId, other);  
+  console.debug("parseAc7 ac7 element other segment", otherId, other);  
   let styleData = {}; 
   styleData["SInt"] = []; 
 	
@@ -416,7 +416,7 @@ function parseAc7(data) {
   styleData["SFF1"] = [];
   styleData["SInt"] = [];
   styleData["Hdr"] = {setTempo: {microsecondsPerBeat:  60 / tempo * 1000000}}  
-  console.debug("parseMidi ac7 styleData", styleData);   
+  console.debug("parseAc7 ac7 styleData", styleData);   
   
   return {
 	header: {format: 0, numTracks: 1, ticksPerBeat: 96},

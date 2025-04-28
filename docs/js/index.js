@@ -327,7 +327,12 @@ window.addEventListener('message', messageHandler);
 window.addEventListener('resize', (event) =>	{setup()});	
 
 async function messageHandler(evt) {
-	console.debug("messageHandler", evt.data);	
+	document.querySelector("#chord_pro").click();	
+	playChordPro(evt.data);
+}
+
+async function playChordPro(body) {
+	console.debug("playChordPro", body);	
 
 	playButton.innerText = "Wait..";
 	playButton.style.setProperty("--accent-fill-rest", "red");
@@ -335,7 +340,7 @@ async function messageHandler(evt) {
 	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
 	const url = (parts[0] == "ws:" ? "http:" : "https:") + parts[2] + "/orinayo/cp2midi";	
 
-	const response = await fetch(url, {method: "POST", body: evt.data});
+	const response = await fetch(url, {method: "POST", body});
 	const blob = await response.blob();	
 	const buffer = await blob.arrayBuffer();		
 	const data = new Uint8Array(buffer);				
@@ -344,11 +349,69 @@ async function messageHandler(evt) {
 	setupSongSequence();
 
 	document.querySelector("#songSequence").selectedIndex = 1;
-	document.querySelector("#chord_pro").click();
 	document.querySelector("#show_lyrics").click();		
 
 	pad.buttons[YELLOW] = true;	
 	toggleStartStop();
+}
+
+async function playAbc(tracks) {
+	console.debug("playAbc", tracks, window.abcChordList);	
+
+	playButton.innerText = "Wait..";
+	playButton.style.setProperty("--accent-fill-rest", "red");
+	
+	songSequence = parseAbc(tracks, "playback.mid");	
+	songSequence.name = "playback";		
+	setupSongSequence();	
+	
+	document.querySelector("#songSequence").selectedIndex = 1; 
+	document.querySelector("#show_lyrics").click();		
+
+	pad.buttons[YELLOW] = true;	
+	toggleStartStop();
+}
+
+function makeSmf(tracks, fileName) {
+	console.debug("parseSmf", fileName);	
+	const events = {Hdr : {}, music: []};
+	
+	events.Hdr.setTempo = {microsecondsPerBeat:  60 / tempo * 1000000}
+	events.Hdr.timeSignature = 0;
+	events.Hdr.keySignature = {tonic: keyChange};	
+	
+	//events.music.push({deltaTime, type: "sysEx", sysexType: "start-sequence"});	// start
+
+	for (let chord of window.abcChordList) { // 8 beats per bar
+		/*
+		{
+			"name": "Am",
+			"boom": 33,
+			"boom2": 28,
+			"chick": [
+				45,
+				48,
+				52
+			]
+		}		
+		*/
+		//events.music.push({deltaTime, type: "sysEx", sysexType: "chord", chordRoot, chordType, chordBass}}; 	
+	}
+	
+	//events.music.push({deltaTime, section: 0x20, sysexType: "section-control"});	// end	
+	return events;
+}
+
+function parseAbc(tracks, fileName) {
+	console.debug("parseAbc", tracks, fileName);	
+	
+	const format = 0;
+	const numTracks = 1;
+	const framesPerSecond = 0;
+	const ticksPerFrame = 0;
+	const ticksPerBeat = 96;
+	const header = {format, numTracks, framesPerSecond, ticksPerFrame, ticksPerBeat};	
+	return {header, data: makeSmf(tracks, fileName)};	
 }
 
 function handleLiberLive(selected) {
@@ -2982,7 +3045,7 @@ function updateTempo() {
 	
 	tempoDiv.innerText = tempo;	
 	
-	if (window.delay) delay.delayTime.value = 60 / tempo;
+	if (window.delay) delay.delayTime.value = 60 / tempo / 2;
 	
 	if (writeCharacteristic) {	// liberlive sync
 		setLiberLiveDeviceSettings() 
@@ -8294,7 +8357,7 @@ function doStartStopSequencer() {
 	if (!styleStarted) 	{
 		let syncGap = 0;
 		
-		if (arranger == "webaudio" && songSequence) {
+		if (arranger == "webaudio" && songSequence?.data?.Hdr?.setTempo?.microsecondsPerBeat ) {
 			syncGap = startStopWebAudio() + ((songSequence.data.Hdr.setTempo.microsecondsPerBeat / 1000) * 1);	
 		}
 	
@@ -9053,7 +9116,9 @@ function setupSongSequence() {
 		
 		document.getElementById("song_control").style.display = "";	
 
-		keyChange = songSequence.data.Hdr.keySignature.tonic;		
+		if (songSequence.data?.Hdr?.keySignature?.tonic) {
+			keyChange = songSequence.data.Hdr.keySignature.tonic;		
+		}
 	} 
 	else
 		

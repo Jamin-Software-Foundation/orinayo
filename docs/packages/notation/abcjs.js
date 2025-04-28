@@ -13435,6 +13435,7 @@ ChordTrack.prototype.interpretChord = function (name) {
     }
   }
   return {
+	name: name,	// BAO
     boom: bass,
     boom2: bass2,
     chick: chick
@@ -13496,7 +13497,7 @@ ChordTrack.prototype.resolveChords = function (startTime, endTime) {
 
   //console.log(this.currentChords)
   var currentChordsExpanded = expandCurrentChords(this.currentChords, 8 * num / den, beatLength);
-  //console.log(currentChordsExpanded)
+  //console.debug("resolveChords", currentChordsExpanded)
   var thisPattern = this.overridePattern ? this.overridePattern : this.rhythmPatterns[num + '/' + den];
   if (portionOfAMeasure) {
     thisPattern = [];
@@ -13536,6 +13537,8 @@ ChordTrack.prototype.processChord = function (elem) {
   var chord = this.findChord(elem);
   if (chord) {
     var c = this.interpretChord(chord);
+	//console.debug("processChord", c, chord, elem.time, timeToRealTime(elem.time));
+		
     // If this isn't a recognized chord, just completely ignore it.
     if (c) {
       // If we ever have a chord in this voice, then we add the chord track.
@@ -13681,6 +13684,11 @@ function expandCurrentChords(currentChords, num8thNotes, beatLength) {
   while (chords.length < num8thNotes) {
     chords.push(currentChord);
   }
+  
+  // BAO
+  if (!window.abcChordList) window.abcChordList = [];
+  window.abcChordList.push(...chords);
+  
   return chords;
 }
 function calcBeat(measureStart, currTime) {
