@@ -359,6 +359,11 @@ async function playChordPro(body) {
 		pad.buttons[YELLOW] = true;	
 	}
 	
+	if (window.midiBuffer) {
+		midiBuffer.stop();
+		midiBuffer = null;	// clear ABC sysnth
+	}	
+	
 	toggleStartStop();
 }
 
@@ -4383,7 +4388,7 @@ function letsGo(config) {
 	  const enable_xmpp = localStorage.getItem("collaboration_server.enable_xmpp");
 	  
 	  if (enable_xmpp && JSON.parse(enable_xmpp) == true) {
-		window.resizeTo(1400, 1140);
+		if (!mobileCheck() && !mobileViewpoint) window.resizeTo(1400, 1140);
 		startXMPP();  
 	  }
 	  
@@ -8178,7 +8183,7 @@ async function setup() {
 	canvas.gameHeight = gameCanvas.height;
 
 	if (!game) {
-		game = new GameBoard(canvas.context, canvas.gameWidth / 4, 0,  canvas.gameWidth / 2, canvas.gameHeight);
+		game = new GameBoard(canvas.context, canvas.gameWidth / 8, 0,  canvas.gameWidth * 0.75, canvas.gameHeight);
 		document.addEventListener("pointerlockchange", lockChangeAlert, false);
 
 		if (inputDeviceType == "orinayo") 

@@ -212,7 +212,12 @@
 	<tr id="streams_list" style="display:none"><td><b>Active Streams</b></td><td><select id="activeStreams" type="text" class="form-control input"></select></td></tr>		
 	</table>
   </div>  
-  <div style="margin-top: 20px;"><center>	
+  
+  <div style="margin-top: 10px;"><center>
+  	  <canvas id="tempoCanvas" width="1200" height="20" style="margin: 0px; display:none"></canvas>
+  </center></div>
+
+  <div><center>  
 	<table width="90%">
 	  <tr>	  
       <td align="left" width="20%"><span style="font-size: 24px" id="orinayo">C</span></td>
@@ -222,10 +227,9 @@
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-reg">Slot 0</span></td>	  
       <!--td align="left" width="16%"><span style="font-size: 24px" id="orinayo-pitch">Pitch --</span></td-->	  
 	  </tr>
-	  <tr> <td colspan="6"><canvas id="tempoCanvas" width="1200" height="50" style="margin: 0px; display:none"></canvas></td></tr>
 	</table>	
   </center></div>
-
+ 
   <div><canvas id="gameCanvas" width="1000" height="175" style="margin: 0; border-radius: 5px;"></canvas></div>
   <div style="margin-left: 20px;font-size: 24px;  border-radius: 5px;" id="lyrics"></div>
 	
