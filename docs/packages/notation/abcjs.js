@@ -15236,6 +15236,8 @@ function placeNote(outputAudioBuffer, sampleRate, sound, startArray, volumeMulti
     }
     source.connect(source.gainNode);
 
+	// BAO
+
     // Do the process of creating the sound and placing it in the buffer
     source.start(0);
     if (source.noteOff) {

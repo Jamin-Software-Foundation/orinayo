@@ -52,6 +52,12 @@
 	}
 	
 	function handlePlayMusicAction(el) {
+		
+		if (window.midiBuffer) {	// stop ABC sysnth
+			midiBuffer.stop();
+			midiBuffer = null;
+		}
+		
 		const text = el.model.get('message');
 		
 		if (isChordPro(text)) {
@@ -62,25 +68,26 @@
 			chordpro += "{start_accomp}\n" + text + "\n[*EA]";
 			console.debug('handlePlayMusicAction - chordpro', chordpro);
 			
-			document.querySelector("#toggle_chat").click();
 			playChordPro(chordpro);
 		}
 		else
 
         if (isAbc(text)) {
 			window.abcChordList = [];
+			
+			window.midiBuffer = new ABCJS.synth.CreateSynth();
 			const visualObj = ABCJS.renderAbc("*", text)[0];	
 			console.debug('handlePlayMusicAction - abc', visualObj);
 			
-			const timer = new ABCJS.TimingCallbacks(visualObj, {eventCallback, beatCallback});			
-
-			const midiBuffer = new ABCJS.synth.CreateSynth();
 			const chordsOff = false;
 			const millisecondsPerMeasure = (60 / tempo * 4) * 1000;	// global tempo
 			
-			midiBuffer.init({audioContext, visualObj, debugCallback, millisecondsPerMeasure, options: {sequenceCallback, onEnded, chordsOff}}).then(function (response) {
-				console.debug("handlePlayMusicAction abc", response);					
-				midiBuffer.prime();
+			midiBuffer.init({audioContext, visualObj, millisecondsPerMeasure, options: {sequenceCallback, onEnded, chordsOff}}).then(function (response) {
+				console.debug("handlePlayMusicAction abc init", response);	
+				
+				midiBuffer.prime().then(function (response) {
+					console.debug("handlePlayMusicAction abc prime", response);						
+				});
 				
 			}).catch(function (error) {
 				console.warn("handlePlayMusicAction abc - audio problem:", error);
@@ -88,27 +95,14 @@
 		}			
 		
 	}
-
-	function beatCallback(beatNumber, totalBeats, totalTime, position, debugInfo) {
-		//console.debug("beatCallback", beatNumber, totalBeats, totalTime, position, debugInfo);			
-	}	
-	
-	function eventCallback(ev) {
-		//console.debug("eventCallback", ev);	
-	}	
 	
 	function onEnded(info) {
 		//console.debug("onEnded", info);		
 	}
-
-	function debugCallback(info) {
-        //console.debug("debugCallback", info);		
-	}
 	
 	function sequenceCallback(tracks) {
-		console.debug("sequenceCallback style notes", tracks, window.abcChordList);	
-		document.querySelector("#toggle_chat").click();		
-		playAbc(tracks);		
+		console.debug("sequenceCallback style notes", tracks, window.abcChordList, window.abcGainNode);		
+		playAbc(tracks);	
 	}
 
     function renderNotation(text)  {

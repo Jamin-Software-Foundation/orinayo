@@ -328,6 +328,8 @@ window.addEventListener('resize', (event) =>	{setup()});
 
 async function messageHandler(evt) {
 	document.querySelector("#chord_pro").click();	
+	document.querySelector("#show_lyrics").click();	
+	
 	playChordPro(evt.data);
 }
 
@@ -348,10 +350,15 @@ async function playChordPro(body) {
 	songSequence.name = "playback";		
 	setupSongSequence();
 
-	document.querySelector("#songSequence").selectedIndex = 1;
-	document.querySelector("#show_lyrics").click();		
+	document.querySelector("#songSequence").selectedIndex = 1;	
+	
+	padsMode = 3; 								// set lead guitar
+	orinayo_pad.innerHTML = "Pad " + padsMode;		
 
-	pad.buttons[YELLOW] = true;	
+	if (introEndCheckedEle?.checked) {			// intro
+		pad.buttons[YELLOW] = true;	
+	}
+	
 	toggleStartStop();
 }
 
@@ -366,21 +373,31 @@ async function playAbc(tracks) {
 	setupSongSequence();	
 	
 	document.querySelector("#songSequence").selectedIndex = 1; 
-	document.querySelector("#show_lyrics").click();		
+	//document.querySelector("#show_lyrics").click();		
 
-	pad.buttons[YELLOW] = true;	
+	padsMode = 0; 						// disable lead guitar
+	orinayo_pad.innerHTML = "Pad None";	
+		
+	pad.buttons[BLUE] = true;
+	pad.buttons[ORANGE] = true;
+	
+	if (introEndCheckedEle?.checked) {	// intro
+		pad.buttons[YELLOW] = true;	
+	}
+	
 	toggleStartStop();
 }
 
-function makeSmf(tracks, fileName) {
-	console.debug("parseSmf", fileName);	
+function makeSmf(ticksPerBeat, tracks, fileName) {
+	console.debug("parseSmf", tracks, fileName);	
 	const events = {Hdr : {}, music: []};
 	
 	events.Hdr.setTempo = {microsecondsPerBeat:  60 / tempo * 1000000}
 	events.Hdr.timeSignature = 0;
-	events.Hdr.keySignature = {tonic: keyChange};	
-	
-	//events.music.push({deltaTime, type: "sysEx", sysexType: "start-sequence"});	// start
+	events.Hdr.keySignature = {tonic: keyChange};
+
+	let deltaTime = 0;
+	events.music.push({deltaTime, type: "sysEx", sysexType: "start-sequence"});	// start
 
 	for (let chord of window.abcChordList) { // 8 beats per bar
 		/*
@@ -395,10 +412,17 @@ function makeSmf(tracks, fileName) {
 			]
 		}		
 		*/
-		//events.music.push({deltaTime, type: "sysEx", sysexType: "chord", chordRoot, chordType, chordBass}}; 	
+		const chordRoot = getRootFromChord(chord.chick[0] % 12);
+		const chordType = chordStringToType(chord.name.split(" ")[0].substring(1));
+		const chordBass = getRootFromChord(chord.boom % 12);
+
+		deltaTime = ticksPerBeat * 0.50;
+		events.music.push({deltaTime, type: "sysEx", sysexType: "chord", chordRoot, chordType, chordBass}); 	
 	}
 	
+	// TODO settings
 	//events.music.push({deltaTime, section: 0x20, sysexType: "section-control"});	// end	
+	events.music.push({deltaTime, type: "sysEx", sysexType: "stop-sequence"});	// start	
 	return events;
 }
 
@@ -409,9 +433,9 @@ function parseAbc(tracks, fileName) {
 	const numTracks = 1;
 	const framesPerSecond = 0;
 	const ticksPerFrame = 0;
-	const ticksPerBeat = 96;
+	const ticksPerBeat = 1920;
 	const header = {format, numTracks, framesPerSecond, ticksPerFrame, ticksPerBeat};	
-	return {header, data: makeSmf(tracks, fileName)};	
+	return {header, data: makeSmf(ticksPerBeat, tracks, fileName)};	
 }
 
 function handleLiberLive(selected) {
@@ -508,12 +532,9 @@ function startRecording() {
 	let blobType = "audio/webm; codecs=opus";
 	let fileExtn = ".ogg";
 
-	const gain = audioContext.createGain();	
-	recorderDestination = audioContext.createMediaStreamDestination();	
-	gain.connect(recorderDestination);	
-	
-	if (window.pedalOutput) pedalOutput.connect(recorderDestination);	
-		
+	window.recordGain = audioContext.createGain();	
+	recorderDestination = audioContext.createMediaStreamDestination();		
+			
 	if (lyricsCanvas.style.display != "none") {	
 		recorderDestination.stream.addTrack(lyricsCanvas.captureStream().getVideoTracks()[0]);	
 		blobType = 'video/mp4; codecs=mp4a.40.2"';
@@ -542,7 +563,14 @@ function startRecording() {
 		 console.debug("startRecording - onstop", e.data);
 	})
 	
-	mediaRecorder.start();
+	if (window.pedalOutput) {
+		pedalOutput.connect(recordGain);
+		recordGain.connect(recorderDestination);		
+	} else {
+		recordGain.connect(recorderDestination);
+	}
+	
+	mediaRecorder.start();		
 }
 
 async function onLavaGenieClick() {
@@ -2230,7 +2258,7 @@ async function onloadHandler() {
 
 	} else {
 		mobileContainer.style.display = "none";
-		window.resizeTo(1300, 1140);
+		window.resizeTo(1100, 1140);
 		desktopContainer.style.display = "";	
 
 		const desktopLogo = document.querySelector("#desktop_logo");
@@ -4355,6 +4383,7 @@ function letsGo(config) {
 	  const enable_xmpp = localStorage.getItem("collaboration_server.enable_xmpp");
 	  
 	  if (enable_xmpp && JSON.parse(enable_xmpp) == true) {
+		window.resizeTo(1400, 1140);
 		startXMPP();  
 	  }
 	  
@@ -5087,6 +5116,12 @@ async function setupUI(config, err) {
 	songSeq.addEventListener("change", function()
 	{
 		songSequence = null;
+		
+		if (window.midiBuffer) {
+			midiBuffer.stop();
+			midiBuffer = null;	// clear ABC sysnth
+		}
+		
 		document.querySelector("#tempoCanvas").style.display = "none";		
 
 		if (songSeq.value != "songSeq") {
@@ -6594,7 +6629,7 @@ async function playChord(chord, root, type, bass) {
 	console.debug("playChord", chord, root, type, bass);
 
 	const guitarPos = guitarPosition.selectedIndex;	
-	const guitarDuration = 960 / tempo; 
+	const guitarDuration = 240 / tempo; 
 	const bassNote = (chord.length == 4 ? chord[0] : chord[0] - 12);
 	const rootNote = (chord.length == 4 ? chord[0] : chord[0] - 12) + (guitarPos * 12);	
 	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);	
@@ -8401,7 +8436,15 @@ function doStartStopSequencer() {
 		nextSongNoteTime = audioContext.currentTime;
 		songStartTime = nextSongNoteTime;
 		
-        if (timerWorker) setTimeout(() => timerWorker.postMessage("start"), syncGap);
+        if (timerWorker) setTimeout(() => {
+			timerWorker.postMessage("start");
+			
+			if (window.midiBuffer) {
+				midiBuffer.start();		// start ABC synth
+			}
+			
+		}, syncGap);
+		
 	} else {		
 		requestArrEnd = true;
 		requestedEnd = "Ending A";
@@ -8419,7 +8462,11 @@ function doStartStopSequencer() {
 			
 			if (timerWorker) timerWorker.postMessage("stop");	
 			notesInQueue = []; 
-		}		
+		}
+
+		if (window.midiBuffer) {	// stop ABC sysnth
+			midiBuffer.stop();
+		}
 	}
 
 	if (arranger != "webaudio" || !songSequence) {
@@ -8658,7 +8705,32 @@ function endSffStyle() {
 	}, 1000);
 }
 
-function getChordType(type) {
+function chordStringToType(string) {
+    if (string == "") return 0x00;
+    if (string == "M") return 0x00;	
+    if (string == "6")  return 0x01;	
+    if (string == "7")  return 0x02;
+    if (string == "7#11")  return 0x03;
+    if (string == "9")  return 0x04;
+    if (string == "7-9")  return 0x05;
+    if (string == "6-9")  return 0x06;
+    if (string == "aug")  return 0x07;
+    if (string == "m")  return 0x08;	
+    if (string == "min")  return 0x08;	
+    if (string == "min6")  return 0x09;
+    if (string == "m7")  return 0x0A;
+    if (string == "min7")  return 0x0A;	
+    if (string == "min7b5")  return 0x0B;
+	if (string == "min9")  return 0x0C;
+    if (string == "min7-9")  return 0x0D;
+    if (string == "min7-11")  return 0x0E;	
+    if (string == "sus")  return 0x20;
+    if (string == "sus4")  return 0x20;	
+    if (string == "sus2")  return 0x21;
+	return 0x00;
+}
+
+function chordTypeToString(type) {
     if (type == 0x00)  return ""	
     if (type == 0x01)  return "6";	
     if (type == 0x02)  return "7";
@@ -8694,7 +8766,26 @@ function getChordType(type) {
     if (type == 0x21)  return "sus2";
 }
 
-function getNoteName(chordRoot) {	
+function getRootFromChord(note) {	
+	let chordRoot = 49;
+		
+	if (note == 0 ) { chordRoot = 49} // c
+	if (note == 1 ) { chordRoot = 34} // db
+	if (note == 2 ) { chordRoot = 50} // d
+	if (note == 3 ) { chordRoot = 35} // eb
+	if (note == 4 ) { chordRoot = 51} // e
+	if (note == 5 ) { chordRoot = 52} // f
+	if (note == 6 ) { chordRoot = 37} // gb
+	if (note == 7 ) { chordRoot = 53} // g
+	if (note == 8 ) { chordRoot = 38} // ab
+	if (note == 9 ) { chordRoot = 54} // a
+	if (note == 10) { chordRoot = 39} // bb
+	if (note == 11) { chordRoot = 55} // b
+	
+	return chordRoot;
+}
+
+function getChordFromRoot(chordRoot) {	
 	let note = BASE;
 		
 	if (chordRoot == 33) { note = BASE - 1} // b
@@ -8775,7 +8866,8 @@ function scheduleSongNote() {
 			}
 			
 			if (event.section == 0x20 || event.section == 0x21 || event.section == 0x22 || event.section == 0x23) {			
-				pad.buttons[YELLOW] = true;
+				// TODO settings
+				//pad.buttons[YELLOW] = true;
 				toggleStartStop();
 				stopChord();
 			}	
@@ -8785,8 +8877,8 @@ function scheduleSongNote() {
 		if (event?.sysexType == "chord") {
 			console.debug("scheduleSongNote - chord", event);				
 			let chord = [];
-			const chordShape = getNoteName(event.chordRoot);	
-			const bassShape = getNoteName(event.chordBass);
+			const chordShape = getChordFromRoot(event.chordRoot);	
+			const bassShape = getChordFromRoot(event.chordBass);
 			
 			const note = chordShape.note;
 			
@@ -8801,7 +8893,7 @@ function scheduleSongNote() {
 			else if (event.chordType == 32)		// sus
 				chord = [note, note + 5, note + 7];	
 				
-			displayShape = chordShape.shape +  " " + getChordType(event.chordType);
+			displayShape = chordShape.shape +  " " + chordTypeToString(event.chordType);
 
 			if (event.chordRoot != event.chordBass) {
 				chord.unshift(bassShape.note);
