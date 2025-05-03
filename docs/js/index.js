@@ -327,10 +327,14 @@ window.addEventListener('message', messageHandler);
 window.addEventListener('resize', (event) =>	{setup()});	
 
 async function messageHandler(evt) {
-	document.querySelector("#chord_pro").click();	
-	document.querySelector("#show_lyrics").click();	
 	
-	playChordPro(evt.data);
+	if (evt.data.indexOf("postis") == -1) {
+		console.debug("messageHandler", evt.data);
+		
+		document.querySelector("#chord_pro").click();	
+		document.querySelector("#show_lyrics").click();		
+		playChordPro(evt.data);
+	}
 }
 
 async function playChordPro(body) {
@@ -1366,7 +1370,7 @@ function startXMPP() {
 	whitelistedPlugins.push("orinayo");		
 	whitelistedPlugins.push("voicechat");	
 	whitelistedPlugins.push("notation");		
-
+	whitelistedPlugins.push("jitsimeet");
 		
 	const options = {
 		allow_contact_requests: false, 
