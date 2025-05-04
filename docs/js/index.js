@@ -2267,7 +2267,7 @@ async function onloadHandler() {
 
 	} else {
 		mobileContainer.style.display = "none";
-		window.resizeTo(1100, 1140);
+		window.resizeTo(1150, 1140);
 		desktopContainer.style.display = "";	
 
 		const desktopLogo = document.querySelector("#desktop_logo");

@@ -1,3 +1,20 @@
+let dish;
+
+window.addEventListener("resize", function () {
+	if (dish) dish.resize();
+});		
+
+window.addEventListener("load", function () {
+	let scenary = document.getElementsByClassName("DishScenary")[0];
+	console.debug("load", scenary);
+	dish = new Dish(scenary);				
+});
+
+function addVideo(video) {
+	dish.addVideo(video);
+}
+		
+
 class Dish {
 
     // ratios
@@ -40,15 +57,7 @@ class Dish {
 
         // append dish to conference
         this._conference.appendChild(this._dish);
-
-    }
-
-    // set dish in scenary
-    append() {
-
-        // append to scenary
         this._scenary.appendChild(this._conference);
-
     }
 
     // calculate dimensions
@@ -147,7 +156,7 @@ class Dish {
     }
 
     // add new camera
-    add(video) {		
+    addVideo(video) {		
         this._cameras++;
         this.render();
         this.resize();
@@ -156,8 +165,9 @@ class Dish {
     }
 
     // remove last camera
-    delete() {
+    deleteVideo(index) {
         this._cameras--;
+		this._dish.children[index].parentNode.removeChild(this._dish.children[index]);
         this.render();
         this.resize();
     }

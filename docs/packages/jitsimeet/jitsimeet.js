@@ -394,7 +394,7 @@ function initialize() {
         jitsimeet_start_option: MEET_START_OPTIONS.INTO_CHAT_WINDOW,
         jitsimeet_head_display_toggle: true,
         jitsimeet_modal: false,
-        jitsimeet_url: "https://meet.jit.si",
+        jitsimeet_url: "https://pade.chat:5443/ofmeet",
     });
 
     api.listen.on("messageNotification", (data) => handleMessageNotification(_converse, data));
