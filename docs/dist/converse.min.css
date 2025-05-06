@@ -5008,6 +5008,70 @@ converse-bg [data-bs-theme=light] {
 .conversejs [data-bs-theme=dark], converse-bg [data-bs-theme=dark] {
   --converse-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
+.conversejs .toast, converse-bg .toast {
+  --converse-toast-zindex: 1090;
+  --converse-toast-padding-x: 0.75rem;
+  --converse-toast-padding-y: 0.5rem;
+  --converse-toast-spacing: 1.5rem;
+  --converse-toast-max-width: 350px;
+  --converse-toast-font-size: 0.875rem;
+  --converse-toast-color: ;
+  --converse-toast-bg: rgba(var(--converse-body-bg-rgb), 0.85);
+  --converse-toast-border-width: var(--converse-border-width);
+  --converse-toast-border-color: var(--converse-border-color-translucent);
+  --converse-toast-border-radius: var(--converse-border-radius);
+  --converse-toast-box-shadow: var(--converse-box-shadow);
+  --converse-toast-header-color: var(--converse-secondary-color);
+  --converse-toast-header-bg: rgba(var(--converse-body-bg-rgb), 0.85);
+  --converse-toast-header-border-color: var(--converse-border-color-translucent);
+  width: var(--converse-toast-max-width);
+  max-width: 100%;
+  font-size: var(--converse-toast-font-size);
+  color: var(--converse-toast-color);
+  pointer-events: auto;
+  background-color: var(--converse-toast-bg);
+  background-clip: padding-box;
+  border: var(--converse-toast-border-width) solid var(--converse-toast-border-color);
+  box-shadow: var(--converse-toast-box-shadow);
+  border-radius: var(--converse-toast-border-radius);
+}
+.conversejs .toast.showing, converse-bg .toast.showing {
+  opacity: 0;
+}
+.conversejs .toast:not(.show), converse-bg .toast:not(.show) {
+  display: none;
+}
+.conversejs .toast-container, converse-bg .toast-container {
+  --converse-toast-zindex: 1090;
+  position: absolute;
+  z-index: var(--converse-toast-zindex);
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 100%;
+  pointer-events: none;
+}
+.conversejs .toast-container > :not(:last-child), converse-bg .toast-container > :not(:last-child) {
+  margin-bottom: var(--converse-toast-spacing);
+}
+.conversejs .toast-header, converse-bg .toast-header {
+  display: flex;
+  align-items: center;
+  padding: var(--converse-toast-padding-y) var(--converse-toast-padding-x);
+  color: var(--converse-toast-header-color);
+  background-color: var(--converse-toast-header-bg);
+  background-clip: padding-box;
+  border-bottom: var(--converse-toast-border-width) solid var(--converse-toast-header-border-color);
+  border-top-left-radius: calc(var(--converse-toast-border-radius) - var(--converse-toast-border-width));
+  border-top-right-radius: calc(var(--converse-toast-border-radius) - var(--converse-toast-border-width));
+}
+.conversejs .toast-header .btn-close, converse-bg .toast-header .btn-close {
+  margin-right: calc(-0.5 * var(--converse-toast-padding-x));
+  margin-left: var(--converse-toast-padding-x);
+}
+.conversejs .toast-body, converse-bg .toast-body {
+  padding: var(--converse-toast-padding-x);
+  word-wrap: break-word;
+}
 .conversejs .modal, converse-bg .modal {
   --converse-modal-zindex: 1055;
   --converse-modal-width: 500px;
@@ -12602,6 +12666,21 @@ converse-spinner.vertically-centered {
 converse-root#conversejs converse-popover {
   margin-left: 0.5em;
 }
+/*!************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/modal/styles/toast.scss ***!
+  \************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-toasts converse-toast .toast {
+  position: relative;
+  margin-block-start: 1em;
+  margin-inline-end: 1em;
+  float: right;
+}
+.conversejs converse-toasts converse-toast .toast .toast-header img {
+  height: 1.5em;
+}
+.conversejs converse-toasts converse-toast .toast .toast-body__container .btn-close {
+  margin-inline-end: 1em;
+}
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/autocomplete/styles/_autocomplete.scss ***!
   \**************************************************************************************************************************************************************************************************************************************************************************/
@@ -16018,7 +16097,9 @@ converse-bg .converse-brand__heading {
     width: 83.33333333%;
   }
 }
-converse-bg .converse-brand__heading svg {
+converse-bg .converse-brand__heading converse-logo {
+  height: 2em;
+  display: flex;
   margin-top: 0.4em;
 }
 /*!******************************************************************************************************************************************************************************************************************************************************************************!*\
