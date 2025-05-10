@@ -9271,6 +9271,7 @@ function setupSongSequence() {
 }
 
 function setupRealInstruments() {
+	const config = getConfig();	
 	console.debug("setupRealInstruments", realInstrument);
 	playButton.innerText = "Wait..";
 	playButton.style.setProperty("--accent-fill-rest", "red");	
@@ -9561,7 +9562,7 @@ function setupRealInstruments() {
 	}
 	
 	if (realInstrument.bpm) {	
-		setTempo(realInstrument.bpm);
+		setTempo(config.tempo || tempo || realInstrument.bpm);
 	}
 	
 	setTimeout(() => {

@@ -269,6 +269,7 @@ var chord_loops = [
 	"extra/assets/chords/unplugged-1_82_11707_11707_4.chord",
 	"assets/chords/unplugged-2_96_10000_10000_4.chord",	
 	"extra/assets/chords/upbeat_120_16000_16000_2.chord",	
+	"extra/assets/chords/very-sharp_118_8136_8136_2.chord",	
 	"assets/chords/village-pop_107_8972_8972_4.chord",
 	"assets/chords/way-pop_75_12800.chord",
 	"assets/chords/wild-rock_120_8000.chord"	
