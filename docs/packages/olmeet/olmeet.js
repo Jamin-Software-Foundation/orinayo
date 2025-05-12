@@ -13,7 +13,7 @@ function handleMessageNotification(_converse, data) {
 
     if (bodyElement) {
         const body = bodyElement.innerHTML;
-        const url = _converse.api.settings.get("jitsimeet_url");
+        const url = _converse.api.settings.get("olmeet_url");
         const pos = body.indexOf(url + "/");
 
         if (pos > -1) {
@@ -60,7 +60,7 @@ function getToolbarButtons(_converse, toolbar_el, buttons) {
     }
 
     buttons.push(html`
-        <button type="button" class="btn plugin-jitsimeet" title="${__("Jitsi Meet")}" @click="${(ev) => performVideo(_converse, ev)}"/>
+        <button type="button" class="btn plugin-olmeet" title="${__("Online Meet")}" @click="${(ev) => performVideo(_converse, ev)}"/>
             <svg style="${style}" viewBox="0 0 32 32">
                 <path d="M22.688 14l5.313-5.313v14.625l-5.313-5.313v4.688c0 .75-.625 1.313-1.375 1.313h-16C4.563 24 4 23.437 4 22.687V9.312c0-.75.563-1.313 1.313-1.313h16c.75 0 1.375.563 1.375 1.313V14z"></path>
             </svg>
@@ -72,7 +72,7 @@ function afterMessageBodyTransformed(_converse, text) {
     const { api, __ } = _converse;
     const pos = text.indexOf("https://");
 
-    if (pos > -1 && text.indexOf(api.settings.get("jitsimeet_url")) > -1) {
+    if (pos > -1 && text.indexOf(api.settings.get("olmeet_url")) > -1) {
         console.debug("afterMessageBodyTransformed", text);
         const { html } = env;
         const url = text.substring(pos);
@@ -113,8 +113,8 @@ function performVideo(_converse, ev) {
 
     const { __ } = _converse;
     const chatView = getChatViewFromElement(ev.currentTarget);
-    const jitsimeet_confirm = __("Would you like to start a meeting?");
-    if (confirm(jitsimeet_confirm)) {
+    const olmeet_confirm = __("Would you like to start a meeting?");
+    if (confirm(olmeet_confirm)) {
         doVideo(_converse, chatView);
     }
 
@@ -140,11 +140,11 @@ function doVideo(_converse, view) {
             .toLowerCase()
             .replace(/[\\]/g, "") +
         "-" + Math.random().toString(36).substr(2, 9);
-    const url = api.settings.get("jitsimeet_url") + "/" + room;
+    const url = api.settings.get("olmeet_url") + "/" + room;
     console.debug("doVideo", room, url, view);
 
     view.model.sendMessage({ body: url });
-    const startOption = api.settings.get("jitsimeet_start_option");
+    const startOption = api.settings.get("olmeet_start_option");
     if (startOption === MEET_START_OPTIONS.INTO_CHAT_WINDOW) {
         doLocalVideo(_converse, view, room, url);
     } else if (startOption === MEET_START_OPTIONS.INTO_NEW_TAB) {
@@ -167,17 +167,17 @@ function doLocalVideo(_converse, view, room, url, label) {
     const chatModel = view.model;
     console.debug("doLocalVideo", view, room, url, label);
 
-    const modal = api.settings.get("jitsimeet_modal") === true;
+    const modal = api.settings.get("olmeet_modal") === true;
 
     if (modal) {
         const model = new converse.env.Model();
         model.set({ view, url, label, room });
-        api.modal.show('converse-jitsimeet-dialog', { model });
+        api.modal.show('converse-olmeet-dialog', { model });
     } else {
         const isOverlayedDisplay = _converse.api.settings.get("view_mode") === "overlayed";
         const headDisplayToggle =
             isOverlayedDisplay ||
-            _converse.api.settings.get("jitsimeet_head_display_toggle") ===
+            _converse.api.settings.get("olmeet_head_display_toggle") ===
                 true;
         const div = view.querySelector(headDisplayToggle ? ".chat-body" : ".box-flyout");
 
@@ -185,14 +185,14 @@ function doLocalVideo(_converse, view, room, url, label) {
             const jid = view.getAttribute("jid");
             if (
                 Array.from(
-                    document.querySelectorAll("iframe.jitsimeet")
+                    document.querySelectorAll("iframe.olmeet")
                 ).filter((f) => f.__jid === jid).length > 0
             ) {
                 __displayError(__("A meet is already running into room"));
                 return;
             }
 
-            const toggleHandler = () => jitsiFrame.toggleHideShow();
+            const toggleHandler = () => olFrame.toggleHideShow();
 
             const dynamicDisplayManager = new (function () {
                 let __resizeHandler;
@@ -228,10 +228,10 @@ function doLocalVideo(_converse, view, room, url, label) {
                             left += current.offsetLeft;
                             current = current.offsetParent;
                         }
-                        jitsiFrame.style.top = top + "px";
-                        jitsiFrame.style.left = left + "px";
-                        jitsiFrame.style.width = width + "px";
-                        jitsiFrame.style.height = height + "px";
+                        olFrame.style.top = top + "px";
+                        olFrame.style.left = left + "px";
+                        olFrame.style.width = width + "px";
+                        olFrame.style.height = height + "px";
                     };
                     __resizeWatchImpl = new (function () {
                         let __resizeObserver;
@@ -258,11 +258,11 @@ function doLocalVideo(_converse, view, room, url, label) {
                             "chatRoomViewInitialized",
                         ];
                         const __startResize = function () {
-                            jitsiFrame.style.pointerEvents = "none";
+                            olFrame.style.pointerEvents = "none";
                             document.addEventListener("mousemove", __deferredResize);
                         };
                         const __endResize = function () {
-                            jitsiFrame.style.pointerEvents = "";
+                            olFrame.style.pointerEvents = "";
                             document.removeEventListener("mousemove", __deferredResize);
                         };
                         let timeoutId;
@@ -298,10 +298,10 @@ function doLocalVideo(_converse, view, room, url, label) {
                         };
                     })();
 
-                    jitsiFrame.style.position = "absolute";
-                    $anchor.appendChild(jitsiFrame);
+                    olFrame.style.position = "absolute";
+                    $anchor.appendChild(olFrame);
                     __resizeWatchImpl.start();
-                    _converse.api.listen.on("chatBoxClosed", closeJitsi);
+                    _converse.api.listen.on("chatBoxClosed", closeOnline);
                     this.triggerChange();
                 };
                 this.triggerChange = function () {
@@ -309,71 +309,71 @@ function doLocalVideo(_converse, view, room, url, label) {
                 };
                 this.close = function () {
                     __resizeWatchImpl.close();
-                    _converse.api.listen.not("chatBoxClosed", closeJitsi);
+                    _converse.api.listen.not("chatBoxClosed", closeOnline);
                 };
             })();
 
-            const jitsiFrame = document.createElement("iframe");
+            const olFrame = document.createElement("iframe");
             let firstTime = true;
 
-            function closeJitsi (currentModel) {
+            function closeOnline (currentModel) {
                 dynamicDisplayManager.triggerChange();
                 if (currentModel && currentModel.cid !== chatModel.cid) {
                     return;
                 }
                 dynamicDisplayManager.close();
-                jitsiFrame.remove();
+                olFrame.remove();
             };
 
-            function jitsiIframeCloseHandler() {
+            function olIframeCloseHandler() {
                 console.debug("doVideo - load", this);
                 if (!firstTime) {
                     // meeting closed and root url is loaded
-                    closeJitsi();
+                    closeOnline();
                 }
                 if (firstTime) {
-                    firstTime = false; // ignore when jitsi-meet room url is loaded
+                    firstTime = false; // ignore when ol-meet room url is loaded
                 }
             };
 
-            jitsiFrame.toggleHideShow = function () {
-                if (jitsiFrame.style.display === "none") {
-                    jitsiFrame.show();
+            olFrame.toggleHideShow = function () {
+                if (olFrame.style.display === "none") {
+                    olFrame.show();
                 } else {
-                    jitsiFrame.hide();
+                    olFrame.hide();
                 }
             };
-            jitsiFrame.show = () => {
-                jitsiFrame.style.display = "";
+            olFrame.show = () => {
+                olFrame.style.display = "";
             };
-            jitsiFrame.hide = () => {
-                jitsiFrame.style.display = "none";
+            olFrame.hide = () => {
+                olFrame.style.display = "none";
             };
-            jitsiFrame.__jid = jid;
-            jitsiFrame.addEventListener("load", jitsiIframeCloseHandler);
-            jitsiFrame.setAttribute("src", url);
-            jitsiFrame.setAttribute("class", "jitsimeet");
-            jitsiFrame.setAttribute("allow", "microphone; camera; display-capture;");
-            jitsiFrame.setAttribute("frameborder", "0");
-            jitsiFrame.setAttribute("seamless", "seamless");
-            jitsiFrame.setAttribute("allowfullscreen", "true");
-            jitsiFrame.setAttribute("scrolling", "no");
-            jitsiFrame.setAttribute("style", "z-index:1049;width:100%;height:100%;");
+            olFrame.__jid = jid;
+            olFrame.addEventListener("load", olIframeCloseHandler);
+            olFrame.setAttribute("src", url);
+            olFrame.setAttribute("class", "olmeet");
+            olFrame.setAttribute("allow", "microphone; camera; display-capture;");
+            olFrame.setAttribute("frameborder", "0");
+            olFrame.setAttribute("seamless", "seamless");
+            olFrame.setAttribute("allowfullscreen", "true");
+            olFrame.setAttribute("scrolling", "no");
+            olFrame.setAttribute("style", "z-index:1049;width:100%;height:100%;");
             dynamicDisplayManager.start();
 
-            jitsiFrame.contentWindow.addEventListener(
+            olFrame.contentWindow.addEventListener(
                 "message",
                 function (event) {
                     if (
                         _converse.api.settings
-                            .get("jitsimeet_url")
+                            .get("olmeet_url")
                             .indexOf(event.origin) === 0 &&
                         typeof event.data === "string"
                     ) {
                         let data = JSON.parse(event.data);
-                        let jitsiEvent = data["jitsimeet_event"];
-                        if ("close" === jitsiEvent) {
-                            closeJitsi();
+                        let olEvent = data["olmeet_event"];
+                        if ("close" === olEvent) {
+                            closeOnline();
                         }
                     }
                 },
@@ -389,12 +389,15 @@ function initialize() {
     const { api, __ } = _converse;
     const { BaseModal } = _converse.exports;
     const { html, render } = converse.env;
+		
+	const parts = JSON.parse(localStorage.getItem("collaboration_server.server_url")).split("/");	
+	const base_url = (parts[0] == "ws:" ? "http:" : "https://") + parts[2] + "/group/public";		
 
     api.settings.extend({
-        jitsimeet_start_option: MEET_START_OPTIONS.INTO_CHAT_WINDOW,
-        jitsimeet_head_display_toggle: true,
-        jitsimeet_modal: false,
-        jitsimeet_url: "https://pade.chat:5443/ofmeet",
+        olmeet_start_option: MEET_START_OPTIONS.INTO_CHAT_WINDOW,
+        olmeet_head_display_toggle: true,
+        olmeet_modal: false,
+        olmeet_url: base_url,
     });
 
     api.listen.on("messageNotification", (data) => handleMessageNotification(_converse, data));
@@ -417,7 +420,7 @@ function initialize() {
             return html`
                 <iframe
                     src="${this.model.get("url")}"
-                    id="jitsimeet"
+                    id="olmeet"
                     allow="microphone; camera; display-capture"
                     frameborder="0"
                     seamless="seamless"
@@ -427,9 +430,9 @@ function initialize() {
         }
     }
 
-    api.elements.define('converse-jitsimeet-dialog', MeetDialog);
+    api.elements.define('converse-olmeet-dialog', MeetDialog);
 
-    console.debug("jitsimeet plugin is ready");
+    console.debug("olmeet plugin is ready");
 };
 
 let converse = window.converse;
@@ -439,9 +442,9 @@ if (typeof converse === "undefined") {
         'converse-loaded',
         (ev) => {
             converse = ev.detail?.converse || ev.converse;
-            converse.plugins.add("jitsimeet", { initialize });
+            converse.plugins.add("olmeet", { initialize });
         }
     );
 } else {
-    converse.plugins.add("jitsimeet", { initialize });
+    converse.plugins.add("olmeet", { initialize });
 }

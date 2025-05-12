@@ -1370,7 +1370,7 @@ function startXMPP() {
 	whitelistedPlugins.push("orinayo");		
 	whitelistedPlugins.push("voicechat");	
 	whitelistedPlugins.push("notation");		
-	whitelistedPlugins.push("jitsimeet");
+	whitelistedPlugins.push("olmeet");
 		
 	const options = {
 		allow_contact_requests: false, 
