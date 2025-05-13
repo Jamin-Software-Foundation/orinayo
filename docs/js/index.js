@@ -1371,6 +1371,9 @@ function startXMPP() {
 	whitelistedPlugins.push("voicechat");	
 	whitelistedPlugins.push("notation");		
 	whitelistedPlugins.push("olmeet");
+	
+	const parts = conURI.split("/");	
+	const base_url = (parts[0] == "ws:" ? "http:" : "https:") + "//" + parts[2] + "/group/public";			
 		
 	const options = {
 		allow_contact_requests: false, 
@@ -1394,6 +1397,7 @@ function startXMPP() {
 		muc_history_max_stanzas: 50,
 		nickname: username,
 		notification_icon: "./assets/icon_128.png",
+		olmeet_url: base_url,
 		password: password,
 		persistent_store: "localStorage", // TODO location.origin.startsWith("chrome-extension") ? 'BrowserExtLocal' : 'IndexedDB', 				
 		play_sounds: false,
