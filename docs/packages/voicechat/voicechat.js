@@ -5,7 +5,7 @@
         factory(converse);
     }
 }(this, function (converse) {
-    let _converse, html, __, model, harker, videoDiv, msgDiv, pcListen = {}, speakers = {}, audioStream, screenStream, chatsLoaded, screenStreamUri, audioStreamUri, pcScreen, pcSpeak, button, screenButton, recognition, recognitionActive, myJid, myself, me, startTime;
+    let _converse, html, __, model, harker, msgDiv, pcListen = {}, speakers = {}, audioStream, chatsLoaded, audioStreamUri, pcSpeak, button, recognition, recognitionActive, myJid, myself, me, startTime;
 
 	converse.plugins.add("voicechat", {
 		dependencies: [],
@@ -16,17 +16,7 @@
             __ = _converse.__;
 			
             _converse.api.listen.on('getToolbarButtons', async function(toolbar_el, buttons) {
-                console.debug("getToolbarButtons", toolbar_el.model);	
-
-				const view = _converse.chatboxviews.get(toolbar_el.model.get('jid'));
-
-				if (view) {
-					msgDiv = view.querySelector(".chat-content__messages");
-					videoDiv = document.createElement('iframe');
-					videoDiv.style = "display:none; width: 100%; height: 800px; border:none; margin:0; padding:0; overflow:hidden;";
-					videoDiv.src = "./packages/voicechat/dish.html";											
-					msgDiv.parentNode.appendChild(videoDiv);
-				}				
+                console.debug("getToolbarButtons", toolbar_el.model);					
 				
 				const voiceChatStart = await _converse.api.user.settings.get('voicechat_start');
 				const screenCastStart = await _converse.api.user.settings.get('screenshare_start');				
@@ -41,14 +31,6 @@
                     </button>
                 `);
 				
-				// TODO
-				/*
-				buttons.push(html`
-					<button class="btn plugin-screencast" title="${screenCastStart}" @click=${performScreenCast} />
-						<svg style="width:18px; height:18px; ${color}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g><path d="M 30,2L 2,2 C 0.896,2,0,2.896,0,4l0,18 c0,1.104, 0.896,2, 2,2l 9.998,0 c-0.004,1.446-0.062,3.324-0.61,4L 10.984,28 C 10.44,28, 10,28.448, 10,29C 10,29.552, 10.44,30, 10.984,30l 10.030,0 C 21.56,30, 22,29.552, 22,29c0-0.552-0.44-1-0.984-1l-0.404,0 c-0.55-0.676-0.606-2.554-0.61-4L 30,24 c 1.104,0, 2-0.896, 2-2L 32,4 C 32,2.896, 31.104,2, 30,2z M 14,24l-0.002,0.004 C 13.998,24.002, 13.998,24.002, 14,24L 14,24z M 18.002,24.004L 18,24l 0.002,0 C 18.002,24.002, 18.002,24.002, 18.002,24.004z M 30,20L 2,20 L 2,4 l 28,0 L 30,20 z"></path></g></svg>
-					</button>
-				`);		
-				*/
                 return buttons;
             });	
 
@@ -91,43 +73,21 @@
             _converse.api.listen.on('chatRoomViewInitialized', async function (view) {
                 console.debug("chatRoomViewInitialized", view);
 				stopVoiceChat();
-				stopScreenCast(view);
 			});
 			
             _converse.api.listen.on('chatBoxViewInitialized', async function (view)  {
                 console.debug("chatBoxViewInitialized", view);			
 				stopVoiceChat();
-				stopScreenCast(view);
 			});
 			
             _converse.api.listen.on('chatBoxClosed', async function (model)  {
                 console.debug("chatBoxClosed", model);			
 				stopVoiceChat();
-				stopScreenCast();
             });			
 			
 			console.log("voicechat plugin is ready");
 		}
-	});
-	
-    async function performScreenCast(ev)   {
-        ev.stopPropagation();
-        ev.preventDefault();
-
-		const toolbar_el = converse.env.utils.ancestor(ev.target, 'converse-chat-toolbar');
-		const view = _converse.chatboxviews.get(toolbar_el.model.get('jid'));		
-		model = toolbar_el.model;
-		
-		screenButton = toolbar_el.querySelector('.plugin-screencast');
-		console.debug("screenshare is clicked", model);	
-
-		if (screenButton.classList.contains('blink_me')) {
-			stopScreenCast(view);						
-		} else {
-			startScreenCast(view);						
-		}		
-
-	}	
+	});	
 
 	async function performAudio(ev) {
         ev.stopPropagation();
@@ -147,30 +107,6 @@
 		} else {
 			startVoiceChat(view);						
 		}				
-	}
-	
-	async function stopScreenCast() {
-		console.debug("stopScreenCast", model);		
-		
-		if (!model) return;	
-
-		if (pcScreen){
-			screenStream.getTracks().forEach(track => track.stop());
-			pcScreen.close();	
-			delete pcListen[screenStreamUri];				
-		}		
-		
-		if (screenButton.classList.contains('blink_me')) {
-			screenButton.classList.remove('blink_me');
-			screenButton.title = await _converse.api.user.settings.get('screenshare_start');
-			
-			const message = "/me stopped screen share";
-			const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
-			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><retract xmlns='urn:xmpp:call-invites:0' id='${screenStreamUri}' /></message>`;
-			_converse.api.send(msg);			
-		}			
-
 	}	
 
 	async function stopVoiceChat() {	
@@ -202,63 +138,6 @@
 		
 		if (harker) {
 			harker.stop();
-		}
-	}
-	
-	async function startScreenCast() {
-		console.debug("startScreenCast", model);			
-		
-		if (pcScreen) {	
-			screenStream.getTracks().forEach(track => track.stop());		
-			pcScreen.close();
-			delete pcListen[screenStreamUri];
-		}	
-		
-		const displayMediaOptions = {video: {cursor: 'always', frameRate: {ideal: 30}, width: {ideal: 1280, max: 1920}, height: {ideal: 720, max: 1080}}, audio: false,  preferCurrentTab: false,  selfBrowserSurface: "exclude",  systemAudio: "exclude",  surfaceSwitching: "include", monitorTypeSurfaces: "include"};		
-		screenStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-		
-		if (screenStream) {
-		
-			pcScreen = new RTCPeerConnection();	
-
-			pcScreen.oniceconnectionstatechange = () => {
-				console.debug("screen oniceconnectionstatechange screen", pcScreen.iceConnectionState);
-			}
-			
-			pcScreen.ontrack = function (event) {
-				console.debug("screen ontrack screen", event.streams, event);			
-			}			
-			
-			screenStream.getTracks().forEach(t => {
-				console.debug("screen getTracks", t);
-				
-				if (t.kind === 'audio') {
-				  pcScreen.addTransceiver(t, {direction: 'sendonly'});
-				  
-				} else {
-				  pcScreen.addTransceiver(t, {direction: 'sendonly', sendEncodings: [{rid: 'high'}, {rid: 'med', scaleResolutionDownBy: 2.0}, {rid: 'low',	scaleResolutionDownBy: 4.0}]});
-				}
-			});
-
-			const offer = await pcScreen.createOffer();
-			pcScreen.setLocalDescription(offer);
-			
-			const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whip', {xmlns: 'urn:xmpp:whip:0'}).c('sdp', offer.sdp));
-			screenStreamUri = res.querySelector('whip').getAttribute("uri");
-			pcListen[screenStreamUri] = pcScreen;	
-
-			const answer = res.querySelector('sdp').innerHTML;
-			pcScreen.setRemoteDescription({sdp: answer,  type: 'answer'});	
-			console.debug('screen whip answer', answer);
-
-			screenButton.classList.add('blink_me');	
-			screenButton.title = await _converse.api.user.settings.get('screenshare_stop');
-
-			const message = "/me started screen share";				
-			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';	
-			const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><invite video="true" xmlns="urn:xmpp:call-invites:0"><external uri="${screenStreamUri}" /></invite></message>`;
-			_converse.api.send(msg);			
 		}
 	}	
 	
@@ -402,18 +281,22 @@
 		const invite = stanza.querySelector('invite');	
 		const retract = stanza.querySelector('retract');
 			
-		if (invite) { 	
-			const uri = invite.querySelector('external').getAttribute("uri");
-			speakers[uri] = {video: invite.getAttribute("video")};			
+		if (invite) { 
+			const video = invite.getAttribute("video");	
 
-			if (startTime < now) {	// live invite
-				console.debug("remote add stream", uri);				
-				
-				if (!pcListen[uri])  {	
-					handleStream(uri, attrs);			
-				}	
-			} else { // history invite
-				console.debug("remote history add stream", uri);				
+			if (!video) {
+				const uri = invite.querySelector('external').getAttribute("uri");
+				speakers[uri] = {video};			
+
+				if (startTime < now) {	// live invite
+					console.debug("remote add stream", uri);				
+					
+					if (!pcListen[uri])  {	
+						handleStream(uri, attrs);			
+					}	
+				} else { // history invite
+					console.debug("remote history add stream", uri);				
+				}
 			}				
 		}
 		else
@@ -478,24 +361,6 @@
 		pcListen[uri].ontrack = function (event) {
 			console.debug("ontrack listen ", event.streams, event, videoDiv.contentWindow.dish);	
 
-			if (mediaData.video && event.track.kind == "video") {
-				msgDiv.style.display = "none";
-				videoDiv.style.display = "";
-				
-				let video = document.getElementById("voicechat-" + uri);				
-
-				if (!video) {				
-					video = document.createElement('video');
-					video.id = "voicechat-" + uri;	
-					video.classList.add("voicechat-video");
-					video.autoplay = true;
-					video.controls = true;	
-				}
-				video.srcObject = event.streams[0];						
-				videoDiv.contentWindow.addVideo(video);							
-			} 
-			else
-
 			if (!mediaData.video && event.track.kind == "audio") {
 				let ele = document.getElementById("voicechat-" + uri);
 				
@@ -511,10 +376,6 @@
 		}			
 		
 		pcListen[uri].addTransceiver('audio', { direction: 'recvonly' });
-		
-		if (mediaData.video) {
-			pcListen[uri].addTransceiver('video', { direction: 'recvonly' });
-		}
 
 		const offer = await pcListen[uri].createOffer();
 		pcListen[uri].setLocalDescription(offer);
@@ -527,7 +388,7 @@
 		pcListen[uri].setRemoteDescription({sdp: answer,  type: 'answer'});	
 		console.debug('whep answer', uri, answer);	
 
-		const message = "/me " + (mediaData.video ? "watching" : "listening to") + " " + uri;
+		const message = "/me " + "listening to " + uri;
 		const type = attrs.type;
 		const target = (type == "chat") ? attrs.from : attrs.from_muc;
 		const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><accept xmlns='urn:xmpp:call-invites:0' id='${uri}' /></message>`;

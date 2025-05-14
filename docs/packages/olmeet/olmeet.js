@@ -178,9 +178,14 @@
 		const { api } = _converse;
 		const room = Strophe.getNodeFromJid(view.model.attributes.jid).toLowerCase().replace(/[\\]/g, "") + "-" + Math.random().toString(36).substr(2, 9);
 		const url = api.settings.get("olmeet_url") + "/" + room;
-		console.debug("doVideo", room, url, view);
-
-		view.model.sendMessage({ body: url });	
+		const model = view.model;
+		console.debug("doVideo", room, url, view, model);
+			
+		const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';	
+		const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
+		const msg = converse.env.stx`<message xmlns="jabber:client" to="${target}" type="${type}"><body>${url}</body><invite video="true" xmlns="urn:xmpp:call-invites:0"><external uri="${url}" /></invite></message>`;
+		_converse.api.send(msg);					
+		
 		const startOption = api.settings.get("olmeet_start_option");
 		
 		if (startOption === MEET_START_OPTIONS.INTO_CHAT_WINDOW) {
