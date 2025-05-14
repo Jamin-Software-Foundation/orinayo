@@ -26,6 +26,7 @@ const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
 
+var songNote = null;
 var smplrKeys = [];
 var smplrPads = [];
 var smplrLeads = [];
@@ -1974,6 +1975,7 @@ function getConfig() {
 
 function saveConfig() {
     let config = {};
+	config.songNote = songNote?.value || "";
 	config.droneActive = window.droneOn;
 	config.mobileViewpoint = mobileViewpoint;
 	config.registration = registration;
@@ -2137,6 +2139,9 @@ async function onloadHandler() {
   
 	desktopContainer = document.getElementById("desktop");
 	mobileContainer = document.getElementById("mobile");
+	
+	songNote = document.querySelector("#song_note");
+	songNote.value = config.songNote || "";
 	
 	playButton = document.querySelector("#play");
 	gamePadModeButton = document.querySelector("#gamepad_mode");
@@ -3184,7 +3189,7 @@ function handleNumPad(name, code) {
 		return true;
 	}	
 	
-	if (keyboard.get(" ") || code == "NumpadEnter") {
+	if ((keyboard.get(" ") || code == "NumpadEnter") && document.activeElement != songNote) {
 		pad.buttons[LOGO] = true;
 		if (keyboard.get("Backspace")) pad.buttons[YELLOW] = true; 	// End1
 		handled = true;				
