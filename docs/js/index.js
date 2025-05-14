@@ -26,6 +26,7 @@ const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
 
+var updating = false;
 var songNote = null;
 var smplrKeys = [];
 var smplrPads = [];
@@ -1924,6 +1925,8 @@ function handleChordaMidiMessage(evt) {
 }
 
 function loadMidiSynth() {
+	console.debug("loadMidiSynth");
+	
 	if (smplrPads.length < 2 || smplrLeads.length < 1) {
 		setTimeout(loadMidiSynth, 1000);	// we need to wait until smplrkeys and smplrPads (ch1 & ch2) are loaded.
 		return;
@@ -1974,6 +1977,9 @@ function getConfig() {
 }
 
 function saveConfig() {
+	if (updating) return;
+	updating = true;
+	
     let config = {};
 	config.songNote = songNote?.value || "";
 	config.droneActive = window.droneOn;
@@ -2034,14 +2040,15 @@ function saveConfig() {
 
     localStorage.setItem("orin.ayo.config", JSON.stringify(config));
 	
-	if (!bluetoothDevice) {
-		return config;
+	if (bluetoothDevice) {
+		console.debug('Disconnecting from Artiphone Bluetooth Chorda Device...');
+		
+		if (bluetoothDevice.gatt.connected) {
+			bluetoothDevice.gatt.disconnect();
+		}
 	}
-	console.debug('Disconnecting from Artiphone Bluetooth Chorda Device...');
-	
-	if (bluetoothDevice.gatt.connected) {
-		bluetoothDevice.gatt.disconnect();
-	}	
+
+	updating = false;
 	return config;
 }
 
@@ -5621,7 +5628,7 @@ async function setupUI(config, err) {
 
 		if (arranger != "sff") {
 
-			if (config.sf2Name) {
+			if (config.sf2Name && arrSynth.name) {
 				arrSynth = {name: config.sf2Name};	
 				getArrSynth(arrSynth.name);	// load sf2 file				
 			} else {
@@ -5904,6 +5911,8 @@ function arrSequenceLoaded() {
 }
 
 function setupMidiChannels() {
+	console.debug("setupMidiChannels");
+	
 	if (!document.getElementById("arr-instrument-18")) {
 		setTimeout(setupMidiChannels, 1000);
 		return;
