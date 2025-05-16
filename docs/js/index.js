@@ -2847,10 +2847,10 @@ async function setupMicrophone() {
 		const stream = await navigator.mediaDevices.getUserMedia({
 			"audio": {
 				"mandatory": {
-					//"googEchoCancellation": "false",
-					//"googAutoGainControl": "false",
-					//"googNoiseSuppression": "false",
-					//"googHighpassFilter": "false"
+					"googEchoCancellation": "false",
+					"googAutoGainControl": "false",
+					"googNoiseSuppression": "false",
+					"googHighpassFilter": "false"
 				},
 				"optional": []
 			}
@@ -2858,12 +2858,13 @@ async function setupMicrophone() {
 		
 		console.debug("setupMicrophone", stream);
 
-		audioContext.resume();		
-        mediaStreamSource = audioContext.createMediaStreamSource(stream);
-	    analyser = audioContext.createAnalyser();
-	    analyser.fftSize = 2048;
-	    mediaStreamSource.connect( analyser );		
-	    updatePitch();		
+		audioContext.resume().then(() => {	
+			mediaStreamSource = audioContext.createMediaStreamSource(stream);
+			analyser = audioContext.createAnalyser();
+			analyser.fftSize = 2048;
+			mediaStreamSource.connect( analyser );		
+			updatePitch();
+		});				
 	}	
 }
 
