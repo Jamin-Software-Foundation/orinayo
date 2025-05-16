@@ -2032,8 +2032,13 @@ function saveConfig() {
 	config.keysSound3Vol = keysSound3Vol;
 	
 	for (let i=0; i<19; i++) {
-		config["channel" + i] = document.getElementById("arr-instrument-" + i)?.checked;
-		if (i < 16) config["instrument" + i] = document.getElementById("midi-channel-" + i)?.selectedIndex;
+		const chanEle = document.getElementById("arr-instrument-" + i);
+		const midiEle = document.getElementById("midi-channel-" + i);
+		
+		if (chanEle && midiEle) {
+			config["channel" + i] = chanEle.checked;
+			if (i < 16) config["instrument" + i] = midiEle.selectedIndex;
+		}
 	}	
 	
 	console.debug("saveConfig", config);
@@ -2283,7 +2288,7 @@ async function onloadHandler() {
 
 	} else {
 		mobileContainer.style.display = "none";
-		window.resizeTo(1150, 1140);
+		window.resizeTo(1180, 1140);
 		desktopContainer.style.display = "";	
 
 		const desktopLogo = document.querySelector("#desktop_logo");
@@ -2379,7 +2384,7 @@ async function onloadHandler() {
 	chatViewEle = document.querySelector("#chatview");
 	
 	const gameCanvas = document.querySelector("#gameCanvas");
-	const toggleChat = document.querySelector("#toggle_chat");
+	const toggleChat = document.querySelector("#toggle_chat");	
 	const settings = document.querySelector("#settings");	
 
 	function setMenuDefaults() {
@@ -5330,23 +5335,19 @@ async function setupUI(config, err) {
 	});	
 	
 
-	realRiffLoop.addEventListener("change", function() {
-		if (styleStarted) return;		
+	realRiffLoop.addEventListener("change", function() {		
 		riffLoopChanged(realRiffLoop);		
 	});	
 		
-	realBassLoop.addEventListener("change", function() {
-		if (styleStarted) return;		
+	realBassLoop.addEventListener("change", function() {	
 		bassLoopChanged(realBassLoop);		
 	});	
 		
-	realDrumsLoop.addEventListener("change", function() {
-		if (styleStarted) return;		
+	realDrumsLoop.addEventListener("change", function() {	
 		drumLoopChanged(realDrumsLoop);		
 	});		
 
-	realChordsLoop.addEventListener("change", function() {
-		if (styleStarted) return;			
+	realChordsLoop.addEventListener("change", function() {			
 		chordLoopChanged(config, realChordsLoop, realDrumsLoop, realBassLoop, realRiffLoop);
 	});	
 	
@@ -7575,6 +7576,7 @@ function doChord() {
   {
 	if (pad.buttons[YELLOW] && pad.buttons[BLUE] && !pad.buttons[BLUE] && !pad.buttons[RED] && !pad.buttons[GREEN]) {	
 		styleStarted = false;	
+		setSettingsUI(styleStarted);
 		resetArrToA();
 		playButton.innerText = !styleStarted ? "Play" : "Stop";	
 		playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");		
@@ -7772,6 +7774,7 @@ function webAudioStyleReady() {
 
 function verifyStartStopWebAudio() {
 	styleStarted = chordLoop?.looping || drumLoop?.looping || bassLoop?.looping;
+	setSettingsUI(styleStarted);
 	handleStartStopButton();	
 }
 
@@ -7942,7 +7945,8 @@ function toggleStartStop() {
 			
 			sendKetronSysex(startEndType);
 			console.debug("toggle start/stop", startEndType);
-			styleStarted = !styleStarted;				
+			styleStarted = !styleStarted;	
+			setSettingsUI(styleStarted);			
 		}
 		else
 
@@ -7954,12 +7958,14 @@ function toggleStartStop() {
 				outputPlayNote(firstChord, [4], {velocity: getVelocity()});				
 				outputSendControlChange (92, 0, 4);  				    
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {
 				console.debug("stop key pressed");				
 				outputSendControlChange (92, 96, 4); 			
 				setTimeout(() => outputSendControlChange (92, 112, 4), 2000);        
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}
 		}	
 		else
@@ -7987,6 +7993,7 @@ function toggleStartStop() {
 					
 				}     
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {				
 				console.debug("Aeros looper stop key pressed");
@@ -8003,6 +8010,7 @@ function toggleStartStop() {
 										
 				}	      
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}			
 		}
 		else
@@ -8011,6 +8019,7 @@ function toggleStartStop() {
 			outputSendControlChange (68, 127, 4);						
 			console.debug("RC looper start/stop key pressed"); 
 			styleStarted = !styleStarted; 			
+			setSettingsUI(styleStarted);
 		}
 		else
 
@@ -8039,6 +8048,7 @@ function toggleStartStop() {
 					
 				}     
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {
 				console.debug("stop key pressed");
@@ -8057,6 +8067,7 @@ function toggleStartStop() {
 					}				
 				}	      
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}
 		}		
 		else
@@ -8080,6 +8091,7 @@ function toggleStartStop() {
 				midiOutput.sendSysex(0x43, [0x60, 0x7A]);			// Yamaha Sysex for Accomp start
 		
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {
 				console.debug("stop key pressed");				
@@ -8097,6 +8109,7 @@ function toggleStartStop() {
 				}
    
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}
 		}
 		else
@@ -8110,6 +8123,7 @@ function toggleStartStop() {
 				sendYamahaSysEx(0x08);	
 				midiOutput.sendSysex(0x43, [0x60, 0x7A]);			// Yamaha Sysex for Accomp start				
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {
 				console.debug("stop key pressed");					
@@ -8121,6 +8135,7 @@ function toggleStartStop() {
 				}
 				
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}
 		}		
 		else
@@ -8146,6 +8161,7 @@ function toggleStartStop() {
 					
 				}     
 				styleStarted = true;
+				setSettingsUI(styleStarted);
 			}
 			else {
 				console.debug("stop key pressed");
@@ -8164,6 +8180,7 @@ function toggleStartStop() {
 					}
 				}	      
 				styleStarted = false;
+				setSettingsUI(styleStarted);
 			}
 		}	
 
@@ -8428,6 +8445,7 @@ function doStartStopSequencer() {
 			if (requestArrEnd) {
 				requestArrEnd = false;
 				styleStarted = !styleStarted;	
+				setSettingsUI(styleStarted);
 				playButton.innerText = !styleStarted ? "Play" : "Stop";	
 				playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");	
 				orinayo_section.innerHTML = currentSffVar;				
@@ -8498,6 +8516,7 @@ function doStartStopSequencer() {
 
 	if (arranger != "webaudio" || !songSequence) {
 		styleStarted = !styleStarted;	
+		setSettingsUI(styleStarted);
 		playButton.innerText = !styleStarted ? "Play" : "Stop";		
 		playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");	
 	}		
@@ -9767,6 +9786,20 @@ function createKnob(id, value, valMin, valMax, color) {
 	knob.setValue(value);
 	document.getElementById(id).appendChild(knob.node());	
 	return knob;
+}
+
+function setSettingsUI(styleStarted) {
+	const realDrumsLoop = document.getElementById("realdrumLoop");	
+	const realBassLoop = document.getElementById("realbassLoop");
+	const realriffLoop = document.getElementById("realriffLoop");
+	const realChordsLoop = document.getElementById("realchordLoop");
+	const tempoEle = document.getElementById("tempo");
+	
+	realDrumsLoop.disabled = styleStarted;
+	realBassLoop.disabled = styleStarted;
+	realriffLoop.disabled = styleStarted;
+	realChordsLoop.disabled = styleStarted;
+	tempoEle.disabled = styleStarted;
 }
 
 // -------------------------------------------------------
