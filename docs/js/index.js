@@ -2944,6 +2944,7 @@ function updatePitch() {
 		orinayo_pitch.innerHTML = "Pitch --";
 				
  	} else {	
+		leadInstrument = smplrLeads[keysSelectedEle3?.selectedIndex]?.instrument;	
 	 	const note = noteFromPitch( pitch );
 		
 		if (leadInstrument?.stopNote != note) {
@@ -2983,7 +2984,7 @@ function startPlayingLeadInstrument(note, detune) {
 	//console.debug("startPlayingLeadInstrument", note, detune);
 	// TODO use active chord and key to set midi note
 			
-	if (leadInstrument) {
+	if (leadInstrument?.start) {
 		leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
 		
 		const pos = parseInt(guitarPosition.value);		
@@ -6012,16 +6013,14 @@ function setupMidiChannels() {
 	keysSelectedEle3.selectedIndex = config["instrument2"];	
 	
 	if (keysSelectedEle3.selectedIndex && smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {
-		smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
-		leadInstrument = smplrLeads[keysSelectedEle3?.selectedIndex]?.instrument;		
+		smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);	
 	}
 		
 	keysSelectedEle3.addEventListener("change", function(event) {
 		console.debug("Switching pads SF", smplrLeads[keysSelectedEle3.selectedIndex]);		
 		
 		if (smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {			
-			smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
-			leadInstrument = smplrLeads[keysSelectedEle3?.selectedIndex]?.instrument;			
+			smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);			
 		}
 	});		
 	
