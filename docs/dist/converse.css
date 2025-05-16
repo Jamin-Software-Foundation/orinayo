@@ -10453,7 +10453,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --foreground-color: var(--polar-night-2);
   --primary-color: var(--green-2) !important;
   --primary-color-hover: var(--green-3) !important;
-  --secondary-color: var(--blue-1) !important;
+  --secondary-color: var(--blue-2) !important;
   --success-color: var(--green-3);
   --danger-color: var(--red);
   --warning-color: var(--orange);
@@ -10473,6 +10473,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--yellow);
   --link-color: var(--blue-2);
   --subdued-color: gray;
+  --toast-color: var(--background-color);
+  --toast-bg-color: var(--secondary-color);
   --selection-color: var(--green-1);
   --highlight-color: var(--snow-storm-2);
   --highlight-color-hover: var(--snow-storm-1);
@@ -10537,6 +10539,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--orange);
   --link-color: #2D3991;
   --subdued-color: gray;
+  --toast-color: var(--background-color);
+  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--lighter-blue);
   --highlight-color-hover: var(--lighter-blue);
@@ -10600,6 +10604,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--pink);
   --link-color: var(--cyan);
   --subdued-color: var(--gray);
+  --toast-color: var(--background-color);
+  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--gray);
   --highlight-color-hover: var(--darkgray);
@@ -10682,6 +10688,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--indigo);
   --link-color: var(--cyan);
   --subdued-color: gray;
+  --toast-color: var(--foreground-color);
+  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--purple);
   --highlight-color-hover: var(--background-color-lighter);
@@ -10763,13 +10771,13 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   box-shadow: 0 0 1rem 0rem rgba(var(--purple-rgb), 0.5) inset, 0 0 2rem 0rem rgba(var(--purple-rgb), 0.2) inset, 0 0 4rem 2rem rgba(var(--purple-rgb), 0.1) inset !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .modal-content, .conversejs[data-bs-theme=cyberpunk] .modal-content, converse-bg[data-converse-theme=cyberpunk] .modal-content, converse-bg[data-bs-theme=cyberpunk] .modal-content {
-  box-shadow: 0 0 0.5rem 0 rgba(var(--secondary-rgb), 0.6) inset, 0 0 2rem 0 rgba(var(--secondary-rgb), 0.3) inset, 0 0 3rem 2rem rgba(var(--secondary-rgb), 0.1) inset !important;
+  box-shadow: 0 0 0.5rem 0 rgba(var(--secondary-rgb), 0.6) inset, 0 0 2rem 0 rgba(var(--secondary-rgb), 0.3) inset, 0 0 3rem 2rem rgba(var(--secondary-rgb), 0.1) inset, 0 0 1rem 0.5rem rgba(var(--background-color-rgb), 0.3), 0 0 2rem 1rem rgba(var(--background-color-rgb), 0.1) !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .modal-content .modal-header, .conversejs[data-bs-theme=cyberpunk] .modal-content .modal-header, converse-bg[data-converse-theme=cyberpunk] .modal-content .modal-header, converse-bg[data-bs-theme=cyberpunk] .modal-content .modal-header {
   background-color: var(--background-color);
-  box-shadow: 0 0 0.5rem 0 rgba(var(--primary-rgb), 0.6) inset, 0 0 2rem 0 rgba(var(--primary-rgb), 0.3) inset, 0 0 3rem 2rem rgba(var(--secondary-rgb), 0.1) inset, 0 0 1rem 0.5rem rgba(var(--background-color-rgb), 0.5), 0 0 2rem 1rem rgba(var(--background-color-rgb), 0.4) !important;
+  box-shadow: 0 0 0.5rem 0 rgba(var(--primary-rgb), 0.6) inset, 0 0 2rem 0 rgba(var(--primary-rgb), 0.3) inset, 0 0 3rem 2rem rgba(var(--secondary-rgb), 0.1) inset;
 }
-.conversejs[data-converse-theme=cyberpunk] .modal-content .modal-header .btn-close svg, .conversejs[data-bs-theme=cyberpunk] .modal-content .modal-header .btn-close svg, converse-bg[data-converse-theme=cyberpunk] .modal-content .modal-header .btn-close svg, converse-bg[data-bs-theme=cyberpunk] .modal-content .modal-header .btn-close svg {
+.conversejs[data-converse-theme=cyberpunk] .modal-content .modal-header .fa-times svg, .conversejs[data-bs-theme=cyberpunk] .modal-content .modal-header .fa-times svg, converse-bg[data-converse-theme=cyberpunk] .modal-content .modal-header .fa-times svg, converse-bg[data-bs-theme=cyberpunk] .modal-content .modal-header .fa-times svg {
   fill: var(--primary-color);
 }
 .conversejs[data-converse-theme=cyberpunk] .modal-content .modal-header .modal-title, .conversejs[data-bs-theme=cyberpunk] .modal-content .modal-header .modal-title, converse-bg[data-converse-theme=cyberpunk] .modal-content .modal-header .modal-title, converse-bg[data-bs-theme=cyberpunk] .modal-content .modal-header .modal-title {
@@ -11981,7 +11989,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   border: none;
   clear: both;
   color: var(--text-color);
-  overflow: hidden;
   padding: 0.5em 0;
   word-wrap: break-word;
   height: 2.5em;
@@ -12459,6 +12466,24 @@ a converse-icon:hover svg, .clickable converse-icon:hover svg {
 .conversejs converse-dropdown .dropdown-item:hover {
   background-color: var(--highlight-color-hover);
 }
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/image-picker.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+converse-image-picker .image-picker {
+  position: relative;
+  display: inline-block;
+}
+converse-image-picker .clear-image {
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 10;
+}
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/components/styles/list-filter.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
@@ -12513,8 +12538,10 @@ converse-list-filter .items-filter-form select.state-type {
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/templates/styles/spinner.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************************/
 converse-spinner.vertically-centered {
-  height: 100%;
-  margin-top: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensure the parent has a defined height */
 }
 
 .vertically-centered > .spinner-grow {
@@ -12651,9 +12678,6 @@ converse-spinner.vertically-centered {
 .conversejs #converse-modals .set-xmpp-status {
   margin: 1em;
 }
-.conversejs #converse-modals .set-xmpp-status .custom-control-label {
-  padding-top: 0.25em;
-}
 .conversejs #converse-modals #omemo-tabpanel {
   margin-top: 1em;
 }
@@ -12669,17 +12693,23 @@ converse-root#conversejs converse-popover {
 /*!************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/plugins/modal/styles/toast.scss ***!
   \************************************************************************************************************************************************************************************************************************************************************/
+.conversejs converse-toasts {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}
 .conversejs converse-toasts converse-toast .toast {
+  color: var(--toast-color);
+  background-color: var(--toast-bg-color);
   position: relative;
   margin-block-start: 1em;
   margin-inline-end: 1em;
-  float: right;
 }
 .conversejs converse-toasts converse-toast .toast .toast-header img {
   height: 1.5em;
 }
-.conversejs converse-toasts converse-toast .toast .toast-body__container .btn-close {
-  margin-inline-end: 1em;
+.conversejs converse-toasts converse-toast .toast .toast-body__container .fa-times svg {
+  fill: var(--toast-color);
 }
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/autocomplete/styles/_autocomplete.scss ***!
@@ -14422,8 +14452,7 @@ converse-chat-content {
   left: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 0;
-  padding-top: 1em;
+  padding: 1em 0;
   text-align: start;
 }
 .conversejs #controlbox .controlbox-pane .add-converse-contact {
@@ -16146,7 +16175,6 @@ converse-bg .converse-brand__heading converse-logo {
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: flex;
@@ -16155,14 +16183,14 @@ converse-bg .converse-brand__heading converse-logo {
 .conversejs #converse-roster .roster-contacts converse-roster-contact .open-chat {
   width: 100%;
 }
+.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions .dropdown-item converse-icon {
+  margin-inline-end: 0.5em;
+}
 .conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions .list-item-action {
   line-height: 2em;
 }
 .conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions:hover .list-item-action {
   opacity: 1;
-}
-.conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions converse-icon {
-  padding-top: 0.5em;
 }
 .conversejs #converse-roster .roster-contacts converse-roster-contact .contact-actions converse-icon svg {
   fill: var(--chat-color) !important;
