@@ -104,7 +104,7 @@ var recordMode = false;
 var writeCharacteristic = null;
 var readCharacteristic = null;
 var appliedVelocity = 0;
-var microphone = true;
+var microphone = null;
 var handledStartStop = true;
 var registration = 0;
 var bluetoothDevice = null;
@@ -323,10 +323,11 @@ var idbKeyval = (function (exports) {
 
 window.loopCache = {};
 window.requestAnimFrame = window.requestAnimationFrame;
-window.addEventListener("load", onloadHandler);
-window.addEventListener("unload", () => {if (!registration) saveConfig(); });
-window.addEventListener('message', messageHandler);
-window.addEventListener('resize', (event) =>	{setup()});	
+
+window.addEventListener("load", 	onloadHandler);
+window.addEventListener("unload", 	onunloadHandler);
+window.addEventListener('message', 	messageHandler);
+window.addEventListener('resize', 	resizeHandler);	
 
 async function messageHandler(evt) {
 	
@@ -2139,6 +2140,14 @@ function getDefaultData() {
 	return data;
 }
 
+async function resizeHandler() {
+	setup()	
+}
+
+async function onunloadHandler() {
+	if (!registration) saveConfig(); 	
+}
+
 async function onloadHandler() {
 	const config = getConfig();
 	console.debug("onloadHandler", config);
@@ -2291,7 +2300,7 @@ async function onloadHandler() {
 
 	} else {
 		mobileContainer.style.display = "none";
-		window.resizeTo(1180, 1140);
+		window.resizeTo(1190, 1140);
 		desktopContainer.style.display = "";	
 
 		const desktopLogo = document.querySelector("#desktop_logo");
@@ -2324,6 +2333,7 @@ async function onloadHandler() {
 	
 	microphone.addEventListener('click', function(event) {
 		stopPlayingLeadInstrument();
+		orinayo_pitch.style.display = microphone?.checked ? "" : "none";
 		if (microphone?.checked) setupMicrophone();
 	});	
 
@@ -2829,26 +2839,30 @@ async function drawButtons(c) {
 }
 	
 async function setupMicrophone() {
+	orinayo_pitch.style.display = "none";
 	
 	if (microphone.checked) {	
-		console.debug("setupMicrophone");
+		orinayo_pitch.style.display = "";
 		
 		const stream = await navigator.mediaDevices.getUserMedia({
 			"audio": {
 				"mandatory": {
-					"googEchoCancellation": "false",
-					"googAutoGainControl": "false",
-					"googNoiseSuppression": "false",
-					"googHighpassFilter": "false"
+					//"googEchoCancellation": "false",
+					//"googAutoGainControl": "false",
+					//"googNoiseSuppression": "false",
+					//"googHighpassFilter": "false"
 				},
 				"optional": []
 			}
 		});
 		
+		console.debug("setupMicrophone", stream);
+
+		audioContext.resume();		
         mediaStreamSource = audioContext.createMediaStreamSource(stream);
 	    analyser = audioContext.createAnalyser();
 	    analyser.fftSize = 2048;
-	    mediaStreamSource.connect( analyser );
+	    mediaStreamSource.connect( analyser );		
 	    updatePitch();		
 	}	
 }
@@ -2867,6 +2881,7 @@ function centsOffFromPitch( frequency, note ) {
 }
 
 function autoCorrelate( buf, sampleRate ) {
+	
 	// Implements the ACF2+ algorithm
 	var SIZE = buf.length;
 	var rms = 0;
@@ -2877,8 +2892,10 @@ function autoCorrelate( buf, sampleRate ) {
 	}
 	rms = Math.sqrt(rms/SIZE);
 	
-	if (rms<0.01) // not enough signal
+	if (rms<0.01) {// not enough signal
+		console.debug("autoCorrelate low signal", rms, sampleRate);	
 		return -1;
+	}
 
 	var r1=0, r2=SIZE-1, thres=0.2;
 	
@@ -2914,6 +2931,7 @@ function autoCorrelate( buf, sampleRate ) {
 	b = (x3 - x1)/2;
 	if (a) T0 = T0 - b/(2*a);
 
+	console.debug("autoCorrelate", T0, sampleRate);
 	return sampleRate/T0;
 }
 
@@ -2941,9 +2959,9 @@ function updatePitch() {
 			
 		} else {
 			if (detune < 0) {
-				//console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
+				console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
 			} else {
-				//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
+				console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
 			}				
 		}
 
@@ -5610,8 +5628,15 @@ async function setupUI(config, err) {
 	guitarReverb.checked = config.reverb;
 	setupPedalBoard(guitarContext, guitarName, guitarDeviceId, guitarReverb.checked);
 	
-	microphone.checked = config.microphone;	
-	setupMicrophone();	
+	const enablePitchDetection = localStorage.getItem("devices.enable_pitch_detection");
+	  
+	if (enablePitchDetection && JSON.parse(enablePitchDetection) == true) {	
+		document.querySelector("#control-microphone").style.display = "";
+		
+		microphone.checked = config.microphone;	
+		setupMicrophone();	
+	}
+	
 	programChangeEle.checked = config.programChange;	
 	document.querySelector("#volume").value = (config.guitarVolume || guitarVolume) * 100;
 	

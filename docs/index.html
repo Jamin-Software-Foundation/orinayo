@@ -114,9 +114,9 @@
 			<div id="sequencer2" style="margin:10px"><center>
 				<span id="tempo-toolbar">
 					<button style="font-size: 14px;margin-left:2px;cursor:pointer;" id="tempo-label">Tempo:<span id="showTempo">100</span></button>	
-					<input title='Overall Tempo control' id="tempo" type="range" min="-6" max="6" step="1" value="0" style="height: 20px; width: 150px">
+					<input title='Overall Tempo control' id="tempo" type="range" min="-6" max="6" step="1" value="0" style="height: 20px; width: 100px">
 				</span>
-				<span style="display: none;"><input title='Enable microphone' style="margin-left: 10px;margin-right: 10px;" id="microphone" type="checkbox">Mic</span>
+				<span id="control-microphone" style="display: none;"><input title='Enable microphone' style="margin-left: 10px;margin-right: 10px;" id="microphone" type="checkbox">Mic</span>
 				<span id="control-fill"><input title='Play Drum Fills automatically when variation changes' style="margin-left: 10px;margin-right: 10px;" id="autoFill" type="checkbox" checked>Auto Fill</span>
 				<span id="control-intro"><input title='Play Intro end Ending' style="margin-left: 10px;margin-right: 10px;" id="introEnd" type="checkbox" checked>Intro/Outro</span>
 				<span id="control-start"><input title='Start playing with first chord' style="margin-left: 10px;margin-right: 10px;" id="syncStart" type="checkbox">Sync Start</span>
@@ -127,7 +127,7 @@
 					<input title='Dont play chords in midi song file' style="margin-left: 10px;margin-right: 10px;" id="mute-chords" type="checkbox">Mute Chords
 					<input title='Dont display chords with lyrics' style="margin-left: 10px;margin-right: 10px;" id="vocalist-mode" type="checkbox">Vocalist
 				</span>				
-				<input title='Guitar volume control' id="volume" type="range" min="1" max="100" step="1" value="25" style="height: 20px; width: 150px;margin-left: 20px;margin-right: 10px;">
+				<input title='Guitar volume control' id="volume" type="range" min="1" max="100" step="1" value="25" style="height: 20px; width: 100px;margin-left: 20px;margin-right: 10px;">
 				<button id="showVol">VOL</button>
 			</center></div>
 		</td>
@@ -231,7 +231,7 @@
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-pad">Pad 2</span></td>
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-strum">Strum 1</span></td>
       <td align="left" width="16%"><span style="font-size: 24px" id="orinayo-reg">Slot 0</span></td>	  
-      <!--td align="left" width="16%"><span style="font-size: 24px" id="orinayo-pitch">Pitch --</span></td-->	  
+      <td align="left" width="16%"><span style="font-size: 24px; display: none;" id="orinayo-pitch">Pitch --</span></td>	  
 	  </tr>
 	</table>	
   </center></div>

@@ -68,7 +68,10 @@ orinayo_config.options.addTab('Collaboration Server', [
 
 orinayo_config.options.addTab('Devices', [
     { type: 'h3', desc: 'Stream Deck ' },
-    { name: 'enable_streamdeck', desc: 'Enable' },
+    { name: 'enable_streamdeck', desc: 'Enable Stream Deck' },
+	
+    { type: 'h3', desc: 'Pitch Detection' },
+    { name: 'enable_pitch_detection', desc: 'Enable Pitch Detection' },	
 ]);
 
 orinayo_config.options.addTab('Contacts', [
