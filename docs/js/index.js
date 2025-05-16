@@ -3864,7 +3864,7 @@ function connectHandler(e) {
 	
 	pad.axis[STRUM] = 0;
 	
-	window.setTimeout(updateStatus);  
+	window.setTimeout(updateGamePadStatus);  
   }
 }
 
@@ -3875,7 +3875,7 @@ function disconnectHandler(e) {
   }
 }
 
-function updateStatus() {
+function updateGamePadStatus() {
 	var guitar = null
 	var ring = null
 	var riffMasterXbox = null;
@@ -4392,7 +4392,7 @@ function updateStatus() {
 		}	
 	}	
 	
-	window.setTimeout(updateStatus);
+	window.setTimeout(updateGamePadStatus);
 }
 
 function handleSongMode() {
