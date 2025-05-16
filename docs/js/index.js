@@ -2860,8 +2860,7 @@ async function setupMicrophone() {
 			mediaStreamSource = audioContext.createMediaStreamSource(stream);
 			analyser = audioContext.createAnalyser();
 			analyser.fftSize = 2048;
-			mediaStreamSource.connect( analyser );	
-			leadInstrument = smplrLeads[keysSelectedEle3.selectedIndex]?.instrument;				
+			mediaStreamSource.connect( analyser );					
 			updatePitch();
 			console.debug("start pitch detection", stream);			
 		});				
@@ -2984,15 +2983,16 @@ function startPlayingLeadInstrument(note, detune) {
 	//console.debug("startPlayingLeadInstrument", note, detune);
 	// TODO use active chord and key to set midi note
 			
-	leadInstrument = smplrLeads[keysSelectedEle3.selectedIndex].instrument;					
-	leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
-	
-	const pos = parseInt(guitarPosition.value);		
-	const midiNote = 48 + (pos * 12) + (note % 12);
-	
-	leadInstrument.start({ note: midiNote, velocity: 100 }); 
-	leadInstrument.stopId = midiNote;				
-	leadInstrument.stopNote = note;	
+	if (leadInstrument) {
+		leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
+		
+		const pos = parseInt(guitarPosition.value);		
+		const midiNote = 48 + (pos * 12) + (note % 12);
+		
+		leadInstrument.start({ note: midiNote, velocity: 100 }); 
+		leadInstrument.stopId = midiNote;				
+		leadInstrument.stopNote = note;	
+	}
 }
 
 function stopPlayingLeadInstrument() {
@@ -6013,6 +6013,7 @@ function setupMidiChannels() {
 	
 	if (keysSelectedEle3.selectedIndex && smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {
 		smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
+		leadInstrument = smplrLeads[keysSelectedEle3?.selectedIndex]?.instrument;		
 	}
 		
 	keysSelectedEle3.addEventListener("change", function(event) {
@@ -6020,6 +6021,7 @@ function setupMidiChannels() {
 		
 		if (smplrLeads[keysSelectedEle3.selectedIndex]?.sf2) {			
 			smplrLeads[keysSelectedEle3.selectedIndex].instrument.loadInstrument(smplrLeads[keysSelectedEle3.selectedIndex].name);
+			leadInstrument = smplrLeads[keysSelectedEle3?.selectedIndex]?.instrument;			
 		}
 	});		
 	
