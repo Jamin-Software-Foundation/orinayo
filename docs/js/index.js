@@ -2855,8 +2855,6 @@ async function setupMicrophone() {
 				"optional": []
 			}
 		});
-		
-		console.debug("setupMicrophone", stream);
 
 		audioContext.resume().then(() => {	
 			mediaStreamSource = audioContext.createMediaStreamSource(stream);
@@ -2864,12 +2862,13 @@ async function setupMicrophone() {
 			analyser.fftSize = 2048;
 			mediaStreamSource.connect( analyser );		
 			updatePitch();
+			console.debug("start pitch detection", stream);			
 		});				
 	}	
 }
 
 function noteFromPitch( frequency ) {
-	var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+	const noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
 	return Math.round( noteNum ) + 69;
 }
 
@@ -2881,8 +2880,7 @@ function centsOffFromPitch( frequency, note ) {
 	return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
 }
 
-function autoCorrelate( buf, sampleRate ) {
-	
+function autoCorrelate( buf, sampleRate ) {	
 	// Implements the ACF2+ algorithm
 	var SIZE = buf.length;
 	var rms = 0;
@@ -2893,8 +2891,7 @@ function autoCorrelate( buf, sampleRate ) {
 	}
 	rms = Math.sqrt(rms/SIZE);
 	
-	if (rms<0.01) {// not enough signal
-		console.debug("autoCorrelate low signal", rms, sampleRate);	
+	if (rms<0.01) {// not enough signal	
 		return -1;
 	}
 
@@ -2932,48 +2929,53 @@ function autoCorrelate( buf, sampleRate ) {
 	b = (x3 - x1)/2;
 	if (a) T0 = T0 - b/(2*a);
 
-	console.debug("autoCorrelate", T0, sampleRate);
 	return sampleRate/T0;
 }
 
 function updatePitch() {
-	var cycles = new Array;
-	var buflen = 2048;
-	var buf = new Float32Array( buflen );
-	
-	stopPlayingLeadInstrument();	
+	const buflen = 2048;
+	const buf = new Float32Array( buflen );	
 	
 	analyser.getFloatTimeDomainData( buf );
-	var ac = autoCorrelate( buf, audioContext.sampleRate );
+	const pitch = autoCorrelate( buf, audioContext.sampleRate );
 
- 	if (ac == -1) {
+ 	if (pitch == -1) {
+		stopPlayingLeadInstrument();		
 		orinayo_pitch.innerHTML = "Pitch --";
 				
- 	} else {
-	 	const pitch = ac;	
-	 	const note =  noteFromPitch( pitch );
-		const noteString = noteStrings[note%12];
-		const detune = centsOffFromPitch( pitch, note );		
+ 	} else {	
+	 	const note = noteFromPitch( pitch );
 		
-		if (detune == 0 ) {
-			console.debug("updatePitch - confident", Math.round( pitch ), noteString);	
+		if (leadInstrument.stopNote != note) {
+			stopPlayingLeadInstrument();
+		
+			let noteString = noteStrings[note%12];
+			const detune = centsOffFromPitch( pitch, note );		
 			
-		} else {
-			if (detune < 0) {
-				console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
+			if (detune == 0 ) {
+				//console.debug("updatePitch - confident", Math.round( pitch ), noteString);	
+				
 			} else {
-				console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
-			}				
-		}
+				if (detune < 0) {
+					noteString = "<i>" + noteString + "</i>";					
+					//console.debug("updatePitch - flat", Math.round( pitch ), noteString, Math.abs( detune ));									
+				} else {
+					noteString = "<b>" + noteString + "</b>";					
+					//console.debug("updatePitch - sharp", Math.round( pitch ), noteString, Math.abs( detune ));	
+				}				
+			}
 
-		if (midiInstrCheckedEle[2]?.checked && activeChord) {		
-			startPlayingLeadInstrument(note, detune);		
-			orinayo_pitch.innerHTML = "Pitch " + noteString;	
+			if (midiInstrCheckedEle[2]?.checked && activeChord) {		
+				startPlayingLeadInstrument(note, detune);		
+				orinayo_pitch.innerHTML = "Pitch " + noteString;	
+			}	
 		}			
 	}
 
 	if (microphone.checked) {
 		window.requestAnimationFrame( updatePitch );
+	} else {
+		console.debug("stop pitch detection");			
 	}
 }
 
@@ -2987,8 +2989,10 @@ function startPlayingLeadInstrument(note, detune) {
 	
 	const pos = parseInt(guitarPosition.value);		
 	const midiNote = 48 + (pos * 12) + (note % 12);
+	
 	leadInstrument.start({ note: midiNote, velocity: 100 }); 
 	leadInstrument.stopId = midiNote;				
+	leadInstrument.stopNote = note;	
 }
 
 function stopPlayingLeadInstrument() {
@@ -2997,6 +3001,7 @@ function stopPlayingLeadInstrument() {
 	if (leadInstrument?.stopId) {
 		leadInstrument.stop({ stopId: leadInstrument.stopId });	
 		leadInstrument.stopId = null;
+		leadInstrument.stopNote = null;			
 	}	
 }
 
