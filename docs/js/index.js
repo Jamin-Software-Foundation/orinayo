@@ -2860,7 +2860,8 @@ async function setupMicrophone() {
 			mediaStreamSource = audioContext.createMediaStreamSource(stream);
 			analyser = audioContext.createAnalyser();
 			analyser.fftSize = 2048;
-			mediaStreamSource.connect( analyser );		
+			mediaStreamSource.connect( analyser );	
+			leadInstrument = smplrLeads[keysSelectedEle3.selectedIndex]?.instrument;				
 			updatePitch();
 			console.debug("start pitch detection", stream);			
 		});				
@@ -2946,7 +2947,7 @@ function updatePitch() {
  	} else {	
 	 	const note = noteFromPitch( pitch );
 		
-		if (leadInstrument.stopNote != note) {
+		if (leadInstrument?.stopNote != note) {
 			stopPlayingLeadInstrument();
 		
 			let noteString = noteStrings[note%12];
@@ -2982,8 +2983,7 @@ function updatePitch() {
 function startPlayingLeadInstrument(note, detune) {
 	//console.debug("startPlayingLeadInstrument", note, detune);
 	// TODO use active chord and key to set midi note
-				
-
+			
 	leadInstrument = smplrLeads[keysSelectedEle3.selectedIndex].instrument;					
 	leadInstrument.output.setVolume(midiVolumeEle[2].value / 100 * 127);
 	
