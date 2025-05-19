@@ -140,6 +140,7 @@ var midiOutput = null;
 var input = null;
 var midiRealGuitar = null;
 var guitarDeviceId = null;
+var voiceDeviceId = null;
 var padsDevice = null;
 var padsInitialised = false;
 var chordTracker = null;
@@ -2011,6 +2012,7 @@ function saveConfig() {
 	config.realRiff = realInstrument?.riffUrl;		
 	config.realdrumDevice = realdrumDevice ? realdrumDevice.deviceId : null;
 	config.guitarDeviceId = guitarDeviceId;
+	config.voiceDeviceId = voiceDeviceId;	
 	config.songName = (songSequence && songSequence.name != "playback") ? songSequence.name : null;
 	config.arrName = arrSequence ? arrSequence.name : null;
 	config.sf2Name = arrSynth ? arrSynth.name : null;
@@ -2844,7 +2846,7 @@ async function setupMicrophone() {
 	if (microphone.checked) {	
 		orinayo_pitch.style.display = "";
 		
-		const stream = await navigator.mediaDevices.getUserMedia({
+		const stream = await navigator.mediaDevices.getUserMedia({deviceId: voiceDeviceId,
 			"audio": {
 				"mandatory": {
 					"googEchoCancellation": "false",
@@ -4503,8 +4505,7 @@ function normaliseSffStyle() {
 
 async function setupUI(config, err) {	
 	console.debug("setupUI", config);
-	
-	//guitarDeviceId = config.guitarDeviceId;
+		
 	tempo = config.tempo ? config.tempo : tempo;
 	guitarVolume = config.guitarVolume ? config.guitarVolume : guitarVolume;
 	savedGuitarVolume = guitarVolume;
@@ -5190,6 +5191,7 @@ async function setupUI(config, err) {
 		saveConfig();		
 	});	
 
+	const voiceDevice = document.getElementById("inputVoiceDevice");	
 	const guitarDevice = document.getElementById("inputAudioDevice");						
 	const realDrumsDevice = document.getElementById("outputAudioDevice");	
 	const realDrumsLoop = document.getElementById("realdrumLoop");	
@@ -5197,6 +5199,7 @@ async function setupUI(config, err) {
 	const realChordsLoop = document.getElementById("realchordLoop");
 	const realRiffLoop = document.getElementById("realriffLoop");	
 
+	voiceDevice.options[0] = new Option("NOT USED", "voiceDevice", false, false);	
 	guitarDevice.options[0] = new Option("NOT USED", "guitarDevice", false, false);	
 	realDrumsDevice.options[0] = new Option("NOT USED", "realDrumsDevice", false, false);
 	realDrumsLoop.options[0] = new Option("NOT USED", "realDrumsLoop", false, false);		
@@ -5381,7 +5384,7 @@ async function setupUI(config, err) {
 	
 	console.debug("WebMidi devices", input, midiOutput, midiRealGuitar, chordTracker);
 	
-	if (guitarDevice.value != "guitarDevice") {	
+	if (guitarDevice.value != "guitarDevice" &&  voiceDevice.value != "voiceDevice") {	
 		const audioMedia = await navigator.mediaDevices.getUserMedia({audio:true});
 		audioMedia.getTracks().forEach( (track) => track.stop());				
 	}
@@ -5392,14 +5395,21 @@ async function setupUI(config, err) {
 
 	for (var i=0; i<inputs.length; i++) 	{
 		let selectedDevice = false;			
-		
+		let selectedVoiceDevice = false;	
+
 		if (config.guitarDeviceId && config.guitarDeviceId == inputs[i].deviceId) {
 			selectedDevice = true;
 			guitarDeviceId = inputs[i].deviceId;			
 		}
 		guitarDevice.options[i + 1] = new Option(inputs[i].label, inputs[i].deviceId, selectedDevice, selectedDevice);
+		
+		if (config.voiceDeviceId && config.voiceDeviceId == inputs[i].deviceId) {
+			selectedVoiceDevice = true;
+			voiceDeviceId = inputs[i].deviceId;			
+		}
+		voiceDevice.options[i + 1] = new Option(inputs[i].label, inputs[i].deviceId, selectedVoiceDevice, selectedVoiceDevice);
 	}
-	
+
 	guitarDevice.addEventListener("change", async function()
 	{
 		guitarDeviceId = null;
@@ -5419,6 +5429,28 @@ async function setupUI(config, err) {
 				}						
 			}
 			console.debug("selected guitar device ", guitarDevice, guitarDevice.value);
+		}
+	});	
+	
+	voiceDevice.addEventListener("change", async function()
+	{
+		voiceDeviceId = null;
+
+		if (voiceDevice.value != "voiceDevice") {
+			const audioMedia = await navigator.mediaDevices.getUserMedia({audio:true});
+			audioMedia.getTracks().forEach( (track) => track.stop());				
+			const devices = await navigator.mediaDevices.enumerateDevices();
+			const inputs = devices.filter(({ kind }) => kind === 'audioinput');
+			
+			for (let input of inputs) 
+			{
+				if (voiceDevice.value == input.deviceId) {
+					voiceDeviceId = input.deviceId;
+					saveConfig();					
+					break;
+				}						
+			}
+			console.debug("selected voice device ", voiceDevice, voiceDevice.value);
 		}
 	});		
 	
