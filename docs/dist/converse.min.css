@@ -10438,26 +10438,48 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --snow-storm-1: #d8dee9;
   --snow-storm-2: #e5e9f0;
   --snow-storm-3: #eceff4;
-  --green-1: #5D9795;
-  --green-2: #387C79;
-  --green-3: #8FBCBA;
-  --green-4: #0B4C4A;
-  --blue-1: #5D9795;
-  --blue-2: #475D8B;
-  --orange: #D0925F;
-  --orange-darker: #A76632;
+  --green-1: #5d9795;
+  --green1-rgb: 93, 151, 149;
+  --green-2: #387c79;
+  --green2-rgb: 56, 124, 121;
+  --green-3: #8fbcba;
+  --green3-rgb: 143, 188, 186;
+  --green-4: #0b4c4a;
+  --blue-1: #5d9795;
+  --blue-2: #475d8b;
+  --blue2-rgb: 71, 93, 139;
+  --orange: #d0925f;
+  --orange-rgb: 208, 146, 95;
+  --orange-darker: #a76632;
   --purple: #b48ead;
+  --purple-rgb: 180, 142, 173;
   --red: #bf616a;
+  --red-rgb: 191, 97, 106;
   --yellow: #ebcb8b;
+  --yellow-rgb: 235, 203, 139;
   --background-color: var(--snow-storm-2);
+  --background-color-rgb: 229, 233, 240;
   --foreground-color: var(--polar-night-2);
+  --chat-rgb: var(--green1-rgb);
+  --muc-rgb: var(--orange-rgb);
   --primary-color: var(--green-2) !important;
+  --primary-rgb: var(--green2-rgb);
   --primary-color-hover: var(--green-3) !important;
   --secondary-color: var(--blue-2) !important;
+  --secondary-rgb: var(--blue2-rgb);
   --success-color: var(--green-3);
+  --success-color-rgb: var(--green3-rgb);
   --danger-color: var(--red);
+  --danger-color-rgb: var(--red-rgb);
   --warning-color: var(--orange);
   --info-color: var(--purple);
+  --info-color-rgb: var(--purple-rgb);
+  --converse-info: var(--info-color);
+  --converse-info-rgb: var(--info-color-rgb);
+  --converse-success: var(--success-color);
+  --converse-success-rgb: var(--success-color-rgb);
+  --converse-danger: var(--danger-color);
+  --converse-danger-rgb: var(--danger-color-rgb);
   --converse-body-bg: var(--background-color);
   --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--red);
@@ -10505,42 +10527,63 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs[data-converse-theme=nordic] .modal, .conversejs[data-bs-theme=nordic] .modal, converse-bg[data-converse-theme=nordic] .modal, converse-bg[data-bs-theme=nordic] .modal {
   --converse-modal-color: var(--foreground-color) !important;
 }
+.conversejs[data-converse-theme=nordic] .toast, .conversejs[data-bs-theme=nordic] .toast, converse-bg[data-converse-theme=nordic] .toast, converse-bg[data-bs-theme=nordic] .toast {
+  --converse-toast-color: var(--background-color);
+  --converse-toast-bg: var(--secondary-color) !important;
+}
 .conversejs[data-converse-theme=classic], .conversejs[data-bs-theme=classic], converse-bg[data-converse-theme=classic], converse-bg[data-bs-theme=classic] {
   --blue: #387592;
+  --blue-rgb: 56, 117, 146;
   --dark-blue: #397491;
   --dark-green: #1e9652;
-  --dark-red: #d24e2b;
+  --red: #d24e2b;
+  --red-rgb: 210, 78, 43;
   --gray: #818479;
   --green: #3aa569;
+  --green-rgb: 58, 165, 105;
   --light-blue: #578ea9;
+  --light-blue-rgb: 87, 142, 169;
   --lighter-blue: #eff4f7;
   --orange: #e7a151;
+  --orange-rgb: 231, 161, 81;
   --redder-orange: #e77051;
   --foreground-color: #666;
   --background-color: #efefef;
+  --background-color-rgb: 102, 102, 102;
+  --chat-rgb: var(--green-rgb);
+  --muc-rgb: var(--orange-rgb);
   --primary-color: var(--blue) !important;
+  --primary-rgb: var(--blue-rgb);
   --secondary-color: var(--light-blue) !important;
+  --secondary-rgb: var(--light-blue-rgb);
   --success-color: var(--green);
-  --danger-color: var(--dark-red);
+  --success-color-rgb: var(--green-rgb);
+  --danger-color: var(--red);
+  --danger-color-rgb: var(--red-rgb);
   --warning-color: var(--orange);
   --info-color: var(--light-blue);
+  --info-color-rgb: var(--light-blue-rgb);
+  --converse-info: var(--info-color);
+  --converse-info-rgb: var(--info-color-rgb);
+  --converse-success: var(--success-color);
+  --converse-success-rgb: var(--success-color-rgb);
+  --converse-danger: var(--danger-color);
+  --converse-danger-rgb: var(--danger-color-rgb);
   --converse-body-bg: var(--background-color);
   --converse-body-color: var(--foreground-color) !important;
-  --converse-highlight-color: var(--dark-red);
+  --converse-highlight-color: var(--red);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
   --chat-status-offline: gray;
   --chat-status-online: var(--green);
   --controlbox-color: var(--light-blue);
   --disabled-color: gray;
-  --error-color: var(--dark-red);
+  --error-color: var(--red);
   --focus-color: var(--light-blue);
   --heading-color: var(--background-color);
   --headlines-color: var(--orange);
   --link-color: #2D3991;
   --subdued-color: gray;
-  --toast-color: var(--background-color);
-  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--lighter-blue);
   --highlight-color-hover: var(--lighter-blue);
@@ -10571,27 +10614,53 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs[data-converse-theme=classic] .modal, .conversejs[data-bs-theme=classic] .modal, converse-bg[data-converse-theme=classic] .modal, converse-bg[data-bs-theme=classic] .modal {
   --converse-modal-color: var(--foreground-color) !important;
 }
+.conversejs[data-converse-theme=classic] .toast, .conversejs[data-bs-theme=classic] .toast, converse-bg[data-converse-theme=classic] .toast, converse-bg[data-bs-theme=classic] .toast {
+  --converse-toast-color: var(--background-color);
+  --converse-toast-bg: var(--secondary-color) !important;
+}
 .conversejs[data-converse-theme=dracula], .conversejs[data-bs-theme=dracula], converse-bg[data-converse-theme=dracula], converse-bg[data-bs-theme=dracula] {
   --cyan: #8be9fd;
   --green: #50fa7b;
+  --green-rgb: 80, 250, 123;
   --orange: #ffb86c;
+  --orange-rgb: 255, 184, 108;
   --pink: #ff79c6;
+  --pink-rgb: 255, 121, 198;
   --purple: #bd93f9;
+  --purple-rgb: 189, 147, 249;
   --red: #ff5555;
+  --red-rgb: 255, 85, 85;
   --yellow: #f1fa8c;
+  --yellow-rgb: 241, 250, 140;
   --gray: #6272a4;
   --darkgray: #212529;
   --background-color: #282a36;
+  --background-color-rgb: 40, 42, 54;
   --foreground-color: #f8f8f2;
+  --chat-rgb: var(--green-rgb);
+  --muc-rgb: var(--orange-rgb);
   --primary-color: var(--pink) !important;
+  --primary-rgb: var(--pink-rgb);
   --secondary-color: var(--purple) !important;
+  --secondary-rgb: var(--purple-rgb);
   --success-color: var(--green);
+  --success-color-rgb: var(--green-rgb);
   --danger-color: var(--red);
+  --danger-color-rgb: var(--red-rgb);
   --warning-color: var(--orange);
   --info-color: var(--yellow);
+  --info-color-rgb: var(--yellow-rgb);
+  --converse-info: var(--info-color);
+  --converse-info-rgb: var(--info-color-rgb);
+  --converse-success: var(--success-color);
+  --converse-success-rgb: var(--success-color-rgb);
+  --converse-danger: var(--danger-color);
+  --converse-danger-rgb: var(--danger-color-rgb);
+  --converse-body-bg-rgb: var(--background-color-rgb);
   --converse-body-bg: var(--background-color);
   --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--yellow) !important;
+  --converse-secondary-color: var(--secondary-color);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
   --chat-status-offline: var(--gray);
@@ -10604,8 +10673,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--pink);
   --link-color: var(--cyan);
   --subdued-color: var(--gray);
-  --toast-color: var(--background-color);
-  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--gray);
   --highlight-color-hover: var(--darkgray);
@@ -10643,39 +10710,56 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 .conversejs[data-converse-theme=dracula] .list-group-item.active, .conversejs[data-bs-theme=dracula] .list-group-item.active, converse-bg[data-converse-theme=dracula] .list-group-item.active, converse-bg[data-bs-theme=dracula] .list-group-item.active {
   --converse-list-group-active-color: var(--background-color) !important;
 }
+.conversejs[data-converse-theme=dracula] .toast, .conversejs[data-bs-theme=dracula] .toast, converse-bg[data-converse-theme=dracula] .toast, converse-bg[data-bs-theme=dracula] .toast {
+  --converse-toast-color: var(--background-color);
+  --converse-toast-bg: var(--secondary-color) !important;
+}
 .conversejs[data-converse-theme=cyberpunk], .conversejs[data-bs-theme=cyberpunk], converse-bg[data-converse-theme=cyberpunk], converse-bg[data-bs-theme=cyberpunk] {
   --blue: #1ba2f6;
   --cyan: #32fbe2;
   --green: #3cf281;
+  --green-rgb: 60, 242, 129;
   --indigo: #6610f2;
   --orange: #f1b633;
+  --orange-rgb: 255, 193, 7;
   --pink: #ea39b8;
+  --pink-rgb: 234, 57, 185;
   --purple: #6f42c1;
+  --purple-rgb: 111, 66, 193;
   --red: #e44c55;
+  --red-rgb: 228, 76, 84;
   --teal: #3f81a2;
   --white: #efefef;
   --yellow: #ffc107;
+  --yellow-rgb: 255, 193, 7;
   --background-color: #1a0933;
+  --background-color-rgb: 26, 9, 51;
   --background-color-lighter: #2c174c;
   --foreground-color: var(--white);
-  --background-color-rgb: 26, 9, 51;
-  --green-rgb: 60, 242, 129;
-  --orange-rgb: 255, 193, 7;
-  --pink-rgb: 234, 57, 185;
-  --purple-rgb: 111, 66, 193;
   --chat-rgb: var(--green-rgb);
   --muc-rgb: var(--orange-rgb);
-  --primary-rgb: var(--pink-rgb);
-  --secondary-rgb: var(--purple-rgb);
   --primary-color: var(--pink) !important;
+  --primary-rgb: var(--pink-rgb);
   --secondary-color: var(--purple) !important;
+  --secondary-rgb: var(--purple-rgb);
   --success-color: var(--green);
+  --success-color-rgb: var(--green-rgb);
   --danger-color: var(--red);
+  --danger-color-rgb: var(--red-rgb);
   --warning-color: var(--orange);
   --info-color: var(--yellow);
+  --info-color-rgb: var(--yellow-rgb);
+  --converse-info: var(--info-color);
+  --converse-info-rgb: var(--info-color-rgb);
+  --converse-success: var(--success-color);
+  --converse-success-rgb: var(--success-color-rgb);
+  --converse-danger: var(--danger-color);
+  --converse-danger-rgb: var(--danger-color-rgb);
+  --converse-body-bg-rgb: var(--background-color-rgb);
   --converse-body-bg: var(--background-color);
   --converse-body-color: var(--foreground-color) !important;
   --converse-highlight-color: var(--yellow);
+  --converse-secondary-color: var(--secondary-color);
   --chat-status-away: var(--orange);
   --chat-status-busy: var(--red);
   --chat-status-offline: gray;
@@ -10688,8 +10772,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --headlines-color: var(--indigo);
   --link-color: var(--cyan);
   --subdued-color: gray;
-  --toast-color: var(--foreground-color);
-  --toast-bg-color: var(--secondary-color);
   --selection-color: black;
   --highlight-color: var(--purple);
   --highlight-color-hover: var(--background-color-lighter);
@@ -10729,6 +10811,10 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 }
 .conversejs[data-converse-theme=cyberpunk] .list-group-item.active, .conversejs[data-bs-theme=cyberpunk] .list-group-item.active, converse-bg[data-converse-theme=cyberpunk] .list-group-item.active, converse-bg[data-bs-theme=cyberpunk] .list-group-item.active {
   --converse-list-group-active-color: var(--background-color) !important;
+}
+.conversejs[data-converse-theme=cyberpunk] .toast, .conversejs[data-bs-theme=cyberpunk] .toast, converse-bg[data-converse-theme=cyberpunk] .toast, converse-bg[data-bs-theme=cyberpunk] .toast {
+  --converse-toast-color: var(--background-color);
+  --converse-toast-bg: var(--secondary-color) !important;
 }
 .conversejs[data-converse-theme=cyberpunk] .toggle-controlbox, .conversejs[data-bs-theme=cyberpunk] .toggle-controlbox, converse-bg[data-converse-theme=cyberpunk] .toggle-controlbox, converse-bg[data-bs-theme=cyberpunk] .toggle-controlbox {
   color: var(--foreground-color) !important;
@@ -10886,7 +10972,6 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
 }
 .conversejs .img-thumbnail {
   background-color: var(--highlight-color);
-  border: 1px solid black;
 }
 .conversejs textarea:disabled {
   background-color: var(--disabled) !important;
@@ -11352,7 +11437,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-border-color: var(--primary-color);
   --converse-btn-disabled-color: var(--primary-color);
   --converse-btn-hover-bg: var(--primary-color);
-  --converse-btn-hover-border-color: var(--primary-color-hover);
+  --converse-btn-hover-border-color: var(--primary-color);
   --converse-btn-hover-color: var(--background-color);
 }
 .conversejs .btn-primary {
@@ -11372,7 +11457,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-border-color: var(--secondary-color);
   --converse-btn-disabled-color: var(--secondary-color);
   --converse-btn-hover-bg: var(--secondary-color);
-  --converse-btn-hover-border-color: var(--secondary-color-hover);
+  --converse-btn-hover-border-color: var(--secondary-color);
   --converse-btn-hover-color: var(--background-color);
 }
 .conversejs .btn-secondary {
@@ -11391,8 +11476,9 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--success-color);
   --converse-btn-disabled-color: var(--success-color);
-  --converse-btn-hover-bg: var(--success-color-hover);
-  --converse-btn-hover-border-color: var(--success-color-hover);
+  --converse-btn-hover-bg: var(--success-color);
+  --converse-btn-hover-color: var(--button-text-color);
+  --converse-btn-hover-border-color: var(--success-color);
 }
 .conversejs .btn-success {
   --converse-btn-color: var(--button-text-color);
@@ -11410,8 +11496,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--warning-color);
   --converse-btn-disabled-color: var(--warning-color);
-  --converse-btn-hover-bg: var(--warning-color-hover);
-  --converse-btn-hover-border-color: var(--warning-color-hover);
+  --converse-btn-hover-bg: var(--warning-color);
+  --converse-btn-hover-border-color: var(--warning-color);
 }
 .conversejs .btn-warning {
   --converse-btn-color: var(--button-text-color);
@@ -11429,8 +11515,8 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-bg: var(--disabled-color);
   --converse-btn-disabled-border-color: var(--danger-color);
   --converse-btn-disabled-color: var(--danger-color);
-  --converse-btn-hover-bg: var(--danger-color-hover);
-  --converse-btn-hover-border-color: var(--danger-color-hover);
+  --converse-btn-hover-bg: var(--danger-color);
+  --converse-btn-hover-border-color: var(--danger-color);
   --converse-btn-hover-color: var(--background-color);
 }
 .conversejs .btn-danger {
@@ -11450,7 +11536,7 @@ converse-bg .visually-hidden-focusable:not(:focus):not(:focus-within):not(captio
   --converse-btn-disabled-border-color: var(--info-color);
   --converse-btn-disabled-color: var(--info-color);
   --converse-btn-hover-bg: var(--info-color-dark);
-  --converse-btn-hover-border-color: var(--danger-color-hover);
+  --converse-btn-hover-border-color: var(--danger-color);
   --converse-btn-hover-border-color: var(--info-color-dark);
 }
 .conversejs .btn-info {
@@ -12601,13 +12687,13 @@ converse-spinner.vertically-centered {
 .conversejs .modal-header .modal-title a {
   color: var(--background-color);
 }
-.conversejs .modal-header .btn-close {
+.conversejs .modal-header .btn {
   --converse-btn-close-bg: none;
   margin: 0;
   padding: 0;
-  font-size: 2.5em;
+  font-size: 1em;
 }
-.conversejs .modal-header .btn-close svg {
+.conversejs .modal-header .btn svg {
   fill: var(--background-color);
 }
 .conversejs .modal-header .close {
@@ -12698,18 +12784,30 @@ converse-root#conversejs converse-popover {
   top: 1em;
   right: 1em;
 }
+.conversejs converse-toasts converse-toast {
+  --converse-toast-border-width: 0;
+}
 .conversejs converse-toasts converse-toast .toast {
-  color: var(--toast-color);
-  background-color: var(--toast-bg-color);
+  color: var(--converse-toast-color) !important;
+  background-color: var(--converse-toast-bg) !important;
   position: relative;
   margin-block-start: 1em;
   margin-inline-end: 1em;
+}
+.conversejs converse-toasts converse-toast .toast.text-bg-success {
+  background-color: rgba(var(--converse-success-rgb), 0.85) !important;
+}
+.conversejs converse-toasts converse-toast .toast.text-bg-danger {
+  background-color: rgba(var(--converse-danger-rgb), 0.85) !important;
+}
+.conversejs converse-toasts converse-toast .toast.text-bg-info {
+  background-color: rgba(var(--converse-info-rgb), 0.85) !important;
 }
 .conversejs converse-toasts converse-toast .toast .toast-header img {
   height: 1.5em;
 }
 .conversejs converse-toasts converse-toast .toast .toast-body__container .fa-times svg {
-  fill: var(--toast-color);
+  fill: var(--converse-toast-color);
 }
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!./src/shared/autocomplete/styles/_autocomplete.scss ***!
@@ -16023,6 +16121,7 @@ converse-add-muc-modal .add-chatroom converse-autocomplete .suggestion-box ul li
 .conversejs #chatrooms converse-rooms-list .list-item .open-room {
   display: flex;
   flex-direction: row;
+  line-height: 1.5em;
 }
 .conversejs #chatrooms converse-rooms-list .list-item .open-room span {
   padding-top: 0.25em;
@@ -16248,9 +16347,6 @@ converse-bg .converse-brand__heading converse-logo {
 }
 .conversejs #converse-roster .roster-contacts .list-item .span {
   display: inline-block;
-}
-.conversejs #converse-roster .roster-contacts .list-item .decline-xmpp-request {
-  margin-inline-start: 1em;
 }
 .conversejs #converse-roster .roster-contacts .list-item:hover {
   background-color: var(--highlight-color-hover);

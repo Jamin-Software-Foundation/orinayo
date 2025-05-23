@@ -12,6 +12,7 @@ if (!conURI || !domain) {
 		domain = JSON.stringify("localhost");
 	}
 
+	localStorage.setItem("collaboration_server.meet_url", location.origin + "/group");
 	localStorage.setItem("collaboration_server.server_url", conURI);
 	localStorage.setItem("collaboration_server.domain", domain);	
 	localStorage.setItem("collaboration_server.room", JSON.stringify("orinayo"));		
@@ -34,6 +35,7 @@ orinayo_config.options.addTab('Collaboration Server', [
     { name: 'password', 'default': '', type: 'password', desc: 'Password', singleline: true },
     { name: 'domain', 'default': '', type: 'text', desc: 'XMPP Domain', singleline: true },	
     { name: 'server_url', 'default': '', type: 'url', desc: 'Connection URI', singleline: true },
+    { name: 'meet_url', 'default': '', type: 'url', desc: 'Meeting Base URL', singleline: true },
     { name: 'room', 'default': '', type: 'text', desc: 'Meeting Room Name', singleline: true },	
     
 	{ type: 'html', html: '<hr/>' },

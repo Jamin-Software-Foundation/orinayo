@@ -64573,7 +64573,6 @@ const {
      */
     async add(attributes, persist = true, subscribe = true, message = '') {
       if (!(0,_utils_jid_js__WEBPACK_IMPORTED_MODULE_0__.isValidJID)(attributes?.jid)) throw new Error('api.contacts.add: Valid JID required');
-      await _shared_api_index_js__WEBPACK_IMPORTED_MODULE_2__["default"].waitUntil('rosterContactsFetched');
       const {
         roster
       } = _shared_converse_js__WEBPACK_IMPORTED_MODULE_1__["default"].state;
@@ -64816,6 +64815,9 @@ class RosterContact extends (0,_shared_model_with_vcard_js__WEBPACK_IMPORTED_MOD
             </query>
         </iq>`;
     return await _shared_api_index_js__WEBPACK_IMPORTED_MODULE_4__["default"].sendIQ(iq);
+  }
+  isUnsaved() {
+    return this.get('subscription') === undefined;
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RosterContact);
@@ -68821,7 +68823,7 @@ class ChatBoxBase extends (0,_model_with_messages_js__WEBPACK_IMPORTED_MODULE_6_
     }
     // Overlayed view mode
     u.safeSave(this, {
-      'hidden': false
+      hidden: false
     });
     this.trigger('show');
     return this;
@@ -79037,7 +79039,8 @@ _converse_headless__WEBPACK_IMPORTED_MODULE_3__.converse.plugins.add('converse-d
      * loaded by converse.js's plugin machinery.
      */
     _converse_headless__WEBPACK_IMPORTED_MODULE_3__.api.settings.extend({
-      'allow_dragresize': true
+      allow_dragresize: true,
+      dragresize_top_margin: 0
     });
     Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_3__._converse.exports.ChatView?.prototype ?? {}, _mixin_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
     Object.assign(_converse_headless__WEBPACK_IMPORTED_MODULE_3__._converse.exports.MUCView?.prototype ?? {}, _mixin_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
@@ -79105,13 +79108,24 @@ const DragResizableMixin = {
     }
     return this;
   },
+  /**
+   * @param {MouseEvent} ev
+   */
   resizeChatBox(ev) {
     let diff;
     const direction = (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getResizingDirection)();
     if (direction.indexOf('top') === 0) {
+      const margin = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('dragresize_top_margin') ?? 0;
+      const max_height = window.innerHeight - margin;
       diff = ev.pageY - this.prev_pageY;
       if (diff) {
-        this.height = this.height - diff > (this.model.get('min_height') || 0) ? this.height - diff : this.model.get('min_height');
+        const new_height = this.height - diff;
+        console.log('------------');
+        console.log(`window.innerHeight: ${window.innerHeight}`);
+        console.log(`max_height: ${max_height}`);
+        console.log(`new_height: ${new_height}`);
+        console.log(`diff: ${diff}`);
+        this.height = this.height - diff > (this.model.get('min_height') || 0) ? new_height <= max_height ? new_height : max_height : this.model.get('min_height');
         this.prev_pageY = ev.pageY;
         this.setChatBoxHeight(this.height);
       }
@@ -79133,27 +79147,24 @@ const DragResizableMixin = {
       this.setChatBoxHeight(this.model.get('height'));
     }
   },
+  /**
+   * @param {number} height
+   */
   setChatBoxHeight(height) {
-    if (height) {
-      height = (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.applyDragResistance)(height, this.model.get('default_height')) + 'px';
-    } else {
-      height = '';
-    }
     const flyout_el = this.querySelector('.box-flyout');
     if (flyout_el !== null) {
-      flyout_el.style.height = height;
+      flyout_el.style.height = height ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.applyDragResistance)(height, this.model.get('default_height')) + 'px' : '';
     }
   },
+  /**
+   * @param {number} width
+   */
   setChatBoxWidth(width) {
-    if (width) {
-      width = (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.applyDragResistance)(width, this.model.get('default_width')) + 'px';
-    } else {
-      width = '';
-    }
-    this.style.width = width;
+    const style_width = width ? (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.applyDragResistance)(width, this.model.get('default_width')) + 'px' : '';
+    this.style.width = style_width;
     const flyout_el = this.querySelector('.box-flyout');
     if (flyout_el !== null) {
-      flyout_el.style.width = width;
+      flyout_el.style.width = style_width;
     }
   },
   adjustToViewport() {
@@ -79277,6 +79288,11 @@ const resizing = {};
 function getResizingDirection() {
   return resizing.direction;
 }
+
+/**
+ * @param {MouseEvent} ev
+ * @param {boolean} [trigger=true]
+ */
 function onStartVerticalResize(ev, trigger = true) {
   if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('allow_dragresize')) {
     return true;
@@ -79299,6 +79315,11 @@ function onStartVerticalResize(ev, trigger = true) {
     _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.trigger('startVerticalResize', chatbox_el);
   }
 }
+
+/**
+ * @param {MouseEvent} ev
+ * @param {boolean} [trigger=true]
+ */
 function onStartHorizontalResize(ev, trigger = true) {
   if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('allow_dragresize')) {
     return true;
@@ -79320,6 +79341,10 @@ function onStartHorizontalResize(ev, trigger = true) {
     _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.trigger('startHorizontalResize', chatbox_el);
   }
 }
+
+/**
+ * @param {MouseEvent} ev
+ */
 function onStartDiagonalResize(ev) {
   onStartHorizontalResize(ev, false);
   onStartVerticalResize(ev, false);
@@ -79336,9 +79361,9 @@ function onStartDiagonalResize(ev) {
  * Applies some resistance to `value` around the `default_value`.
  * If value is close enough to `default_value`, then it is returned, otherwise
  * `value` is returned.
- * @param { number } value
- * @param { number } default_value
- * @returns { number }
+ * @param {number} value
+ * @param {number} default_value
+ * @returns {number}
  */
 function applyDragResistance(value, default_value) {
   if (value === undefined) {
@@ -79352,6 +79377,10 @@ function applyDragResistance(value, default_value) {
   }
   return value;
 }
+
+/**
+ * @param {MouseEvent} ev
+ */
 function onMouseMove(ev) {
   if (!resizing.chatbox || !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('allow_dragresize')) {
     return true;
@@ -79359,6 +79388,10 @@ function onMouseMove(ev) {
   ev.preventDefault();
   resizing.chatbox.resizeChatBox(ev);
 }
+
+/**
+ * @param {MouseEvent} ev
+ */
 function onMouseUp(ev) {
   if (!resizing.chatbox || !_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('allow_dragresize')) {
     return true;
@@ -81704,6 +81737,9 @@ __webpack_require__.r(__webpack_exports__);
 class Toast extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_3__.CustomElement {
   static get properties() {
     return {
+      type: {
+        type: String
+      },
       name: {
         type: String
       },
@@ -81720,13 +81756,21 @@ class Toast extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_3__.Cu
     this.name = '';
     this.body = '';
     this.header = '';
+    this.type = 'info';
   }
-  initialize() {
-    super.initialize();
-    setTimeout(() => this.hide(), 5000);
+
+  /**
+   * @param {import('lit').PropertyValues} changed
+   */
+  updated(changed) {
+    if (changed.get('type') !== 'danger') {
+      this.timeoutId = setTimeout(() => this.hide(), 5000);
+    } else {
+      clearTimeout(this.timeoutId);
+    }
   }
   render() {
-    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">${this.title ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="toast-header"><img src="/logo/conversejs-filled.svg" class="rounded me-2" alt="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Converse logo')}"> <strong class="me-auto">${this.title ?? ''}</strong> <button @click="${this.hide}" type="button" class="btn-close" aria-label="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close')}"></button></div>` : ''} ${this.body ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="d-flex justify-content-between toast-body__container"><div class="toast-body w-100">${this.body ?? ''}</div>${!this.title ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button @click="${this.hide}" type="button" class="btn centered" aria-label="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close')}"><converse-icon size="1em" class="fa fa-times"></converse-icon></button>` : ''}</div>` : ''}</div>`;
+    return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="toast show text-bg-${this.type ?? 'info'}" role="alert" aria-live="assertive" aria-atomic="true">${this.title ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="toast-header"><img src="/logo/conversejs-filled.svg" class="rounded me-2" alt="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Converse logo')}"> <strong class="me-auto">${this.title ?? ''}</strong> <button @click="${this.hide}" type="button" class="btn-close" aria-label="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close')}"></button></div>` : ''} ${this.body ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="d-flex justify-content-between toast-body__container"><div class="toast-body w-100">${this.body ?? ''}</div>${!this.title ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button @click="${this.hide}" type="button" class="btn centered" aria-label="${(0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close')}"><converse-icon size="1em" class="fa fa-times"></converse-icon></button>` : ''}</div>` : ''}</div>`;
   }
 
   /**
@@ -81768,7 +81812,7 @@ class ToastsContainer extends shared_components_element_js__WEBPACK_IMPORTED_MOD
   render() {
     const toasts = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.get();
     return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`${toasts.map(/** @param {import('./types').ToastProperties} toast */
-    toast => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-toast name="${toast.name}" title="${toast.title ?? ''}" body="${toast.body ?? ''}"></converse-toast>`)}`;
+    toast => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-toast name="${toast.name}" title="${toast.title ?? ''}" body="${toast.body ?? ''}" type="${toast.type ?? ''}"></converse-toast>`)}`;
   }
 }
 _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-toasts', ToastsContainer);
@@ -89754,6 +89798,7 @@ class ProfileModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__["
       if (await this.setVCard(data)) {
         this.modal.hide();
         _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.show('vcard-updated', {
+          type: 'success',
           body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Profile updated successfully')
         });
       }
@@ -92189,9 +92234,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const {
-  Strophe
-} = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.converse.env;
 class RosterContactView extends shared_components_observable_js__WEBPACK_IMPORTED_MODULE_2__.ObservableElement {
   /**
    * @typedef {import('shared/components/types').ObservableProperty} ObservableProperty
@@ -92200,7 +92242,7 @@ class RosterContactView extends shared_components_observable_js__WEBPACK_IMPORTE
   constructor() {
     super();
     this.model = null;
-    this.observable = /** @type {ObservableProperty} */"once";
+    this.observable = /** @type {ObservableProperty} */'once';
   }
   static get properties() {
     return {
@@ -92242,6 +92284,7 @@ class RosterContactView extends shared_components_observable_js__WEBPACK_IMPORTE
   addContact(ev) {
     ev?.preventDefault?.();
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.modal.show('converse-add-contact-modal', {
+      contact: this.model,
       model: new _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model()
     }, ev);
   }
@@ -92295,26 +92338,7 @@ class RosterContactView extends shared_components_observable_js__WEBPACK_IMPORTE
    */
   async declineRequest(ev) {
     ev?.preventDefault?.();
-    const domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.session.get('domain');
-    const blocking_supported = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.disco.supports(Strophe.NS.BLOCKING, domain);
-    const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.confirm((0,i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Decline contact request'), [(0,i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Are you sure you want to decline this contact request from %1$s?', this.model.getDisplayName())], blocking_supported ? [{
-      label: (0,i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Also block this user from sending you further messages'),
-      name: 'block',
-      type: 'checkbox'
-    }] : []);
-    if (result) {
-      const chat = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.chats.get(this.model.get('jid'));
-      chat?.close();
-      this.model.unauthorize();
-      if (blocking_supported && Array.isArray(result)) {
-        const should_block = result.find(i => i.name === 'block')?.value === 'on';
-        if (should_block) {
-          _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.blocklist.add(this.model.get('jid'));
-        }
-      }
-      this.model.destroy();
-    }
-    return this;
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_7__.declineContactRequest)(this.model);
   }
 }
 _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-roster-contact', RosterContactView);
@@ -92411,16 +92435,16 @@ class AcceptContactRequest extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODU
   }
   initialize() {
     super.initialize();
-    this.listenTo(this.model, "change", () => this.requestUpdate());
-    this.listenTo(this.contact, "change", () => this.requestUpdate());
+    this.listenTo(this.model, 'change', () => this.requestUpdate());
+    this.listenTo(this.contact, 'change', () => this.requestUpdate());
     this.requestUpdate();
-    this.addEventListener("shown.bs.modal", () => /** @type {HTMLInputElement} */this.querySelector('input[name="name"]')?.focus(), false);
+    this.addEventListener('shown.bs.modal', () => /** @type {HTMLInputElement} */this.querySelector('input[name="name"]')?.focus(), false);
   }
   renderModal() {
     return (0,_templates_accept_contact_request_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
   }
   getModalTitle() {
-    return (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Contact Request");
+    return (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Contact Request');
   }
 
   /**
@@ -92430,28 +92454,35 @@ class AcceptContactRequest extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODU
     ev.preventDefault();
     const form = /** @type {HTMLFormElement} */ev.target;
     const data = new FormData(form);
-    const name = /** @type {string} */(data.get("name") || "").trim();
-    const groups = /** @type {string} */data.get("groups")?.split(",").map(g => g.trim()).filter(g => g) || [];
+    const name = /** @type {string} */(data.get('name') || '').trim();
+    const groups = /** @type {string} */data.get('groups')?.split(',').map(g => g.trim()).filter(g => g) || [];
     try {
       await _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state.roster.sendContactAddIQ({
-        jid: this.contact.get("jid"),
+        jid: this.contact.get('jid'),
         name,
         groups
       });
       this.contact.authorize().subscribe();
     } catch (e) {
       _converse_headless__WEBPACK_IMPORTED_MODULE_0__.log.error(e);
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Sorry, something went wrong"));
+      _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.toast.show('accept-request-error', {
+        type: 'danger',
+        body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Sorry, something went wrong while accepting the contact request')
+      });
       return;
     }
     this.contact.save({
       nickname: name,
       groups
     });
+    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.toast.show('accept-request-success', {
+      type: 'success',
+      body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Successfully accepted the contact request')
+    });
     this.modal.hide();
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define("converse-accept-contact-request-modal", AcceptContactRequest);
+_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-accept-contact-request-modal', AcceptContactRequest);
 
 /***/ }),
 
@@ -92479,57 +92510,62 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  constructor() {
+    super();
+    this.contact = null;
+  }
   initialize() {
     super.initialize();
-    this.listenTo(this.model, "change", () => this.requestUpdate());
+    this.listenTo(this.contact, 'change', () => this.requestUpdate());
+    this.listenTo(this.model, 'change', () => this.requestUpdate());
     this.requestUpdate();
-    this.addEventListener("shown.bs.modal", () => /** @type {HTMLInputElement} */this.querySelector('input[name="jid"]')?.focus(), false);
+    this.addEventListener('shown.bs.modal', () => /** @type {HTMLInputElement} */this.querySelector('input[name="jid"]')?.focus(), false);
   }
   renderModal() {
     return (0,_templates_add_contact_js__WEBPACK_IMPORTED_MODULE_3__["default"])(this);
   }
   getModalTitle() {
-    return (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add a Contact");
+    return (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Add a Contact');
   }
 
   /**
    * @param {string} jid
    */
   validateSubmission(jid) {
-    if (!jid || jid.split("@").filter(s => !!s).length < 2) {
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Please enter a valid XMPP address"));
+    if (!jid || jid.split('@').filter(s => !!s).length < 2) {
+      this.model.set('error', (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Please enter a valid XMPP address'));
       return false;
-    } else if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.roster.get(strophe_js__WEBPACK_IMPORTED_MODULE_0__.Strophe.getBareJidFromJid(jid))) {
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This contact has already been added"));
+    } else if (!this.contact && _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.state.roster.get(strophe_js__WEBPACK_IMPORTED_MODULE_0__.Strophe.getBareJidFromJid(jid))) {
+      this.model.set('error', (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('This contact has already been added'));
       return false;
     }
-    this.model.set("error", null);
+    this.model.set('error', null);
     return true;
   }
 
   /**
-   * @param {HTMLFormElement} form
    * @param {string} jid
    * @param {string} name
    * @param {string[]} groups
    */
-  async afterSubmission(form, jid, name, groups) {
-    try {
-      await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.contacts.add({
-        jid,
-        name,
-        groups
-      });
-    } catch (e) {
+  async afterSubmission(jid, name, groups) {
+    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.contacts.add({
+      jid,
+      name,
+      groups
+    }).catch(e => {
       _converse_headless__WEBPACK_IMPORTED_MODULE_1__.log.error(e);
-      this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Sorry, something went wrong"));
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.show('contact-add-error', {
+        type: 'danger',
+        body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Sorry, something went wrong while adding the contact')
+      });
       return;
-    }
+    });
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.chats.open(jid, {}, true);
-    form.reset();
     this.model.clear();
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.show('contact-added', {
-      body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Contact added successfully")
+      type: 'success',
+      body: (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Contact added successfully')
     });
     this.modal.hide();
   }
@@ -92541,9 +92577,9 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2_
     ev.preventDefault();
     const form = /** @type {HTMLFormElement} */ev.target;
     const data = new FormData(form);
-    let jid = /** @type {string} */(data.get("jid") || "").trim();
+    let jid = /** @type {string} */(data.get('jid') || '').trim();
     let name;
-    if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url")) {
+    if (_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('xhr_user_search_url')) {
       // In this case, the value of `jid` is something like `John Doe <john@chat.com>`
       // So we want to get `name` which is `John Doe` and reset `jid` to
       // what's inside the arrow brackets, so in this case
@@ -92553,19 +92589,20 @@ class AddContactModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2_
         name = match[1].trim();
         jid = match[2].trim();
       } else {
-        this.model.set("error", (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Invalid value for the name and XMPP address. Please use the format "Name <username@example.org>".'));
+        this.model.set('error', (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Invalid value for the name and XMPP address. Please use the format "Name <username@example.org>".'));
         return;
       }
     } else {
-      name = /** @type {string} */(data.get("name") || "").trim();
+      name = /** @type {string} */(data.get('name') || '').trim();
     }
     if (this.validateSubmission(jid)) {
-      const groups = /** @type {string} */data.get("groups")?.split(",").map(g => g.trim()).filter(g => g) || [];
-      this.afterSubmission(form, jid, name, groups);
+      const groups = /** @type {string} */data.get('groups')?.split(',').map(g => g.trim()).filter(g => g) || [];
+      this.afterSubmission(jid, name, groups);
+      form.reset();
     }
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define("converse-add-contact-modal", AddContactModal);
+_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-add-contact-modal', AddContactModal);
 
 /***/ }),
 
@@ -92722,12 +92759,13 @@ __webpack_require__.r(__webpack_exports__);
  * @param {import('../accept-contact-request.js').default} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  const i18n_add = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Add");
-  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Groups");
-  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Use commas to separate multiple values");
-  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Name");
-  const error = el.model.get("error");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ""}<form class="converse-form" @submit="${ev => el.acceptContactRequest(ev)}"><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.contact.vcard?.get('fullname') || ''}" class="form-control"></div><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${i18n_add}</button></form></div>`;
+  const i18n_accept = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Accept');
+  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Groups');
+  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Use commas to separate multiple values');
+  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Name');
+  const i18n_xmpp_address = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('XMPP Address');
+  const error = el.model.get('error');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ''}<form class="converse-form" @submit="${ev => el.acceptContactRequest(ev)}"><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.contact.vcard?.get('fullname') || ''}" class="form-control"></div><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div><div class="mb-3 d-flex justify-content-between"><label class="form-label clearfix w-100" for="jid-display">${i18n_xmpp_address}:</label><p class="form-control-plaintext text-end" id="jid-display">${el.contact.get('jid')}</p></div><button type="submit" class="btn btn-primary">${i18n_accept}</button></form></div>`;
 });
 
 /***/ }),
@@ -92758,15 +92796,16 @@ __webpack_require__.r(__webpack_exports__);
  * @param {import('../add-contact.js').default} el
  */
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (el => {
-  const i18n_add = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add");
-  const i18n_contact_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("name@example.org");
-  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Groups");
-  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Use commas to separate multiple values");
-  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Name");
-  const using_xhr = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url");
-  const i18n_xmpp_address = using_xhr ? (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Search name or XMPP address") : (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)("XMPP Address");
-  const error = el.model.get("error");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ""}<form class="converse-form add-xmpp-contact" @submit="${ev => el.addContactFromForm(ev)}"><div class="mb-3"><label class="form-label clearfix" for="jid">${i18n_xmpp_address}:</label> ${using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .getAutoCompleteList="${_utils_js__WEBPACK_IMPORTED_MODULE_3__.getNamesAutoCompleteList}" position="below" min_chars="2" filter="contains" ?required="${true}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>` : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getJIDsAutoCompleteList)()}" .data="${(text, input) => `${input.slice(0, input.indexOf("@"))}@${text}`}" position="below" min_chars="2" filter="startswith" ?required="${!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get("xhr_user_search_url")}" value="${el.model.get("jid") || ""}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>`}</div>${!using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.model.get("nickname") || ""}" class="form-control"></div>` : ""}<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${i18n_add}</button></form></div>`;
+  const i18n_add = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add');
+  const i18n_contact_placeholder = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('name@example.org');
+  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Groups');
+  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Use commas to separate multiple values');
+  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Name');
+  const using_xhr = _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('xhr_user_search_url');
+  const i18n_xmpp_address = (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('XMPP Address');
+  const i18n_search_or_address = using_xhr ? (0,i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Search name or XMPP address') : i18n_xmpp_address;
+  const error = el.model.get('error');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="modal-body">${error ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="alert alert-danger" role="alert">${error}</div>` : ''}<form class="converse-form add-xmpp-contact" @submit="${ev => el.addContactFromForm(ev)}">${el.contact ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<input type="hidden" name="jid" value="${el.contact.get('jid')}">` : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label class="form-label clearfix" for="jid">${i18n_search_or_address}:</label> ${using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .getAutoCompleteList="${_utils_js__WEBPACK_IMPORTED_MODULE_3__.getNamesAutoCompleteList}" position="below" min_chars="2" filter="contains" ?required="${true}" value="${el.model.get('jid') || ''}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>` : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getJIDsAutoCompleteList)()}" .data="${(text, input) => `${input.slice(0, input.indexOf('@'))}@${text}`}" position="below" min_chars="2" filter="startswith" ?required="${!_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('xhr_user_search_url')}" value="${el.model.get('jid') || ''}" placeholder="${i18n_contact_placeholder}" name="jid"></converse-autocomplete>`}</div>`} ${!using_xhr ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_nickname}:</label> <input type="text" name="name" value="${el.model.get('nickname') || ''}" class="form-control"></div>` : ''}<div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getGroupsAutoCompleteList)()}" name="groups"></converse-autocomplete></div>${el.contact ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="mb-3 d-flex justify-content-between"><label class="form-label clearfix w-100" for="jid-display">${i18n_xmpp_address}:</label><p class="form-control-plaintext text-end" id="jid-display">${el.contact.get('jid')}</p></div>` : ''} <button type="submit" class="btn btn-primary">${i18n_add}</button></form></div>`;
 });
 
 /***/ }),
@@ -92856,6 +92895,7 @@ class RosterView extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_2
     this.listenTo(roster, 'destroy', () => this.requestUpdate());
     this.listenTo(roster, 'remove', () => this.requestUpdate());
     this.listenTo(roster, 'change', () => this.requestUpdate());
+    this.listenTo(roster, 'presence:change', () => this.requestUpdate());
     this.listenTo(roster.state, 'change', () => this.requestUpdate());
     this.listenTo(this.model, 'change', () => this.requestUpdate());
     /**
@@ -93045,7 +93085,7 @@ function renderContact(contact) {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (o => {
   const i18n_title = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Click to hide these contacts');
   const collapsed = _converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.state.roster.state.get('collapsed_groups');
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="roster-group" data-group="${o.name}"><a href="#" class="list-toggle group-toggle controlbox-padded" title="${i18n_title}" @click="${ev => (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.toggleGroup)(ev, o.name)}"><converse-icon color="var(--chat-color)" size="1em" class="fa ${collapsed.includes(o.name) ? 'fa-caret-right' : 'fa-caret-down'}"></converse-icon>${o.name}</a><ul class="items-list roster-group-contacts ${collapsed.includes(o.name) ? 'collapsed' : ''}" data-group="${o.name}">${(0,lit_directives_repeat_js__WEBPACK_IMPORTED_MODULE_1__.repeat)(o.contacts, c => c.get('jid'), renderContact)}</ul></div>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="roster-group" data-group="${o.name}"><a href="#" class="list-toggle group-toggle controlbox-padded" title="${i18n_title}" @click="${ev => (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.toggleGroup)(ev, o.name)}"><converse-icon color="var(--chat-color)" size="1em" class="fa ${collapsed.includes(o.name) ? 'fa-caret-right' : 'fa-caret-down'}"></converse-icon>${o.name}  ${o.contacts[0].get('requesting') ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-icon color="var(--chat-color)" size="1.2em" class="fa fa-bell-alt"></converse-icon>` : ``}</a><ul class="items-list roster-group-contacts ${collapsed.includes(o.name) ? 'collapsed' : ''}" data-group="${o.name}">${(0,lit_directives_repeat_js__WEBPACK_IMPORTED_MODULE_1__.repeat)(o.contacts, c => c.get('jid'), renderContact)}</ul></div>`;
 });
 
 /***/ }),
@@ -93064,6 +93104,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 /* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
 /* harmony import */ var shared_chat_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shared/chat/utils.js */ "./src/shared/chat/utils.js");
+/* harmony import */ var _roster_item_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./roster_item.js */ "./src/plugins/rosterview/templates/roster_item.js");
+
 
 
 
@@ -93078,7 +93120,8 @@ __webpack_require__.r(__webpack_exports__);
   const i18n_accept = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click to accept the contact request from %1$s (XMPP address: %2$s)', display_name, jid);
   const i18n_decline = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click to decline the contact request from %1$s (XMPP address: %2$s)', display_name, jid);
   const i18n_chat = (0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click to chat with %1$s (XMPP address: %2$s)', display_name, jid);
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<a class="list-item-link cbox-list-item open-chat ${num_unread ? 'unread-msgs' : ''}" title="${i18n_chat}" href="#" data-jid="${jid}" @click="${el.openChat}"><span><converse-avatar .model="${el.model}" class="avatar" name="${el.model.getDisplayName()}" nonce="${el.model.vcard?.get('vcard_updated')}" height="30" width="30"></converse-avatar></span>${num_unread ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<span class="msgs-indicator badge">${num_unread}</span>` : ''} <span class="contact-name ${num_unread ? 'unread-msgs' : ''}">${display_name}</span> </a><span class="contact-actions"><a class="accept-xmpp-request list-item-action list-item-action--visible" @click="${el.acceptRequest}" aria-label="${i18n_accept}" title="${i18n_accept}" href="#"><converse-icon class="fa fa-check" size="1.5em"></converse-icon></a><a class="decline-xmpp-request list-item-action list-item-action--visible" @click="${el.declineRequest}" aria-label="${i18n_decline}" title="${i18n_decline}" href="#"><converse-icon class="fa fa-times" size="1.5em"></converse-icon></a></span>`;
+  const btns = [(0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<a class="dropdown-item accept-xmpp-request" role="button" @click="${ev => el.acceptRequest(ev)}" aria-label="${i18n_accept}" title="${i18n_accept}" href="#"><converse-icon class="fa fa-check" size="1em"></converse-icon>${(0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Accept as contact')}</a>`, (0,_roster_item_js__WEBPACK_IMPORTED_MODULE_3__.tplDetailsButton)(el), (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<a class="dropdown-item decline-xmpp-request" role="button" @click="${ev => el.declineRequest(ev)}" aria-label="${i18n_decline}" title="${i18n_decline}"><converse-icon class="fa fa-times" size="1em"></converse-icon>${(0,i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove')}</a>`];
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<a class="list-item-link cbox-list-item open-chat ${num_unread ? 'unread-msgs' : ''}" title="${i18n_chat}" href="#" data-jid="${jid}" @click="${el.openChat}"><span><converse-avatar .model="${el.model}" class="avatar" name="${el.model.getDisplayName()}" nonce="${el.model.vcard?.get('vcard_updated')}" height="30" width="30"></converse-avatar></span>${num_unread ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<span class="msgs-indicator badge">${num_unread}</span>` : ''} <span class="contact-name ${num_unread ? 'unread-msgs' : ''}">${display_name}</span> </a><span class="contact-actions"><converse-dropdown class="btn-group dropstart list-item-action" .items="${btns}"></converse-dropdown></span>`;
 });
 
 /***/ }),
@@ -93306,7 +93349,7 @@ __webpack_require__.r(__webpack_exports__);
 function tplAddContactButton(el) {
   const display_name = el.model.getDisplayName();
   const i18n_add_contact = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Click to add %1$s as a contact', display_name);
-  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<a class="dropdown-item add-contact" role="button" @click="${el.addContact}" title="${i18n_add_contact}" data-toggle="modal"><converse-icon class="fa fa-user-plus" size="1.5em"></converse-icon>${(0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Save as contact')}</a>`;
+  return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<a class="dropdown-item add-contact" role="button" @click="${ev => el.addContact(ev)}" title="${i18n_add_contact}" data-toggle="modal"><converse-icon class="fa fa-user-plus" size="1.5em"></converse-icon>${(0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Save as contact')}</a>`;
 }
 
 /**
@@ -93317,7 +93360,7 @@ function tplAddContactButton(el) {
   const display_name = el.model.getDisplayName();
   const jid = el.model.get('jid');
   const i18n_chat = (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Click to chat with %1$s (XMPP address: %2$s)', display_name, jid);
-  const btns = [...(_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('allow_contact_removal') ? [(0,_roster_item__WEBPACK_IMPORTED_MODULE_4__.tplRemoveButton)(el)] : []), (0,_roster_item__WEBPACK_IMPORTED_MODULE_4__.tplDetailsButton)(el), tplAddContactButton(el)];
+  const btns = [(0,_roster_item__WEBPACK_IMPORTED_MODULE_4__.tplDetailsButton)(el), tplAddContactButton(el), ...(_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.settings.get('allow_contact_removal') ? [(0,_roster_item__WEBPACK_IMPORTED_MODULE_4__.tplRemoveButton)(el)] : [])];
   return (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<a class="list-item-link cbox-list-item open-chat ${num_unread ? 'unread-msgs' : ''}" title="${i18n_chat}" href="#" data-jid="${jid}" @click="${el.openChat}"><span><converse-avatar .model="${el.model}" class="avatar" name="${el.model.getDisplayName()}" nonce="${el.model.vcard?.get('vcard_updated')}" height="30" width="30"></converse-avatar></span>${num_unread ? (0,lit__WEBPACK_IMPORTED_MODULE_2__.html)`<span class="msgs-indicator badge">${num_unread}</span>` : ''} <span class="contact-name ${num_unread ? 'unread-msgs' : ''}">${display_name}</span> </a><span class="contact-actions"><converse-dropdown class="btn-group dropstart list-item-action" .items="${btns}"></converse-dropdown></span>`;
 });
 
@@ -93334,6 +93377,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   blockContact: () => (/* binding */ blockContact),
 /* harmony export */   contactsComparator: () => (/* binding */ contactsComparator),
+/* harmony export */   declineContactRequest: () => (/* binding */ declineContactRequest),
 /* harmony export */   getGroupsAutoCompleteList: () => (/* binding */ getGroupsAutoCompleteList),
 /* harmony export */   getJIDsAutoCompleteList: () => (/* binding */ getJIDsAutoCompleteList),
 /* harmony export */   getNamesAutoCompleteList: () => (/* binding */ getNamesAutoCompleteList),
@@ -93381,6 +93425,38 @@ async function removeContact(contact, unauthorize = false) {
     _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.alert('error', (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Error'), [(0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Sorry, an error occurred while trying to remove %1$s as a contact', contact.getDisplayName())]);
   }
   return true;
+}
+
+/**
+ * @param {RosterContact} contact
+ */
+async function declineContactRequest(contact) {
+  const domain = _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.session.get('domain');
+  const blocking_supported = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.disco.supports(Strophe.NS.BLOCKING, domain);
+  const result = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.confirm((0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Remove and decline contact request'), [(0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to decline the contact request from %1$s?', contact.getDisplayName())], blocking_supported ? [{
+    label: (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Also block this user from sending you further messages'),
+    name: 'block',
+    type: 'checkbox'
+  }] : []);
+  if (result) {
+    const chat = await _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.chats.get(contact.get('jid'));
+    chat?.close();
+    contact.unauthorize();
+    if (blocking_supported && Array.isArray(result) && result.find(i => i.name === 'block')?.value === 'on') {
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.blocklist.add(contact.get('jid'));
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.show('declined-and-blocked', {
+        type: 'success',
+        body: (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Contact request declined and user blocked')
+      });
+    } else {
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.toast.show('request-declined', {
+        type: 'success',
+        body: (0,i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Contact request declined')
+      });
+    }
+    contact.destroy();
+  }
+  return this;
 }
 
 /**
@@ -98081,7 +98157,7 @@ class ConverseFooter extends _element_js__WEBPACK_IMPORTED_MODULE_2__.CustomElem
     const theme = _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('theme');
     const is_dark_theme = ['dracula', 'cyberpunk'].includes(theme);
     const i18n_sponsors = (0,i18n__WEBPACK_IMPORTED_MODULE_3__.__)('A big thank you to our sponsors 🙏');
-    return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<footer class="footer mt-auto py-3 pb-3"><div class="container"><div class="row"><div class="col-12 text-center"><p class="brand-subtitle mb-2 subdued">Version: ${_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.VERSION_NAME}</p><p class="brand-subtitle mb-4"><a target="_blank" rel="nofollow" href="https://github.com/conversejs/converse.js">Open Source</a> XMPP chat client brought to you by <a target="_blank" rel="nofollow" href="https://opkode.com/about">Opkode</a>.</p><div class="sponsors text-center"><p class="byline mb-1">${i18n_sponsors}</p><div class="fs-6 d-flex flex-wrap justify-content-center align-items-center gap-4 mb-2"><div><a href="https://bairesdev.com/sponsoring-open-source-projects/?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:13em" src="/media/logos/bairesdev-primary.png" alt="BairesDev"></a></div><div><a href="https://blokt.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:12em" src="${is_dark_theme ? '/media/logos/blokt-invert.png' : '/media/logos/blokt.png'}" alt="Blokt Crypto & Privacy"></a></div><div><a href="https://www.keycdn.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="height:3em" src="/logo/keycdn.png" alt="KeyCDN"></a></div></div></div><p class="brand-subtitle mb-3">If you'd like to sponsor this project, please visit: <a href="https://github.com/sponsors/jcbrand" target="_blank" rel="noopener">Github</a>, <a href="https://www.patreon.com/jcbrand" target="_blank" rel="noopener">Patreon</a>, <a href="https://liberapay.com/jcbrand" target="_blank" rel="noopener">Liberapay</a> or <a href="https://opkode.com/contact.html" target="_blank" rel="noopener">contact us</a>.</p></div></div></div></footer>` : ''}`;
+    return (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`${is_fullscreen ? (0,lit__WEBPACK_IMPORTED_MODULE_1__.html)`<footer class="footer mt-auto py-3 pb-3"><div class="container"><div class="row"><div class="col-12 text-center"><p class="brand-subtitle mb-2 subdued">Version: ${_converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.VERSION_NAME}</p><p class="brand-subtitle mb-4"><a target="_blank" rel="nofollow" href="https://github.com/conversejs/converse.js">Open Source</a> XMPP chat client brought to you by <a target="_blank" rel="nofollow" href="https://opkode.com/about">Opkode</a>.</p><div class="sponsors text-center"><p class="byline mb-1">${i18n_sponsors}</p><div class="fs-6 d-flex flex-wrap justify-content-center align-items-center gap-4 mb-2"><div><a href="https://bairesdev.com/sponsoring-open-source-projects/?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:13em" src="https://conversejs.org/media/logos/bairesdev-primary.png" alt="BairesDev"></a></div><div><a href="https://blokt.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="width:12em" src="${is_dark_theme ? 'https://conversejs.org/media/logos/blokt-invert.png' : 'https://conversejs.org/media/logos/blokt.png'}" alt="Blokt Crypto & Privacy"></a></div><div><a href="https://www.keycdn.com?utm_source=conversejs" target="_blank" rel="noopener"><img style="height:3em" src="https://conversejs.org/logo/keycdn.png" alt="KeyCDN"></a></div></div></div><p class="brand-subtitle mb-3">If you'd like to sponsor this project, please visit: <a href="https://github.com/sponsors/jcbrand" target="_blank" rel="noopener">Github</a>, <a href="https://www.patreon.com/jcbrand" target="_blank" rel="noopener">Patreon</a>, <a href="https://liberapay.com/jcbrand" target="_blank" rel="noopener">Liberapay</a> or <a href="https://opkode.com/contact.html" target="_blank" rel="noopener">contact us</a>.</p></div></div></div></footer>` : ''}`;
   }
 }
 _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-footer', ConverseFooter);
@@ -99575,7 +99651,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var lit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit */ "./node_modules/lit/index.js");
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (() => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" style="display:none"><symbol id="icon-filter" viewBox="0 0 512 512"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/></symbol><symbol id="icon-address-book" viewBox="0 0 448 512"><path d="M436 160c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h320c26.5 0 48-21.5 48-48v-48h20c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20v-64h20c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20v-64h20zm-228-32c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H118.4C106 384 96 375.4 96 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2z"></path></symbol><symbol id="icon-angle-double-down" viewBox="0 0 320 512"><path d="M143 256.3L7 120.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0L313 86.3c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1zm34 192l136-136c9.4-9.4 9.4-24.6 0-33.9l-22.6-22.6c-9.4-9.4-24.6-9.4-33.9 0L160 352.1l-96.4-96.4c-9.4-9.4-24.6-9.4-33.9 0L7 278.3c-9.4 9.4-9.4 24.6 0 33.9l136 136c9.4 9.5 24.6 9.5 34 .1z"></path></symbol><symbol id="icon-angle-double-left" viewBox="0 0 448 512"><path d="M223.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L319.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L393.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34zm-192 34l136 136c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L127.9 256l96.4-96.4c9.4-9.4 9.4-24.6 0-33.9L201.7 103c-9.4-9.4-24.6-9.4-33.9 0l-136 136c-9.5 9.4-9.5 24.6-.1 34z"></path></symbol><symbol id="icon-angle-double-right" viewBox="0 0 448 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"></path></symbol><symbol id="icon-angle-double-up" viewBox="0 0 320 512"><path d="M177 255.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 351.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 425.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1zm-34-192L7 199.7c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l96.4-96.4 96.4 96.4c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9l-136-136c-9.2-9.4-24.4-9.4-33.8 0z"></path></symbol><symbol id="icon-angle-down" viewBox="0 0 320 512"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path></symbol><symbol id="icon-angle-left" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></symbol><symbol id="icon-angle-right" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></symbol><symbol id="icon-angle-up" viewBox="0 0 320 512"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"></path></symbol><symbol id="icon-arrow-alt-circle-down" viewBox="0 0 512 512"><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z"></path></symbol><symbol id="icon-arrow-alt-circle-left" viewBox="0 0 512 512"><path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z"></path></symbol><symbol id="icon-arrow-alt-circle-right" viewBox="0 0 512 512"><path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zM140 300h116v70.9c0 10.7 13 16.1 20.5 8.5l114.3-114.9c4.7-4.7 4.7-12.2 0-16.9l-114.3-115c-7.6-7.6-20.5-2.2-20.5 8.5V212H140c-6.6 0-12 5.4-12 12v64c0 6.6 5.4 12 12 12z"></path></symbol><symbol id="icon-arrow-alt-circle-up" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm292 116V256h70.9c10.7 0 16.1-13 8.5-20.5L264.5 121.2c-4.7-4.7-12.2-4.7-16.9 0l-115 114.3c-7.6 7.6-2.2 20.5 8.5 20.5H212v116c0 6.6 5.4 12 12 12h64c6.6 0 12-5.4 12-12z"></path></symbol><symbol id="icon-arrow-circle-down" viewBox="0 0 512 512"><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-143.6-28.9L288 302.6V120c0-13.3-10.7-24-24-24h-16c-13.3 0-24 10.7-24 24v182.6l-72.4-75.5c-9.3-9.7-24.8-9.9-34.3-.4l-10.9 11c-9.4 9.4-9.4 24.6 0 33.9L239 404.3c9.4 9.4 24.6 9.4 33.9 0l132.7-132.7c9.4-9.4 9.4-24.6 0-33.9l-10.9-11c-9.5-9.5-25-9.3-34.3.4z"></path></symbol><symbol id="icon-arrow-circle-left" viewBox="0 0 512 512"><path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z"></path></symbol><symbol id="icon-arrow-circle-right" viewBox="0 0 512 512"><path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"></path></symbol><symbol id="icon-arrow-circle-up" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"></path></symbol><symbol id="icon-arrow-down" viewBox="0 0 448 512"><path d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"></path></symbol><symbol id="icon-arrow-left" viewBox="0 0 448 512"><path d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"></path></symbol><symbol id="icon-arrow-right" viewBox="0 0 448 512"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></symbol><symbol id="icon-arrow-up" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path></symbol><symbol id="icon-arrows-alt" viewBox="0 0 512 512"><path d="M352.201 425.775l-79.196 79.196c-9.373 9.373-24.568 9.373-33.941 0l-79.196-79.196c-15.119-15.119-4.411-40.971 16.971-40.97h51.162L228 284H127.196v51.162c0 21.382-25.851 32.09-40.971 16.971L7.029 272.937c-9.373-9.373-9.373-24.569 0-33.941L86.225 159.8c15.119-15.119 40.971-4.411 40.971 16.971V228H228V127.196h-51.23c-21.382 0-32.09-25.851-16.971-40.971l79.196-79.196c9.373-9.373 24.568-9.373 33.941 0l79.196 79.196c15.119 15.119 4.411 40.971-16.971 40.971h-51.162V228h100.804v-51.162c0-21.382 25.851-32.09 40.97-16.971l79.196 79.196c9.373 9.373 9.373 24.569 0 33.941L425.773 352.2c-15.119 15.119-40.971 4.411-40.97-16.971V284H284v100.804h51.23c21.382 0 32.09 25.851 16.971 40.971z"></path></symbol><symbol id="icon-arrows-alt-h" viewBox="0 0 512 512"><path d="M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z"></path></symbol><symbol id="icon-arrows-alt-v" viewBox="0 0 256 512"><path d="M214.059 377.941H168V134.059h46.059c21.382 0 32.09-25.851 16.971-40.971L144.971 7.029c-9.373-9.373-24.568-9.373-33.941 0L24.971 93.088c-15.119 15.119-4.411 40.971 16.971 40.971H88v243.882H41.941c-21.382 0-32.09 25.851-16.971 40.971l86.059 86.059c9.373 9.373 24.568 9.373 33.941 0l86.059-86.059c15.12-15.119 4.412-40.971-16.97-40.971z"></path></symbol><symbol id="icon-bars" viewBox="0 0 448 512"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></symbol><symbol id="icon-bookmark" viewBox="0 0 384 512"><path d="M0 512V48C0 21.49 21.49 0 48 0h288c26.51 0 48 21.49 48 48v464L192 400 0 512z"></path></symbol><symbol id="icon-bookmark-empty" viewBox="0 0 384 512"><path d="M0 48C0 21.5 21.5 0 48 0l0 48V441.4l130.1-92.9c8.3-6 19.6-6 27.9 0L336 441.4V48H48V0H336c26.5 0 48 21.5 48 48V488c0 9-5 17.2-13 21.3s-17.6 3.4-24.9-1.8L192 397.5 37.9 507.5c-7.3 5.2-16.9 5.9-24.9 1.8S0 497 0 488V48z"/></symbol><symbol id="icon-caret-down" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></symbol><symbol id="icon-caret-right" viewBox="0 0 192 512"><path d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></symbol><symbol id="icon-check" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path></symbol><symbol id="icon-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></symbol><symbol id="icon-cog" viewBox="0 0 512 512"><path d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"></path></symbol><symbol id="icon-database" viewBox="0 0 448 512"><path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"></path></symbol><symbol id="icon-edit" viewBox="0 0 576 512"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></symbol><symbol id="icon-eye" viewBox="0 0 576 512"><path d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></symbol><symbol id="icon-eye-slash" viewBox="0 0 640 512"><path d="M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79 17.3-26.48 35.59-36.72 55.59a32.35 32.35 0 0 0 0 29.19C89.71 376.41 197.07 448 320 448c26.91 0 52.87-4 77.89-10.46L346 397.39a144.13 144.13 0 0 1-26 2.61zm313.82 58.1l-110.55-85.44a331.25 331.25 0 0 0 81.25-102.07 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64a308.15 308.15 0 0 0-147.32 37.7L45.46 3.37A16 16 0 0 0 23 6.18L3.37 31.45A16 16 0 0 0 6.18 53.9l588.36 454.73a16 16 0 0 0 22.46-2.81l19.64-25.27a16 16 0 0 0-2.82-22.45zm-183.72-142l-39.3-30.38A94.75 94.75 0 0 0 416 256a94.76 94.76 0 0 0-121.31-92.21A47.65 47.65 0 0 1 304 192a46.64 46.64 0 0 1-1.54 10l-73.61-56.89A142.31 142.31 0 0 1 320 112a143.92 143.92 0 0 1 144 144c0 21.63-5.29 41.79-13.9 60.11z"></path></symbol><symbol id="icon-gavel" viewBox="0 0 512 512"><path d="M504.971 199.362l-22.627-22.627c-9.373-9.373-24.569-9.373-33.941 0l-5.657 5.657L329.608 69.255l5.657-5.657c9.373-9.373 9.373-24.569 0-33.941L312.638 7.029c-9.373-9.373-24.569-9.373-33.941 0L154.246 131.48c-9.373 9.373-9.373 24.569 0 33.941l22.627 22.627c9.373 9.373 24.569 9.373 33.941 0l5.657-5.657 39.598 39.598-81.04 81.04-5.657-5.657c-12.497-12.497-32.758-12.497-45.255 0L9.373 412.118c-12.497 12.497-12.497 32.758 0 45.255l45.255 45.255c12.497 12.497 32.758 12.497 45.255 0l114.745-114.745c12.497-12.497 12.497-32.758 0-45.255l-5.657-5.657 81.04-81.04 39.598 39.598-5.657 5.657c-9.373 9.373-9.373 24.569 0 33.941l22.627 22.627c9.373 9.373 24.569 9.373 33.941 0l124.451-124.451c9.372-9.372 9.372-24.568 0-33.941z"></path></symbol><symbol id="icon-globe" viewBox="0 0 496 512"><path d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"></path></symbol><symbol id="icon-id-card" viewBox="0 0 576 512"><path d="M528 32H48C21.5 32 0 53.5 0 80v16h576V80c0-26.5-21.5-48-48-48zM0 432c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V128H0v304zm352-232c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zm0 64c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zm0 64c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zM176 192c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zM67.1 396.2C75.5 370.5 99.6 352 128 352h8.2c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h8.2c28.4 0 52.5 18.5 60.9 44.2 3.2 9.9-5.2 19.8-15.6 19.8H82.7c-10.4 0-18.8-10-15.6-19.8z"></path></symbol><symbol id="icon-id-card-alt" viewBox="0 0 576 512"><path d="M528 64H384v96H192V64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM288 224c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm93.3 224H194.7c-10.4 0-18.8-10-15.6-19.8 8.3-25.6 32.4-44.2 60.9-44.2h8.2c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h8.2c28.4 0 52.5 18.5 60.9 44.2 3.2 9.8-5.2 19.8-15.6 19.8zM352 32c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32v96h128V32z"></path></symbol><symbol id="icon-info" viewBox="0 0 192 512"><path d="M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72 72-32.235 72-72S135.764 0 96 0z"></path></symbol><symbol id="icon-info-circle" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></symbol><symbol id="icon-list-ul" viewBox="0 0 512 512"><path d="M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"></path></symbol><symbol id="icon-lock" viewBox="0 0 448 512"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"></path></symbol><symbol id="icon-lock-open" viewBox="0 0 576 512"><path d="M423.5 0C339.5.3 272 69.5 272 153.5V224H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48h-48v-71.1c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v80c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-80C576 68 507.5-.3 423.5 0z"></path></symbol><symbol id="icon-minus" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></symbol><symbol id="icon-minus-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"></path></symbol><symbol id="icon-minus-square" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"></path></symbol><symbol id="icon-paper-plane" viewBox="0 0 512 512"><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"></path></symbol><symbol id="icon-paperclip" viewBox="0 0 448 512"><path d="M43.246 466.142c-58.43-60.289-57.341-157.511 1.386-217.581L254.392 34c44.316-45.332 116.351-45.336 160.671 0 43.89 44.894 43.943 117.329 0 162.276L232.214 383.128c-29.855 30.537-78.633 30.111-107.982-.998-28.275-29.97-27.368-77.473 1.452-106.953l143.743-146.835c6.182-6.314 16.312-6.422 22.626-.241l22.861 22.379c6.315 6.182 6.422 16.312.241 22.626L171.427 319.927c-4.932 5.045-5.236 13.428-.648 18.292 4.372 4.634 11.245 4.711 15.688.165l182.849-186.851c19.613-20.062 19.613-52.725-.011-72.798-19.189-19.627-49.957-19.637-69.154 0L90.39 293.295c-34.763 35.56-35.299 93.12-1.191 128.313 34.01 35.093 88.985 35.137 123.058.286l172.06-175.999c6.177-6.319 16.307-6.433 22.626-.256l22.877 22.364c6.319 6.177 6.434 16.307.256 22.626l-172.06 175.998c-59.576 60.938-155.943 60.216-214.77-.485z"></path></symbol><symbol id="icon-pencil-alt" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></symbol><symbol id="icon-phone" viewBox="0 0 512 512"><path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></symbol><symbol id="icon-plus" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></symbol><symbol id="icon-plus-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></symbol><symbol id="icon-plus-square" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></symbol><symbol id="icon-save" viewBox="0 0 448 512"><path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"></path></symbol><symbol id="icon-sign-out-alt" viewBox="0 0 512 512"><path d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z"></path></symbol><symbol id="icon-smile" viewBox="0 0 496 512"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm80 168c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm-160 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm194.8 170.2C334.3 380.4 292.5 400 248 400s-86.3-19.6-114.8-53.8c-13.6-16.3 11-36.7 24.6-20.5 22.4 26.9 55.2 42.2 90.2 42.2s67.8-15.4 90.2-42.2c13.4-16.2 38.1 4.2 24.6 20.5z"></path></symbol><symbol id="icon-snowflake" viewBox="0 0 448 512"><path d="M440.3 345.2l-33.8-19.5 26-7c8.2-2.2 13.1-10.7 10.9-18.9l-4-14.9c-2.2-8.2-10.7-13.1-18.9-10.9l-70.8 19-63.9-37 63.8-36.9 70.8 19c8.2 2.2 16.7-2.7 18.9-10.9l4-14.9c2.2-8.2-2.7-16.7-10.9-18.9l-26-7 33.8-19.5c7.4-4.3 9.9-13.7 5.7-21.1L430.4 119c-4.3-7.4-13.7-9.9-21.1-5.7l-33.8 19.5 7-26c2.2-8.2-2.7-16.7-10.9-18.9l-14.9-4c-8.2-2.2-16.7 2.7-18.9 10.9l-19 70.8-62.8 36.2v-77.5l53.7-53.7c6.2-6.2 6.2-16.4 0-22.6l-11.3-11.3c-6.2-6.2-16.4-6.2-22.6 0L256 56.4V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v40.4l-19.7-19.7c-6.2-6.2-16.4-6.2-22.6 0L138.3 48c-6.3 6.2-6.3 16.4 0 22.6l53.7 53.7v77.5l-62.8-36.2-19-70.8c-2.2-8.2-10.7-13.1-18.9-10.9l-14.9 4c-8.2 2.2-13.1 10.7-10.9 18.9l7 26-33.8-19.5c-7.4-4.3-16.8-1.7-21.1 5.7L2.1 145.7c-4.3 7.4-1.7 16.8 5.7 21.1l33.8 19.5-26 7c-8.3 2.2-13.2 10.7-11 19l4 14.9c2.2 8.2 10.7 13.1 18.9 10.9l70.8-19 63.8 36.9-63.8 36.9-70.8-19c-8.2-2.2-16.7 2.7-18.9 10.9l-4 14.9c-2.2 8.2 2.7 16.7 10.9 18.9l26 7-33.8 19.6c-7.4 4.3-9.9 13.7-5.7 21.1l15.5 26.8c4.3 7.4 13.7 9.9 21.1 5.7l33.8-19.5-7 26c-2.2 8.2 2.7 16.7 10.9 18.9l14.9 4c8.2 2.2 16.7-2.7 18.9-10.9l19-70.8 62.8-36.2v77.5l-53.7 53.7c-6.3 6.2-6.3 16.4 0 22.6l11.3 11.3c6.2 6.2 16.4 6.2 22.6 0l19.7-19.7V496c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-40.4l19.7 19.7c6.2 6.2 16.4 6.2 22.6 0l11.3-11.3c6.2-6.2 6.2-16.4 0-22.6L256 387.7v-77.5l62.8 36.2 19 70.8c2.2 8.2 10.7 13.1 18.9 10.9l14.9-4c8.2-2.2 13.1-10.7 10.9-18.9l-7-26 33.8 19.5c7.4 4.3 16.8 1.7 21.1-5.7l15.5-26.8c4.3-7.3 1.8-16.8-5.6-21z"></path></symbol><symbol id="icon-spinner" viewBox="0 0 512 512"><path d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"></path></symbol><symbol id="icon-sync" viewBox="0 0 512 512"><path d="M440.65 12.57l4 82.77A247.16 247.16 0 0 0 255.83 8C134.73 8 33.91 94.92 12.29 209.82A12 12 0 0 0 24.09 224h49.05a12 12 0 0 0 11.67-9.26 175.91 175.91 0 0 1 317-56.94l-101.46-4.86a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12H500a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12h-47.37a12 12 0 0 0-11.98 12.57zM255.83 432a175.61 175.61 0 0 1-146-77.8l101.8 4.87a12 12 0 0 0 12.57-12v-47.4a12 12 0 0 0-12-12H12a12 12 0 0 0-12 12V500a12 12 0 0 0 12 12h47.35a12 12 0 0 0 12-12.6l-4.15-82.57A247.17 247.17 0 0 0 255.83 504c121.11 0 221.93-86.92 243.55-201.82a12 12 0 0 0-11.8-14.18h-49.05a12 12 0 0 0-11.67 9.26A175.86 175.86 0 0 1 255.83 432z"></path></symbol><symbol id="icon-times" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></symbol><symbol id="icon-times-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></symbol><symbol id="icon-trash" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"></path></symbol><symbol id="icon-trash-alt" viewBox="0 0 448 512"><path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path></symbol><symbol id="icon-unlock" viewBox="0 0 448 512"><path d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48z"></path></symbol><symbol id="icon-user" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></symbol><symbol id="icon-user-cog" viewBox="0 0 640 512"><path d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z"></path></symbol><symbol id="icon-user-plus" viewBox="0 0 640 512"><path d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></symbol><symbol id="icon-user-secret" viewBox="0 0 448 512"><path d="M383.9 308.3l23.9-62.6c4-10.5-3.7-21.7-15-21.7h-58.5c11-18.9 17.8-40.6 17.8-64v-.3c39.2-7.8 64-19.1 64-31.7 0-13.3-27.3-25.1-70.1-33-9.2-32.8-27-65.8-40.6-82.8-9.5-11.9-25.9-15.6-39.5-8.8l-27.6 13.8c-9 4.5-19.6 4.5-28.6 0L182.1 3.4c-13.6-6.8-30-3.1-39.5 8.8-13.5 17-31.4 50-40.6 82.8-42.7 7.9-70 19.7-70 33 0 12.6 24.8 23.9 64 31.7v.3c0 23.4 6.8 45.1 17.8 64H56.3c-11.5 0-19.2 11.7-14.7 22.3l25.8 60.2C27.3 329.8 0 372.7 0 422.4v44.8C0 491.9 20.1 512 44.8 512h358.4c24.7 0 44.8-20.1 44.8-44.8v-44.8c0-48.4-25.8-90.4-64.1-114.1zM176 480l-41.6-192 49.6 32 24 40-32 120zm96 0l-32-120 24-40 49.6-32L272 480zm41.7-298.5c-3.9 11.9-7 24.6-16.5 33.4-10.1 9.3-48 22.4-64-25-2.8-8.4-15.4-8.4-18.3 0-17 50.2-56 32.4-64 25-9.5-8.8-12.7-21.5-16.5-33.4-.8-2.5-6.3-5.7-6.3-5.8v-10.8c28.3 3.6 61 5.8 96 5.8s67.7-2.1 96-5.8v10.8c-.1.1-5.6 3.2-6.4 5.8z"></path></symbol><symbol id="icon-users" viewBox="0 0 640 512"><path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"></path></symbol><symbol id="icon-wrench" viewBox="0 0 512 512"><path d="M507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2L18.74 402.76c-24.99 24.99-24.99 65.51 0 90.5 24.99 24.99 65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zM64 472c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"></path></symbol><symbol id="icon-refresh" viewBox="0 0 512 512"><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"></path></symbol><symbol id="icon-copy" viewBox="0 0 448 512"><path d="M320 448v40c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V120c0-13.3 10.7-24 24-24h72v296c0 30.9 25.1 56 56 56h168zm0-344V0H152c-13.3 0-24 10.7-24 24v368c0 13.3 10.7 24 24 24h272c13.3 0 24-10.7 24-24V128H344c-13.2 0-24-10.8-24-24zm121-31L375 7A24 24 0 0 0 358.1 0H352v96h96v-6.1a24 24 0 0 0 -7-17z"></path></symbol><symbol id="icon-quote-right" viewBox="0 0 512 512"><path d="M464 32H336c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h80v64c0 35.3-28.7 64-64 64h-8c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24h8c88.4 0 160-71.6 160-160V80c0-26.5-21.5-48-48-48zm-288 0H48C21.5 32 0 53.5 0 80v128c0 26.5 21.5 48 48 48h80v64c0 35.3-28.7 64-64 64h-8c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24h8c88.4 0 160-71.6 160-160V80c0-26.5-21.5-48-48-48z"></path></symbol></svg>`);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (() => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" style="display:none"><symbol id="icon-filter" viewBox="0 0 512 512"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/></symbol><symbol id="icon-address-book" viewBox="0 0 448 512"><path d="M436 160c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h320c26.5 0 48-21.5 48-48v-48h20c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20v-64h20c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-20v-64h20zm-228-32c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H118.4C106 384 96 375.4 96 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2z"></path></symbol><symbol id="icon-angle-double-down" viewBox="0 0 320 512"><path d="M143 256.3L7 120.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0L313 86.3c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1zm34 192l136-136c9.4-9.4 9.4-24.6 0-33.9l-22.6-22.6c-9.4-9.4-24.6-9.4-33.9 0L160 352.1l-96.4-96.4c-9.4-9.4-24.6-9.4-33.9 0L7 278.3c-9.4 9.4-9.4 24.6 0 33.9l136 136c9.4 9.5 24.6 9.5 34 .1z"></path></symbol><symbol id="icon-angle-double-left" viewBox="0 0 448 512"><path d="M223.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L319.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L393.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34zm-192 34l136 136c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L127.9 256l96.4-96.4c9.4-9.4 9.4-24.6 0-33.9L201.7 103c-9.4-9.4-24.6-9.4-33.9 0l-136 136c-9.5 9.4-9.5 24.6-.1 34z"></path></symbol><symbol id="icon-angle-double-right" viewBox="0 0 448 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"></path></symbol><symbol id="icon-angle-double-up" viewBox="0 0 320 512"><path d="M177 255.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 351.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 425.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1zm-34-192L7 199.7c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l96.4-96.4 96.4 96.4c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9l-136-136c-9.2-9.4-24.4-9.4-33.8 0z"></path></symbol><symbol id="icon-angle-down" viewBox="0 0 320 512"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path></symbol><symbol id="icon-angle-left" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></symbol><symbol id="icon-angle-right" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></symbol><symbol id="icon-angle-up" viewBox="0 0 320 512"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"></path></symbol><symbol id="icon-arrow-alt-circle-down" viewBox="0 0 512 512"><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM212 140v116h-70.9c-10.7 0-16.1 13-8.5 20.5l114.9 114.3c4.7 4.7 12.2 4.7 16.9 0l114.9-114.3c7.6-7.6 2.2-20.5-8.5-20.5H300V140c0-6.6-5.4-12-12-12h-64c-6.6 0-12 5.4-12 12z"></path></symbol><symbol id="icon-arrow-alt-circle-left" viewBox="0 0 512 512"><path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z"></path></symbol><symbol id="icon-arrow-alt-circle-right" viewBox="0 0 512 512"><path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zM140 300h116v70.9c0 10.7 13 16.1 20.5 8.5l114.3-114.9c4.7-4.7 4.7-12.2 0-16.9l-114.3-115c-7.6-7.6-20.5-2.2-20.5 8.5V212H140c-6.6 0-12 5.4-12 12v64c0 6.6 5.4 12 12 12z"></path></symbol><symbol id="icon-arrow-alt-circle-up" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm292 116V256h70.9c10.7 0 16.1-13 8.5-20.5L264.5 121.2c-4.7-4.7-12.2-4.7-16.9 0l-115 114.3c-7.6 7.6-2.2 20.5 8.5 20.5H212v116c0 6.6 5.4 12 12 12h64c6.6 0 12-5.4 12-12z"></path></symbol><symbol id="icon-arrow-circle-down" viewBox="0 0 512 512"><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-143.6-28.9L288 302.6V120c0-13.3-10.7-24-24-24h-16c-13.3 0-24 10.7-24 24v182.6l-72.4-75.5c-9.3-9.7-24.8-9.9-34.3-.4l-10.9 11c-9.4 9.4-9.4 24.6 0 33.9L239 404.3c9.4 9.4 24.6 9.4 33.9 0l132.7-132.7c9.4-9.4 9.4-24.6 0-33.9l-10.9-11c-9.5-9.5-25-9.3-34.3.4z"></path></symbol><symbol id="icon-arrow-circle-left" viewBox="0 0 512 512"><path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z"></path></symbol><symbol id="icon-arrow-circle-right" viewBox="0 0 512 512"><path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"></path></symbol><symbol id="icon-arrow-circle-up" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"></path></symbol><symbol id="icon-arrow-down" viewBox="0 0 448 512"><path d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"></path></symbol><symbol id="icon-arrow-left" viewBox="0 0 448 512"><path d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"></path></symbol><symbol id="icon-arrow-right" viewBox="0 0 448 512"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></symbol><symbol id="icon-arrow-up" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path></symbol><symbol id="icon-arrows-alt" viewBox="0 0 512 512"><path d="M352.201 425.775l-79.196 79.196c-9.373 9.373-24.568 9.373-33.941 0l-79.196-79.196c-15.119-15.119-4.411-40.971 16.971-40.97h51.162L228 284H127.196v51.162c0 21.382-25.851 32.09-40.971 16.971L7.029 272.937c-9.373-9.373-9.373-24.569 0-33.941L86.225 159.8c15.119-15.119 40.971-4.411 40.971 16.971V228H228V127.196h-51.23c-21.382 0-32.09-25.851-16.971-40.971l79.196-79.196c9.373-9.373 24.568-9.373 33.941 0l79.196 79.196c15.119 15.119 4.411 40.971-16.971 40.971h-51.162V228h100.804v-51.162c0-21.382 25.851-32.09 40.97-16.971l79.196 79.196c9.373 9.373 9.373 24.569 0 33.941L425.773 352.2c-15.119 15.119-40.971 4.411-40.97-16.971V284H284v100.804h51.23c21.382 0 32.09 25.851 16.971 40.971z"></path></symbol><symbol id="icon-arrows-alt-h" viewBox="0 0 512 512"><path d="M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z"></path></symbol><symbol id="icon-arrows-alt-v" viewBox="0 0 256 512"><path d="M214.059 377.941H168V134.059h46.059c21.382 0 32.09-25.851 16.971-40.971L144.971 7.029c-9.373-9.373-24.568-9.373-33.941 0L24.971 93.088c-15.119 15.119-4.411 40.971 16.971 40.971H88v243.882H41.941c-21.382 0-32.09 25.851-16.971 40.971l86.059 86.059c9.373 9.373 24.568 9.373 33.941 0l86.059-86.059c15.12-15.119 4.412-40.971-16.97-40.971z"></path></symbol><symbol id="icon-bars" viewBox="0 0 448 512"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></symbol><symbol id="icon-bookmark" viewBox="0 0 384 512"><path d="M0 512V48C0 21.49 21.49 0 48 0h288c26.51 0 48 21.49 48 48v464L192 400 0 512z"></path></symbol><symbol id="icon-bookmark-empty" viewBox="0 0 384 512"><path d="M0 48C0 21.5 21.5 0 48 0l0 48V441.4l130.1-92.9c8.3-6 19.6-6 27.9 0L336 441.4V48H48V0H336c26.5 0 48 21.5 48 48V488c0 9-5 17.2-13 21.3s-17.6 3.4-24.9-1.8L192 397.5 37.9 507.5c-7.3 5.2-16.9 5.9-24.9 1.8S0 497 0 488V48z"/></symbol><symbol id="icon-caret-down" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></symbol><symbol id="icon-caret-right" viewBox="0 0 192 512"><path d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></symbol><symbol id="icon-check" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path></symbol><symbol id="icon-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></symbol><symbol id="icon-cog" viewBox="0 0 512 512"><path d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"></path></symbol><symbol id="icon-database" viewBox="0 0 448 512"><path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"></path></symbol><symbol id="icon-edit" viewBox="0 0 576 512"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></symbol><symbol id="icon-eye" viewBox="0 0 576 512"><path d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></symbol><symbol id="icon-eye-slash" viewBox="0 0 640 512"><path d="M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79 17.3-26.48 35.59-36.72 55.59a32.35 32.35 0 0 0 0 29.19C89.71 376.41 197.07 448 320 448c26.91 0 52.87-4 77.89-10.46L346 397.39a144.13 144.13 0 0 1-26 2.61zm313.82 58.1l-110.55-85.44a331.25 331.25 0 0 0 81.25-102.07 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64a308.15 308.15 0 0 0-147.32 37.7L45.46 3.37A16 16 0 0 0 23 6.18L3.37 31.45A16 16 0 0 0 6.18 53.9l588.36 454.73a16 16 0 0 0 22.46-2.81l19.64-25.27a16 16 0 0 0-2.82-22.45zm-183.72-142l-39.3-30.38A94.75 94.75 0 0 0 416 256a94.76 94.76 0 0 0-121.31-92.21A47.65 47.65 0 0 1 304 192a46.64 46.64 0 0 1-1.54 10l-73.61-56.89A142.31 142.31 0 0 1 320 112a143.92 143.92 0 0 1 144 144c0 21.63-5.29 41.79-13.9 60.11z"></path></symbol><symbol id="icon-gavel" viewBox="0 0 512 512"><path d="M504.971 199.362l-22.627-22.627c-9.373-9.373-24.569-9.373-33.941 0l-5.657 5.657L329.608 69.255l5.657-5.657c9.373-9.373 9.373-24.569 0-33.941L312.638 7.029c-9.373-9.373-24.569-9.373-33.941 0L154.246 131.48c-9.373 9.373-9.373 24.569 0 33.941l22.627 22.627c9.373 9.373 24.569 9.373 33.941 0l5.657-5.657 39.598 39.598-81.04 81.04-5.657-5.657c-12.497-12.497-32.758-12.497-45.255 0L9.373 412.118c-12.497 12.497-12.497 32.758 0 45.255l45.255 45.255c12.497 12.497 32.758 12.497 45.255 0l114.745-114.745c12.497-12.497 12.497-32.758 0-45.255l-5.657-5.657 81.04-81.04 39.598 39.598-5.657 5.657c-9.373 9.373-9.373 24.569 0 33.941l22.627 22.627c9.373 9.373 24.569 9.373 33.941 0l124.451-124.451c9.372-9.372 9.372-24.568 0-33.941z"></path></symbol><symbol id="icon-globe" viewBox="0 0 496 512"><path d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"></path></symbol><symbol id="icon-id-card" viewBox="0 0 576 512"><path d="M528 32H48C21.5 32 0 53.5 0 80v16h576V80c0-26.5-21.5-48-48-48zM0 432c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V128H0v304zm352-232c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zm0 64c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zm0 64c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16zM176 192c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zM67.1 396.2C75.5 370.5 99.6 352 128 352h8.2c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h8.2c28.4 0 52.5 18.5 60.9 44.2 3.2 9.9-5.2 19.8-15.6 19.8H82.7c-10.4 0-18.8-10-15.6-19.8z"></path></symbol><symbol id="icon-id-card-alt" viewBox="0 0 576 512"><path d="M528 64H384v96H192V64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM288 224c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm93.3 224H194.7c-10.4 0-18.8-10-15.6-19.8 8.3-25.6 32.4-44.2 60.9-44.2h8.2c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h8.2c28.4 0 52.5 18.5 60.9 44.2 3.2 9.8-5.2 19.8-15.6 19.8zM352 32c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32v96h128V32z"></path></symbol><symbol id="icon-info" viewBox="0 0 192 512"><path d="M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72 72-32.235 72-72S135.764 0 96 0z"></path></symbol><symbol id="icon-info-circle" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></symbol><symbol id="icon-list-ul" viewBox="0 0 512 512"><path d="M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"></path></symbol><symbol id="icon-lock" viewBox="0 0 448 512"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"></path></symbol><symbol id="icon-lock-open" viewBox="0 0 576 512"><path d="M423.5 0C339.5.3 272 69.5 272 153.5V224H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48h-48v-71.1c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v80c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-80C576 68 507.5-.3 423.5 0z"></path></symbol><symbol id="icon-minus" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></symbol><symbol id="icon-minus-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"></path></symbol><symbol id="icon-minus-square" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"></path></symbol><symbol id="icon-paper-plane" viewBox="0 0 512 512"><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"></path></symbol><symbol id="icon-paperclip" viewBox="0 0 448 512"><path d="M43.246 466.142c-58.43-60.289-57.341-157.511 1.386-217.581L254.392 34c44.316-45.332 116.351-45.336 160.671 0 43.89 44.894 43.943 117.329 0 162.276L232.214 383.128c-29.855 30.537-78.633 30.111-107.982-.998-28.275-29.97-27.368-77.473 1.452-106.953l143.743-146.835c6.182-6.314 16.312-6.422 22.626-.241l22.861 22.379c6.315 6.182 6.422 16.312.241 22.626L171.427 319.927c-4.932 5.045-5.236 13.428-.648 18.292 4.372 4.634 11.245 4.711 15.688.165l182.849-186.851c19.613-20.062 19.613-52.725-.011-72.798-19.189-19.627-49.957-19.637-69.154 0L90.39 293.295c-34.763 35.56-35.299 93.12-1.191 128.313 34.01 35.093 88.985 35.137 123.058.286l172.06-175.999c6.177-6.319 16.307-6.433 22.626-.256l22.877 22.364c6.319 6.177 6.434 16.307.256 22.626l-172.06 175.998c-59.576 60.938-155.943 60.216-214.77-.485z"></path></symbol><symbol id="icon-pencil-alt" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></symbol><symbol id="icon-phone" viewBox="0 0 512 512"><path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></symbol><symbol id="icon-plus" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></symbol><symbol id="icon-plus-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></symbol><symbol id="icon-plus-square" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></symbol><symbol id="icon-save" viewBox="0 0 448 512"><path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"></path></symbol><symbol id="icon-sign-out-alt" viewBox="0 0 512 512"><path d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z"></path></symbol><symbol id="icon-smile" viewBox="0 0 496 512"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm80 168c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm-160 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm194.8 170.2C334.3 380.4 292.5 400 248 400s-86.3-19.6-114.8-53.8c-13.6-16.3 11-36.7 24.6-20.5 22.4 26.9 55.2 42.2 90.2 42.2s67.8-15.4 90.2-42.2c13.4-16.2 38.1 4.2 24.6 20.5z"></path></symbol><symbol id="icon-snowflake" viewBox="0 0 448 512"><path d="M440.3 345.2l-33.8-19.5 26-7c8.2-2.2 13.1-10.7 10.9-18.9l-4-14.9c-2.2-8.2-10.7-13.1-18.9-10.9l-70.8 19-63.9-37 63.8-36.9 70.8 19c8.2 2.2 16.7-2.7 18.9-10.9l4-14.9c2.2-8.2-2.7-16.7-10.9-18.9l-26-7 33.8-19.5c7.4-4.3 9.9-13.7 5.7-21.1L430.4 119c-4.3-7.4-13.7-9.9-21.1-5.7l-33.8 19.5 7-26c2.2-8.2-2.7-16.7-10.9-18.9l-14.9-4c-8.2-2.2-16.7 2.7-18.9 10.9l-19 70.8-62.8 36.2v-77.5l53.7-53.7c6.2-6.2 6.2-16.4 0-22.6l-11.3-11.3c-6.2-6.2-16.4-6.2-22.6 0L256 56.4V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v40.4l-19.7-19.7c-6.2-6.2-16.4-6.2-22.6 0L138.3 48c-6.3 6.2-6.3 16.4 0 22.6l53.7 53.7v77.5l-62.8-36.2-19-70.8c-2.2-8.2-10.7-13.1-18.9-10.9l-14.9 4c-8.2 2.2-13.1 10.7-10.9 18.9l7 26-33.8-19.5c-7.4-4.3-16.8-1.7-21.1 5.7L2.1 145.7c-4.3 7.4-1.7 16.8 5.7 21.1l33.8 19.5-26 7c-8.3 2.2-13.2 10.7-11 19l4 14.9c2.2 8.2 10.7 13.1 18.9 10.9l70.8-19 63.8 36.9-63.8 36.9-70.8-19c-8.2-2.2-16.7 2.7-18.9 10.9l-4 14.9c-2.2 8.2 2.7 16.7 10.9 18.9l26 7-33.8 19.6c-7.4 4.3-9.9 13.7-5.7 21.1l15.5 26.8c4.3 7.4 13.7 9.9 21.1 5.7l33.8-19.5-7 26c-2.2 8.2 2.7 16.7 10.9 18.9l14.9 4c8.2 2.2 16.7-2.7 18.9-10.9l19-70.8 62.8-36.2v77.5l-53.7 53.7c-6.3 6.2-6.3 16.4 0 22.6l11.3 11.3c6.2 6.2 16.4 6.2 22.6 0l19.7-19.7V496c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-40.4l19.7 19.7c6.2 6.2 16.4 6.2 22.6 0l11.3-11.3c6.2-6.2 6.2-16.4 0-22.6L256 387.7v-77.5l62.8 36.2 19 70.8c2.2 8.2 10.7 13.1 18.9 10.9l14.9-4c8.2-2.2 13.1-10.7 10.9-18.9l-7-26 33.8 19.5c7.4 4.3 16.8 1.7 21.1-5.7l15.5-26.8c4.3-7.3 1.8-16.8-5.6-21z"></path></symbol><symbol id="icon-spinner" viewBox="0 0 512 512"><path d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"></path></symbol><symbol id="icon-sync" viewBox="0 0 512 512"><path d="M440.65 12.57l4 82.77A247.16 247.16 0 0 0 255.83 8C134.73 8 33.91 94.92 12.29 209.82A12 12 0 0 0 24.09 224h49.05a12 12 0 0 0 11.67-9.26 175.91 175.91 0 0 1 317-56.94l-101.46-4.86a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12H500a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12h-47.37a12 12 0 0 0-11.98 12.57zM255.83 432a175.61 175.61 0 0 1-146-77.8l101.8 4.87a12 12 0 0 0 12.57-12v-47.4a12 12 0 0 0-12-12H12a12 12 0 0 0-12 12V500a12 12 0 0 0 12 12h47.35a12 12 0 0 0 12-12.6l-4.15-82.57A247.17 247.17 0 0 0 255.83 504c121.11 0 221.93-86.92 243.55-201.82a12 12 0 0 0-11.8-14.18h-49.05a12 12 0 0 0-11.67 9.26A175.86 175.86 0 0 1 255.83 432z"></path></symbol><symbol id="icon-times" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></symbol><symbol id="icon-times-circle" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></symbol><symbol id="icon-trash" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"></path></symbol><symbol id="icon-trash-alt" viewBox="0 0 448 512"><path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path></symbol><symbol id="icon-unlock" viewBox="0 0 448 512"><path d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48z"></path></symbol><symbol id="icon-user" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></symbol><symbol id="icon-user-cog" viewBox="0 0 640 512"><path d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z"></path></symbol><symbol id="icon-user-plus" viewBox="0 0 640 512"><path d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></symbol><symbol id="icon-user-secret" viewBox="0 0 448 512"><path d="M383.9 308.3l23.9-62.6c4-10.5-3.7-21.7-15-21.7h-58.5c11-18.9 17.8-40.6 17.8-64v-.3c39.2-7.8 64-19.1 64-31.7 0-13.3-27.3-25.1-70.1-33-9.2-32.8-27-65.8-40.6-82.8-9.5-11.9-25.9-15.6-39.5-8.8l-27.6 13.8c-9 4.5-19.6 4.5-28.6 0L182.1 3.4c-13.6-6.8-30-3.1-39.5 8.8-13.5 17-31.4 50-40.6 82.8-42.7 7.9-70 19.7-70 33 0 12.6 24.8 23.9 64 31.7v.3c0 23.4 6.8 45.1 17.8 64H56.3c-11.5 0-19.2 11.7-14.7 22.3l25.8 60.2C27.3 329.8 0 372.7 0 422.4v44.8C0 491.9 20.1 512 44.8 512h358.4c24.7 0 44.8-20.1 44.8-44.8v-44.8c0-48.4-25.8-90.4-64.1-114.1zM176 480l-41.6-192 49.6 32 24 40-32 120zm96 0l-32-120 24-40 49.6-32L272 480zm41.7-298.5c-3.9 11.9-7 24.6-16.5 33.4-10.1 9.3-48 22.4-64-25-2.8-8.4-15.4-8.4-18.3 0-17 50.2-56 32.4-64 25-9.5-8.8-12.7-21.5-16.5-33.4-.8-2.5-6.3-5.7-6.3-5.8v-10.8c28.3 3.6 61 5.8 96 5.8s67.7-2.1 96-5.8v10.8c-.1.1-5.6 3.2-6.4 5.8z"></path></symbol><symbol id="icon-users" viewBox="0 0 640 512"><path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"></path></symbol><symbol id="icon-wrench" viewBox="0 0 512 512"><path d="M507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2L18.74 402.76c-24.99 24.99-24.99 65.51 0 90.5 24.99 24.99 65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zM64 472c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"></path></symbol><symbol id="icon-refresh" viewBox="0 0 512 512"><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"></path></symbol><symbol id="icon-copy" viewBox="0 0 448 512"><path d="M320 448v40c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V120c0-13.3 10.7-24 24-24h72v296c0 30.9 25.1 56 56 56h168zm0-344V0H152c-13.3 0-24 10.7-24 24v368c0 13.3 10.7 24 24 24h272c13.3 0 24-10.7 24-24V128H344c-13.2 0-24-10.8-24-24zm121-31L375 7A24 24 0 0 0 358.1 0H352v96h96v-6.1a24 24 0 0 0 -7-17z"></path></symbol><symbol id="icon-quote-right" viewBox="0 0 512 512"><path d="M464 32H336c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h80v64c0 35.3-28.7 64-64 64h-8c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24h8c88.4 0 160-71.6 160-160V80c0-26.5-21.5-48-48-48zm-288 0H48C21.5 32 0 53.5 0 80v128c0 26.5 21.5 48 48 48h80v64c0 35.3-28.7 64-64 64h-8c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24h8c88.4 0 160-71.6 160-160V80c0-26.5-21.5-48-48-48z"></path></symbol><symbol id="icon-bell" viewBox="0 0 512 512"><path d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416l384 0c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8l0-18.8c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"></path></symbol><symbol id="icon-bell-alt" viewBox="0 0 512 512"><path d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></symbol></svg>`);
 
 /***/ }),
 
@@ -100864,7 +100940,7 @@ const {
  * @param {import('../user-details').default} el
  */
 function tplUnblockButton(el) {
-  const i18n_block = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Remove from blocklist");
+  const i18n_block = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Remove from blocklist');
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.unblockContact(ev)}" class="btn btn-danger"><converse-icon class="fas fa-times" color="var(--background-color)" size="1em"></converse-icon> ${i18n_block}</button>`;
 }
 
@@ -100872,16 +100948,40 @@ function tplUnblockButton(el) {
  * @param {import('../user-details').default} el
  */
 function tplBlockButton(el) {
-  const i18n_block = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add to blocklist");
+  const i18n_block = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Add to blocklist');
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.blockContact(ev)}" class="btn btn-danger"><converse-icon class="fas fa-times" color="var(--background-color)" size="1em"></converse-icon> ${i18n_block}</button>`;
 }
 
 /**
  * @param {import('../user-details').default} el
  */
+function tplAddButton(el) {
+  const i18n_add_contact = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Add as contact');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.addContact(ev)}" class="btn btn-success add-contact"><converse-icon class="fas fa-user-plus" color="var(--background-color)" size="1em"></converse-icon> ${i18n_add_contact}</button>`;
+}
+
+/**
+ * @param {import('../user-details').default} el
+ */
 function tplRemoveButton(el) {
-  const i18n_remove_contact = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Remove as contact");
+  const i18n_remove_contact = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Remove as contact');
   return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.removeContact(ev)}" class="btn btn-danger remove-contact"><converse-icon class="fas fa-trash-alt" color="var(--background-color)" size="1em"></converse-icon> ${i18n_remove_contact}</button>`;
+}
+
+/**
+ * @param {import('../user-details').default} el
+ */
+function tplAcceptButton(el) {
+  const i18n_accept = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Accept');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.acceptContactRequest(ev)}" class="btn btn-success accept-contact-request"><converse-icon class="fas fa-user-plus" color="var(--background-color)" size="1em"></converse-icon> ${i18n_accept}</button>`;
+}
+
+/**
+ * @param {import('../user-details').default} el
+ */
+function tplDeclineButton(el) {
+  const i18n_decline = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Decline');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<button type="button" @click="${ev => el.declineContactRequest(ev)}" class="btn btn-danger decline-contact-request"><converse-icon class="fas fa-user-plus" color="var(--background-color)" size="1em"></converse-icon> ${i18n_decline}</button>`;
 }
 
 /**
@@ -100894,42 +100994,42 @@ function tplUserDetailsModal(el) {
     ...el.model.toJSON(),
     ...vcard_json
   };
-  const is_roster_contact = el.getContact() !== undefined;
-  const allow_contact_removal = _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.settings.get("allow_contact_removal");
-  const domain = _converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.session.get("domain");
+  const contact = el.getContact();
+  const is_roster_contact = contact && !contact.isUnsaved();
+  const allow_contact_removal = _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.settings.get('allow_contact_removal');
+  const domain = _converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.session.get('domain');
   const blocking_supported = _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.disco.supports(Strophe.NS.BLOCKING, domain).then(/** @param {boolean} supported */
   async supported => {
     const blocklist = await _converse_headless__WEBPACK_IMPORTED_MODULE_2__.api.blocklist.get();
     if (supported) {
-      if (blocklist.get(el.model.get("jid"))) {
+      if (blocklist.get(el.model.get('jid'))) {
         tplUnblockButton(el);
       } else {
         tplBlockButton(el);
       }
     }
   });
-  const i18n_address = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("XMPP Address");
-  const i18n_email = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Email");
-  const i18n_full_name = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Full Name");
-  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Nickname");
-  const i18n_role = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Role");
-  const i18n_url = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("URL");
-  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Groups");
-  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Use commas to separate multiple values");
-  const i18n_omemo = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("OMEMO");
-  const i18n_profile = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Profile");
-  const ii18n_edit = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Edit");
-  const navigation_tabs = [(0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === "profile" ? "active" : ""}" id="profile-tab" href="#profile-tabpanel" aria-controls="profile-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="profile" data-toggle="tab">${i18n_profile}</a></li>`];
-  navigation_tabs.push((0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === "edit" ? "active" : ""}" id="edit-tab" href="#edit-tabpanel" aria-controls="edit-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="edit" data-toggle="tab">${ii18n_edit}</a></li>`);
-  if (_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.pluggable.plugins["converse-omemo"]?.enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse)) {
-    navigation_tabs.push((0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === "omemo" ? "active" : ""}" id="omemo-tab" href="#omemo-tabpanel" aria-controls="omemo-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="omemo" data-toggle="tab">${i18n_omemo}</a></li>`);
+  const i18n_address = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('XMPP Address');
+  const i18n_email = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Email');
+  const i18n_full_name = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Full Name');
+  const i18n_nickname = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Nickname');
+  const i18n_role = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Role');
+  const i18n_url = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('URL');
+  const i18n_groups = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Groups');
+  const i18n_groups_help = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Use commas to separate multiple values');
+  const i18n_omemo = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('OMEMO');
+  const i18n_profile = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Profile');
+  const ii18n_edit = (0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Edit');
+  const navigation_tabs = [(0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === 'profile' ? 'active' : ''}" id="profile-tab" href="#profile-tabpanel" aria-controls="profile-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="profile" data-toggle="tab">${i18n_profile}</a></li>`];
+  if (is_roster_contact) {
+    navigation_tabs.push((0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === 'edit' ? 'active' : ''}" id="edit-tab" href="#edit-tabpanel" aria-controls="edit-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="edit" data-toggle="tab">${ii18n_edit}</a></li>`);
   }
-  const contact = el.getContact();
-  if (!contact) return ''; // Happens during tests
-
-  const name = contact.get("nickname") || contact.vcard?.get('fullname');
-  const groups = contact.get("groups");
-  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<ul class="nav nav-pills justify-content-center">${navigation_tabs}</ul><div class="tab-content"><div class="tab-pane ${el.tab === "profile" ? "active" : ""}" id="profile-tabpanel" role="tabpanel" aria-labelledby="profile-tab"><div class="mb-4 centered"><converse-avatar .model="${el.model}" name="${el.model.getDisplayName()}" height="140" width="140"></converse-avatar></div>${o.fullname ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_full_name}:</label></div><div class="col-sm-8">${o.fullname}</div></div>` : ""}<div class="row mb-2"><div class="col-sm-4"><label>${i18n_address}:</label></div><div class="col-sm-8"><a href="xmpp:${o.jid}">${o.jid}</a></div></div>${o.nickname ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_nickname}:</label></div><div class="col-sm-8">${o.nickname}</div></div>` : ""} ${o.url ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_url}:</label></div><div class="col-sm-8"><a target="_blank" rel="noopener" href="${o.url}">${o.url}</a></div></div>` : ""} ${o.email ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_email}:</label></div><div class="col-sm-8"><a href="mailto:${o.email}">${o.email}</a></div></div>` : ""} ${o.role ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_role}:</label></div><div class="col-sm-8">${o.role}</div></div>` : ""} ${groups.length ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_groups}:</label></div><div class="col-sm-8">${groups.map(/** @param {string} group */group => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<span class="badge badge-roster-group me-1">${group}</span>`)}</div></div>` : ""}</div><div class="tab-pane ${el.tab === "edit" ? "active" : ""}" id="edit-tabpanel" role="tabpanel" aria-labelledby="edit-tab">${el.tab === "edit" ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form class="converse-form" @submit="${ev => el.updateContact(ev)}"><div class="mb-3"><label class="form-label clearfix" for="name">${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Name")}:</label> <input type="text" name="name" value="${name}" class="form-control"></div><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_3__.getGroupsAutoCompleteList)()}" name="groups" value="${groups}"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Update")}</button></form><hr>${allow_contact_removal && is_roster_contact ? tplRemoveButton(el) : ""} ${(0,lit_directives_until_js__WEBPACK_IMPORTED_MODULE_1__.until)(blocking_supported.then(() => tplBlockButton(el)), "")}` : ""}</div>${_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.pluggable.plugins["converse-omemo"]?.enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse) ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="tab-pane ${el.tab === "omemo" ? "active" : ""}" id="omemo-tabpanel" role="tabpanel" aria-labelledby="omemo-tab">${el.tab === "omemo" ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-omemo-fingerprints jid="${o.jid}"></converse-omemo-fingerprints>` : ""}</div>` : ""}</div>`;
+  if (_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.pluggable.plugins['converse-omemo']?.enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse)) {
+    navigation_tabs.push((0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<li role="presentation" class="nav-item"><a class="nav-link ${el.tab === 'omemo' ? 'active' : ''}" id="omemo-tab" href="#omemo-tabpanel" aria-controls="omemo-tabpanel" role="tab" @click="${ev => el.switchTab(ev)}" data-name="omemo" data-toggle="tab">${i18n_omemo}</a></li>`);
+  }
+  const name = contact?.get('nickname') || contact.vcard?.get('fullname');
+  const groups = contact?.get('groups');
+  return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<ul class="nav nav-pills justify-content-center">${navigation_tabs}</ul><div class="tab-content"><div class="tab-pane ${el.tab === 'profile' ? 'active' : ''}" id="profile-tabpanel" role="tabpanel" aria-labelledby="profile-tab"><div class="mb-4 centered"><converse-avatar .model="${el.model}" name="${el.model.getDisplayName()}" height="140" width="140"></converse-avatar></div>${o.fullname ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_full_name}:</label></div><div class="col-sm-8">${o.fullname}</div></div>` : ''}<div class="row mb-2"><div class="col-sm-4"><label>${i18n_address}:</label></div><div class="col-sm-8"><a href="xmpp:${o.jid}">${o.jid}</a></div></div>${o.nickname ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_nickname}:</label></div><div class="col-sm-8">${o.nickname}</div></div>` : ''} ${o.url ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_url}:</label></div><div class="col-sm-8"><a target="_blank" rel="noopener" href="${o.url}">${o.url}</a></div></div>` : ''} ${o.email ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_email}:</label></div><div class="col-sm-8"><a href="mailto:${o.email}">${o.email}</a></div></div>` : ''} ${o.role ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_role}:</label></div><div class="col-sm-8">${o.role}</div></div>` : ''} ${groups.length ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${i18n_groups}:</label></div><div class="col-sm-8">${groups.map(/** @param {string} group */group => (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<span class="badge badge-roster-group me-1">${group}</span>`)}</div></div>` : ''}<hr>${contact.get('requesting') ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="row mb-2"><div class="col-sm-4"><label>${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Contact Request')}:</label></div><div class="col-sm-8">${tplAcceptButton(el)} ${tplDeclineButton(el)}</div></div>` : ''} ${!is_roster_contact ? tplAddButton(el) : ''} ${!contact ? (0,lit_directives_until_js__WEBPACK_IMPORTED_MODULE_1__.until)(blocking_supported.then(() => tplBlockButton(el)), '') : ''}</div>${is_roster_contact ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="tab-pane ${el.tab === 'edit' ? 'active' : ''}" id="edit-tabpanel" role="tabpanel" aria-labelledby="edit-tab">${el.tab === 'edit' ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<form class="converse-form" @submit="${ev => el.updateContact(ev)}"><div class="mb-3"><label class="form-label clearfix" for="name">${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Name')}:</label> <input type="text" name="name" value="${name}" class="form-control"></div><div class="mb-3"><label class="form-label clearfix" for="name">${i18n_groups}:</label><div class="mb-1"><small class="form-text text-muted">${i18n_groups_help}</small></div><converse-autocomplete .list="${(0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_3__.getGroupsAutoCompleteList)()}" name="groups" value="${groups}"></converse-autocomplete></div><button type="submit" class="btn btn-primary">${(0,i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Update')}</button></form><hr>${allow_contact_removal && is_roster_contact ? tplRemoveButton(el) : ''} ${(0,lit_directives_until_js__WEBPACK_IMPORTED_MODULE_1__.until)(blocking_supported.then(() => tplBlockButton(el)), '')}` : ''}</div>` : ''} ${_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse.pluggable.plugins['converse-omemo']?.enabled(_converse_headless__WEBPACK_IMPORTED_MODULE_2__._converse) ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<div class="tab-pane ${el.tab === 'omemo' ? 'active' : ''}" id="omemo-tabpanel" role="tabpanel" aria-labelledby="omemo-tab">${el.tab === 'omemo' ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)`<converse-omemo-fingerprints jid="${o.jid}"></converse-omemo-fingerprints>` : ''}</div>` : ''}</div>`;
 }
 
 /***/ }),
@@ -100945,19 +101045,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UserDetailsModal)
 /* harmony export */ });
-/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
-/* harmony import */ var plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! plugins/rosterview/utils.js */ "./src/plugins/rosterview/utils.js");
-/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
-/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
-/* harmony import */ var _templates_user_details_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./templates/user-details.js */ "./src/shared/modals/templates/user-details.js");
-/* harmony import */ var _styles_user_details_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./styles/user-details.scss */ "./src/shared/modals/styles/user-details.scss");
+/* harmony import */ var _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @converse/skeletor */ "./node_modules/@converse/skeletor/dist/skeletor.js");
+/* harmony import */ var _converse_skeletor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_converse_skeletor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _converse_headless__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @converse/headless */ "./src/headless/index.js");
+/* harmony import */ var plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! plugins/rosterview/utils.js */ "./src/plugins/rosterview/utils.js");
+/* harmony import */ var plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! plugins/modal/modal.js */ "./src/plugins/modal/modal.js");
+/* harmony import */ var i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! i18n */ "./src/i18n/index.js");
+/* harmony import */ var _templates_user_details_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./templates/user-details.js */ "./src/shared/modals/templates/user-details.js");
+/* harmony import */ var _styles_user_details_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./styles/user-details.scss */ "./src/shared/modals/styles/user-details.scss");
 
 
 
 
 
 
-class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
+
+class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
   constructor(options) {
     super(options);
     this.tab = 'profile';
@@ -100971,11 +101074,11 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
      * @type {import('@converse/headless').ChatBox}
      * @example _converse.api.listen.on('userDetailsModalInitialized', (chatbox) => { ... });
      */
-    _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.trigger('userDetailsModalInitialized', this.model);
+    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.trigger('userDetailsModalInitialized', this.model);
   }
   addListeners() {
     this.listenTo(this.model, 'change', () => this.requestUpdate());
-    if (this.model instanceof _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.exports.ChatBox) {
+    if (this.model instanceof _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.exports.ChatBox) {
       this.model.rosterContactAdded.then(() => this.registerContactEventHandlers(this.model.contact));
       if (this.model.contact !== undefined) {
         this.registerContactEventHandlers(this.model.contact);
@@ -100985,7 +101088,7 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
     }
   }
   getContact() {
-    if (this.model instanceof _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.exports.ChatBox) {
+    if (this.model instanceof _converse_headless__WEBPACK_IMPORTED_MODULE_1__._converse.exports.ChatBox) {
       return this.model.contact;
     } else {
       return this.model;
@@ -101005,7 +101108,7 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
     return true;
   }
   renderModal() {
-    return (0,_templates_user_details_js__WEBPACK_IMPORTED_MODULE_4__.tplUserDetailsModal)(this);
+    return (0,_templates_user_details_js__WEBPACK_IMPORTED_MODULE_5__.tplUserDetailsModal)(this);
   }
   getModalTitle() {
     return this.model.getDisplayName();
@@ -101020,8 +101123,20 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
     this.listenTo(contact.vcard, 'change', () => this.requestUpdate());
     if (contact.vcard) {
       // Refresh the vcard
-      _converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.vcard.update(contact.vcard, true);
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.vcard.update(contact.vcard, true);
     }
+  }
+
+  /**
+   * @param {MouseEvent} ev
+   */
+  async addContact(ev) {
+    ev?.preventDefault?.();
+    this.modal.hide();
+    _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.modal.show('converse-add-contact-modal', {
+      contact: this.model,
+      model: new _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model()
+    }, ev);
   }
 
   /**
@@ -101045,7 +101160,7 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
    */
   async removeContact(ev) {
     ev?.preventDefault?.();
-    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_1__.removeContact)(this.getContact()), 1);
+    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_2__.removeContact)(this.getContact()), 1);
     this.modal.hide();
   }
 
@@ -101054,7 +101169,7 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
    */
   async blockContact(ev) {
     ev?.preventDefault?.();
-    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_1__.blockContact)(this.getContact()), 1);
+    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_2__.blockContact)(this.getContact()), 1);
     this.modal.hide();
   }
 
@@ -101063,11 +101178,34 @@ class UserDetailsModal extends plugins_modal_modal_js__WEBPACK_IMPORTED_MODULE_2
    */
   async unblockContact(ev) {
     ev?.preventDefault?.();
-    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_1__.unblockContact)(this.getContact()), 1);
+    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_2__.unblockContact)(this.getContact()), 1);
+    this.modal.hide();
+  }
+
+  /**
+   * @param {MouseEvent} ev
+   */
+  async acceptContactRequest(ev) {
+    ev?.preventDefault?.();
+    setTimeout(() => {
+      _converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.modal.show('converse-accept-contact-request-modal', {
+        model: new _converse_skeletor__WEBPACK_IMPORTED_MODULE_0__.Model(),
+        contact: this.getContact()
+      }, ev);
+    });
+    this.modal.hide();
+  }
+
+  /**
+   * @param {MouseEvent} ev
+   */
+  async declineContactRequest(ev) {
+    ev?.preventDefault?.();
+    setTimeout(() => (0,plugins_rosterview_utils_js__WEBPACK_IMPORTED_MODULE_2__.declineContactRequest)(this.getContact()));
     this.modal.hide();
   }
 }
-_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.elements.define('converse-user-details-modal', UserDetailsModal);
+_converse_headless__WEBPACK_IMPORTED_MODULE_1__.api.elements.define('converse-user-details-modal', UserDetailsModal);
 
 /***/ }),
 
