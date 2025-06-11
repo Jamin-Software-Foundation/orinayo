@@ -3216,8 +3216,8 @@ function handleNumPad(name, code) {
 	var handled = false;
 
 	if (!styleStarted && keyboard.get("0") && (keyboard.get("1") || keyboard.get("2") || keyboard.get("3") || keyboard.get("4") || keyboard.get("5") || keyboard.get("6") || keyboard.get("7") || keyboard.get("8") || keyboard.get("9"))) {
-		console.debug("handleNumPad", keyboard.get("Shift"));
-		
+		console.debug("handleNumPad - recall registrations");
+				
 		if (keyboard.get("1")) recallRegistration(1);
 		if (keyboard.get("2")) recallRegistration(2);
 		if (keyboard.get("3")) recallRegistration(3);
@@ -3230,6 +3230,22 @@ function handleNumPad(name, code) {
 					
 		return true;
 	}	
+	
+	if (keyboard.get(")") || keyboard.get("!") || keyboard.get("\"") || keyboard.get("£") || keyboard.get("$") || keyboard.get("%")) {
+		console.debug("handleNumPad - setPadsMode");
+		
+		if (keyboard.get(")")) padsMode = 0;
+		if (keyboard.get("!")) padsMode = 1;
+		if (keyboard.get("\"")) padsMode = 2;
+		if (keyboard.get("£")) padsMode = 3;
+		if (keyboard.get("$")) padsMode = 4;
+		if (keyboard.get("%")) padsMode = 5;		
+		
+		orinayo_pad.innerHTML = (padsMode == 0) ? "None" : "Pad " + padsMode;			
+		handled = true;			
+	}
+	else
+		
 	
 	if ((keyboard.get(" ") || code == "NumpadEnter") && document.activeElement != songNote) {
 		pad.buttons[LOGO] = true;
@@ -10228,10 +10244,11 @@ function scrollToBottom(ev) {
 	ev.preventDefault();
 	
 	const toolbar_el = converse.env.utils.ancestor(ev.target, 'converse-chat-toolbar');
-	const chatview = _converse.chatboxviews.get(toolbar_el.model.get('jid'));		
-	console.debug("scrollToBottom", chatview);
-
-	if (chatview) chatview.scrollDown();
+	const chatview = _converse.chatboxviews.get(toolbar_el.model.get('jid'));	
+	const ele = chatview.querySelector(".chat-content__messages");		
+	console.debug("scrollToBottom", ele);
+	
+	ele.scrollTo(0, ele.scrollHeight);
 }
 
 function hideChat(ev) {
