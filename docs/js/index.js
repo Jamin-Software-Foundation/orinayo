@@ -1132,7 +1132,7 @@ async function fetchStreams() {
 		let count = 1;
 		
 		for (item of items) {		
-			const id = item.getAttribute("id");
+			const id = item.getAttribute("uri");
 			activeStreams.options[count++] = new Option(id, id, false, false);	
 		}
 		
@@ -1168,7 +1168,7 @@ async function fetchStreams() {
 				watchConnection.setLocalDescription(offer);
 				console.debug('fetchStreams offer', offer.sdp);					
 				
-				const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whep', {id: activeStreams.value, xmlns: 'urn:xmpp:whep:0'}).c('sdp', offer.sdp)); 
+				const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whep', {uri: activeStreams.value, xmlns: 'urn:xmpp:whep:0'}).c('sdp', offer.sdp)); 
 				console.debug('fetchStreams whep set response', res);						
 				const answer = res.querySelector('sdp')?.innerHTML;
 				const json = res.querySelector('json')?.innerHTML;
