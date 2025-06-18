@@ -5,7 +5,7 @@
         factory(converse);
     }
 }(this, function (converse) {
-    let _converse, html, __, model, harker, msgDiv, pcListen = {}, speakers = {}, audioStream, chatsLoaded, audioStreamUri, pcSpeak, button, recognition, recognitionActive, myJid, myself, me, startTime;
+    let _converse, html, __, converseConn;
 
 	converse.plugins.add("voicechat", {
 		dependencies: [],
@@ -18,420 +18,78 @@
             _converse.api.listen.on('getToolbarButtons', async function(toolbar_el, buttons) {
                 console.debug("getToolbarButtons", toolbar_el.model);					
 				
-				const voiceChatStart = await _converse.api.user.settings.get('voicechat_start');
-				const screenCastStart = await _converse.api.user.settings.get('screenshare_start');				
-				
-                let color = "fill:var(--secondary-color);";
-                if (toolbar_el.model.get("type") == "chatbox") color = "fill:var(--chat-color);";
-                if (toolbar_el.model.get("type") === "chatroom") color = "fill:var(--muc-color);";
+				if (toolbar_el.model.get("type") === "chatroom") {
+					const voiceChatStart = await _converse.api.user.settings.get('voicechat_start');								
+					const color = "fill:var(--muc-color);";
 
-                buttons.push(html`
-                    <button class="btn plugin-voicechat" title="${voiceChatStart}" @click=${performAudio}/>
-						<svg style="width:18px; height:18px; ${color}" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-up" class="svg-inline--fa fa-volume-up fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.54 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"></path></svg>					
-                    </button>
-                `);
+					buttons.push(html`
+						<button class="btn plugin-voicechat" title="${voiceChatStart}" @click=${performAudio}/>
+							<svg style="width:18px; height:18px; ${color}" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-up" class="svg-inline--fa fa-volume-up fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.54 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"></path></svg>					
+						</button>
+					`);
+				}
 				
                 return buttons;
             });	
 
 			_converse.api.listen.on('connected', async function() {
-	            console.debug("voicechat - connected");	
-				
-				await _converse.api.user.settings.set({
-						voicechat_prefix: 'VC',					
-						voicechat_transcribe: false,
-						voicechat_transcribeLanguage: 'en-GB',
-						
-						voicechat_start:  __('Start voice chat'),
-						voicechat_stop: __('Stop voice chat'),	
-						
-						screenshare_start: __('Start a screen share'),
-						screenshare_stop: __('Stop a screen share'),						
-				});
-				
-				myJid = await _converse.api.connection.get().jid;
-				myself = converse.env.Strophe.getBareJidFromJid(myJid);	
-				me = converse.env.Strophe.getNodeFromJid(myJid);
-				
-				startTime = new Date(+(new Date()) + 3000);
-				chatsLoaded = false;
-			});	
-
-			_converse.api.listen.on('parseMessage', (stanza, attrs) => {
-				return parseStanza(stanza, attrs);
-			});	
-			
-			_converse.api.listen.on('parseMUCMessage', (stanza, attrs) => {
-				return parseStanza(stanza, attrs);
-			});	
-
-			_converse.api.listen.on('parseMUCPresence', (stanza, attrs) => {
-				console.debug("parseMUCPresence", stanza, attrs);
-				return attrs;
-			});						
-
-            _converse.api.listen.on('chatRoomViewInitialized', async function (view) {
-                console.debug("chatRoomViewInitialized", view);
-				stopVoiceChat();
-			});
-			
-            _converse.api.listen.on('chatBoxViewInitialized', async function (view)  {
-                console.debug("chatBoxViewInitialized", view);			
-				stopVoiceChat();
-			});
-			
-            _converse.api.listen.on('chatBoxClosed', async function (model)  {
-                console.debug("chatBoxClosed", model);			
-				stopVoiceChat();
-            });			
+				converseConn = await _converse.api.connection.get();					
+			});				
 			
 			console.log("voicechat plugin is ready");
 		}
 	});	
-
-	async function performAudio(ev) {
+	
+    function performAudio(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
-		const toolbar_el = converse.env.utils.ancestor(ev.target, 'converse-chat-toolbar');	
-		const view = _converse.chatboxviews.get(toolbar_el.model.get('jid'));		
-		model = toolbar_el.model;
-		const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-		const target = model.get('jid');
-										
-		button = toolbar_el.querySelector('.plugin-voicechat');		
-		console.debug("voicechat is clicked", model, button);
+		const serverUrl = localStorage.getItem("collaboration_server.server_url");		
+		const toolbar_el = converse.env.utils.ancestor(ev.target, 'converse-chat-toolbar');
+		const chatview = _converse.chatboxviews.get(toolbar_el.model.get('jid'));		
+		console.debug("performAudio", chatview, toolbar_el.model);
+		
+		const jid = toolbar_el.model.get("jid");
+		const id = toolbar_el.model.get("box_id");
+		const occupants = chatview.querySelector('.occupants');	
 
-		if (button.classList.contains('blink_me')) {
-			stopVoiceChat(view);						
+		console.debug("performAudio", jid, id, occupants, chatview);	
+
+		const button = toolbar_el.querySelector('.plugin-voicechat');
+        const chatroom_body = chatview.querySelector('.chatroom-body');
+        let info_area = chatview.querySelector('.occupants-voice-chat');
+
+		console.debug("toggleInfoBar", chatview, jid, id);
+		
+        if (!info_area)
+        {
+            info_area = document.createElement("div");
+            info_area.classList.add('occupants-voice-chat'); // col-xs-12 col-md-4 col-xl-2
+			info_area.style.display = "none";				
+			info_area.style.width = "500px";			
+            info_area.classList.add('col-xs-12');
+            info_area.classList.add('col-md-4');
+            info_area.classList.add('col-xl-2');			
+            chatroom_body.appendChild(info_area);
+        }
+
+		if (info_area.style.display == "none") {
+			chatview.model.save({'hidden_occupants': true});			
+
+			const parts = JSON.parse(serverUrl).split("/");
+			const style = "width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
+			info_area.innerHTML = '<iframe allow="geolocation; microphone; camera" style="' + style + '" src="https://' + parts[2] + '/orinayo/ohun/' + jid.split("@")[0] + '"></iframe>';
+			info_area.style.display = "";	
+			button.classList.add('blink_me');		
+
 		} else {
-			startVoiceChat(view);						
-		}				
-	}	
-
-	async function stopVoiceChat() {	
-		console.debug("stopVoiceChat", model);		
-		if (!model) return;	
-		
-		if (pcSpeak){
-			audioStream.getTracks().forEach(track => track.stop());			
-			pcSpeak.close();
-			delete pcListen[audioStreamUri];			
-		}
-		
-		if (button && button.classList.contains('blink_me')) {
+			chatview.model.save({'hidden_occupants': false});
+			info_area.innerHTML = "";			
+			info_area.style.display = "none";
 			button.classList.remove('blink_me');
-			button.title = await _converse.api.user.settings.get('voicechat_start');
-
-			const message = "/me stopped speaking";
-			const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
-			const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';				
-			const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><retract xmlns='urn:xmpp:call-invites:0' id='${audioStreamUri}' /></message>`;
-			_converse.api.send(msg);
-		
 		}
 		
-		if (recognitionActive && recognition) {
-			recognition.stop();
-			recognitionActive = false;
-		}
-		
-		if (harker) {
-			harker.stop();
-		}
-	}	
-	
-	async function startVoiceChat() {
-		console.debug("startVoiceChat", model);	
-			
-		if (pcSpeak) {	
-			audioStream.getTracks().forEach(track => track.stop());
-			pcSpeak.close();
-			delete pcListen[audioStreamUri];
-		}
-
-		const question = await _converse.api.user.settings.get('voicechat_start') + "?";
-		const sure = confirm(question);
-		
-		if (sure) {
-			pcSpeak = new RTCPeerConnection();
-
-			pcSpeak.oniceconnectionstatechange = () => {
-				console.debug("oniceconnectionstatechange speak", pcSpeak.iceConnectionState);
-			}
-			
-			pcSpeak.ontrack = function (event) {
-				console.debug("ontrack speak", event.streams, event);			
-			}			
-				
-			audioStream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});		
-
-			if (audioStream) {
-				audioStream.getTracks().forEach(t => 
-				{
-					if (t.kind === 'audio') {
-						pcSpeak.addTransceiver(t, {direction: 'sendonly'})
-					}
-				})	
-
-				if (await _converse.api.user.settings.get('voicechat_transcribe')) {
-					setupSpeechRecognition();
-				}					
-
-				harker = hark(audioStream, {interval: 100, history: 4 });
-
-				harker.on('speaking', async () => {
-					
-					if (await _converse.api.user.settings.get('voicechat_transcribe') && model) {					
-						model.setChatState(_converse.COMPOSING);											
-					}
-				});
-
-				harker.on('stopped_speaking', async () =>  {
-					
-					if (await _converse.api.user.settings.get('voicechat_transcribe') && model) {						
-						model.setChatState(_converse.PAUSED);												
-					}
-				});	
-
-				const offer = await pcSpeak.createOffer();
-				pcSpeak.setLocalDescription(offer);
-				
-				const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whip', {xmlns: 'urn:xmpp:whip:0'}).c('sdp', offer.sdp));
-				audioStreamUri = res.querySelector('whip').getAttribute("uri");
-				pcListen[audioStreamUri] = pcSpeak;	
-				
-				const answer = res.querySelector('sdp').innerHTML;
-				pcSpeak.setRemoteDescription({sdp: answer,  type: 'answer'});	
-				console.debug('whip answer', answer);
-
-				button.classList.add('blink_me');	
-				button.title = await _converse.api.user.settings.get('voicechat_stop');
-
-				const message = "/me started speaking";				
-				const type = (model.get('type') == 'chatroom') ? 'groupchat' : 'chat';	
-				const target = (model.get('type') == 'chatbox') ? model.get('jid') : (model.get('type') == 'chatroom' ? model.get('jid') : model.get('from'));			
-				const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><invite xmlns="urn:xmpp:call-invites:0"><external uri="${audioStreamUri}" /></invite></message>`;
-				_converse.api.send(msg);				
-			}
-		}
-	}	
-	
-    async function setupSpeechRecognition() {
-        console.debug("setupSpeechRecognition");
-
-        recognition = new webkitSpeechRecognition();
-        recognition.lang = await _converse.api.user.settings.get('voicechat_transcribeLanguage');
-        recognition.continuous = true;
-        recognition.interimResults = false;
-
-        recognition.onresult = function(event)
-        {
-            console.debug("Speech recog event", event)
-
-            if (event.results[event.resultIndex].isFinal==true)
-            {
-                const transcript = event.results[event.resultIndex][0].transcript;
-                console.debug("Speech recog transcript", transcript);
-                if (model) model.sendMessage({'body': transcript});		
-				if (model) model.setChatState(_converse.ACTIVE);					
-			}
-        }
-
-        recognition.onspeechend  = function(event)
-        {
-            console.debug("Speech recog onspeechend", event);		
-        }
-
-        recognition.onstart = function(event)
-        {
-            console.debug("Speech to text started", event);
-            recognitionActive = true;			
-        }
-
-        recognition.onend = function(event)
-        {
-            console.debug("Speech to text ended", event);
-
-            if (recognitionActive)
-            {
-                console.debug("Speech to text restarted");
-                setTimeout(function() {recognition.start()}, 1000);
-            }
-        }
-
-        recognition.onerror = function(event)
-        {
-            console.debug("Speech to text error", event);
-        }
-
-        recognition.start();		
-    }
-
-	async function parseStanza(stanza, attrs) {
-		const now = new Date(attrs.time);
-		console.debug("parseStanza", (startTime < now), stanza, attrs);
-		
-		if (!chatsLoaded && startTime < now) {
-			chatsLoaded = true;
-			startListening(attrs);
-		}
-
-		const accept = stanza.querySelector('accept');			
-		const invite = stanza.querySelector('invite');	
-		const retract = stanza.querySelector('retract');
-			
-		if (invite) { 
-			const video = invite.getAttribute("video");	
-
-			if (!video) {
-				const uri = invite.querySelector('external').getAttribute("uri");
-				speakers[uri] = {video};			
-
-				if (startTime < now) {	// live invite
-					console.debug("remote add stream", uri);				
-					
-					if (!pcListen[uri])  {	
-						handleStream(uri, attrs);			
-					}	
-				} else { // history invite
-					console.debug("remote history add stream", uri);				
-				}
-			}				
-		}
-		else
-			
-		if (accept) {	
-			const uri = accept.getAttribute("id");
-			
-			if (startTime < now) {	// live accept
-				console.debug("remote accept stream", uri);	
-				
-			} else {	// historical accept
-
-			}				
-		}
-		else
-			
-		if (retract) {	
-			const uri = retract.getAttribute("id");
-			const mediaData = speakers[uri];						
-			
-			if (startTime < now) {
-				console.debug("remote remove stream", uri);				
-				
-				if (pcListen[uri])  {	// live retraction	
-					pcListen[uri].close();						
-					delete pcListen[uri];
-
-					if (mediaData.video) {
-						videoDiv.contentWindow.document.getElementById("voicechat-" + uri)?.remove();	
-						
-						if (videoDiv.contentWindow.document.getElementsByClassName("voicechat-video").length == 0) {	
-							msgDiv.style.display = "";
-							videoDiv.innerHTML = "";
-							videoDiv.style.display = "none";
-						}						
-						
-					} else {
-						document.getElementById("voicechat-" + uri)?.remove();								
-					}
-				}		
-				
-			} else {	// historical retraction
-				console.debug("remote history remove stream", uri);			
-			}
-
-			delete speakers[uri];
-		}		
-					
-		return attrs;
-	}	
-	
-	async function handleStream(uri, attrs) {
-		const mediaData = speakers[uri];
-		console.debug("handleStream - media data", mediaData);
-		
-		pcListen[uri] = new RTCPeerConnection();
-
-		pcListen[uri].oniceconnectionstatechange = () => {
-			console.debug("oniceconnectionstatechange listen", pcListen[uri].iceConnectionState);
-		}
-		
-		pcListen[uri].ontrack = function (event) {
-			console.debug("ontrack listen ", event.streams, event, videoDiv.contentWindow.dish);	
-
-			if (!mediaData.video && event.track.kind == "audio") {
-				let ele = document.getElementById("voicechat-" + uri);
-				
-				if (!ele) {
-					ele = document.createElement("audio");
-					ele.id = "voicechat-" + uri;	
-					ele.setAttribute("autoplay", true);					
-					document.body.appendChild(ele);
-				}
-				
-				ele.srcObject = event.streams[0];		
-			}				
-		}			
-		
-		pcListen[uri].addTransceiver('audio', { direction: 'recvonly' });
-
-		const offer = await pcListen[uri].createOffer();
-		pcListen[uri].setLocalDescription(offer);
-		console.debug('handleStream - whep offer', uri, offer.sdp);					
-
-		const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whep', {uri: uri, xmlns: 'urn:xmpp:whep:0'}).c('sdp', offer.sdp));				
-		console.debug('whep set response', uri, res);
-		
-		const answer = res.querySelector('sdp').innerHTML;
-		pcListen[uri].setRemoteDescription({sdp: answer,  type: 'answer'});	
-		console.debug('whep answer', uri, answer);	
-
-		const message = "/me " + "listening to " + uri;
-		const type = attrs.type;
-		const target = (type == "chat") ? attrs.from : attrs.from_muc;
-		const msg = converse.env.stx`<message xmlns="jabber:client" from="${myJid}" to="${target}" type="${type}"><body>${message}</body><accept xmlns='urn:xmpp:call-invites:0' id='${uri}' /></message>`;
-		_converse.api.send(msg);
-			
-	}	
-	
-	async function startListening(attrs) {
-		const speakerURIs = Object.getOwnPropertyNames(speakers);
-		console.debug("startListening", speakerURIs, attrs);
-		
-		for (let uri of speakerURIs) {
-			handleStream(uri, attrs)
-		}
-
-		speakers = {};		
-	}
-	
-	async function getSelectedModel() {
-		var models = await _converse.api.chatboxes.get(); //_converse.chatboxes.models;
-		console.debug("getSelectedModel", models);
-
-		for (var i=0; i<models.length; i++) 
-		{
-			if (!models[i].get('hidden')) {
-				return models[i];
-			}
-		}
-		return null;
-	}	
-	
-	function injectMessage(model, body, nick) {
-		const msgId = 'inject-' + Math.random().toString(36).substr(2,9);
-		const type = model.get("type") == "chatbox" ? "chat" : "groupchat";
-		const from = nick == me ? _converse.jid : model.get("jid");		
-
-		let attrs = {message: body, body, id: msgId, msgId, type, from}; 
-		
-		if (type == "groupchat") {
-			attrs = {message: body, body, id: msgId, msgId, type, from_muc: model.get("jid"), from: model.get("jid") + '/' + nick, nick};  
-		}
-		
-		model.queueMessage(attrs);		
-	}	
+        chatview.scrollDown();
+    }	
 	
 }));

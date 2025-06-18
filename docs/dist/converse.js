@@ -84097,7 +84097,8 @@ class MUCHeading extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_4
                 });
             }
         }
-        if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('singleton')) {
+		// BAO
+        //if (!_converse_headless__WEBPACK_IMPORTED_MODULE_0__.api.settings.get('singleton')) {
             buttons.push({
                 'i18n_text': (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Leave'),
                 'i18n_title': (0,i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Leave and close this groupchat'),
@@ -84114,7 +84115,7 @@ class MUCHeading extends shared_components_element_js__WEBPACK_IMPORTED_MODULE_4
                 'icon_class': 'fa-sign-out-alt',
                 'name': 'signout'
             });
-        }
+        //}
         const { chatboxviews } = _converse_headless__WEBPACK_IMPORTED_MODULE_0__._converse.state;
         const el = chatboxviews.get(this.getAttribute('jid'));
         if (el) {
