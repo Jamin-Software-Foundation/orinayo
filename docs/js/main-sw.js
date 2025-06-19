@@ -333,7 +333,8 @@ const assets = [
   "/orinayo/extra/assets/bass/soft-ballad_75_12800.bass",  
   "/orinayo/extra/assets/bass/upbeat_120_16000.bass",  
   "/orinayo/extra/assets/bass/groove-pop_85_22588.bass",
-  "/orinayo/extra/assets/bass/guitar-ballad_70_27429.bass",   
+  "/orinayo/extra/assets/bass/guitar-ballad_70_27429.bass", 
+  "/orinayo/extra/assets/bass/slow-blues_60_32000.bass",
   
   "/orinayo/extra/assets/chords/funky-soul_90_10667.chord",
   "/orinayo/extra/assets/chords/guitar-pop_100_9600_9600_4.chord",
@@ -350,6 +351,8 @@ const assets = [
   "/orinayo/extra/assets/chords/groove-pop_85_22588_22588_2.chord",
   "/orinayo/extra/assets/chords/guitar-ballad_70_27429_27429_2.chord",
   "/orinayo/extra/assets/chords/pop-groove_85_22588_22588_2.chord",	
+  "/orinayo/extra/assets/chords/blues-slow_60_32000_32000_2.chord",  
+  "/orinayo/extra/assets/chords/slow-blues_60_32000_32000_2.chord",	
    
   "/orinayo/extra/assets/drums/groove-pop_85_2824_22588_2824_2824_16941.drum",
   "/orinayo/extra/assets/drums/guitar-ballad_70_3429_27429_3429_3429_20571.drum",  

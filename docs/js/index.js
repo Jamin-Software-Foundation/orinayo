@@ -1329,14 +1329,12 @@ function startXMPP() {
 					color = "fill:var(--muc-toolbar-btn-color);";
 					
 				} else {				
-					
-				}
-				
-				buttons.push(html`
-					<button class="btn toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
-						<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
-					</button>
-				`);					
+					buttons.push(html`
+						<button class="btn toolbar-utilities-hide" title="${__('Return to group chat')}" @click=${hideChat}/>
+							<converse-icon style="width:18px; height:18px; ${color}" class="fa fa-minus" size="1em"></converse-icon>
+						</button>
+					`);						
+				}				
 							
 				buttons.push(html`
 					<button class="btn toolbar-utilities-scroll" title="${__('Scroll to the bottom')}" @click=${scrollToBottom}/>
