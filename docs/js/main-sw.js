@@ -325,6 +325,7 @@ const assets = [
   "/orinayo/assets/drums/village-pop_107_2243_8972_2243_2243_4486.drum",
   "/orinayo/assets/drums/wild-rock_120_2000_16000_2000_2000_8000.drum",
   "/orinayo/assets/drums/wonderfull_94_2553_10213_2553_2553_5106.drum",
+  "/orinayo/assets/drums/rock-drums_120_2000_8000_2000_2000_14000.drum",  
   
   "/orinayo/extra/assets/bass/miami-rock_85_11294.bass",
   "/orinayo/extra/assets/bass/pop-rock_80_12000_2.bass",

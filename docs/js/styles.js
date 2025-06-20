@@ -407,6 +407,7 @@ var drum_loops = [
 	"assets/drums/rock3_130_14769_29538_1846_1846_11077.drum",
 	"assets/drums/rock-ballad_80_2999_12000_3000_3000_6000.drum",
 	"assets/drums/rock-beat_116_2069_16552_2069_2069_6207.drum",
+	"assets/drums/rock-drums_120_2000_8000_2000_2000_14000.drum",	
 	"extra/assets/drums/rock-flow_130_1846_7385_1846_1846_3692.drum",
 	"assets/drums/rock-hop_85_2824_11294_2824_2823_5647.drum",
 	"extra/assets/drums/rockit_140_1714_13714_1714_1714_10286.drum",
