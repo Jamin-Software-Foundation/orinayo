@@ -278,7 +278,7 @@ var chord_loops = [
 	"extra/assets/chords/very-sharp_118_8136_8136_2.chord",	
 	"assets/chords/village-pop_107_8972_8972_4.chord",
 	"assets/chords/way-pop_75_12800.chord",
-	"assets/chords/wild-rock_120_8000.chord"	
+	"assets/chords/wild-rock_120_8000.chord"
 ]
 
 var drum_loops = [

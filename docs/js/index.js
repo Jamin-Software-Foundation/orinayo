@@ -1227,9 +1227,11 @@ async function handleMediaStream(started) {
 		const json = {tempo, keyChange, name: arrSequence?.name};
 		const offer = await publishConnection.createOffer();
 		publishConnection.setLocalDescription(offer);
-		console.debug('handleMediaStream offer', offer.sdp);	
 		
-		const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whip', {xmlns: 'urn:xmpp:whip:0'}).c('sdp').t(offer.sdp).up().c('json', {xmlns: 'urn:xmpp:json:0'}).t(JSON.stringify(json)));
+		const streamKey = crypto.randomUUID();		
+		console.debug('handleMediaStream offer', offer.sdp, streamKey);	
+		
+		const res = await _converse.api.sendIQ(converse.env.$iq({type: 'set', to: _converse.api.domain}).c('whip', {xmlns: 'urn:xmpp:whip:0', key: streamKey}).c('sdp').t(offer.sdp).up().c('json', {xmlns: 'urn:xmpp:json:0'}).t(JSON.stringify(json)));
 		const answer = res.querySelector('sdp').innerHTML;
 		publishConnection.setRemoteDescription({sdp: answer,  type: 'answer'});	
 		console.debug('handleMediaStream answer', answer);			
