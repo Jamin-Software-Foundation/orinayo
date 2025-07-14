@@ -97,8 +97,8 @@ function parseSmf(parser, arrName) {
 		
 		if (event) {			
 				
-			if (event.type == "lyrics") {
-				console.debug("lyrics", event.text);	
+			if (event.type == "lyrics" || event.type == "text") {
+				console.debug(event.type, event.text);	
 				events.music.push(event);				
 			}
 			else
@@ -605,7 +605,7 @@ function readEvent(p) {
             event.type = 'text'
             event.text = p.readString(length)
 			//console.debug(event.type, event.text, event.deltaTime);				
-            return null; //event			
+            return event;			
           case 0x02:
             event.type = 'copyrightNotice'
             event.text = p.readString(length)

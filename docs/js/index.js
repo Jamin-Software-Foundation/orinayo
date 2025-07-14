@@ -33,7 +33,7 @@ var smplrPads = [];
 var smplrLeads = [];
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 var whitelistedPlugins = [];
-
+var songControl = {};
 var analyser = null;
 var mediaStreamSource = null;
 var leadInstrument = null;
@@ -149,6 +149,7 @@ var orinayo_section = null;
 var orinayo_strum = null;
 var orinayo_pad = null;
 var orinayo_reg = null;
+var orinayo_control = null;
 var orinayo_pitch = null;
 
 var base = BASE;
@@ -979,7 +980,7 @@ async function setLavaGenieSettings() {
 	*/
 
 	// enable key press events
-	writeGenie([0xac, 0x2, 0x5d, 0x1, 0x5c]);
+	//writeGenie([0xac, 0x2, 0x5d, 0x1, 0x5c]);
 
 	// mapping
 	//writeGenie([0xac, 0x2d, 0x67, 0x16, 0x4c, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x19, 0x39, 0x59, 0x69, 0x8b, 0xa9, 0xb1, 0x14, 0x31, 0x51, 0x64, 0x84, 0xa1, 0xc4, 0x8, 0x63, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x2, 0x49, 0x0, 0x2, 0x4a, 0x0, 0x2, 0x52, 0x4a, 0x2, 0x57, 0x1, 0x69]);
@@ -2179,7 +2180,8 @@ async function onloadHandler() {
 	orinayo_section = document.querySelector('#orinayo-section');
 	orinayo_strum = document.querySelector('#orinayo-strum');
 	orinayo_pad = document.querySelector('#orinayo-pad');
-	orinayo_reg = document.querySelector('#orinayo-reg');	
+	orinayo_reg = document.querySelector('#orinayo-reg');
+	orinayo_control	= document.querySelector('#orinayo-control');
 	orinayo_pitch = document.querySelector('#orinayo-pitch');	
 	guitarReverb = document.querySelector("#reverb");
 	
@@ -4408,8 +4410,8 @@ function updateGamePadStatus() {
 		
 	if (updated) 
 	{
-		if (styleStarted && songSequence) {
-			handleSongMode();
+		if (songSequence) {
+			if (styleStarted) handleSongMode();
 		} else {
 			doChord();
 		}
@@ -7639,7 +7641,8 @@ function doChord() {
 	if (pad.buttons[BLUE]) recallRegistration(9);	
 	if (pad.buttons[ORANGE]) recallRegistration(10);	
   }  
-  
+
+	  
   if (pad.buttons[START] || pad.buttons[STARPOWER])
   {
 	if (pad.buttons[START]) {	// start + button activates pad mode
@@ -7675,11 +7678,31 @@ function doChord() {
 			if (padsMode != 0) orinayo_pad.innerHTML = "Pad " + padsMode;		
 		}			
 	}
+	else
+		
+	if (pad.buttons[STARPOWER] && songSequence?.data?.music) { // jump to new song sections in song mode
+		let songSection = undefined;
+		
+		if (pad.buttons[GREEN]) songSection = "intro";
+		if (pad.buttons[RED]) songSection = "verse";	
+		if (pad.buttons[YELLOW]) songSection = "chorus";
+		if (pad.buttons[BLUE]) songSection = "bridge";
+		if (pad.buttons[ORANGE]) songSection = "outro";
+		
+		if (songSection) {
+			const songNote = songControl[songSection];
+			
+			if (songSequence?.data.music[songNote]) {
+				currentSongNote = songNote - 1;
+				return;
+			}
+		}
+	}
 	
 	playSectionCheck();
 
   }
-
+	  
   if (pad.buttons[LOGO])
   {
 	if (pad.buttons[YELLOW] && pad.buttons[BLUE] && !pad.buttons[BLUE] && !pad.buttons[RED] && !pad.buttons[GREEN]) {	
@@ -9024,6 +9047,8 @@ function scheduleSongNote() {
 				//pad.buttons[YELLOW] = true;
 				toggleStartStop();
 				stopChord();
+				
+				orinayo_control.innerHTML = "";				
 			}	
 		}
 		else
@@ -9075,13 +9100,22 @@ function scheduleSongNote() {
 			
 		if (event?.sysexType == "start-sequence") {
 			console.debug("scheduleSongNote - start-sequence", event);	
-			clearLyrics();				
+			clearLyrics();	
 		}
 		else
 			
 		if (event?.sysexType == "stop-sequence") {
-			console.debug("scheduleSongNote - stop-sequence", event);								
+			console.debug("scheduleSongNote - stop-sequence", event);				
 		}			
+		else
+			
+		if (event.type == "text") {
+			console.debug("scheduleSongNote - text", event.text);	
+			
+			if (event.text.startsWith("comment:")) {
+				orinayo_control.innerHTML = event.text.substring(8);
+			}
+		}
 		else
 			
 		if (event.type == "lyrics") {
@@ -9365,6 +9399,22 @@ function setupSongSequence() {
 		if (songSequence.data?.Hdr?.keySignature?.tonic) {
 			keyChange = songSequence.data.Hdr.keySignature.tonic;		
 		}
+		let count = 0;
+		
+		for (let event of songSequence.data.music) 
+		{
+			if (event.type == "text") {
+				console.debug("setupSongSequence - text", event.text);	
+				
+				if (event.text.startsWith("comment:")) {
+					const songSection = event.text.substring(8).toLowerCase().split(" ")[0];
+					if (!songControl[songSection]) songControl[songSection] = count;
+				}
+			}
+			count++;			
+		}
+		
+		console.debug("setupSongSequence - song control", songControl);			
 	} 
 	else
 		
