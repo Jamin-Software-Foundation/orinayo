@@ -1380,6 +1380,7 @@ function startXMPP() {
 	whitelistedPlugins.push("voicechat");	
 	whitelistedPlugins.push("notation");		
 	whitelistedPlugins.push("olmeet");
+	whitelistedPlugins.push("screencast");	
 			
 	const options = {
 		allow_contact_requests: false, 
@@ -4411,7 +4412,11 @@ function updateGamePadStatus() {
 	if (updated) 
 	{
 		if (songSequence) {
-			if (styleStarted) handleSongMode();
+			if (styleStarted) {
+				handleAutoSongMode();
+			} else {
+				handleManualSongMode();
+			}
 		} else {
 			doChord();
 		}
@@ -4442,7 +4447,11 @@ function updateGamePadStatus() {
 	window.setTimeout(updateGamePadStatus);
 }
 
-function handleSongMode() {
+function handleManualSongMode() {
+	
+}
+
+function handleAutoSongMode() {
 	let processed = false;
 	
 	if ((pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE] || pad.buttons[RED] || pad.buttons[GREEN]) && !pad.buttons[START] && !pad.buttons[STARPOWER]) {		
@@ -7700,7 +7709,6 @@ function doChord() {
 	}
 	
 	playSectionCheck();
-
   }
 	  
   if (pad.buttons[LOGO])
