@@ -10,6 +10,10 @@ const STRUM_DOWN = 0.1429;
 const STRUM_LEFT = 0.7143;
 const STRUM_RIGHT = -0.4286;
 
+const JSTICK_NEUTRAL =  0.00392;
+const JSTICK_UP = -1.0000;
+const JSTICK_DOWN = 1.0000;
+
 const GREEN = 1;
 const RED = 2;
 const YELLOW = 0;
@@ -26,6 +30,7 @@ const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
 
+var guitarControllerName = "";
 var updating = false;
 var songNote = null;
 var smplrKeys = [];
@@ -980,7 +985,7 @@ async function setLavaGenieSettings() {
 	*/
 
 	// enable key press events
-	//writeGenie([0xac, 0x2, 0x5d, 0x1, 0x5c]);
+	writeGenie([0xac, 0x2, 0x5d, 0x1, 0x5c]);
 
 	// mapping
 	//writeGenie([0xac, 0x2d, 0x67, 0x16, 0x4c, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x19, 0x39, 0x59, 0x69, 0x8b, 0xa9, 0xb1, 0x14, 0x31, 0x51, 0x64, 0x84, 0xa1, 0xc4, 0x8, 0x63, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x2, 0x49, 0x0, 0x2, 0x4a, 0x0, 0x2, 0x52, 0x4a, 0x2, 0x57, 0x1, 0x69]);
@@ -3951,6 +3956,7 @@ function updateGamePadStatus() {
 			
 		if (gamepads[i] && gamepads[i].id.indexOf("Guitar") > -1) {
 		  guitar = gamepads[i];
+		  guitarControllerName = gamepads[i].id;
 		  guitarAvailable = true;
 		  break;
 		}
@@ -4243,7 +4249,7 @@ function updateGamePadStatus() {
 					//console.debug("button " + i, touched);									
 					pad.buttons[i] = touched;
 					updated = true;
-				}					
+				}
 			}				
 		}
 		
@@ -4264,6 +4270,12 @@ function updateGamePadStatus() {
 			if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
 				//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
 				pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
+				updated = true;				
+			}	
+
+			if (pad.axis[JSTICKY] != guitar.axes[JSTICKY].toFixed(1)) {
+				//console.debug("joystick", guitar.axes[JSTICKY].toFixed(1));							
+				pad.axis[JSTICKY] = guitar.axes[JSTICKY].toFixed(1);
 				updated = true;				
 			}			
 		}		
@@ -4406,9 +4418,9 @@ function updateGamePadStatus() {
 			console.debug("joy stick Y", riffMasterPS.axes[JSTICKY].toFixed(1));							
 			pad.axis[JSTICKY] = riffMasterPS.axes[JSTICKY].toFixed(1);
 			updated = true;				
-		}							
-	}	
-		
+		}			
+	}
+	
 	if (updated) 
 	{
 		if (songSequence) {
@@ -4441,7 +4453,7 @@ function updateGamePadStatus() {
 		if (riffMasterPS) {	
 			pad.buttons[LOGO] = false;		
 			pad.axis[TOUCH] = 0;
-		}	
+		}
 	}	
 	
 	window.setTimeout(updateGamePadStatus);
@@ -6640,6 +6652,38 @@ function doSffFill(changed) {
 	//console.debug("doSffFill", currentSffVar, arrangerBeat, currentPlayNote, arrSequence.data[currentSffVar].length);	
 }
 
+function checkForJoyStick() {
+	console.debug("checkForJoyStick", pad.axis[JSTICKY]);	
+
+	if (pad.buttons[GREEN]) {
+		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(11);	
+		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(10);	
+	} 
+	else
+
+	if (pad.buttons[BLUE]) {
+		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(13);
+		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(12);	
+	}
+	else
+	
+	if (pad.buttons[ORANGE]) {
+		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(7);
+		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(6);	
+	}
+	else
+		
+	if (pad.buttons[RED]) {
+		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(9);
+		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(8);
+	}
+	else {
+		if (pad.axis[JSTICKY] == JSTICK_UP) doBreak();
+		if (pad.axis[JSTICKY] == JSTICK_DOWN) doFill();		
+	}
+	 
+}
+
 function checkForTouchArea() {
 	console.debug("checkForTouchArea", pad.axis[TOUCH]);	
 	
@@ -6681,12 +6725,13 @@ function checkForTouchArea() {
 	}		
 	else
 		
-	if (pad.axis[TOUCH] == 1.0) { 
+	if (pad.axis[TOUCH] == 1.0 && guitarControllerName.indexOf("Guitar Controller P3") == -1) { 	// bug in PC CRKD guitar
 		console.debug("ORANGE Touch");	
 			
 		if (pad.axis[STRUM] == STRUM_UP) pressFootSwitch(7);	// FSW 7
 		if (pad.axis[STRUM] == STRUM_DOWN) pressFootSwitch(6);	// FSW-6
-	}			
+	}
+	
 }
 
 function stopSynthNote(note, channel, velocity) {
@@ -7608,6 +7653,7 @@ function dokeyChange() {
 function doChord() {
   //console.debug("doChord", pad)
   stopChord();
+  
 
   if (!window.droneOn && droneActive) {
      window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));
@@ -7737,10 +7783,21 @@ function doChord() {
 		return;		
 	}
   }  
-
-   if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) {
-		if (styleStarted) checkForTouchArea();
+  
+   if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) 
+   {
+		if (styleStarted) {
+			checkForTouchArea();
+		}
    }
+   else
+	   
+   if (pad.axis[JSTICKY] == JSTICK_UP || pad.axis[JSTICKY] == JSTICK_DOWN) 
+   {
+		if (styleStarted) {
+			checkForJoyStick();			
+		}
+   }   
 
   if ((pad.axis[STRUM] != STRUM_UP && pad.axis[STRUM] != STRUM_DOWN) || pad.buttons[STARPOWER] || pad.buttons[START]) {
 	  return;
