@@ -11,8 +11,8 @@ const STRUM_LEFT = 0.7143;
 const STRUM_RIGHT = -0.4286;
 
 const JSTICK_NEUTRAL =  0.00392;
-const JSTICK_UP = -1.0000;
-const JSTICK_DOWN = 1.0000;
+const JSTICK_UP = -0.9000;
+const JSTICK_DOWN = 0.9000;
 
 const GREEN = 1;
 const RED = 2;
@@ -24,8 +24,12 @@ const START = 9;
 
 const STRUM = 9;
 const TOUCH = 5;
-const JSTICKX = 0;
-const JSTICKY = 1;
+const JSTICK_0 = 0;
+const JSTICK_1 = 1;
+const JSTICK_2 = 2;
+const JSTICK_3 = 3;
+const JSTICK_4 = 4;
+const JSTICK_5 = 5;
 const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
@@ -3905,7 +3909,7 @@ function resetGuitarHero() {
 function connectHandler(e) {
   console.debug("connectHandler " + e.gamepad.id, e.gamepad);	
   
-  if (e.gamepad.id.indexOf("Guitar") > -1 || (e.gamepad.id.indexOf("248a") > -1 && e.gamepad.id.indexOf("8266") > -1) || e.gamepad.id == "Xbox 360 Controller for Windows (STANDARD GAMEPAD)" || e.gamepad.id == "DS4 Wired Controller (Vendor: 7545 Product: 1073)") {
+  if (e.gamepad.id.indexOf("Guitar") > -1 || (e.gamepad.id.indexOf("248a") > -1 && e.gamepad.id.indexOf("8266") > -1) || e.gamepad.id == "Xbox 360 Controller for Windows (STANDARD GAMEPAD)" || e.gamepad.id == "DS4 Wired Controller (Vendor: 7545 Product: 1073)" || e.gamepad.id.indexOf("Wireless Gamepad (STANDARD GAMEPAD") > -1) {
 	console.debug("connectHandler found gamepad " + e.gamepad.id, e.gamepad);
 	
 	inputDeviceType = "games-controller";
@@ -3932,6 +3936,7 @@ function updateGamePadStatus() {
 	var guitar = null
 	var ring = null
 	var riffMasterXbox = null;
+	var ckdPs3 = null;	
 	var riffMasterPS = null;
 	var ds4WiredController = null;	
 	
@@ -3971,6 +3976,13 @@ function updateGamePadStatus() {
 			
 		if (gamepads[i] && gamepads[i].id.indexOf("Xbox 360 Controller for Windows (STANDARD GAMEPAD)") > -1) {
 		  riffMasterXbox = gamepads[i];
+		  guitarAvailable = true;
+		  break;
+		}
+		else
+			
+		if (gamepads[i] && gamepads[i].id.indexOf("Wireless Gamepad (STANDARD GAMEPAD") > -1) {
+		  ckdPs3 = gamepads[i];
 		  guitarAvailable = true;
 		  break;
 		}		
@@ -4056,25 +4068,99 @@ function updateGamePadStatus() {
 				updated = true;
 			}
 
-			if (pad.axis[JSTICKX] != ds4WiredController.axes[JSTICKX].toFixed(1)) {
-				console.debug("joy stick X", ds4WiredController.axes[JSTICKX].toFixed(1));							
-				pad.axis[JSTICKX] = ds4WiredController.axes[JSTICKX].toFixed(1);
+			if (pad.axis[JSTICK_0] != ds4WiredController.axes[JSTICK_0].toFixed(1)) {
+				console.debug("joy stick X", ds4WiredController.axes[JSTICK_0].toFixed(1));							
+				pad.axis[JSTICK_0] = ds4WiredController.axes[JSTICK_0].toFixed(1);
 				
-				if (pad.axis[JSTICKX] == 1.0) {
+				if (pad.axis[JSTICK_0] == 1.0) {
 					pad.buttons[LOGO] = true;
 					updated = true;				
 				}
 			}	
 
-			if (pad.axis[JSTICKY] != ds4WiredController.axes[JSTICKY].toFixed(1)) {
-				console.debug("joy stick Y", ds4WiredController.axes[JSTICKY].toFixed(1));							
-				pad.axis[JSTICKY] = ds4WiredController.axes[JSTICKY].toFixed(1);
+			if (pad.axis[JSTICK_1] != ds4WiredController.axes[JSTICK_1].toFixed(1)) {
+				console.debug("joy stick Y", ds4WiredController.axes[JSTICK_1].toFixed(1));							
+				pad.axis[JSTICK_1] = ds4WiredController.axes[JSTICK_1].toFixed(1);
 				updated = true;				
 			}			
 		}		
 
 	}		
 	else	
+
+	if (ckdPs3) {
+		//console.debug("using riff master" + ckdPs3.id, ckdPs3);
+		
+		pad.axis[STRUM] = 0;
+		
+		for (var i=0; i<ckdPs3.buttons.length; i++) {
+			var touched = false;	
+			var val = ckdPs3.buttons[i];		
+		  
+			if (typeof(val) == "object") 
+			{	  			
+				if ('touched' in val) {
+				  touched = val.touched;
+				}			
+			}
+			
+			let j = i;
+			if (i == 1) j = GREEN;
+			if (i == 0) j = RED;				
+			if (i == 2) j = YELLOW;
+			if (i == 3) j = BLUE;			
+			if (i == 4) j = ORANGE;	
+			if (i == 8) j = STARPOWER;				
+			if (i == 11) j = START;			
+			if (i == 16) j = LOGO;			
+			
+			if (i == 12) j = 112;				
+			if (i == 13) j = 113;			
+
+			if (pad.buttons[j] != touched) {
+				console.debug("button " + j, touched);	
+				
+				if (i == 12 || i == 13 || i == 14 || i == 15) {			
+					if (touched) {
+						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));						
+						updated = true;						
+					}
+					
+				} 								
+				else {
+					updated = true;
+				}
+				
+				pad.buttons[j] = touched;				
+			}					
+		}
+		
+		if (pad.axis[JSTICK_1] != ckdPs3.axes[JSTICK_1].toFixed(1)) {
+			const val = ckdPs3.axes[JSTICK_1].toFixed(1);
+			
+			if (val != JSTICK_NEUTRAL && val != 0) {
+				console.debug("joy stick 1", val);							
+				pad.axis[JSTICK_1] = val;
+				updated = true;	
+			}				
+		}
+		
+		if (pad.axis[JSTICK_3] != ckdPs3.axes[JSTICK_3].toFixed(1)) {
+			const val = ckdPs3.axes[JSTICK_3].toFixed(1);
+				
+			if (val != JSTICK_NEUTRAL && val != 0 && val >= 0.9) {
+				console.debug("joy stick 3", val);							
+				pad.buttons[START] = true;
+				pad.axis[JSTICK_3] = val;
+				updated = true;	
+			} else {
+				pad.buttons[START] = false;
+				pad.axis[JSTICK_3] = 0;					
+			}				
+		}		
+
+	}
+	else
 		
 	if (riffMasterXbox) {
 		//console.debug("using riff master" + riffMasterXbox.id, riffMasterXbox);
@@ -4253,7 +4339,7 @@ function updateGamePadStatus() {
 			}				
 		}
 		
-		if (!androidDesktopMode() && guitar.axes.length > STRUM) // double notes on mobile
+		if (!androidDesktopMode()) // double notes on mobile
 		{			
 			if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
 				//console.debug("strum", guitar.axes[STRUM].toFixed(4));							
@@ -4273,11 +4359,11 @@ function updateGamePadStatus() {
 				updated = true;				
 			}	
 
-			if (pad.axis[JSTICKY] != guitar.axes[JSTICKY].toFixed(1)) {
-				//console.debug("joystick", guitar.axes[JSTICKY].toFixed(1));							
-				pad.axis[JSTICKY] = guitar.axes[JSTICKY].toFixed(1);
+			if (pad.axis[JSTICK_1] != guitar.axes[JSTICK_1].toFixed(1)) {
+				//console.debug("joystick", guitar.axes[JSTICK_1].toFixed(1));							
+				pad.axis[JSTICK_1] = guitar.axes[JSTICK_1].toFixed(1);
 				updated = true;				
-			}			
+			}				
 		}		
 	}
 	else
@@ -4404,19 +4490,19 @@ function updateGamePadStatus() {
 			updated = true;
 		}		
 
-		if (pad.axis[JSTICKX] != riffMasterPS.axes[JSTICKX].toFixed(1)) {
-			console.debug("joy stick X", riffMasterPS.axes[JSTICKX].toFixed(1));							
-			pad.axis[JSTICKX] = riffMasterPS.axes[JSTICKX].toFixed(1);
+		if (pad.axis[JSTICK_0] != riffMasterPS.axes[JSTICK_0].toFixed(1)) {
+			console.debug("joy stick X", riffMasterPS.axes[JSTICK_0].toFixed(1));							
+			pad.axis[JSTICK_0] = riffMasterPS.axes[JSTICK_0].toFixed(1);
 			
-			if (pad.axis[JSTICKX] == 1.0) {
+			if (pad.axis[JSTICK_0] == 1.0) {
 				pad.buttons[LOGO] = true;
 				updated = true;				
 			}
 		}	
 
-		if (pad.axis[JSTICKY] != riffMasterPS.axes[JSTICKY].toFixed(1)) {
-			console.debug("joy stick Y", riffMasterPS.axes[JSTICKY].toFixed(1));							
-			pad.axis[JSTICKY] = riffMasterPS.axes[JSTICKY].toFixed(1);
+		if (pad.axis[JSTICK_1] != riffMasterPS.axes[JSTICK_1].toFixed(1)) {
+			console.debug("joy stick Y", riffMasterPS.axes[JSTICK_1].toFixed(1));							
+			pad.axis[JSTICK_1] = riffMasterPS.axes[JSTICK_1].toFixed(1);
 			updated = true;				
 		}			
 	}
@@ -4453,6 +4539,11 @@ function updateGamePadStatus() {
 		if (riffMasterPS) {	
 			pad.buttons[LOGO] = false;		
 			pad.axis[TOUCH] = 0;
+		}
+		else
+			
+		if (ckdPs3 || guitar) {
+			pad.axis[JSTICK_1] = 0;		
 		}
 	}	
 	
@@ -6653,33 +6744,33 @@ function doSffFill(changed) {
 }
 
 function checkForJoyStick() {
-	console.debug("checkForJoyStick", pad.axis[JSTICKY]);	
+	console.debug("checkForJoyStick", pad.axis[JSTICK_1]);	
 
 	if (pad.buttons[GREEN]) {
-		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(11);	
-		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(10);	
+		if (pad.axis[JSTICK_1] > JSTICK_UP) pressFootSwitch(11);	
+		if (pad.axis[JSTICK_1] < JSTICK_DOWN) pressFootSwitch(10);	
 	} 
 	else
 
 	if (pad.buttons[BLUE]) {
-		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(13);
-		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(12);	
+		if (pad.axis[JSTICK_1] > JSTICK_UP) pressFootSwitch(13);
+		if (pad.axis[JSTICK_1] < JSTICK_DOWN) pressFootSwitch(12);	
 	}
 	else
 	
 	if (pad.buttons[ORANGE]) {
-		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(7);
-		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(6);	
+		if (pad.axis[JSTICK_1] > JSTICK_UP) pressFootSwitch(7);
+		if (pad.axis[JSTICK_1] < JSTICK_DOWN) pressFootSwitch(6);	
 	}
 	else
 		
 	if (pad.buttons[RED]) {
-		if (pad.axis[JSTICKY] == JSTICK_UP) pressFootSwitch(9);
-		if (pad.axis[JSTICKY] == JSTICK_DOWN) pressFootSwitch(8);
+		if (pad.axis[JSTICK_1] > JSTICK_UP) pressFootSwitch(9);
+		if (pad.axis[JSTICK_1] < JSTICK_DOWN) pressFootSwitch(8);
 	}
 	else {
-		if (pad.axis[JSTICKY] == JSTICK_UP) doBreak();
-		if (pad.axis[JSTICKY] == JSTICK_DOWN) doFill();		
+		if (pad.axis[JSTICK_1] > JSTICK_UP) doBreak();
+		if (pad.axis[JSTICK_1] < JSTICK_DOWN) doFill();		
 	}
 	 
 }
@@ -7792,7 +7883,7 @@ function doChord() {
    }
    else
 	   
-   if (pad.axis[JSTICKY] == JSTICK_UP || pad.axis[JSTICKY] == JSTICK_DOWN) 
+   if ((pad.axis[JSTICK_1] > JSTICK_UP || pad.axis[JSTICK_1] < JSTICK_DOWN) && pad.axis[JSTICK_1] != JSTICK_NEUTRAL  && pad.axis[JSTICK_1] != 0 ) 
    {
 		if (styleStarted) {
 			checkForJoyStick();			
