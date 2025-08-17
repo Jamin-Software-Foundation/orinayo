@@ -3909,7 +3909,7 @@ function resetGuitarHero() {
 function connectHandler(e) {
   console.debug("connectHandler " + e.gamepad.id, e.gamepad);	
   
-  if (e.gamepad.id.indexOf("Guitar") > -1 || (e.gamepad.id.indexOf("248a") > -1 && e.gamepad.id.indexOf("8266") > -1) || e.gamepad.id == "Xbox 360 Controller for Windows (STANDARD GAMEPAD)" || e.gamepad.id == "DS4 Wired Controller (Vendor: 7545 Product: 1073)" || e.gamepad.id.indexOf("Wireless Gamepad (STANDARD GAMEPAD") > -1) {
+  if (e.gamepad.id.indexOf("Guitar") > -1 || (e.gamepad.id.indexOf("248a") > -1 && e.gamepad.id.indexOf("8266") > -1) || e.gamepad.id == "Xbox 360 Controller for Windows (STANDARD GAMEPAD)" || e.gamepad.id == "DS4 Wired Controller (Vendor: 7545 Product: 1073)" || e.gamepad.id.indexOf("STANDARD GAMEPAD") > -1) {
 	console.debug("connectHandler found gamepad " + e.gamepad.id, e.gamepad);
 	
 	inputDeviceType = "games-controller";
@@ -3981,7 +3981,7 @@ function updateGamePadStatus() {
 		}
 		else
 			
-		if (gamepads[i] && gamepads[i].id.indexOf("Wireless Gamepad (STANDARD GAMEPAD") > -1) {
+		if (gamepads[i] && gamepads[i].id.indexOf("STANDARD GAMEPAD") > -1) {
 		  ckdPs3 = gamepads[i];
 		  guitarAvailable = true;
 		  break;
