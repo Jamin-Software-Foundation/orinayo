@@ -7846,6 +7846,10 @@ function doChord() {
 	}
 	
 	playSectionCheck();
+	
+	if (!styleStarted && pad.buttons[STARPOWER]) {
+		pad.buttons[LOGO] = true; 	// auto-start
+	}
   }
 	  
   if (pad.buttons[LOGO])
