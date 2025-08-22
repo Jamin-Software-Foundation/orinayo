@@ -7879,6 +7879,7 @@ function doChord() {
 		}			
 		return;		
 	}
+	pad.buttons[LOGO] = false; 
   }  
   
    if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) 
