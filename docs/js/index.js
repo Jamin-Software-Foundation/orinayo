@@ -4134,6 +4134,10 @@ function updateGamePadStatus() {
 				pad.buttons[j] = touched;				
 			}					
 		}
+			
+		if (pad.buttons[GREEN] && pad.buttons[STARPOWER]) {
+			pad.buttons[LOGO] = true; 	// start-stop
+		}
 		
 		if (pad.axis[JSTICK_1] != ckdPs3.axes[JSTICK_1].toFixed(1)) {
 			const val = ckdPs3.axes[JSTICK_1].toFixed(1);
@@ -4543,7 +4547,8 @@ function updateGamePadStatus() {
 		else
 			
 		if (ckdPs3 || guitar) {
-			pad.axis[JSTICK_1] = 0;		
+			pad.axis[JSTICK_1] = 0;	
+			pad.buttons[LOGO] = false;			
 		}
 	}	
 	
@@ -7846,12 +7851,6 @@ function doChord() {
 	}
 	
 	playSectionCheck();
-	
-	if (pad.buttons[GREEN] && pad.buttons[STARPOWER]) {
-		pad.buttons[GREEN] = false;
-		pad.buttons[STARPOWER] = false;
-		pad.buttons[LOGO] = true; 	// start-stop
-	}
   }
 	  
   if (pad.buttons[LOGO])
@@ -7879,7 +7878,6 @@ function doChord() {
 		}			
 		return;		
 	}
-	pad.buttons[LOGO] = false; 
   }  
   
    if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) 
