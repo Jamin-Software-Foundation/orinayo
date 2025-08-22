@@ -278,6 +278,8 @@ var chord_loops = [
 	"extra/assets/chords/very-sharp_118_8136_8136_2.chord",	
 	"assets/chords/village-pop_107_8972_8972_4.chord",
 	"assets/chords/way-pop_75_12800.chord",
+	"extra/assets/chords/wagner-dance_125_7680_7680_2.chord",	
+	"extra/assets/chords/wagner-pop_125_7680_7680_2.chord",		
 	"assets/chords/wild-rock_120_8000.chord"
 ]
 
@@ -427,6 +429,7 @@ var drum_loops = [
 	"extra/assets/drums/upbeat_120_2000_16000_2000_2000_8000.drum",	
 	"assets/drums/village-pop_107_2243_8972_2243_2243_4486.drum",
 	"assets/drums/wild-rock_120_2000_16000_2000_2000_8000.drum",
+	"extra/assets/drums/wagner-pop_125_1920_7680_1920_1920_11520.drum",	
 	"assets/drums/wonderfull_94_2553_10213_2553_2553_5106.drum"
 ]
 
@@ -484,6 +487,7 @@ var bass_loops = [
 	"assets/bass/thanksgiving-praise_118_8136_2.bass",
 	"assets/bass/u2-guitar_105_18286.bass",
 	"extra/assets/bass/upbeat_120_16000.bass",
+	"extra/assets/bass/wagner-pop_125_7680.bass",	
 	"assets/bass/wild-rock_120_8000.bass"
 ]
 
