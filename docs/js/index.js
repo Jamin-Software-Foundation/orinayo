@@ -7594,7 +7594,7 @@ function playSectionCheck() {
 		if (pad.buttons[YELLOW]) sectionChange = 0;
 		else if (pad.buttons[BLUE]) sectionChange = 1;		
 		else if (pad.buttons[RED]) sectionChange = 2;
-		else if (pad.buttons[ORANGE] || pad.buttons[GREEN]) sectionChange = 3;	
+		else if (pad.buttons[ORANGE]) sectionChange = 3;	
 		else {
 			sectionChange++;
 			if (sectionChange > 3) sectionChange = 0;			
@@ -7847,8 +7847,10 @@ function doChord() {
 	
 	playSectionCheck();
 	
-	if (!styleStarted && pad.buttons[STARPOWER]) {
-		pad.buttons[LOGO] = true; 	// auto-start
+	if (pad.buttons[GREEN] && pad.buttons[STARPOWER]) {
+		pad.buttons[GREEN] = false;
+		pad.buttons[STARPOWER] = false;
+		pad.buttons[LOGO] = true; 	// start-stop
 	}
   }
 	  
