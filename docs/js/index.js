@@ -4137,6 +4137,9 @@ function updateGamePadStatus() {
 			
 		if (pad.buttons[GREEN] && pad.buttons[STARPOWER]) {
 			pad.buttons[LOGO] = true; 	// start-stop
+			pad.buttons[GREEN] = false;
+			pad.buttons[STARPOWER] = false;
+			updated = true;	
 		}
 		
 		if (pad.axis[JSTICK_1] != ckdPs3.axes[JSTICK_1].toFixed(1)) {
@@ -4548,7 +4551,7 @@ function updateGamePadStatus() {
 			
 		if (ckdPs3 || guitar) {
 			pad.axis[JSTICK_1] = 0;	
-			pad.buttons[LOGO] = false;			
+			if (ckdPs3) pad.buttons[LOGO] = false;			
 		}
 	}	
 	
