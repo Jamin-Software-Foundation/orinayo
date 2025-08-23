@@ -34,6 +34,7 @@ const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
 
+var starPowerStart = false;
 var guitarControllerName = "";
 var updating = false;
 var songNote = null;
@@ -3938,8 +3939,7 @@ function updateGamePadStatus() {
 	var riffMasterXbox = null;
 	var ckdPs3 = null;	
 	var riffMasterPS = null;
-	var ds4WiredController = null;	
-	
+	var ds4WiredController = null;		
 	var gamepads = navigator.getGamepads();	
 	  
 	for (var i = 0; i < gamepads.length; i++) {
@@ -4133,13 +4133,6 @@ function updateGamePadStatus() {
 				
 				pad.buttons[j] = touched;				
 			}					
-		}
-			
-		if (pad.buttons[GREEN] && pad.buttons[STARPOWER]) {
-			pad.buttons[LOGO] = true; 	// start-stop
-			pad.buttons[GREEN] = false;
-			pad.buttons[STARPOWER] = false;
-			updated = true;	
 		}
 		
 		if (pad.axis[JSTICK_1] != ckdPs3.axes[JSTICK_1].toFixed(1)) {
@@ -4337,15 +4330,16 @@ function updateGamePadStatus() {
 				}*/
 				
 			} else {
-		  
+				
 				if (pad.buttons[i] != touched) {
 					//console.debug("button " + i, touched);									
 					pad.buttons[i] = touched;
 					updated = true;
 				}
+				
 			}				
 		}
-		
+				
 		if (!androidDesktopMode()) // double notes on mobile
 		{			
 			if (pad.axis[STRUM] != guitar.axes[STRUM].toFixed(4)) {
@@ -4550,8 +4544,7 @@ function updateGamePadStatus() {
 		else
 			
 		if (ckdPs3 || guitar) {
-			pad.axis[JSTICK_1] = 0;	
-			if (ckdPs3) pad.buttons[LOGO] = false;			
+			pad.axis[JSTICK_1] = 0;		
 		}
 	}	
 	
@@ -7597,7 +7590,7 @@ function playSectionCheck() {
 	let arrChanged = false;
 	const oldSection = sectionChange;
 				
-	if (pad.buttons[STARPOWER]) {	// next variation. jump to section of button pressed
+	if (pad.buttons[STARPOWER]  && !pad.buttons[GREEN]) {	// next variation. jump to section of button pressed
 
 		if (pad.buttons[YELLOW]) sectionChange = 0;
 		else if (pad.buttons[BLUE]) sectionChange = 1;		
@@ -7830,40 +7823,44 @@ function doChord() {
 			if (pad.buttons[ORANGE]) padsMode = 5;	// 5th note up/root note down
 			
 			if (padsMode != 0) orinayo_pad.innerHTML = "Pad " + padsMode;		
-		}			
+		}		
 	}
 	else
 		
-	if (pad.buttons[STARPOWER] && songSequence?.data?.music) { // jump to new song sections in song mode
-		let songSection = undefined;
-		
-		if (pad.buttons[GREEN]) songSection = "intro";
-		if (pad.buttons[RED]) songSection = "verse";	
-		if (pad.buttons[YELLOW]) songSection = "chorus";
-		if (pad.buttons[BLUE]) songSection = "bridge";
-		if (pad.buttons[ORANGE]) songSection = "outro";
-		
-		if (songSection) {
-			const songNote = songControl[songSection];
+	if (pad.buttons[STARPOWER]) 
+	{ // jump to new song sections in song mode
+
+		if (songSequence?.data?.music) {
+			let songSection = undefined;
 			
-			if (songSequence?.data.music[songNote]) {
-				currentSongNote = songNote - 1;
-				return;
+			if (pad.buttons[GREEN]) songSection = "intro";
+			if (pad.buttons[RED]) songSection = "verse";	
+			if (pad.buttons[YELLOW]) songSection = "chorus";
+			if (pad.buttons[BLUE]) songSection = "bridge";
+			if (pad.buttons[ORANGE]) songSection = "outro";
+			
+			if (songSection) {
+				const songNote = songControl[songSection];
+				
+				if (songSequence?.data.music[songNote]) {
+					currentSongNote = songNote - 1;
+					return;
+				}
 			}
-		}
+		} 
 	}
 	
-	playSectionCheck();
+	playSectionCheck();	
   }
 	  
-  if (pad.buttons[LOGO])
-  {
+  if (pad.buttons[LOGO] || (pad.buttons[GREEN] && pad.buttons[STARPOWER]))   {
+	
 	if (pad.buttons[YELLOW] && pad.buttons[BLUE] && !pad.buttons[BLUE] && !pad.buttons[RED] && !pad.buttons[GREEN]) {	
 		styleStarted = false;	
 		setSettingsUI(styleStarted);
 		resetArrToA();
 		playButton.innerText = !styleStarted ? "Play" : "Stop";	
-		playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");		
+		playButton.style.setProperty("--accent-fill-rest", !styleStarted ? "green" : "red");
 		
 	} else {		
 		if (handledStartStop) 
@@ -7877,8 +7874,8 @@ function doChord() {
 				}
 			} else {
 				toggleStartStop();					
-			}
-		}			
+			}			
+		}	
 		return;		
 	}
   }  
@@ -8093,7 +8090,7 @@ function startStopWebAudio() {
 
 			const introEnd = introEndCheckedEle?.checked;
 			
-			if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
+			if (((pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd && drumLoop) {		// intro requires drumbeat	
 				orinayo_section.innerHTML = "Arr A";
 				
 				if (syncStartCheckedEle.checked) {			// start on next 1/4 beat sync start
@@ -8130,7 +8127,7 @@ function startStopWebAudio() {
 function endAudioStyle() {
 	console.debug("endAudioStyle", styleStarted, webAudioStyleReady(), webAudioStyleStarted());
 
-	if (((pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd) {	
+	if (((pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) || midiNotes.size > 2) && introEnd) {	
 		orinayo_section.innerHTML = "End";
 
 		if (drumLoop) 
