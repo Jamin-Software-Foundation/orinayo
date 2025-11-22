@@ -4089,7 +4089,7 @@ function updateGamePadStatus() {
 	else	
 
 	if (ckdPs3) {
-		//console.debug("using riff master" + ckdPs3.id, ckdPs3);
+		console.debug("using crkd ps3" + ckdPs3.id, ckdPs3);
 		
 		pad.axis[STRUM] = 0;
 		
@@ -4354,10 +4354,15 @@ function updateGamePadStatus() {
 				updated = true;				
 			}	
 
-			if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(1)) {
-				//console.debug("whammy", guitar.axes[WHAMMY].toFixed(1));							
-				pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(1);
-				updated = true;				
+			if (pad.axis[WHAMMY] != guitar.axes[WHAMMY].toFixed(2)) {
+				pad.axis[WHAMMY] = guitar.axes[WHAMMY].toFixed(2);
+				pad.buttons[START] = false;	
+				
+				if ( guitar.axes[WHAMMY].toFixed(2) == -1.00) {
+					console.debug("whammy", guitar.axes[WHAMMY].toFixed(2));
+					pad.buttons[START] = true;					
+					updated = true;			
+				}					
 			}	
 
 			if (pad.axis[JSTICK_1] != guitar.axes[JSTICK_1].toFixed(1)) {
@@ -6945,28 +6950,14 @@ async function playChord(chord, root, type, bass) {
 			if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN)	
 			{
 				if (padsMode == 1) {
-					if (pad.axis[STRUM]  == STRUM_UP) {
-						player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume * 0.5, undefined, guitarReverb.checked);								
-						// TODO more dynamics with muted guitar (explore dutune)
-						//if (pad.axis[STRUM] == STRUM_UP) 
-					}
-					else {
-
-						if (autoStrumCode == STRUM_UP) {
-							player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);					
-						}
-						else 
-							
-						if (autoStrumCode == STRUM_DOWN) {
-							player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
-						}
-					}
+					if (pad.axis[STRUM] == STRUM_UP) player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+					if (pad.axis[STRUM] == STRUM_DOWN) player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
 				}		
 				else
 					
 				if (padsMode == 2) {
 					if (pad.axis[STRUM] == STRUM_UP) player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
-					if (pad.axis[STRUM] == STRUM_DOWN) 	player.queueWaveTable(guitarContext, guitarSource, midiGuitar, 0, bassNote, guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+					if (pad.axis[STRUM] == STRUM_DOWN) 	player.queueWaveTable(guitarContext, guitarSource, midiGuitar, 0, rootNote, guitarDuration, guitarVolume, undefined, guitarReverb.checked);
 				}	
 				else
 					
@@ -6998,6 +6989,17 @@ async function playChord(chord, root, type, bass) {
 					}
 				}
 			}
+			else {
+
+				if (autoStrumCode == STRUM_UP) {
+					player.queueStrumUp(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);					
+				}
+				else 
+					
+				if (autoStrumCode == STRUM_DOWN) {
+					player.queueStrumDown(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume, undefined, guitarReverb.checked);
+				}
+			}			
 		}
 
 		if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN)	{
