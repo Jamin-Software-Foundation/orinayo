@@ -7380,7 +7380,7 @@ function pressFootSwitch(code, noupdate) {
 
 	if (arranger == "sff") 
 	{				
-		if (code == 6) {	// drum toggle
+		if (code == 6) {	// bass toggle
 			const instrumentNode = midiInstrCheckedEle[9];		
 			if (!noupdate) instrumentNode.checked = !instrumentNode.checked;			
 		}
@@ -7795,7 +7795,22 @@ function doChord() {
   if (pad.buttons[START] || pad.buttons[STARPOWER])
   {
 	if (pad.buttons[START]) {	// start + button activates pad mode
-	
+
+		if (pad.buttons[YELLOW] && pad.buttons[ORANGE]) { // toggle chord mute
+ 			pressFootSwitch(9);		
+		}
+		else 
+			
+		if (pad.buttons[BLUE] && pad.buttons[RED]) { // toggle bass mute
+			pressFootSwitch(6);
+		}
+		else 
+			
+		if (pad.buttons[GREEN] && pad.buttons[YELLOW]) { // toggle drum mute
+			pressFootSwitch(7);			
+		}
+		else 
+			
 		if (pad.buttons[YELLOW] && pad.buttons[BLUE]) { // Guitar position C3
  			guitarPosition.selectedIndex = 2;			
 		}
@@ -7804,7 +7819,6 @@ function doChord() {
 		if (pad.buttons[GREEN] && pad.buttons[RED]) { // Guitar position C4
 			guitarPosition.selectedIndex = 0;
 		}
-		
 		else 
 			
 		if (pad.buttons[RED] && pad.buttons[YELLOW]) { // Guitar postion C5
