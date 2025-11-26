@@ -4091,9 +4091,12 @@ function updateGamePadStatus() {
 	else	
 
 	if (ckdPs3) {
-		console.debug("using crkd ps3" + ckdPs3.id, ckdPs3);
+		//console.debug("using crkd ps3" + ckdPs3.id, ckdPs3);
 		
-		pad.axis[STRUM] = 0;
+		pad.axis[STRUM] = STRUM_NEUTRAL;
+		pad.buttons[START] = false;
+
+		let whammy = false;
 		
 		for (var i=0; i<ckdPs3.buttons.length; i++) {
 			var touched = false;	
@@ -4112,30 +4115,42 @@ function updateGamePadStatus() {
 			if (i == 2) j = YELLOW;
 			if (i == 3) j = BLUE;			
 			if (i == 4) j = ORANGE;	
+		
 			if (i == 8) j = STARPOWER;				
-			if (i == 11) j = START;			
+			if (i == 11) j = START;				
 			if (i == 16) j = LOGO;			
-			
+						
 			if (i == 12) j = 112;				
 			if (i == 13) j = 113;			
 
 			if (pad.buttons[j] != touched) {
 				console.debug("button " + j, touched);	
 				
+				if (i == 6) {
+					whammy = touched;
+				}
+								
 				if (i == 12 || i == 13 || i == 14 || i == 15) {			
 					if (touched) {
-						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));						
-						updated = true;						
+						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));											
 					}
 					
+					updated = true;	
 				} 								
-				else {
+				else
+
+				if (j != 106)	{
 					updated = true;
 				}
 				
 				pad.buttons[j] = touched;				
 			}					
 		}
+		
+		if (whammy) {	// WHAMMY BAR
+			pad.buttons[START] = true;
+			updated = true;
+		}		
 		
 		if (pad.axis[JSTICK_1] != ckdPs3.axes[JSTICK_1].toFixed(1)) {
 			const val = ckdPs3.axes[JSTICK_1].toFixed(1);
@@ -4152,11 +4167,11 @@ function updateGamePadStatus() {
 				
 			if (val != JSTICK_NEUTRAL && val != 0 && val >= 0.9) {
 				console.debug("joy stick 3", val);							
-				pad.buttons[START] = true;
+				//pad.buttons[START] = true;
 				pad.axis[JSTICK_3] = val;
 				updated = true;	
 			} else {
-				pad.buttons[START] = false;
+				//pad.buttons[START] = false;
 				pad.axis[JSTICK_3] = 0;					
 			}				
 		}		
@@ -4551,7 +4566,8 @@ function updateGamePadStatus() {
 		else
 			
 		if (ckdPs3 || guitar) {
-			pad.axis[JSTICK_1] = 0;		
+			pad.axis[JSTICK_1] = 0;	
+			pad.axis[STRUM] = STRUM_NEUTRAL;
 		}
 	}	
 	
