@@ -127,7 +127,6 @@ var currentSffVar = "Intro A";
 var loadFile = null;
 var fretButton = 127;
 var padFretButton = 127;
-var isStrumUp = false;
 var artiphonI1Base = 36;
 var footSwCode7Enabled = false;
 var playButton = null;
@@ -173,6 +172,7 @@ var rgIndex = 0;
 var nextRgIndex = 0;
 var styleStarted = false;
 var activeChord = null;
+var activeStrum = null;
 var forwardChord = null;
 var arrChordType = "maj";
 var guitarAvailable = false;
@@ -3684,6 +3684,8 @@ function handleNoteOn(note, device, velocity, channel) {
 			const rootHex = chordTable[tonic];
 			
 			activeChord = null;
+			activeStrum = pad.axis[STRUM];
+			
 			pad.axis[STRUM] = STRUM_DOWN;			
 			playChord(chord, rootHex, typeHex, bassHex);
 			
@@ -6921,7 +6923,7 @@ async function playChord(chord, root, type, bass) {
 	const guitarDuration = 240 / tempo; 
 	const bassNote = (chord.length == 4 ? chord[0] : chord[0] - 12);
 	const rootNote = (chord.length == 4 ? chord[0] : chord[0] - 12) + (guitarPos * 12);	
-	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);	
+	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);
 	const thirdNote = (chord.length == 4 ? chord[2] : chord[1]);	
 	const fifthNote = (chord.length == 4 ? chord[3] : chord[2]);
 	
@@ -7556,8 +7558,7 @@ function resetArrToA() {
 }
 
 function stopChord() {			
-	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) {
-
+	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN || pad.axis[STRUM] == STRUM_NEUTRAL) {
 		stopPlayingLeadInstrument();
 		
 		if (padsDevice?.stopNote || padsDevice?.name == "soundfont") {
@@ -7909,11 +7910,19 @@ function doChord() {
 		if (styleStarted) {
 			checkForJoyStick();			
 		}
-   }   
+   }  
+
+  if (pad.axis[STRUM] == STRUM_NEUTRAL) activeStrum = null;   
 
   if ((pad.axis[STRUM] != STRUM_UP && pad.axis[STRUM] != STRUM_DOWN) || pad.buttons[STARPOWER] || pad.buttons[START]) {
 	  return;
   }
+  
+  if (activeStrum == pad.axis[STRUM]) {
+	 return;
+  }
+  
+  activeStrum = pad.axis[STRUM];
 
   // --- F/C
 
@@ -9258,6 +9267,8 @@ function scheduleSongNote() {
 			
 			if (chord.length > 0) {
 				activeChord = null;
+				activeStrum = pad.axis[STRUM];
+				
 				pad.axis[STRUM] = autoStrumUpDown();		
 				orinayo.innerHTML = displayShape;	
 
