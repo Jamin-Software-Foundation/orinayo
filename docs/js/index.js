@@ -127,6 +127,7 @@ var currentSffVar = "Intro A";
 var loadFile = null;
 var fretButton = 127;
 var padFretButton = 127;
+var isStrumUp = false;
 var artiphonI1Base = 36;
 var footSwCode7Enabled = false;
 var playButton = null;
@@ -4093,10 +4094,8 @@ function updateGamePadStatus() {
 	if (ckdPs3) {
 		//console.debug("using crkd ps3" + ckdPs3.id, ckdPs3);
 		
-		pad.axis[STRUM] = STRUM_NEUTRAL;
-		pad.buttons[START] = false;
-
-		let whammy = false;
+		pad.axis[STRUM] = 0;
+		let whammy = false;		
 		
 		for (var i=0; i<ckdPs3.buttons.length; i++) {
 			var touched = false;	
@@ -4115,31 +4114,31 @@ function updateGamePadStatus() {
 			if (i == 2) j = YELLOW;
 			if (i == 3) j = BLUE;			
 			if (i == 4) j = ORANGE;	
-		
 			if (i == 8) j = STARPOWER;				
-			if (i == 11) j = START;				
+			if (i == 11) j = START;			
 			if (i == 16) j = LOGO;			
-						
+			
 			if (i == 12) j = 112;				
 			if (i == 13) j = 113;			
 
 			if (pad.buttons[j] != touched) {
-				console.debug("button " + j, touched);	
-				
+				console.debug("button " + j, touched);
+
 				if (i == 6) {
 					whammy = touched;
-				}
-								
-				if (i == 12 || i == 13 || i == 14 || i == 15) {			
+				}				
+				
+				if (i == 12 || i == 13 || i == 14 || i == 15) {	
+					pad.axis[STRUM] = STRUM_NEUTRAL;
+				
 					if (touched) {
 						pad.axis[STRUM] = (i == 12 ? STRUM_UP : (i == 13 ? STRUM_DOWN : (i == 14 ? STRUM_LEFT : STRUM_RIGHT)));											
 					}
 					
-					updated = true;	
+					updated = true;						
+					
 				} 								
-				else
-
-				if (j != 106)	{
+				else {
 					updated = true;
 				}
 				
@@ -4167,11 +4166,11 @@ function updateGamePadStatus() {
 				
 			if (val != JSTICK_NEUTRAL && val != 0 && val >= 0.9) {
 				console.debug("joy stick 3", val);							
-				//pad.buttons[START] = true;
+				pad.buttons[START] = true;
 				pad.axis[JSTICK_3] = val;
 				updated = true;	
 			} else {
-				//pad.buttons[START] = false;
+				pad.buttons[START] = false;
 				pad.axis[JSTICK_3] = 0;					
 			}				
 		}		
@@ -4567,7 +4566,7 @@ function updateGamePadStatus() {
 			
 		if (ckdPs3 || guitar) {
 			pad.axis[JSTICK_1] = 0;	
-			pad.axis[STRUM] = STRUM_NEUTRAL;
+			if (ckdPs3) pad.axis[STRUM] = STRUM_NEUTRAL;
 		}
 	}	
 	
@@ -6939,7 +6938,7 @@ async function playChord(chord, root, type, bass) {
 	const guitarDuration = 240 / tempo; 
 	const bassNote = (chord.length == 4 ? chord[0] : chord[0] - 12);
 	const rootNote = (chord.length == 4 ? chord[0] : chord[0] - 12) + (guitarPos * 12);	
-	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);
+	const firstNote = (chord.length == 4 ? chord[1] : chord[0]);	
 	const thirdNote = (chord.length == 4 ? chord[2] : chord[1]);	
 	const fifthNote = (chord.length == 4 ? chord[3] : chord[2]);
 	
@@ -7574,7 +7573,8 @@ function resetArrToA() {
 }
 
 function stopChord() {			
-	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN || pad.axis[STRUM] == STRUM_NEUTRAL) {
+	if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) {
+
 		stopPlayingLeadInstrument();
 		
 		if (padsDevice?.stopNote || padsDevice?.name == "soundfont") {
@@ -7769,7 +7769,7 @@ function doChord() {
   if (!window.droneOn && droneActive) {
      window.dispatchEvent(new CustomEvent('MIDI', { detail: 11 }));
   }  
-
+  
   if (!pad.buttons[YELLOW] && !pad.buttons[BLUE] && !pad.buttons[ORANGE] && !pad.buttons[RED]  && !pad.buttons[GREEN]) 
   {
 	  if (pad.axis[STRUM] == STRUM_LEFT)
@@ -7782,14 +7782,7 @@ function doChord() {
 	  {
 		dokeyUp();
 	  }
-	  
-	  if (guitarName != "none" && !guitarDeviceId && (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) && padsMode != 0 && padsMode != 3 && padsMode != 4 && padsMode != 5) {
-		const arrChord = (firstChord.length == 4 ? firstChord[1] : firstChord[0]) % 12;
-		const guitarDuration = 240 / tempo;
-		player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume/4, undefined, guitarReverb.checked);					  
-	  }
-  }
-  else
+  }  
 	  
   if (pad.axis[STRUM] == STRUM_RIGHT && !styleStarted) {
 	if (pad.buttons[GREEN]) recallRegistration(1);	
@@ -7926,9 +7919,9 @@ function doChord() {
 		if (styleStarted) {
 			checkForJoyStick();			
 		}
-   }  
+   } 
 
-  if (pad.axis[STRUM] == STRUM_NEUTRAL) activeStrum = null;   
+  if (pad.axis[STRUM] == STRUM_NEUTRAL) activeStrum = null;     
 
   if ((pad.axis[STRUM] != STRUM_UP && pad.axis[STRUM] != STRUM_DOWN) || pad.buttons[STARPOWER] || pad.buttons[START]) {
 	  return;
@@ -7938,7 +7931,16 @@ function doChord() {
 	 return;
   }
   
-  activeStrum = pad.axis[STRUM];
+  activeStrum = pad.axis[STRUM];  
+  
+  if (!pad.buttons[YELLOW] && !pad.buttons[BLUE] && !pad.buttons[ORANGE] && !pad.buttons[RED]  && !pad.buttons[GREEN]) 
+  {
+	  if (guitarName != "none" && !guitarDeviceId && (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN) && padsMode != 0 && padsMode != 3 && padsMode != 4 && padsMode != 5) {
+		const arrChord = (firstChord.length == 4 ? firstChord[1] : firstChord[0]) % 12;
+		const guitarDuration = 240 / tempo;
+		player.queueSnap(guitarContext, guitarSource, midiGuitar, 0, getPitches(), guitarDuration, guitarVolume/4, undefined, guitarReverb.checked);					  
+	  }
+  }  
 
   // --- F/C
 
