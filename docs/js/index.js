@@ -1099,6 +1099,66 @@ async function setLiberLiveDeviceSettings() {
 	const resp = await writeCharacteristic.writeValue(dataView);
 	console.debug("setLiberLiveDeviceSettings", resp);
 }
+/*
+	String mac = ClientManager.getMac();
+	String strValueOf = String.valueOf(StyleActivity.this.f6636l);
+	String strSubstring = pickStyleVo.getCode().substring(0, 1);
+	String strSubstring2 = pickStyleVo.getCode().substring(1, 3);
+	StyleActivity styleActivity = StyleActivity.this;
+	
+	ClientManager.setChord(mac, strValueOf, strSubstring, strSubstring2, String.valueOf(styleActivity.f6639o[styleActivity.f6636l]), String.valueOf(StyleActivity.this.f6637m), new a(pickStyleVo));
+    ClientManager.setDrum(ClientManager.getMac(), pickStyleVo.getCode(), String.valueOf(StyleActivity.this.f6636l), String.valueOf(StyleActivity.this.f6637m), String.valueOf(StyleActivity.this.f6638n), new b(pickStyleVo));
+
+*/
+
+/*
+	// use these functions to simulate the strumbar and touchpad key press 
+	
+    public static void setTouchpad(String str, String str2, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{27}, new byte[]{2, 0}, HexUtils.hexStringToBytes(str2)), bleWriteResponse);
+    }
+    public static void playChord(String str, String str2, String str3, String str4, String str5, String str6, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{22}, new byte[]{5, 0}, HexUtils.hexStringToBytes(str2), HexUtils.hexStringToBytes(str3), HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(Integer.parseInt(str4))), HexUtils.hexStringToBytes(str5), HexUtils.hexStringToBytes(str6)), bleWriteResponse);
+    }
+
+    public static void playDrum(String str, String str2, String str3, String str4, String str5, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{23}, new byte[]{5, 0}, HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(Integer.parseInt(str2) & 255)), HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString((Integer.parseInt(str2) >> 8) & 255)), HexUtils.hexStringToBytes(str3), HexUtils.hexStringToBytes(str4), HexUtils.hexStringToBytes(str5)), bleWriteResponse);
+    }
+
+	// use these functions to set chord and drum, then preview them independent of touchpad and strumbar with specified chord tip
+	
+    public static void setDrumStylePreview(String str, String str2, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{38}, new byte[]{1, 0}, HexUtils.hexStringToBytes(str2)), bleWriteResponse);
+    }
+
+    public static void setRhythmStylePreview(String str, String str2, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{37}, new byte[]{1, 0}, HexUtils.hexStringToBytes(str2)), bleWriteResponse);
+    }
+
+    public static void setTipChord(String str, String str2, String str3, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{12}, new byte[]{3, 0}, HexUtils.hexStringToBytes(str2), HexUtils.hexStringToBytes(str3), new byte[]{0}), bleWriteResponse);
+    }
+
+	// playing prefrences
+
+    public static void setAutoBass(String str, String str2, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{39}, new byte[]{1, 0}, HexUtils.hexStringToBytes(str2)), bleWriteResponse);
+    }
+	
+    public static void setBPM(String str, int i9, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{26}, new byte[]{2, 0}, HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(i9))), bleWriteResponse);
+    }
+	
+    public static void setGuitarNoise(String str, int i9, BleWriteResponse bleWriteResponse) {
+        getWrite(str, OtherTool.concatAll(new byte[]{42}, new byte[]{2, 0}, HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(i9))), bleWriteResponse);
+    }
+
+    public static void setVolume(String str, int i9, int i10, BleWriteResponse bleWriteResponse) {
+		// bass and drum volume
+        getWrite(str, OtherTool.concatAll(new byte[]{25}, new byte[]{2, 0}, HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(i9)), HexUtils.hexStringToBytes(DigitalTrans.algorismToHEXString(i10))), bleWriteResponse);
+    }
+
+*/
 
 function parseChar(integer) {
 	return integer <= 9 ? "" + integer : integer == 10 ? "A" : integer == 11 ? "B" : integer == 12 ? "C" : integer == 13 ? "D" : integer == 14 ? "E" : integer == 15 ? "F" : "0";
