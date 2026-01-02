@@ -3343,6 +3343,7 @@ function handleNumPad(name, code) {
 	  
 	if (keyboard.get("0") || keyboard.get(".") || keyboard.get("1") || keyboard.get("2") || keyboard.get("3") || keyboard.get("4") || keyboard.get("5") || keyboard.get("6") || keyboard.get("7") || keyboard.get("8") || keyboard.get("9") || keyboard.get("*") || keyboard.get("/") || keyboard.get("Backspace")) {	
 		pad.axis[STRUM] = autoStrumUpDown();
+		activeStrum = null; 
 		
 		if (midiRealGuitar) {
 			midiRealGuitar.playNote(pad.axis[STRUM] == STRUM_UP ? 122 : 121, 1, {velocity: getVelocity(), duration: 1000});	
