@@ -1637,8 +1637,8 @@ async function doLiberLiveSetup(device) {
 							if (eventData[1] == 6) keyChange = 11;	// B
 							
 							keyChange = keyChange + offset;
-							if (keyChange < 0) keyChage = 11;
-							if (keyChange > 11) keyChage = 0;
+							if (keyChange < 0) keyChange = 11;
+							if (keyChange > 11) keyChange = 0;
 							
 							if (oldKey != keyChange) {
 								dokeyChange();
