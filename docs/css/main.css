@@ -1,22 +1,41 @@
 html, body { 
   height: 100%; 
   overflow: hidden;
-  font-size:12px;  
+  font-size:12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 .form-control {
   font-size:12px; 	
-  height: 30px;  
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 select {
-  font-size:12px; 	
+  font-size:12px;
+  background-color: white;
+  cursor: pointer;
 }
 
 input {
-  font-size:14px; 	
+  font-size:14px;
+}
+
+input[type="range"] {
+  cursor: pointer;
 }
 
 body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
   background-position: center center;
   background-repeat: no-repeat;
   padding: 0;
@@ -60,7 +79,8 @@ h1 {
 	padding:0; 
 	overflow:hidden;
 	width: 90%;
-	height: 90%;	
+	height: 90%;
+	border-radius: 12px;
 }
 
 #chordpro, #lyrics, #chatview {
@@ -69,7 +89,8 @@ h1 {
 	padding:0; 
 	overflow:hidden;
 	width: 98%;
-	height: 875px;	
+	height: 875px;
+	border-radius: 12px;
 }
 
 
@@ -79,34 +100,30 @@ h1 {
 }
 
 .play, .show_lyrics, .chord_pro, .style_type, .liber_live, .gamepad_mode, .load_file, .reset_app, .chorda_bluetooth, .delete_style, .pedal_board, .save_reg, .record_song {
-	-moz-box-shadow:inset 0px 20px 26px 0px #b6cde3;
-	-webkit-box-shadow:inset 0px 20px 26px 0px #b6cde3;
-	box-shadow:inset 0px 20px 26px 0px #b6cde3;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
-	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
-	background-color:#79bbff;
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-	border-radius:20px;
-	color:#ffffff;
-	padding:8px 12px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-radius: 8px;
+	border: none;
+	color: #ffffff;
+	padding: 10px 16px;
 	cursor: pointer;
 	margin-left: 10px;
-	text-decoration:none;
-	text-shadow:1px 1px 6px #000000;
+	text-decoration: none;
+	font-weight: 500;
 	width: 80px;
 	text-align: center;
+	transition: all 0.3s ease;
 }
 
 .play:hover {
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
-	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
-	background-color:#378de5;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+	background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .play:active {
-	position:relative;
-	top:1px; left: 1px;
+	transform: translateY(0);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #showTempo { 
@@ -117,4 +134,79 @@ h1 {
 #showSwing { 
 	display: inline-block;
 	width: 40px; 
+}
+
+/* Enhanced UI Improvements */
+#desktop {
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	padding: 20px;
+	backdrop-filter: blur(10px);
+}
+
+#settings {
+	background: linear-gradient(to bottom, #ffffff, #f9fafb);
+	border-radius: 12px;
+	padding: 20px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#settings td {
+	padding: 8px;
+}
+
+#settings b {
+	color: #374151;
+	font-weight: 600;
+}
+
+button {
+	border-radius: 8px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+button:hover {
+	transform: translateY(-1px);
+}
+
+input[type="checkbox"] {
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	accent-color: #667eea;
+}
+
+#tempo, #volume {
+	accent-color: #667eea;
+}
+
+fluent-button {
+	font-weight: 500;
+	letter-spacing: 0.3px;
+}
+
+canvas {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+}
+
+#orinayo, #orinayo-section, #orinayo-pad, #orinayo-strum, #orinayo-reg, #orinayo-control {
+	font-weight: 600;
+	color: #1f2937;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+#mobile {
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	padding: 10px;
+	backdrop-filter: blur(10px);
+}
+
+#mobile h4 {
+	color: #374151;
+	font-weight: 600;
 }

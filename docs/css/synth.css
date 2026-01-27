@@ -1,17 +1,29 @@
 body {
-  background-color: white;
+  background: transparent;
 }
 .synthtable table {
   font-size: 5px;
   table-layout: fixed;
   width: 100%;
   border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
 }
  .synthtable th {
-  padding: 0;
+  padding: 4px;
+  background: linear-gradient(to bottom, #667eea, #764ba2);
+  color: white;
+  font-weight: 600;
 }
 .synthtable tbody > tr:nth-child(odd) {
-  background-color: #eee;
+  background-color: #f3f4f6;
+}
+.synthtable tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+.synthtable tbody > tr:hover {
+  background-color: #e5e7eb;
+  transition: background-color 0.2s ease;
 }
 .synthtable th:first-child,  .synthtable td:first-child {
   width: 128px;
@@ -58,7 +70,8 @@ td:nth-child(65) {
   border-right: none;
 }
 .synthtable td.note-on {
-  background-color: red;
+  background-color: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
 }
 
 #message {
@@ -67,17 +80,19 @@ td:nth-child(65) {
 #message.show {
   padding: 1em;
   display: block;
-  font-weight: bold;
-  color: darkred;
-  border-radius: 1em;
-  border: 1px solid darkred;
-  background-color: #fcc;
+  font-weight: 600;
+  color: #991b1b;
+  border-radius: 12px;
+  border: 2px solid #f87171;
+  background: linear-gradient(to bottom, #fee2e2, #fecaca);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 div.load {
-  border-top: 1px solid #08f;
-  border-bottom: 1px solid #08f;
-  background-color: #def;
+  border-top: 2px solid #667eea;
+  border-bottom: 2px solid #667eea;
+  background: linear-gradient(to bottom, #ede9fe, #ddd6fe);
   margin-top: 1em;
   margin-bottom: 1em;
-  padding: 0.5em;
+  padding: 0.75em;
+  border-radius: 8px;
 }
