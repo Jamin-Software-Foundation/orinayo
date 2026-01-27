@@ -11,9 +11,12 @@ body {
 }
  .synthtable th {
   padding: 4px;
-  background: linear-gradient(to bottom, #667eea, #764ba2);
+  background: linear-gradient(to bottom, #5a67d8, #6b46c1);
   color: white;
   font-weight: 600;
+}
+.synthtable tbody > tr {
+  transition: background-color 0.2s ease;
 }
 .synthtable tbody > tr:nth-child(odd) {
   background-color: #f3f4f6;
@@ -22,8 +25,7 @@ body {
   background-color: #ffffff;
 }
 .synthtable tbody > tr:hover {
-  background-color: #e5e7eb;
-  transition: background-color 0.2s ease;
+  background-color: rgba(102, 126, 234, 0.15);
 }
 .synthtable th:first-child,  .synthtable td:first-child {
   width: 128px;

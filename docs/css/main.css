@@ -15,8 +15,8 @@ html, body {
 
 .form-control:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 select {
@@ -142,7 +142,14 @@ h1 {
 	border-radius: 16px;
 	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 	padding: 20px;
+	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+	#desktop {
+		background: rgba(255, 255, 255, 0.98);
+	}
 }
 
 #settings {
@@ -161,13 +168,15 @@ h1 {
 	font-weight: 600;
 }
 
-button {
+#desktop > table button,
+#mobile > table button {
 	border-radius: 8px;
 	font-weight: 500;
 	transition: all 0.2s ease;
 }
 
-button:hover {
+#desktop > table button:hover,
+#mobile > table button:hover {
 	transform: translateY(-1px);
 }
 
@@ -203,7 +212,14 @@ canvas {
 	border-radius: 16px;
 	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 	padding: 10px;
+	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+	#mobile {
+		background: rgba(255, 255, 255, 0.98);
+	}
 }
 
 #mobile h4 {
@@ -257,12 +273,12 @@ canvas {
 	background: linear-gradient(to right, #f9fafb, #ffffff);
 	padding: 10px 15px;
 	border-radius: 8px;
-	border: 2px solid #e5e7eb !important;
+	border: 2px solid #e5e7eb;
 	transition: all 0.2s ease;
 }
 
 #song_note:focus {
-	border-color: #667eea !important;
+	border-color: #667eea;
 	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 	outline: none;
 }
@@ -281,7 +297,14 @@ canvas {
 }
 
 fluent-dialog {
+	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+	fluent-dialog::part(control) {
+		background: rgba(0, 0, 0, 0.6);
+	}
 }
 
 #settings select.form-control {
