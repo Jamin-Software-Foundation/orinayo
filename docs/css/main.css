@@ -210,3 +210,82 @@ canvas {
 	color: #374151;
 	font-weight: 600;
 }
+
+#sequencer2 {
+	background: linear-gradient(to right, #f9fafb, #ffffff);
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	margin: 10px 0;
+}
+
+#sequencer2 span {
+	padding: 5px 10px;
+}
+
+#tempo-label {
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font-weight: 500;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#tempo-label:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#showVol {
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	border: none;
+	padding: 6px 16px;
+	border-radius: 6px;
+	font-weight: 500;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#showVol:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#song_note {
+	background: linear-gradient(to right, #f9fafb, #ffffff);
+	padding: 10px 15px;
+	border-radius: 8px;
+	border: 2px solid #e5e7eb !important;
+	transition: all 0.2s ease;
+}
+
+#song_note:focus {
+	border-color: #667eea !important;
+	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+	outline: none;
+}
+
+.desktop_logo img, .mobile_logo img {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	transition: transform 0.2s ease;
+}
+
+.desktop_logo img:hover, .mobile_logo img:hover {
+	transform: scale(1.05);
+}
+
+#desktop_logo img {
+	border-radius: 12px;
+}
+
+fluent-dialog {
+	backdrop-filter: blur(10px);
+}
+
+#settings select.form-control {
+	background: white;
+	border: 1px solid #d1d5db;
+	padding: 6px 8px;
+}
