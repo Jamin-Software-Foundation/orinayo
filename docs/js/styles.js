@@ -201,6 +201,7 @@ var chord_loops = [
 	"assets/chords/funky-pop_110_8727_8727_4.chord",
 	"extra/assets/chords/funky-soul_90_10667.chord",	
 	"assets/chords/fusion-pop_100_9600.chord",
+	"extra/assets/chords/giglad-1_72_3333.chord",	
 	"assets/chords/glorious-pop_110_8727_8727_2.chord",
 	"assets/chords/gogo_180_21333_10667.chord",
 	"assets/chords/gospel-funk_90_21333.chord",
