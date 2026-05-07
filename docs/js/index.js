@@ -10650,19 +10650,8 @@ function audioBufferToWav (instrument, opt) {
 		result = buffer.getChannelData(0)
 	}
 
-	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth);
-	const uint = [...new Uint8Array(data)];
-	const tmp = new wavefile.WaveFile(uint);
-	const samples = tmp.getSamples(true);
-	
-	const wav = new wavefile.WaveFile();
-	wav.fromScratch(numChannels, sampleRate, '16', samples);
-	addCuePoints(wav, instrument);
-	
-	let cuePoints = wav.listCuePoints();
-	console.debug("CUE Points", instrument.styleType, cuePoints);
-	
-	const blob = new Blob([wav.toBuffer()], { type: 'audio/wav' });			
+	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, instrument);
+	const blob = new Blob([data], { type: 'audio/wav' });			
 	const anchor = document.createElement('a');
 	anchor.href = window.URL.createObjectURL(blob);
 	anchor.style = "display: none;";
@@ -10670,11 +10659,12 @@ function audioBufferToWav (instrument, opt) {
 	document.body.appendChild(anchor);
 	anchor.click();
 	window.URL.revokeObjectURL(anchor.href);  
+	
 }
 
-function addCuePoints(wav, instrument) {
+function addCuePoints(instrument, sampleRate) {
 	const cues = Object.getOwnPropertyNames(instrument.loop);
-	const markers = {};
+	const markers = {}, cuePoints = [];
 
 	for (cue of cues) {
 		const cueData = instrument.loop[cue];;
@@ -10690,50 +10680,86 @@ function addCuePoints(wav, instrument) {
 	for (point of points) {
 		const cueData = markers[point];
 		console.debug("Cue Point", instrument.styleType, cueData);
-		wav.setCuePoint({position: cueData.start, label: cueData.cue});
-	}	
+		cuePoints.push(cueData.start * (sampleRate / 1000));
+	}
+
+	return cuePoints;
 }
 
-function encodeWAV (samples, format, sampleRate, numChannels, bitDepth) {
-  var bytesPerSample = bitDepth / 8
-  var blockAlign = numChannels * bytesPerSample
+function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrument) {
+	const markers = addCuePoints(instrument, sampleRate);
+	console.debug("encodeWAV", markers, instrument, sampleRate);	
+	
+	var bytesPerSample = bitDepth / 8
+	var blockAlign = numChannels * bytesPerSample
 
-  var buffer = new ArrayBuffer(44 + samples.length * bytesPerSample)
-  var view = new DataView(buffer)
+	var buffer = new ArrayBuffer(44 + (samples.length * bytesPerSample) + 8 + (markers.length * 24) + 12 + (markers.length * 16))
+	var view = new DataView(buffer)
 
-  /* RIFF identifier */
-  writeString(view, 0, 'RIFF')
-  /* RIFF chunk length */
-  view.setUint32(4, 36 + samples.length * bytesPerSample, true)
-  /* RIFF type */
-  writeString(view, 8, 'WAVE')
-  /* format chunk identifier */
-  writeString(view, 12, 'fmt ')
-  /* format chunk length */
-  view.setUint32(16, 16, true)
-  /* sample format (raw) */
-  view.setUint16(20, format, true)
-  /* channel count */
-  view.setUint16(22, numChannels, true)
-  /* sample rate */
-  view.setUint32(24, sampleRate, true)
-  /* byte rate (sample rate * block align) */
-  view.setUint32(28, sampleRate * blockAlign, true)
-  /* block align (channel count * bytes per sample) */
-  view.setUint16(32, blockAlign, true)
-  /* bits per sample */
-  view.setUint16(34, bitDepth, true)
-  /* data chunk identifier */
-  writeString(view, 36, 'data')
-  /* data chunk length */
-  view.setUint32(40, samples.length * bytesPerSample, true)
-  if (format === 1) { // Raw PCM
-    floatTo16BitPCM(view, 44, samples)
-  } else {
-    writeFloat32(view, 44, samples)
-  }
+	/* RIFF identifier */
+	writeString(view, 0, 'RIFF')
+	/* RIFF chunk length */
+	view.setUint32(4, 36 + samples.length * bytesPerSample, true)
+	/* RIFF type */
+	writeString(view, 8, 'WAVE')
+	/* format chunk identifier */
+	writeString(view, 12, 'fmt ')
+	/* format chunk length */
+	view.setUint32(16, 16, true)
+	/* sample format (raw) */
+	view.setUint16(20, format, true)
+	/* channel count */
+	view.setUint16(22, numChannels, true)
+	/* sample rate */
+	view.setUint32(24, sampleRate, true)
+	/* byte rate (sample rate * block align) */
+	view.setUint32(28, sampleRate * blockAlign, true)
+	/* block align (channel count * bytes per sample) */
+	view.setUint16(32, blockAlign, true)
+	/* bits per sample */
+	view.setUint16(34, bitDepth, true)
+	/* data chunk identifier */
+	writeString(view, 36, 'data')
+	/* data chunk length */
+	view.setUint32(40, samples.length * bytesPerSample, true)
+	
+	if (format === 1) { // Raw PCM
+		floatTo16BitPCM(view, 44, samples)
+	} else {
+		writeFloat32(view, 44, samples)
+	}
+	
+	let pointer = 44 + (samples.length * bytesPerSample);
+	
+	writeString(view, pointer, 	'cue ');	
+	view.setUint32(pointer + 4, 4 + (markers.length * 24), true);	
+	view.setUint32(pointer + 8, markers.length, true);	
+	
+	for (index in markers) {
+		view.setUint32(pointer + 12, index, true);
+		view.setUint32(pointer + 16, 0, true);
+		writeString(view, pointer + 20, 'data');		
+		view.setUint32(pointer + 24, 0, true);		
+		view.setUint32(pointer + 28, 0, true);			
+		view.setUint32(pointer + 32, markers[index], true);	
+		
+		pointer = pointer + 24;		
+	}
+	
+	writeString(view, pointer, 	'LIST');
+	view.setUint32(pointer + 4, 8 + (markers.length * 16), true);	
+	writeString(view, pointer + 8, 	'adtl');	
+	
+	for (index in markers) {
+		writeString(view, pointer + 12, 'labl');		
+		view.setUint32(pointer + 16, 8, true);
+		view.setUint32(pointer + 20, index, true);		
+		writeString(view, pointer + 24, 'key' + '\0');
+		
+		pointer = pointer + 16;		
+	}	
 
-  return buffer
+	return buffer
 }
 
 function interleave (inputL, inputR) {

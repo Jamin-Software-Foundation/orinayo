@@ -282,7 +282,7 @@ var chord_loops = [
 	"assets/chords/unplugged-2_96_10000_10000_4.chord",	
 	"extra/assets/chords/upbeat_120_16000_16000_2.chord",	
 	"extra/assets/chords/very-sharp_118_8136_8136_2.chord",	
-	"assets/chords/village-pop_107_8972_8972_4.chord",
+	"assets/chords/village-pop_107_8972_8972_2.chord",
 	"assets/chords/way-pop_75_12800.chord",	
 	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",		
 	"assets/chords/wild-rock_120_8000.chord"
@@ -502,6 +502,7 @@ var bass_loops = [
 	"assets/bass/thanksgiving-praise_118_8136_2.bass",
 	"assets/bass/u2-guitar_105_18286.bass",
 	"extra/assets/bass/upbeat_120_16000.bass",
+	"assets/bass/village-pop_107_8972.bass",
 	"extra/assets/bass/wagner-pop_125_7680.bass",	
 	"assets/bass/wild-rock_120_8000.bass"
 ]
