@@ -2422,6 +2422,11 @@ async function onloadHandler() {
 		window.open("./help.html", "user-guide");
 	});
 	
+	document.querySelector('#export').addEventListener("click", () => {	
+		console.debug("Export activated");		
+		exportStyle();
+	});
+	
 	document.querySelector('#giglad').addEventListener("click", () => {			
 		setTimeout(() => outputSendControlChange (85, 127, 4), 10000);	// FADE IN
 		setTimeout(() => outputSendControlChange (86, 127, 4), 20000);	// FADE OUT
@@ -10610,4 +10615,157 @@ function loadCSS(name) {
 function setupVoiceCommands() {
 	console.debug("setupVoiceCommands", speechObjectActive);	
 		
+}
+
+// -------------------------------------------------------
+//
+// Export Audio Style to WAV files
+//
+// -------------------------------------------------------
+
+function exportStyle() {
+	audioBufferToWav(bassLoop, {name: "bass_export.wav"});
+	audioBufferToWav(chordLoop, {name: "chord_export.wav"});		
+	audioBufferToWav(drumLoop, {name: "drum_export.wav"});		
+}
+
+function audioBufferToWav (instrument, opt) {
+	opt = opt || {};
+	
+	const loopData = instrument.loop.url.substring(instrument.loop.url.lastIndexOf("/") + 1);
+	const metaData = loopData.split("_");		
+	const name = metaData[0] + " " + instrument.bpm + " " + instrument.styleType + ".wav";	
+
+	const buffer = loopCache[instrument.loop.url];
+	const numChannels = buffer.numberOfChannels
+	const sampleRate = buffer.sampleRate
+	const format = opt.float32 ? 3 : 1
+	const bitDepth = format === 3 ? 32 : 16
+
+	let result;
+	
+	if (numChannels === 2) {
+		result = interleave(buffer.getChannelData(0), buffer.getChannelData(1))
+	} else {
+		result = buffer.getChannelData(0)
+	}
+
+	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth);
+	const uint = [...new Uint8Array(data)];
+	const tmp = new wavefile.WaveFile(uint);
+	const samples = tmp.getSamples(true);
+	
+	const wav = new wavefile.WaveFile();
+	wav.fromScratch(numChannels, sampleRate, '16', samples);
+	addCuePoints(wav, instrument);
+	
+	let cuePoints = wav.listCuePoints();
+	console.debug("CUE Points", instrument.styleType, cuePoints);
+	
+	const blob = new Blob([wav.toBuffer()], { type: 'audio/wav' });			
+	const anchor = document.createElement('a');
+	anchor.href = window.URL.createObjectURL(blob);
+	anchor.style = "display: none;";
+	anchor.download = name;
+	document.body.appendChild(anchor);
+	anchor.click();
+	window.URL.revokeObjectURL(anchor.href);  
+}
+
+function addCuePoints(wav, instrument) {
+	const cues = Object.getOwnPropertyNames(instrument.loop);
+	const markers = {};
+
+	for (cue of cues) {
+		const cueData = instrument.loop[cue];;
+		
+		if (!cue.startsWith("url") && cueData?.stop) {
+			cueData.cue = cue			
+			markers[cueData.start] = cueData;
+		}
+	}
+
+	const points = Object.getOwnPropertyNames(markers);
+	
+	for (point of points) {
+		const cueData = markers[point];
+		console.debug("Cue Point", instrument.styleType, cueData);
+		wav.setCuePoint({position: cueData.start, label: cueData.cue});
+	}	
+}
+
+function encodeWAV (samples, format, sampleRate, numChannels, bitDepth) {
+  var bytesPerSample = bitDepth / 8
+  var blockAlign = numChannels * bytesPerSample
+
+  var buffer = new ArrayBuffer(44 + samples.length * bytesPerSample)
+  var view = new DataView(buffer)
+
+  /* RIFF identifier */
+  writeString(view, 0, 'RIFF')
+  /* RIFF chunk length */
+  view.setUint32(4, 36 + samples.length * bytesPerSample, true)
+  /* RIFF type */
+  writeString(view, 8, 'WAVE')
+  /* format chunk identifier */
+  writeString(view, 12, 'fmt ')
+  /* format chunk length */
+  view.setUint32(16, 16, true)
+  /* sample format (raw) */
+  view.setUint16(20, format, true)
+  /* channel count */
+  view.setUint16(22, numChannels, true)
+  /* sample rate */
+  view.setUint32(24, sampleRate, true)
+  /* byte rate (sample rate * block align) */
+  view.setUint32(28, sampleRate * blockAlign, true)
+  /* block align (channel count * bytes per sample) */
+  view.setUint16(32, blockAlign, true)
+  /* bits per sample */
+  view.setUint16(34, bitDepth, true)
+  /* data chunk identifier */
+  writeString(view, 36, 'data')
+  /* data chunk length */
+  view.setUint32(40, samples.length * bytesPerSample, true)
+  if (format === 1) { // Raw PCM
+    floatTo16BitPCM(view, 44, samples)
+  } else {
+    writeFloat32(view, 44, samples)
+  }
+
+  return buffer
+}
+
+function interleave (inputL, inputR) {
+  var length = inputL.length + inputR.length
+  var result = new Float32Array(length)
+
+  var index = 0
+  var inputIndex = 0
+
+  while (index < length) {
+    result[index++] = inputL[inputIndex]
+    result[index++] = inputR[inputIndex]
+    inputIndex++
+  }
+  return result
+}
+
+function writeFloat32 (output, offset, input) {
+  for (var i = 0; i < input.length; i++, offset += 4) {
+    output.setFloat32(offset, input[i], true)
+  }
+}
+
+function floatTo16BitPCM (output, offset, input) {
+  for (var i = 0; i < input.length; i++, offset += 2) {
+    var s = Math.max(-1, Math.min(1, input[i]))
+    output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true)
+  }
+}
+
+function writeString (view, offset, string) {
+  for (var i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i))
+  }
 }
