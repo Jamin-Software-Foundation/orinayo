@@ -10645,13 +10645,13 @@ async function audioBufferToWav (instrument, opt) {
 	const bitDepth = format === 3 ? 32 : 16;
 	const loopSize = instrument.styleType == "bass" ? 24 : (instrument.styleType == "chord" ? 36 : 0); 
 	
-	const tempoRatio = tempo / savedTempo;
+	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
 	const newLength = Math.floor(buffer.length / tempoRatio);
 	
 	const offlineCtx = new OfflineAudioContext(numChannels,	newLength,	sampleRate);
 	const source = offlineCtx.createBufferSource();
 	source.buffer = buffer;
-	source.playbackRate.value = 2 ** (parseInt(tempoEle.value) / 12);
+	source.playbackRate.value = tempoRatio;
 	source.connect(offlineCtx.destination);
 	source.start(0);
 	const renderedBuffer = await offlineCtx.startRendering();	
@@ -10742,7 +10742,9 @@ function addCuePoints(instrument, sampleRate, tempoRatio) {
 	for (point of points) {
 		const cueData = markers[point];
 		console.debug("Cue Point", instrument.styleType, cueData);
-		cuePoints.push(Math.floor(cueData.start * (sampleRate / 1000) / tempoRatio));
+		
+		let pointValue = Math.floor(cueData.start * (sampleRate / 1000) / tempoRatio);
+		cuePoints.push(pointValue);
 	}
 
 	return cuePoints;
