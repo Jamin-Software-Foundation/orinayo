@@ -10629,28 +10629,42 @@ function exportStyle() {
 	audioBufferToWav(drumLoop, {name: "drum_export.wav"});		
 }
 
-function audioBufferToWav (instrument, opt) {
+async function audioBufferToWav (instrument, opt) {
+	if (!instrument) return;
+	
 	opt = opt || {};
 	
 	const loopData = instrument.loop.url.substring(instrument.loop.url.lastIndexOf("/") + 1);
 	const metaData = loopData.split("_");		
-	const name = metaData[0] + " " + instrument.bpm + " " + instrument.styleType + ".wav";	
+	const name = metaData[0] + " " + tempo + " " + instrument.styleType + ".wav";	
 
 	const buffer = loopCache[instrument.loop.url];
-	const numChannels = buffer.numberOfChannels
-	const sampleRate = buffer.sampleRate
-	const format = opt.float32 ? 3 : 1
-	const bitDepth = format === 3 ? 32 : 16
+	const numChannels = buffer.numberOfChannels;
+	const sampleRate = buffer.sampleRate;
+	const format = opt.float32 ? 3 : 1;
+	const bitDepth = format === 3 ? 32 : 16;
+	const loopSize = instrument.styleType == "bass" ? 24 : (instrument.styleType == "chord" ? 36 : 0); 
+	
+	const tempoRatio = tempo / savedTempo;
+	const newLength = Math.floor(buffer.length / tempoRatio);
+	
+	const offlineCtx = new OfflineAudioContext(numChannels,	newLength,	sampleRate);
+	const source = offlineCtx.createBufferSource();
+	source.buffer = buffer;
+	source.playbackRate.value = 2 ** (parseInt(tempoEle.value) / 12);
+	source.connect(offlineCtx.destination);
+	source.start(0);
+	const renderedBuffer = await offlineCtx.startRendering();	
 
 	let result;
 	
 	if (numChannels === 2) {
-		result = interleave(buffer.getChannelData(0), buffer.getChannelData(1))
+		result = interleave(adjustForTempo(renderedBuffer.getChannelData(0), loopSize), adjustForTempo(renderedBuffer.getChannelData(1), loopSize));
 	} else {
-		result = buffer.getChannelData(0)
+		result = adjustForTempo(renderedBuffer.getChannelData(0), loopSize);
 	}
 
-	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, instrument);
+	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, instrument, tempoRatio);
 	const blob = new Blob([data], { type: 'audio/wav' });			
 	const anchor = document.createElement('a');
 	anchor.href = window.URL.createObjectURL(blob);
@@ -10662,7 +10676,55 @@ function audioBufferToWav (instrument, opt) {
 	
 }
 
-function addCuePoints(instrument, sampleRate) {
+function adjustForTempo(buffer, loopCount) {
+	if (loopCount == 0) return buffer;
+	
+	let index = 0;
+	let base = 0;
+	
+	const newBuffer = new Float32Array(buffer.length);
+	const sliceLength = Math.floor(buffer.length / loopCount);
+	const offset = parseInt(tempoEle.value) * sliceLength;					// values -6 to 6 (12 semitones)	
+	const loopLength = sliceLength * 12;	
+
+	console.debug("adjustForTempo", tempoEle.value, offset, loopCount, sliceLength, loopLength, buffer.length);
+	
+	for (let i=0; i<loopCount; i+=12 )  {										
+		let boundary = base + loopLength;		
+		let origin = base - offset;		
+		let overflow = 0;
+		
+		if (origin < base) {
+			origin = boundary - Math.abs(offset);
+			overflow = base + loopLength - Math.abs(offset);
+		} else {
+			overflow = base + Math.abs(offset);
+		}
+		
+		console.debug("adjustForTempo process", base, boundary, origin, overflow);	
+		
+		let inputIndex = origin;		
+		
+		while (inputIndex < boundary) {
+			newBuffer[index++] = buffer[inputIndex];
+			inputIndex++;
+		}
+
+		inputIndex = base;
+		
+		while (inputIndex < overflow) {
+			newBuffer[index++] = buffer[inputIndex];
+			inputIndex++;		
+		}
+		
+		base = base + loopLength;	
+	}
+	
+	return newBuffer;
+}
+
+
+function addCuePoints(instrument, sampleRate, tempoRatio) {
 	const cues = Object.getOwnPropertyNames(instrument.loop);
 	const markers = {}, cuePoints = [];
 
@@ -10680,14 +10742,14 @@ function addCuePoints(instrument, sampleRate) {
 	for (point of points) {
 		const cueData = markers[point];
 		console.debug("Cue Point", instrument.styleType, cueData);
-		cuePoints.push(cueData.start * (sampleRate / 1000));
+		cuePoints.push(Math.floor(cueData.start * (sampleRate / 1000) / tempoRatio));
 	}
 
 	return cuePoints;
 }
 
-function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrument) {
-	const markers = addCuePoints(instrument, sampleRate);
+function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrument, tempoRatio) {
+	const markers = addCuePoints(instrument, sampleRate, tempoRatio);
 	console.debug("encodeWAV", markers, instrument, sampleRate);	
 	
 	var bytesPerSample = bitDepth / 8
