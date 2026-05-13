@@ -10723,10 +10723,10 @@ function adjustForTempo(buffer, loopCount) {
 	return newBuffer;
 }
 
-
 function addCuePoints(instrument, sampleRate, tempoRatio) {
 	const cues = Object.getOwnPropertyNames(instrument.loop);
 	const markers = {}, cuePoints = [];
+	let highestValue = 0;
 
 	for (cue of cues) {
 		const cueData = instrument.loop[cue];;
@@ -10743,10 +10743,14 @@ function addCuePoints(instrument, sampleRate, tempoRatio) {
 		const cueData = markers[point];
 		console.debug("Cue Point", instrument.styleType, cueData);
 		
-		let pointValue = Math.floor(cueData.start * (sampleRate / 1000) / tempoRatio);
-		cuePoints.push(pointValue);
+		const pointStart = Math.floor(cueData.start * (sampleRate / 1000) / tempoRatio);	
+		cuePoints.push(pointStart);
+		
+		const pointEnd = Math.floor(cueData.stop * (sampleRate / 1000) / tempoRatio);	
+		if (highestValue < pointEnd) highestValue = pointEnd;
 	}
-
+	
+	cuePoints.push(highestValue);
 	return cuePoints;
 }
 
