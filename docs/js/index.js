@@ -66,6 +66,7 @@ var introEndCheckedEle = null;
 var syncStartCheckedEle = null;
 var guitarIRDef = null;
 var guitarPosition = null;
+var exportDevice = null;
 var tempoDiv = null;
 var showVol = null;
 var bassKnob = null;
@@ -2100,6 +2101,7 @@ function saveConfig() {
 	config.microphone = microphone.checked;
 	config.programChange = programChangeEle.checked;
 	config.strumPos = guitarPosition?.selectedIndex;
+	config.exportDevice = exportDevice?.selectedIndex;
 	config.liberLiveChrd1 = liberLive.chord1;
 	config.liberLiveChrd2 = liberLive.chord2;
 	config.liberLiveDrms1 = liberLive.drums1;
@@ -5065,9 +5067,11 @@ async function setupUI(config, err) {
 		.catch(e => onError('Failed to load reverb impulse'));
 	});
 	
+	exportDevice = document.getElementById("exportDevice");
+	exportDevice.selectedIndex = config.exportDevice;
 	
 	guitarPosition = document.getElementById("guitarPosition");
-	guitarPosition.selectedIndex = config.strumPos	
+	guitarPosition.selectedIndex = config.strumPos;	
 	
 	guitarStrum[1].addEventListener("change", function()
 	{
@@ -10624,38 +10628,122 @@ function setupVoiceCommands() {
 // -------------------------------------------------------
 
 function exportStyle() {
-	audioBufferToWav(bassLoop, {name: "bass_export.wav"});
-	audioBufferToWav(chordLoop, {name: "chord_export.wav"});		
-	audioBufferToWav(drumLoop, {name: "drum_export.wav"});		
+	
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 0) {							// Nanobox Tangerine
+		makeWavForNanobox(bassLoop);
+		makeWavForNanobox(chordLoop);		
+		makeWavForNanobox(drumLoop);	
+	} 
+	else
+		
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 1) {							// Akai MPX
+		makeWavForMpx(parseInt(keyChange + 0), "maj", "maj");
+		makeWavForMpx(parseInt(keyChange + 2), "min", "min");		
+		makeWavForMpx(parseInt(keyChange + 4), "min", "min");		
+		makeWavForMpx(parseInt(keyChange + 5), "maj", "maj");		
+		makeWavForMpx(parseInt(keyChange + 7), "maj", "maj");
+		makeWavForMpx(parseInt(keyChange + 9), "min", "min");
+		makeWavForMpx(parseInt(keyChange + 0), "sus", "maj");		
+		makeWavForMpx(parseInt(keyChange + 7), "sus", "maj");			
+	}		
+	else {
+		alert("Export not yet implemented for this instrument or settings");
+	}		
 }
 
-async function audioBufferToWav (instrument, opt) {
+async function makeWavForMpx(chordIndex, chordType, bassType) {
+	const numChannels = buffer.numberOfChannels;
+	const sampleRate = buffer.sampleRate;
+	const format = 1;
+	const bitDepth = 16;	
+	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
+
+	let drumBuffer = loopCache[drumLoop.loop.url];	
+	const drumLength = Math.floor(drumBuffer.length / tempoRatio);		
+	drumBuffer = await renderInstrument(drumBuffer, numChannels, drumLength, sampleRate, tempoRatio);
+
+	let bassBuffer = loopCache[bassLoop.loop.url];	
+	const bassLength = Math.floor(bassBuffer.length / tempoRatio);		
+	bassBuffer = await renderInstrument(bassBuffer, numChannels, bassLength, sampleRate, tempoRatio);
+
+	let chordBuffer = loopCache[chordLoop.loop.url];	
+	const chordLength = Math.floor(chordBuffer.length / tempoRatio);		
+	chordBuffer = await renderInstrument(chordBuffer, numChannels, chordLength, sampleRate, tempoRatio);
+
+	let metaData = chordLoop.loop.url.substring(chordLoop.loop.url.lastIndexOf("/") + 1).split("_");
+	const name = metaData[0] + " " + tempo + " " + chordLoop.styleType + ".wav";	
+	let chordVars = 1;
+	if (metaData.length == 5) chordVars = parseInt(metaData[4]);		
+	const chordLoopSize = 36 * chordVars;
+
+	metaData = bassLoop.loop.url.substring(bassLoop.loop.url.lastIndexOf("/") + 1).split("_");		
+	let bassVars = 1;
+	if (metaData.length == 4) bassVars = parseInt(metaData[3]);		
+	const bassLoopSize = 24 * bassVars;
+
+	const drumBufferLeft = drumBuffer.getChannelData(0);
+	const drumBufferRight = drumBuffer.getChannelData(1);	
+	const bassBufferLeft = adjustForTempo(bassBuffer.getChannelData(0), bassLoopSize);
+	const bassBufferRight = adjustForTempo(bassBuffer.getChannelData(1), bassLoopSize);
+	const chordBufferLeft = adjustForTempo(chordBuffer.getChannelData(0), chordLoopSize);
+	const chordBufferRight = adjustForTempo(chordBuffer.getChannelData(1), chordLoopSize);
+	
+	const ratio = (sampleRate / 1000) / tempoRatio;
+	const chordStart = Math.floor(chordLoop.loop['key' + chordIndex + '_' + chordType + '_arra'].start * ratio);
+	const chordStop = Math.floor(chordLoop.loop['key' + chordIndex + '_' + chordType + '_arra'].stop * ratio);
+	const bassStart = Math.floor(bassLoop.loop['key' + chordIndex + '_' + bassType + '_arra'].start * ratio);
+	const bassStop = Math.floor(bassLoop.loop['key' + chordIndex + '_' + bassType + '_arra'].stop * ratio);
+	const drumStart = Math.floor(drumLoop.loop['arra'].start * ratio);
+	const drumStop = Math.floor(drumLoop.loop['arra'].stop * ratio);
+	
+	const chordSize = chordStop - chordStart;
+	const bassSize = bassStop - bassStart;
+	const drumSize = drumStop - drumStart;
+	const mixSize = chordSize;
+	
+	const mixBufferLeft = new Float32Array(mixSize);	
+	const mixBufferRight = new Float32Array(mixSize);
+	
+	for (let i=0; i<chordSize;  i++) {
+		mixBufferLeft[i]  = (drumBufferLeft[drumStart + (i % drumSize)] + bassBufferLeft[bassStart + (i % bassSize)] + chordBufferLeft[chordStart + i]) / 3;	
+		mixBufferRight[i]  = (drumBufferRight[drumStart + (i % drumSize)] + bassBufferRight[bassStart + (i % bassSize)] + chordBufferRight[chordStart + i]) / 3;		
+	}
+	
+	const stereoBuffer = interleave(mixBufferLeft, mixBufferRight);	
+	const data = encodeWAV(stereoBuffer, format, sampleRate, numChannels, bitDepth, tempoRatio);
+	const chordName = chordType.toUpperCase() + "_" + KEYS[chordIndex] + ".wav";
+	saveWavFile(chordName, data);
+}
+
+async function makeWavForNanobox (instrument) {
 	if (!instrument) return;
-	
-	opt = opt || {};
-	
+		
 	const loopData = instrument.loop.url.substring(instrument.loop.url.lastIndexOf("/") + 1);
 	const metaData = loopData.split("_");		
-	const name = metaData[0] + " " + tempo + " " + instrument.styleType + ".wav";	
-
 	const buffer = loopCache[instrument.loop.url];
 	const numChannels = buffer.numberOfChannels;
 	const sampleRate = buffer.sampleRate;
-	const format = opt.float32 ? 3 : 1;
-	const bitDepth = format === 3 ? 32 : 16;
-	const loopSize = instrument.styleType == "bass" ? 24 : (instrument.styleType == "chord" ? 36 : 0); 
+	const format = 1;
+	const bitDepth = 16;
 	
-	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
-	const newLength = Math.floor(buffer.length / tempoRatio);
+	let variations = 1;
+	let loopSize = 0;
 	
-	const offlineCtx = new OfflineAudioContext(numChannels,	newLength,	sampleRate);
-	const source = offlineCtx.createBufferSource();
-	source.buffer = buffer;
-	source.playbackRate.value = tempoRatio;
-	source.connect(offlineCtx.destination);
-	source.start(0);
-	const renderedBuffer = await offlineCtx.startRendering();	
+	if (instrument.styleType == "chord") {
+		if (metaData.length == 5) variations = parseInt(metaData[4]); 
+		loopSize = 36 * variations;
+	}
+	else
+		
+	if (instrument.styleType == "bass") {
+		if (metaData.length == 4) variations = parseInt(metaData[3]); 
+		loopSize = 24 * variations;
+	}	
 
+	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
+	const newLength = Math.floor(buffer.length / tempoRatio);	
+	
+	const renderedBuffer = await renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio);
 	let result;
 	
 	if (numChannels === 2) {
@@ -10663,8 +10751,23 @@ async function audioBufferToWav (instrument, opt) {
 	} else {
 		result = adjustForTempo(renderedBuffer.getChannelData(0), loopSize);
 	}
+	const name = metaData[0] + " " + tempo + " " + instrument.styleType + ".wav";	
+	const markers = addCuePoints(instrument, sampleRate, tempoRatio);
+	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, tempoRatio, markers);
+	saveWavFile(name, data);	
+}
 
-	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, instrument, tempoRatio);
+async function renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio) {	
+	const offlineCtx = new OfflineAudioContext(numChannels,	newLength,	sampleRate);
+	const source = offlineCtx.createBufferSource();
+	source.buffer = buffer;
+	source.playbackRate.value = tempoRatio;
+	source.connect(offlineCtx.destination);
+	source.start(0);
+	return await offlineCtx.startRendering();	
+}
+
+function saveWavFile(name, data) {
 	const blob = new Blob([data], { type: 'audio/wav' });			
 	const anchor = document.createElement('a');
 	anchor.href = window.URL.createObjectURL(blob);
@@ -10672,8 +10775,7 @@ async function audioBufferToWav (instrument, opt) {
 	anchor.download = name;
 	document.body.appendChild(anchor);
 	anchor.click();
-	window.URL.revokeObjectURL(anchor.href);  
-	
+	window.URL.revokeObjectURL(anchor.href); 	
 }
 
 function adjustForTempo(buffer, loopCount) {
@@ -10754,16 +10856,7 @@ function addCuePoints(instrument, sampleRate, tempoRatio) {
 	return cuePoints;
 }
 
-function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrument, tempoRatio) {
-	const markers = addCuePoints(instrument, sampleRate, tempoRatio);
-	console.debug("encodeWAV", markers, instrument, sampleRate);	
-	
-	var bytesPerSample = bitDepth / 8
-	var blockAlign = numChannels * bytesPerSample
-
-	var buffer = new ArrayBuffer(44 + (samples.length * bytesPerSample) + 8 + (markers.length * 24) + 12 + (markers.length * 16))
-	var view = new DataView(buffer)
-
+function encodeWAVHdr(view, samples, format, sampleRate, numChannels, bitDepth, bytesPerSample, blockAlign) {
 	/* RIFF identifier */
 	writeString(view, 0, 'RIFF')
 	/* RIFF chunk length */
@@ -10795,8 +10888,10 @@ function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrume
 		floatTo16BitPCM(view, 44, samples)
 	} else {
 		writeFloat32(view, 44, samples)
-	}
-	
+	}	
+}
+
+function encodeWAVCues(view, markers, samples, bytesPerSample) {
 	let pointer = 44 + (samples.length * bytesPerSample);
 	
 	writeString(view, pointer, 	'cue ');	
@@ -10826,7 +10921,23 @@ function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, instrume
 		
 		pointer = pointer + 16;		
 	}	
+}
 
+function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, tempoRatio, markers) {
+	console.debug("encodeWAV", markers, sampleRate);	
+	
+	var bytesPerSample = bitDepth / 8;
+	var blockAlign = numChannels * bytesPerSample;
+	var markersLen = 0;
+
+	if (markers) markersLen = 8 + (markers.length * 24) + 12 + (markers.length * 16);
+
+	var buffer = new ArrayBuffer(44 + (samples.length * bytesPerSample) + markersLen);
+	var view = new DataView(buffer)	
+	encodeWAVHdr(view, samples, format, sampleRate, numChannels, bitDepth, bytesPerSample, blockAlign);
+	
+	if (markers) encodeWAVCues(view, markers, samples, bytesPerSample);
+	
 	return buffer
 }
 
