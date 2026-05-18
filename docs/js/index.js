@@ -10629,14 +10629,14 @@ function setupVoiceCommands() {
 
 async function exportStyle() {
 	
-	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 0) {							// Nanobox Tangerine
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 0) {	// Nanobox Tangerine
 		await makeWavForNanobox(bassLoop);
 		await makeWavForNanobox(chordLoop);		
 		await makeWavForNanobox(drumLoop);	
 	} 
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 1) {							// Akai MPX Var A
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 1) {	// Akai MPX Var A
 		await makeWavForMpx(parseInt(keyChange + 0), "maj", "maj", "arra");
 		await makeWavForMpx(parseInt(keyChange + 2), "min", "min", "arra");		
 		await makeWavForMpx(parseInt(keyChange + 4), "min", "min", "arra");		
@@ -10648,7 +10648,7 @@ async function exportStyle() {
 	}	
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 2) {							// Akai MPX Var B
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 2) {	// Akai MPX Var B
 		await makeWavForMpx(parseInt(keyChange + 0), "maj", "maj", "arrb");
 		await makeWavForMpx(parseInt(keyChange + 2), "min", "min", "arrb");		
 		await makeWavForMpx(parseInt(keyChange + 4), "min", "min", "arrb");		
@@ -10660,15 +10660,15 @@ async function exportStyle() {
 	}
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 3) {							// Akai MPX Drums
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 3) {	// Akai MPX Drums
 		await makeWavForDrumPad('arra.wav', 'arra');	
 		await makeWavForDrumPad('arrb.wav', 'arrb');
 		await makeWavForDrumPad('arrc.wav', 'arrc');
 		await makeWavForDrumPad('arrd.wav', 'arrd');
 	}
 	else
-		
-	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 4) {							// Akai MPC Sample
+
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 4) {	// Akai MPC Sample
 		await makeWavForDrumPad('1-01-' + tempo + '.wav', 'arra');	
 		await makeWavForDrumPad('1-02-' + tempo + '.wav', 'arrb');
 		await makeWavForDrumPad('1-03-' + tempo + '.wav', 'arrc');
@@ -10686,8 +10686,7 @@ async function exportStyle() {
 		await makeWavForDrumPad('1-15-' + tempo + '.wav', 'brka');
 		await makeWavForDrumPad('1-16-' + tempo + '.wav', 'brkb');
 		
-
-		await makeWavForChordPad('2-01-' + tempo + '.wav', 10, 'maj', 'arra');
+		await makeWavForChordPad('2-01-' + tempo + '.wav', 10, 'maj', 'arra');		// Maj Var A
 		await makeWavForChordPad('2-02-' + tempo + '.wav', 9,  'maj', 'arra');
 		await makeWavForChordPad('2-03-' + tempo + '.wav', 11, 'maj', 'arra');
 		await makeWavForChordPad('2-04-' + tempo + '.wav', 1,  'maj', 'arra');
@@ -10699,7 +10698,7 @@ async function exportStyle() {
 		await makeWavForChordPad('2-10-' + tempo + '.wav', 5,  'maj', 'arra');
 		await makeWavForChordPad('2-11-' + tempo + '.wav', 8,  'maj', 'arra');
 		await makeWavForChordPad('2-12-' + tempo + '.wav', 7,  'maj', 'arra');
-		await makeWavForChordPad('2-13-' + tempo + '.wav', 10, 'min', 'arra');
+		await makeWavForChordPad('2-13-' + tempo + '.wav', 10, 'min', 'arra');		// Min Var A
 		await makeWavForChordPad('2-14-' + tempo + '.wav', 9,  'min', 'arra');
 		await makeWavForChordPad('2-15-' + tempo + '.wav', 11, 'min', 'arra');
 		await makeWavForChordPad('2-16-' + tempo + '.wav', 1,  'min', 'arra');
@@ -10708,24 +10707,24 @@ async function exportStyle() {
 		await makeWavForChordPad('3-02-' + tempo + '.wav', 3,  'min', 'arra');
 		await makeWavForChordPad('3-03-' + tempo + '.wav', 2,  'min', 'arra');
 		await makeWavForChordPad('3-04-' + tempo + '.wav', 4,  'min', 'arra');
-		await makeWavForChordPad('3-05-' + tempo + '.wav', 6,  'maj', 'arra');
-		await makeWavForChordPad('3-06-' + tempo + '.wav', 5,  'maj', 'arra');
-		await makeWavForChordPad('3-07-' + tempo + '.wav', 8,  'maj', 'arra');
-		await makeWavForChordPad('3-08-' + tempo + '.wav', 7,  'maj', 'arra');
-		await makeWavForChordPad('3-09-' + tempo + '.wav', 10, 'min', 'arrb');
-		await makeWavForChordPad('3-10-' + tempo + '.wav', 9,  'min', 'arrb');
-		await makeWavForChordPad('3-11-' + tempo + '.wav', 11, 'min', 'arrb');
-		await makeWavForChordPad('3-12-' + tempo + '.wav', 1,  'min', 'arrb');
-		await makeWavForChordPad('3-13-' + tempo + '.wav', 0,  'min', 'arrb');
-		await makeWavForChordPad('3-14-' + tempo + '.wav', 3,  'min', 'arrb');
-		await makeWavForChordPad('3-15-' + tempo + '.wav', 2,  'min', 'arrb');
-		await makeWavForChordPad('3-16-' + tempo + '.wav', 4,  'min', 'arrb');
+		await makeWavForChordPad('3-05-' + tempo + '.wav', 6,  'min', 'arra');
+		await makeWavForChordPad('3-06-' + tempo + '.wav', 5,  'min', 'arra');
+		await makeWavForChordPad('3-07-' + tempo + '.wav', 8,  'min', 'arra');
+		await makeWavForChordPad('3-08-' + tempo + '.wav', 7,  'min', 'arra');
+		await makeWavForChordPad('3-09-' + tempo + '.wav', 10, 'maj', 'arrb');		// Maj Var B
+		await makeWavForChordPad('3-10-' + tempo + '.wav', 9,  'maj', 'arrb');
+		await makeWavForChordPad('3-11-' + tempo + '.wav', 11, 'maj', 'arrb');
+		await makeWavForChordPad('3-12-' + tempo + '.wav', 1,  'maj', 'arrb');
+		await makeWavForChordPad('3-13-' + tempo + '.wav', 0,  'maj', 'arrb');
+		await makeWavForChordPad('3-14-' + tempo + '.wav', 3,  'maj', 'arrb');
+		await makeWavForChordPad('3-15-' + tempo + '.wav', 2,  'maj', 'arrb');
+		await makeWavForChordPad('3-16-' + tempo + '.wav', 4,  'maj', 'arrb');
 		
 		await makeWavForChordPad('4-01-' + tempo + '.wav', 6,  'maj', 'arrb');
 		await makeWavForChordPad('4-02-' + tempo + '.wav', 5,  'maj', 'arrb');
 		await makeWavForChordPad('4-03-' + tempo + '.wav', 8,  'maj', 'arrb');
 		await makeWavForChordPad('4-04-' + tempo + '.wav', 7,  'maj', 'arrb');
-		await makeWavForChordPad('4-05-' + tempo + '.wav', 10, 'min', 'arrb');
+		await makeWavForChordPad('4-05-' + tempo + '.wav', 10, 'min', 'arrb');		// Min Var B
 		await makeWavForChordPad('4-06-' + tempo + '.wav', 9,  'min', 'arrb');
 		await makeWavForChordPad('4-07-' + tempo + '.wav', 11, 'min', 'arrb');
 		await makeWavForChordPad('4-08-' + tempo + '.wav', 1,  'min', 'arrb');
@@ -10738,32 +10737,32 @@ async function exportStyle() {
 		await makeWavForChordPad('4-15-' + tempo + '.wav', 8,  'min', 'arrb');
 		await makeWavForChordPad('4-16-' + tempo + '.wav', 7,  'min', 'arrb');
 
-		await makeWavForChordPad('5-01-' + tempo + '.wav', 10, 'maj', 'arra');
-		await makeWavForChordPad('5-02-' + tempo + '.wav', 9,  'maj', 'arra');
-		await makeWavForChordPad('5-03-' + tempo + '.wav', 11, 'maj', 'arra');
-		await makeWavForChordPad('5-04-' + tempo + '.wav', 1,  'maj', 'arra');
-		await makeWavForChordPad('5-05-' + tempo + '.wav', 0,  'maj', 'arra');
-		await makeWavForChordPad('5-06-' + tempo + '.wav', 3,  'maj', 'arra');
-		await makeWavForChordPad('5-07-' + tempo + '.wav', 2,  'maj', 'arra');
-		await makeWavForChordPad('5-08-' + tempo + '.wav', 4,  'maj', 'arra');
-		await makeWavForChordPad('5-09-' + tempo + '.wav', 6,  'maj', 'arra');
-		await makeWavForChordPad('5-10-' + tempo + '.wav', 5,  'maj', 'arra');
-		await makeWavForChordPad('5-11-' + tempo + '.wav', 8,  'maj', 'arra');
-		await makeWavForChordPad('5-12-' + tempo + '.wav', 7,  'maj', 'arra');
-		await makeWavForChordPad('5-13-' + tempo + '.wav', 10, 'sus', 'arra');
-		await makeWavForChordPad('5-14-' + tempo + '.wav', 9,  'sus', 'arra');
-		await makeWavForChordPad('5-15-' + tempo + '.wav', 11, 'sus', 'arra');
-		await makeWavForChordPad('5-16-' + tempo + '.wav', 1,  'sus', 'arra');
+		await makeWavForChordPad('5-01-' + tempo + '.wav', 10, 'sus', 'arra');		// Sus Var A
+		await makeWavForChordPad('5-02-' + tempo + '.wav', 9,  'sus', 'arra');
+		await makeWavForChordPad('5-03-' + tempo + '.wav', 11, 'sus', 'arra');
+		await makeWavForChordPad('5-04-' + tempo + '.wav', 1,  'sus', 'arra');
+		await makeWavForChordPad('5-05-' + tempo + '.wav', 0,  'sus', 'arra');
+		await makeWavForChordPad('5-06-' + tempo + '.wav', 3,  'sus', 'arra');
+		await makeWavForChordPad('5-07-' + tempo + '.wav', 2,  'sus', 'arra');
+		await makeWavForChordPad('5-08-' + tempo + '.wav', 4,  'sus', 'arra');
+		await makeWavForChordPad('5-09-' + tempo + '.wav', 6,  'sus', 'arra');
+		await makeWavForChordPad('5-10-' + tempo + '.wav', 5,  'sus', 'arra');
+		await makeWavForChordPad('5-11-' + tempo + '.wav', 8,  'sus', 'arra');
+		await makeWavForChordPad('5-12-' + tempo + '.wav', 7,  'sus', 'arra');
+		await makeWavForChordPad('5-13-' + tempo + '.wav', 10, 'sus', 'arrb');		// Sus4 Var B
+		await makeWavForChordPad('5-14-' + tempo + '.wav', 9,  'sus', 'arrb');
+		await makeWavForChordPad('5-15-' + tempo + '.wav', 11, 'sus', 'arrb');
+		await makeWavForChordPad('5-16-' + tempo + '.wav', 1,  'sus', 'arrb');
 
-		await makeWavForChordPad('6-01-' + tempo + '.wav', 0,  'sus', 'arra');
-		await makeWavForChordPad('6-02-' + tempo + '.wav', 3,  'sus', 'arra');
-		await makeWavForChordPad('6-03-' + tempo + '.wav', 2,  'sus', 'arra');
-		await makeWavForChordPad('6-04-' + tempo + '.wav', 4,  'sus', 'arra');
-		await makeWavForChordPad('6-05-' + tempo + '.wav', 6,  'sus', 'arra');
-		await makeWavForChordPad('6-06-' + tempo + '.wav', 5,  'sus', 'arra');
-		await makeWavForChordPad('6-07-' + tempo + '.wav', 8,  'sus', 'arra');
-		await makeWavForChordPad('6-08-' + tempo + '.wav', 7,  'sus', 'arra');			
-		await makeWavForBassPad('6-09-' + tempo + '.wav', 10, 'maj', 'arra');
+		await makeWavForChordPad('6-01-' + tempo + '.wav', 0,  'sus', 'arrb');
+		await makeWavForChordPad('6-02-' + tempo + '.wav', 3,  'sus', 'arrb');
+		await makeWavForChordPad('6-03-' + tempo + '.wav', 2,  'sus', 'arrb');
+		await makeWavForChordPad('6-04-' + tempo + '.wav', 4,  'sus', 'arrb');
+		await makeWavForChordPad('6-05-' + tempo + '.wav', 6,  'sus', 'arrb');
+		await makeWavForChordPad('6-06-' + tempo + '.wav', 5,  'sus', 'arrb');
+		await makeWavForChordPad('6-07-' + tempo + '.wav', 8,  'sus', 'arrb');
+		await makeWavForChordPad('6-08-' + tempo + '.wav', 7,  'sus', 'arrb');			
+		await makeWavForBassPad('6-09-' + tempo + '.wav', 10, 'maj', 'arra');		// Bass Maj
 		await makeWavForBassPad('6-10-' + tempo + '.wav', 9,  'maj', 'arra');
 		await makeWavForBassPad('6-11-' + tempo + '.wav', 11, 'maj', 'arra');
 		await makeWavForBassPad('6-12-' + tempo + '.wav', 1,  'maj', 'arra');
@@ -10776,7 +10775,7 @@ async function exportStyle() {
 		await makeWavForBassPad('7-02-' + tempo + '.wav', 5,  'maj', 'arra');
 		await makeWavForBassPad('7-03-' + tempo + '.wav', 8,  'maj', 'arra');
 		await makeWavForBassPad('7-04-' + tempo + '.wav', 7,  'maj', 'arra');	
-		await makeWavForBassPad('7-05-' + tempo + '.wav', 10, 'min', 'arra');
+		await makeWavForBassPad('7-05-' + tempo + '.wav', 10, 'min', 'arra');		// Bass Min
 		await makeWavForBassPad('7-06-' + tempo + '.wav', 9,  'min', 'arra');
 		await makeWavForBassPad('7-07-' + tempo + '.wav', 11, 'min', 'arra');
 		await makeWavForBassPad('7-08-' + tempo + '.wav', 1,  'min', 'arra');
@@ -10789,18 +10788,154 @@ async function exportStyle() {
 		await makeWavForBassPad('7-15-' + tempo + '.wav', 8,  'min', 'arra');
 		await makeWavForBassPad('7-16-' + tempo + '.wav', 7,  'min', 'arra');	
 		
-		await makeWavForBassPad('8-01-' + tempo + '.wav', 10, 'maj', 'arrb');
-		await makeWavForBassPad('8-02-' + tempo + '.wav', 9,  'maj', 'arrb');
-		await makeWavForBassPad('8-03-' + tempo + '.wav', 11, 'maj', 'arrb');
-		await makeWavForBassPad('8-04-' + tempo + '.wav', 1,  'maj', 'arrb');
-		await makeWavForBassPad('8-05-' + tempo + '.wav', 0,  'maj', 'arrb');
-		await makeWavForBassPad('8-06-' + tempo + '.wav', 3,  'maj', 'arrb');
-		await makeWavForBassPad('8-07-' + tempo + '.wav', 2,  'maj', 'arrb');		
-		await makeWavForBassPad('8-08-' + tempo + '.wav', 4,  'maj', 'arrb');	
-		await makeWavForBassPad('8-09-' + tempo + '.wav', 6,  'maj', 'arrb');
-		await makeWavForBassPad('8-10-' + tempo + '.wav', 5,  'maj', 'arrb');
-		await makeWavForBassPad('8-11-' + tempo + '.wav', 8,  'maj', 'arrb');
-		await makeWavForBassPad('8-12-' + tempo + '.wav', 7,  'maj', 'arrb');		
+		await makeWavForBassPad('8-01-' + tempo + '.wav', 10, 'maj', 'arra');		// Bass Root
+		await makeWavForBassPad('8-02-' + tempo + '.wav', 9,  'maj', 'arra');
+		await makeWavForBassPad('8-03-' + tempo + '.wav', 11, 'maj', 'arra');
+		await makeWavForBassPad('8-04-' + tempo + '.wav', 1,  'maj', 'arra');
+		await makeWavForBassPad('8-05-' + tempo + '.wav', 0,  'maj', 'arra');
+		await makeWavForBassPad('8-06-' + tempo + '.wav', 3,  'maj', 'arra');
+		await makeWavForBassPad('8-07-' + tempo + '.wav', 2,  'maj', 'arra');		
+		await makeWavForBassPad('8-08-' + tempo + '.wav', 4,  'maj', 'arra');	
+		await makeWavForBassPad('8-09-' + tempo + '.wav', 6,  'maj', 'arra');
+		await makeWavForBassPad('8-10-' + tempo + '.wav', 5,  'maj', 'arra');
+		await makeWavForBassPad('8-11-' + tempo + '.wav', 8,  'maj', 'arra');
+		await makeWavForBassPad('8-12-' + tempo + '.wav', 7,  'maj', 'arra');		
+	}
+	else
+		
+	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 5) {	// Roland SP-404 Mk2
+		await makeWavForDrumPad('1-01-' + tempo + '.wav', 'arra');					// drums
+		await makeWavForDrumPad('1-02-' + tempo + '.wav', 'arrb');
+		await makeWavForDrumPad('1-03-' + tempo + '.wav', 'arrc');
+		await makeWavForDrumPad('1-04-' + tempo + '.wav', 'arrd');
+		await makeWavForDrumPad('1-05-' + tempo + '.wav', 'arra');	
+		await makeWavForDrumPad('1-06-' + tempo + '.wav', 'arrb');
+		await makeWavForDrumPad('1-07-' + tempo + '.wav', 'arrc');
+		await makeWavForDrumPad('1-08-' + tempo + '.wav', 'arrd');
+		await makeWavForDrumPad('1-09-' + tempo + '.wav', 'end1');
+		await makeWavForDrumPad('1-10-' + tempo + '.wav', 'fila');
+		await makeWavForDrumPad('1-11-' + tempo + '.wav', 'filb');
+		await makeWavForDrumPad('1-12-' + tempo + '.wav', 'filc');	
+		await makeWavForDrumPad('1-13-' + tempo + '.wav', 'fild');
+		await makeWavForDrumPad('1-14-' + tempo + '.wav', 'int1');			
+		await makeWavForDrumPad('1-15-' + tempo + '.wav', 'brka');
+		await makeWavForDrumPad('1-16-' + tempo + '.wav', 'brkb');
+		
+		await makeWavForChordPad('2-01-' + tempo + '.wav', 10, 'maj', 'arra');		// Maj Var A
+		await makeWavForChordPad('2-02-' + tempo + '.wav', 9,  'maj', 'arra');
+		await makeWavForChordPad('2-03-' + tempo + '.wav', 11, 'maj', 'arra');
+		await makeWavForChordPad('2-04-' + tempo + '.wav', 1,  'maj', 'arra');
+		await makeWavForChordPad('2-05-' + tempo + '.wav', 0,  'maj', 'arra');
+		await makeWavForChordPad('2-06-' + tempo + '.wav', 3,  'maj', 'arra');
+		await makeWavForChordPad('2-07-' + tempo + '.wav', 2,  'maj', 'arra');
+		await makeWavForChordPad('2-08-' + tempo + '.wav', 4,  'maj', 'arra');
+		await makeWavForChordPad('2-09-' + tempo + '.wav', 6,  'maj', 'arra');
+		await makeWavForChordPad('2-10-' + tempo + '.wav', 5,  'maj', 'arra');
+		await makeWavForChordPad('2-11-' + tempo + '.wav', 8,  'maj', 'arra');
+		await makeWavForChordPad('2-12-' + tempo + '.wav', 7,  'maj', 'arra');
+		await makeWavForChordPad('2-13-' + tempo + '.wav', 10, 'min', 'arra');		// Min Var A
+		await makeWavForChordPad('2-14-' + tempo + '.wav', 9,  'min', 'arra');
+		await makeWavForChordPad('2-15-' + tempo + '.wav', 11, 'min', 'arra');
+		await makeWavForChordPad('2-16-' + tempo + '.wav', 1,  'min', 'arra');
+
+		await makeWavForChordPad('3-01-' + tempo + '.wav', 0,  'min', 'arra');
+		await makeWavForChordPad('3-02-' + tempo + '.wav', 3,  'min', 'arra');
+		await makeWavForChordPad('3-03-' + tempo + '.wav', 2,  'min', 'arra');
+		await makeWavForChordPad('3-04-' + tempo + '.wav', 4,  'min', 'arra');
+		await makeWavForChordPad('3-05-' + tempo + '.wav', 6,  'min', 'arra');
+		await makeWavForChordPad('3-06-' + tempo + '.wav', 5,  'min', 'arra');
+		await makeWavForChordPad('3-07-' + tempo + '.wav', 8,  'min', 'arra');
+		await makeWavForChordPad('3-08-' + tempo + '.wav', 7,  'min', 'arra');
+		await makeWavForChordPad('3-09-' + tempo + '.wav', 10, 'maj', 'arrb');		// Maj Var B
+		await makeWavForChordPad('3-10-' + tempo + '.wav', 9,  'maj', 'arrb');
+		await makeWavForChordPad('3-11-' + tempo + '.wav', 11, 'maj', 'arrb');
+		await makeWavForChordPad('3-12-' + tempo + '.wav', 1,  'maj', 'arrb');
+		await makeWavForChordPad('3-13-' + tempo + '.wav', 0,  'maj', 'arrb');
+		await makeWavForChordPad('3-14-' + tempo + '.wav', 3,  'maj', 'arrb');
+		await makeWavForChordPad('3-15-' + tempo + '.wav', 2,  'maj', 'arrb');
+		await makeWavForChordPad('3-16-' + tempo + '.wav', 4,  'maj', 'arrb');
+		
+		await makeWavForChordPad('4-01-' + tempo + '.wav', 6,  'maj', 'arrb');
+		await makeWavForChordPad('4-02-' + tempo + '.wav', 5,  'maj', 'arrb');
+		await makeWavForChordPad('4-03-' + tempo + '.wav', 8,  'maj', 'arrb');
+		await makeWavForChordPad('4-04-' + tempo + '.wav', 7,  'maj', 'arrb');
+		await makeWavForChordPad('4-05-' + tempo + '.wav', 10, 'min', 'arrb');		// Min Var B
+		await makeWavForChordPad('4-06-' + tempo + '.wav', 9,  'min', 'arrb');
+		await makeWavForChordPad('4-07-' + tempo + '.wav', 11, 'min', 'arrb');
+		await makeWavForChordPad('4-08-' + tempo + '.wav', 1,  'min', 'arrb');
+		await makeWavForChordPad('4-09-' + tempo + '.wav', 0,  'min', 'arrb');
+		await makeWavForChordPad('4-10-' + tempo + '.wav', 3,  'min', 'arrb');
+		await makeWavForChordPad('4-11-' + tempo + '.wav', 2,  'min', 'arrb');
+		await makeWavForChordPad('4-12-' + tempo + '.wav', 4,  'min', 'arrb');
+		await makeWavForChordPad('4-13-' + tempo + '.wav', 6,  'min', 'arrb');
+		await makeWavForChordPad('4-14-' + tempo + '.wav', 5,  'min', 'arrb');
+		await makeWavForChordPad('4-15-' + tempo + '.wav', 8,  'min', 'arrb');
+		await makeWavForChordPad('4-16-' + tempo + '.wav', 7,  'min', 'arrb');
+
+		await makeWavForChordPad('5-01-' + tempo + '.wav', 10, 'sus', 'arra');		// Sus4 Var A
+		await makeWavForChordPad('5-02-' + tempo + '.wav', 9,  'sus', 'arra');
+		await makeWavForChordPad('5-03-' + tempo + '.wav', 11, 'sus', 'arra');
+		await makeWavForChordPad('5-04-' + tempo + '.wav', 1,  'sus', 'arra');
+		await makeWavForChordPad('5-05-' + tempo + '.wav', 0,  'sus', 'arra');
+		await makeWavForChordPad('5-06-' + tempo + '.wav', 3,  'sus', 'arra');
+		await makeWavForChordPad('5-07-' + tempo + '.wav', 2,  'sus', 'arra');
+		await makeWavForChordPad('5-08-' + tempo + '.wav', 4,  'sus', 'arra');
+		await makeWavForChordPad('5-09-' + tempo + '.wav', 6,  'sus', 'arra');
+		await makeWavForChordPad('5-10-' + tempo + '.wav', 5,  'sus', 'arra');
+		await makeWavForChordPad('5-11-' + tempo + '.wav', 8,  'sus', 'arra');
+		await makeWavForChordPad('5-12-' + tempo + '.wav', 7,  'sus', 'arra');
+		await makeWavForChordPad('5-13-' + tempo + '.wav', 10, 'sus', 'arrb');		// Sus4 Var B
+		await makeWavForChordPad('5-14-' + tempo + '.wav', 9,  'sus', 'arrb');
+		await makeWavForChordPad('5-15-' + tempo + '.wav', 11, 'sus', 'arrb');
+		await makeWavForChordPad('5-16-' + tempo + '.wav', 1,  'sus', 'arrb');
+		
+		await makeWavForChordPad('6-01-' + tempo + '.wav', 0,  'sus', 'arrb');
+		await makeWavForChordPad('6-02-' + tempo + '.wav', 3,  'sus', 'arrb');
+		await makeWavForChordPad('6-03-' + tempo + '.wav', 2,  'sus', 'arrb');
+		await makeWavForChordPad('6-04-' + tempo + '.wav', 4,  'sus', 'arrb');
+		await makeWavForChordPad('6-05-' + tempo + '.wav', 6,  'sus', 'arrb');
+		await makeWavForChordPad('6-06-' + tempo + '.wav', 5,  'sus', 'arrb');
+		await makeWavForChordPad('6-07-' + tempo + '.wav', 8,  'sus', 'arrb');
+		await makeWavForChordPad('6-08-' + tempo + '.wav', 7,  'sus', 'arrb');		
+		await makeWavForBassPad('6-09-' + tempo + '.wav', 10, 'maj', 'arra');		// Maj Bass
+		await makeWavForBassPad('6-10-' + tempo + '.wav', 9,  'maj', 'arra');
+		await makeWavForBassPad('6-11-' + tempo + '.wav', 11, 'maj', 'arra');
+		await makeWavForBassPad('6-12-' + tempo + '.wav', 1,  'maj', 'arra');
+		await makeWavForBassPad('6-13-' + tempo + '.wav', 0,  'maj', 'arra');
+		await makeWavForBassPad('6-14-' + tempo + '.wav', 3,  'maj', 'arra');
+		await makeWavForBassPad('6-15-' + tempo + '.wav', 2,  'maj', 'arra');
+		await makeWavForBassPad('6-16-' + tempo + '.wav', 4,  'maj', 'arra');
+		
+		await makeWavForBassPad('7-01-' + tempo + '.wav', 6,  'maj', 'arra');
+		await makeWavForBassPad('7-02-' + tempo + '.wav', 5,  'maj', 'arra');
+		await makeWavForBassPad('7-03-' + tempo + '.wav', 8,  'maj', 'arra');
+		await makeWavForBassPad('7-04-' + tempo + '.wav', 7,  'maj', 'arra');			
+		await makeWavForBassPad('7-05-' + tempo + '.wav', 10, 'min', 'arra');		// Min Bass
+		await makeWavForBassPad('7-06-' + tempo + '.wav', 9,  'min', 'arra');
+		await makeWavForBassPad('7-07-' + tempo + '.wav', 11, 'min', 'arra');
+		await makeWavForBassPad('7-08-' + tempo + '.wav', 1,  'min', 'arra');
+		await makeWavForBassPad('7-09-' + tempo + '.wav', 0,  'min', 'arra');
+		await makeWavForBassPad('7-10-' + tempo + '.wav', 3,  'min', 'arra');
+		await makeWavForBassPad('7-11-' + tempo + '.wav', 2,  'min', 'arra');		
+		await makeWavForBassPad('7-12-' + tempo + '.wav', 4,  'min', 'arra');			
+		await makeWavForBassPad('7-13-' + tempo + '.wav', 6,  'min', 'arra');
+		await makeWavForBassPad('7-14-' + tempo + '.wav', 5,  'min', 'arra');
+		await makeWavForBassPad('7-15-' + tempo + '.wav', 8,  'min', 'arra');
+		await makeWavForBassPad('7-16-' + tempo + '.wav', 7,  'min', 'arra');	
+		
+		await makeWavForBassPad('8-01-' + tempo + '.wav', 10, 'maj', 'arra');		// Root Bass
+		await makeWavForBassPad('8-02-' + tempo + '.wav', 9,  'maj', 'arra');
+		await makeWavForBassPad('8-03-' + tempo + '.wav', 11, 'maj', 'arra');
+		await makeWavForBassPad('8-04-' + tempo + '.wav', 1,  'maj', 'arra');
+		await makeWavForBassPad('8-05-' + tempo + '.wav', 0,  'maj', 'arra');
+		await makeWavForBassPad('8-06-' + tempo + '.wav', 3,  'maj', 'arra');
+		await makeWavForBassPad('8-07-' + tempo + '.wav', 2,  'maj', 'arra');		
+		await makeWavForBassPad('8-08-' + tempo + '.wav', 4,  'maj', 'arra');	
+		await makeWavForBassPad('8-09-' + tempo + '.wav', 6,  'maj', 'arra');
+		await makeWavForBassPad('8-10-' + tempo + '.wav', 5,  'maj', 'arra');
+		await makeWavForBassPad('8-11-' + tempo + '.wav', 8,  'maj', 'arra');
+		await makeWavForBassPad('8-12-' + tempo + '.wav', 7,  'maj', 'arra');			
+		
 	}		
 	else {
 		alert("Export not yet implemented for this instrument or settings");
