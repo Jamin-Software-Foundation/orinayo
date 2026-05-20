@@ -10685,7 +10685,7 @@ async function exportStyle() {
 		await makeWavForDrumPad('1-14-' + tempo + '.wav', 'fild');
 		await makeWavForDrumPad('1-15-' + tempo + '.wav', 'brka');
 		await makeWavForDrumPad('1-16-' + tempo + '.wav', 'brkb');
-		
+	
 		await makeWavForChordPad('2-01-' + tempo + '.wav', 10, 'maj', 'arra');		// Maj Var A
 		await makeWavForChordPad('2-02-' + tempo + '.wav', 9,  'maj', 'arra');
 		await makeWavForChordPad('2-03-' + tempo + '.wav', 11, 'maj', 'arra');
@@ -10944,6 +10944,7 @@ async function exportStyle() {
 
 
 function savePadWavFile(padName, bufferLeft, bufferRight, mixStart, mixSize, format, sampleRate, numChannels, bitDepth, tempoRatio) {
+	console.debug("savePadWavFile", padName);
 	const mixBufferLeft = new Float32Array(mixSize);	
 	const mixBufferRight = new Float32Array(mixSize);
 	
@@ -10958,6 +10959,7 @@ function savePadWavFile(padName, bufferLeft, bufferRight, mixStart, mixSize, for
 }
 
 async function makeWavForDrumPad(padName, variation) {
+	console.debug("makeWavForDrumPad", padName);	
 	const buffer = loopCache[drumLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
 	const sampleRate = buffer.sampleRate;
@@ -10974,13 +10976,12 @@ async function makeWavForDrumPad(padName, variation) {
 	const drumBufferRight = drumBuffer.getChannelData(1);	
 	const drumStart = Math.floor(drumLoop.loop[variation].start * samplRatio);
 	const drumStop = Math.floor(drumLoop.loop[variation].stop * samplRatio);
-	const drumSize = drumStop - drumStart;
-	const mixSize = drumSize;
-	
+	const drumSize = drumStop - drumStart;	
 	savePadWavFile(padName, drumBufferLeft, drumBufferRight, drumStart, drumSize, format, sampleRate, numChannels, bitDepth, tempoRatio);
 }
 
 async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
+	console.debug("makeWavForChordPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
 	const sampleRate = buffer.sampleRate;
@@ -11008,6 +11009,7 @@ async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
 }
 
 async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
+	console.debug("makeWavForBassPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
 	const sampleRate = buffer.sampleRate;
@@ -11035,6 +11037,7 @@ async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
 }
 
 async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
+	console.debug("makeWavForMpx", chordIndex);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
 	const sampleRate = buffer.sampleRate;
@@ -11077,10 +11080,8 @@ async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
 	const chordStop = Math.floor(chordLoop.loop['key' + chordIndex + '_' + chordType + '_' + variation].stop * samplRatio);
 	const bassStart = Math.floor(bassLoop.loop['key' + chordIndex + '_' + bassType + '_' + variation].start * samplRatio);
 	const bassStop = Math.floor(bassLoop.loop['key' + chordIndex + '_' + bassType + '_' + variation].stop * samplRatio);
-	
-	// we skip past drum crash at begginging
-	const drumStart = Math.floor((drumLoop.loop[variation].start + drumLoop.loop['int1'].stop) * samplRatio);
-	const drumStop = Math.floor((drumLoop.loop[variation].stop + drumLoop.loop['int1'].stop) * samplRatio);
+	const drumStart = Math.floor((drumLoop.loop[variation].start) * samplRatio);
+	const drumStop = Math.floor((drumLoop.loop[variation].stop) * samplRatio);
 	
 	const chordSize = chordStop - chordStart;
 	const bassSize = bassStop - bassStart;
@@ -11103,7 +11104,8 @@ async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
 
 async function makeWavForNanobox (instrument) {
 	if (!instrument) return;
-		
+
+	console.debug("makeWavForNanobox", instrument);		
 	const loopData = instrument.loop.url.substring(instrument.loop.url.lastIndexOf("/") + 1);
 	const metaData = loopData.split("_");		
 	const buffer = loopCache[instrument.loop.url];
@@ -11154,6 +11156,7 @@ async function renderInstrument(buffer, numChannels, newLength, sampleRate, temp
 }
 
 function saveWavFile(name, data) {
+	console.debug("saveWavFile - start", name, data);	
 	const blob = new Blob([data], { type: 'audio/wav' });			
 	const anchor = document.createElement('a');
 	anchor.href = window.URL.createObjectURL(blob);
@@ -11161,7 +11164,9 @@ function saveWavFile(name, data) {
 	anchor.download = name;
 	document.body.appendChild(anchor);
 	anchor.click();
+	anchor.remove();
 	window.URL.revokeObjectURL(anchor.href); 	
+	console.debug("saveWavFile - end", name);		
 }
 
 function adjustForTempo(buffer, loopCount) {
@@ -11310,8 +11315,6 @@ function encodeWAVCues(view, markers, samples, bytesPerSample) {
 }
 
 function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, tempoRatio, markers) {
-	console.debug("encodeWAV", markers, sampleRate);	
-	
 	var bytesPerSample = bitDepth / 8;
 	var blockAlign = numChannels * bytesPerSample;
 	var markersLen = 0;
