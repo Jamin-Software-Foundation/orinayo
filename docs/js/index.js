@@ -11662,8 +11662,13 @@ function downloadCSV(slotNo) {
 		data.push([["#NOTE", 36 + i, 5,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);		
 	}
 	
-	// TODO - global commands 0n channel 16 to stop all tracks, load preset 
-				
+	// global commands on channel 16 to stop all tracks
+	data.push([["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,-20,0,64]]);	
+
+	// global commands on channel 16 to load presets 1-20 (36- 55)
+	for (let i=0; i<20; i++) {
+		data.push([["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,-20,0,64]]);		
+	}
 	
 	const csvContent = data.map(row => 
 		row.map(value => 
