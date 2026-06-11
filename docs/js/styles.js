@@ -288,9 +288,9 @@ var chord_loops = [
 	"extra/assets/chords/upbeat_120_16000_16000_2.chord",	
 	"extra/assets/chords/very-sharp_118_8136_8136_2.chord",	
 	"assets/chords/village-pop_107_8972_8972_2.chord",
-	"assets/chords/way-pop_75_12800.chord",	
-	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",		
-	"assets/chords/wild-rock_120_8000.chord"
+	"assets/chords/way-pop_75_12800.chord",			
+	"assets/chords/wild-rock_120_8000_8000_2.chord",
+	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",	
 ]
 
 var drum_loops = [

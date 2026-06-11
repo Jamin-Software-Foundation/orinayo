@@ -11572,7 +11572,6 @@ function writeString (view, offset, string) {
 function downloadCSV(slotNo) {
 	let csvFileName = "set_" + String(slotNo).padStart(4, '0') + ".csv";
 	let data = [
-		/*	
 		["#NOTE", 24,0,"01 - Play Note",24,0,0,750,0,0,0,1,127,0,0,64,""],
 		["#NOTE", 25,0,"01 - Play Note",25,0,0,750,0,0,0,1,127,0,0,64,""],
 		["#NOTE", 26,0,"01 - Play Note",26,0,0,750,0,0,0,1,127,0,0,64,""],
@@ -11634,11 +11633,24 @@ function downloadCSV(slotNo) {
 		["#NOTE", 82,0,"01 - Play Note",82,0,0,750,0,0,0,1,127,0,0,64,""],
 		["#NOTE", 83,0,"01 - Play Note",83,0,0,750,0,0,0,1,127,0,0,64,""],
 		["#NOTE", 84,0,"01 - Play Note",84,0,0,750,0,0,0,1,127,0,0,64,""],	
-		*/
 	]
 
-	let fileNo = 204 * (parseInt(slotNo) - 1) + 97;		
+	let fileNo = 204 * (parseInt(slotNo) - 1) + 85;		
 	console.debug("downloadCSV", csvFileName, data, fileNo);
+	
+	// global commands on channel 16 to stop all tracks
+	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
+
+	// global commands on channel 16 to load presets 1-20 (36 - 55)
+	for (let i=0; i<20; i++) {
+		data.push(["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,0,0,64,""]);		
+	}	
+	
+	// global commands on channel 16 to play/stop backing tracks (56 - 79)
+	for (let i=0; i<12; i++) {
+		data.push(["#NOTE", 56 + i, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
+		data.push(["#NOTE", 68 + i, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);			
+	}	
 	
 	// drums - midi channel 5 notes 36 - 46 (11 notes)
 	data.push(["#NOTE", 36, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
@@ -11674,14 +11686,6 @@ function downloadCSV(slotNo) {
 	for (let i=0; i<24; i++) {
 		data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);		
 		data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);			
-	}
-	
-	// global commands on channel 16 to stop all tracks
-	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
-
-	// global commands on channel 16 to load presets 1-20 (36- 55)
-	for (let i=0; i<20; i++) {
-		data.push(["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,0,0,64,""]);		
 	}
 	
 	const csvContent = data.map(row => 
