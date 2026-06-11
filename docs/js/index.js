@@ -10954,7 +10954,7 @@ async function exportStyle() {
 		}
 		
 		let fileNo = 204 * (parseInt(slotNo) - 1) + 97;	// skip multi-sampler uses 8 octaves (8 *12) = 97 files per preset
-		/*
+		
 		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_drums.wav', 'int1');						// Drums (0)
 		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_drums.wav', 'arra');
 		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_drums.wav', 'fila');
@@ -11070,7 +11070,6 @@ async function exportStyle() {
 		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_bass.wav', 9,  'min', 'arra');
 		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_bass.wav', 10, 'min', 'arra');
 		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_bass.wav', 11, 'min', 'arra');		
-		*/
 		
 		downloadCSV(slotNo);
 		
@@ -11168,7 +11167,7 @@ async function makeWavForDrumPad(padName, variation) {
 	console.debug("makeWavForDrumPad", padName);	
 	const buffer = loopCache[drumLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = buffer.sampleRate;
+	const sampleRate = 44100; //buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;	
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
@@ -11190,7 +11189,7 @@ async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
 	console.debug("makeWavForChordPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = buffer.sampleRate;
+	const sampleRate = 44100; //buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;	
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
@@ -11218,7 +11217,7 @@ async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
 	console.debug("makeWavForBassPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = buffer.sampleRate;
+	const sampleRate = 44100; //buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;	
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
@@ -11246,7 +11245,7 @@ async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
 	console.debug("makeWavForMpx", chordIndex);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = buffer.sampleRate;
+	const sampleRate = 44100; //buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;	
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
@@ -11316,7 +11315,7 @@ async function makeWavForNanobox (instrument) {
 	const metaData = loopData.split("_");		
 	const buffer = loopCache[instrument.loop.url];
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = buffer.sampleRate;
+	const sampleRate = 44100; //buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;
 	
@@ -11573,101 +11572,116 @@ function writeString (view, offset, string) {
 function downloadCSV(slotNo) {
 	let csvFileName = "set_" + String(slotNo).padStart(4, '0') + ".csv";
 	let data = [
-		["#NOTE", 24,16,"01 - Play Note",24,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 25,16,"01 - Play Note",25,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 26,16,"01 - Play Note",26,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 27,16,"01 - Play Note",27,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 28,16,"01 - Play Note",28,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 29,16,"01 - Play Note",29,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 30,16,"01 - Play Note",30,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 31,16,"01 - Play Note",31,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 32,16,"01 - Play Note",32,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 33,16,"01 - Play Note",33,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 34,16,"01 - Play Note",34,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 35,16,"01 - Play Note",35,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 36,16,"01 - Play Note",36,0,0,750,0,0,0,1,127,-20,0,64],	
-		["#NOTE", 37,16,"01 - Play Note",37,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 38,16,"01 - Play Note",38,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 39,16,"01 - Play Note",39,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 40,16,"01 - Play Note",40,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 41,16,"01 - Play Note",41,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 42,16,"01 - Play Note",42,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 43,16,"01 - Play Note",43,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 44,16,"01 - Play Note",44,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 45,16,"01 - Play Note",45,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 46,16,"01 - Play Note",46,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 47,16,"01 - Play Note",47,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 48,16,"01 - Play Note",48,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 49,16,"01 - Play Note",49,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 50,16,"01 - Play Note",50,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 51,16,"01 - Play Note",51,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 52,16,"01 - Play Note",52,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 53,16,"01 - Play Note",53,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 54,16,"01 - Play Note",54,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 55,16,"01 - Play Note",55,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 56,16,"01 - Play Note",56,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 57,16,"01 - Play Note",57,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 58,16,"01 - Play Note",58,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 59,16,"01 - Play Note",59,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 60,16,"01 - Play Note",60,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 61,16,"01 - Play Note",61,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 62,16,"01 - Play Note",62,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 63,16,"01 - Play Note",63,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 64,16,"01 - Play Note",64,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 65,16,"01 - Play Note",65,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 66,16,"01 - Play Note",66,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 67,16,"01 - Play Note",67,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 68,16,"01 - Play Note",68,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 69,16,"01 - Play Note",69,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 70,16,"01 - Play Note",70,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 71,16,"01 - Play Note",71,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 72,16,"01 - Play Note",72,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 73,16,"01 - Play Note",73,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 74,16,"01 - Play Note",74,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 75,16,"01 - Play Note",75,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 76,16,"01 - Play Note",76,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 77,16,"01 - Play Note",77,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 78,16,"01 - Play Note",78,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 79,16,"01 - Play Note",79,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 80,16,"01 - Play Note",80,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 81,16,"01 - Play Note",81,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 82,16,"01 - Play Note",82,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 83,16,"01 - Play Note",83,0,0,750,0,0,0,1,127,-20,0,64],
-		["#NOTE", 84,16,"01 - Play Note",84,0,0,750,0,0,0,1,127,-20,0,64],		
+		/*	
+		["#NOTE", 24,0,"01 - Play Note",24,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 25,0,"01 - Play Note",25,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 26,0,"01 - Play Note",26,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 27,0,"01 - Play Note",27,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 28,0,"01 - Play Note",28,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 29,0,"01 - Play Note",29,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 30,0,"01 - Play Note",30,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 31,0,"01 - Play Note",31,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 32,0,"01 - Play Note",32,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 33,0,"01 - Play Note",33,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 34,0,"01 - Play Note",34,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 35,0,"01 - Play Note",35,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 36,0,"01 - Play Note",36,0,0,750,0,0,0,1,127,0,0,64,""],	
+		["#NOTE", 37,0,"01 - Play Note",37,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 38,0,"01 - Play Note",38,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 39,0,"01 - Play Note",39,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 40,0,"01 - Play Note",40,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 41,0,"01 - Play Note",41,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 42,0,"01 - Play Note",42,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 43,0,"01 - Play Note",43,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 44,0,"01 - Play Note",44,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 45,0,"01 - Play Note",45,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 46,0,"01 - Play Note",46,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 47,0,"01 - Play Note",47,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 48,0,"01 - Play Note",48,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 49,0,"01 - Play Note",49,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 50,0,"01 - Play Note",50,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 51,0,"01 - Play Note",51,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 52,0,"01 - Play Note",52,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 53,0,"01 - Play Note",53,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 54,0,"01 - Play Note",54,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 55,0,"01 - Play Note",55,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 56,0,"01 - Play Note",56,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 57,0,"01 - Play Note",57,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 58,0,"01 - Play Note",58,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 59,0,"01 - Play Note",59,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 60,0,"01 - Play Note",60,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 61,0,"01 - Play Note",61,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 62,0,"01 - Play Note",62,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 63,0,"01 - Play Note",63,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 64,0,"01 - Play Note",64,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 65,0,"01 - Play Note",65,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 66,0,"01 - Play Note",66,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 67,0,"01 - Play Note",67,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 68,0,"01 - Play Note",68,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 69,0,"01 - Play Note",69,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 70,0,"01 - Play Note",70,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 71,0,"01 - Play Note",71,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 72,0,"01 - Play Note",72,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 73,0,"01 - Play Note",73,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 74,0,"01 - Play Note",74,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 75,0,"01 - Play Note",75,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 76,0,"01 - Play Note",76,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 77,0,"01 - Play Note",77,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 78,0,"01 - Play Note",78,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 79,0,"01 - Play Note",79,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 80,0,"01 - Play Note",80,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 81,0,"01 - Play Note",81,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 82,0,"01 - Play Note",82,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 83,0,"01 - Play Note",83,0,0,750,0,0,0,1,127,0,0,64,""],
+		["#NOTE", 84,0,"01 - Play Note",84,0,0,750,0,0,0,1,127,0,0,64,""],	
+		*/
 	]
 
 	let fileNo = 204 * (parseInt(slotNo) - 1) + 97;		
 	console.debug("downloadCSV", csvFileName, data, fileNo);
 	
 	// drums - midi channel 5 notes 36 - 46 (11 notes)
-	data.push([["#NOTE", 36, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 37, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 38, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 39, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 40, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 41, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 42, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 43, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 44, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 45, 4,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);
-	data.push([["#NOTE", 46, 4,"01 - Play Note", fileNo++, 0, 0,0, 0,0,0,1,127,-20,0,64]]);
+	data.push(["#NOTE", 36, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 36, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 37, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 37, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 38, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 38, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 39, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 39, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 40, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 40, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 41, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 41, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 42, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 42, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 43, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 43, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 44, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 44, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 45, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 45, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
+	data.push(["#NOTE", 46, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,0,0,1,127,0,0,64,""]);
+	data.push(["#NOTE", 46, 7,"05 - Stop Track", fileNo++, 0, 0,0, 0,0,0,1,127,0,0,64,""]);		
 	
 	// chord - midi channel 7 notes 36 - 107 (72 notes)	
 	for (let i=0; i<72; i++) {
-		data.push([["#NOTE", 36 + i, 6,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);		
+		data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);		
+		data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);			
 	}
 	
 	// bass - midi channel 6 notes 36 - 59 (24 notes)	
 	for (let i=0; i<24; i++) {
-		data.push([["#NOTE", 36 + i, 5,"01 - Play Note", fileNo++, 0, 0,0, 1,0,0,1,127,-20,0,64]]);		
+		data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);		
+		data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);			
 	}
 	
 	// global commands on channel 16 to stop all tracks
-	data.push([["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,-20,0,64]]);	
+	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
 
 	// global commands on channel 16 to load presets 1-20 (36- 55)
 	for (let i=0; i<20; i++) {
-		data.push([["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,-20,0,64]]);		
+		data.push(["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,0,0,64,""]);		
 	}
 	
 	const csvContent = data.map(row => 
