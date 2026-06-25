@@ -187,7 +187,7 @@ var chord_loops = [
 	"extra/assets/chords/finger-rock_120_4000_4000_2.chord",	
 	"assets/chords/finger-strum_100_9600_9600_2.chord",	
 	"assets/chords/flow-pop_110_8727_8727_2.chord",	
-	"assets/chords/folk_114_16842.chord",
+	"assets/chords/folk_114_16842_16842_2.chord",
 	"assets/chords/folk-fields_130_3692_3692_2.chord",
 	"assets/chords/funk_90_10667.chord",
 	"assets/chords/funk_96_10000_10000_2.chord",
@@ -262,10 +262,9 @@ var chord_loops = [
 	"extra/assets/chords/rock-flow_130_14769_14769_4.chord",	
 	"extra/assets/chords/rockit_140_13714_13714_2.chord",
 	"assets/chords/shuffle_120_16000.chord",	
-	"assets/chords/soul_114_16842.chord",
+	"assets/chords/soul_114_16842_16842_2.chord",
 	"assets/chords/smokie-beat_120_16000_16000_2.chord",	
 	"extra/assets/chords/soft-ballad_75_12800_12800_2.chord",	
-	"assets/chords/soft-rock_120_8000.chord",
 	"assets/chords/soul-band_90_21333.chord",
 	"extra/assets/chords/slow-blues_60_32000_32000_2.chord",
 	"extra/assets/chords/slow-pop_75_25600_25600_2.chord",	
@@ -291,6 +290,7 @@ var chord_loops = [
 	"assets/chords/way-pop_75_12800.chord",			
 	"assets/chords/wild-rock_120_8000_8000_2.chord",
 	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",	
+	"assets/chords/soft-rock_120_8000.chord",				// 	dummy line... last line is ignored
 ]
 
 var drum_loops = [
@@ -483,7 +483,8 @@ var bass_loops = [
 	"assets/bass/gospel-latin-2_98_9796_2.bass",	
 	"assets/bass/gospel-praise_108_8889_2.bass",
 	"extra/assets/bass/groove-pop_85_22588.bass",
-	"extra/assets/bass/guitar-ballad_70_27429.bass",	
+	"extra/assets/bass/guitar-ballad_70_27429.bass",
+	"assets/bass/half-beat-pop_114_16842.bass",	
 	"assets/bass/half-beat-pop_119_16134.bass",	
 	"assets/bass/jazzy-funk_110_17455.bass",
 	"assets/bass/latin-night-pop_110_8727.bass",	

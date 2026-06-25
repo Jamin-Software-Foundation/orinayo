@@ -67,6 +67,7 @@ var syncStartCheckedEle = null;
 var guitarIRDef = null;
 var guitarPosition = null;
 var exportDevice = null;
+var exportLead = null;
 var tempoDiv = null;
 var showVol = null;
 var bassKnob = null;
@@ -2102,6 +2103,7 @@ function saveConfig() {
 	config.programChange = programChangeEle.checked;
 	config.strumPos = guitarPosition?.selectedIndex;
 	config.exportDevice = exportDevice?.selectedIndex;
+	config.exportLead = exportLead?.selectedIndex;	
 	config.liberLiveChrd1 = liberLive.chord1;
 	config.liberLiveChrd2 = liberLive.chord2;
 	config.liberLiveDrms1 = liberLive.drums1;
@@ -5069,6 +5071,9 @@ async function setupUI(config, err) {
 	
 	exportDevice = document.getElementById("exportDevice");
 	exportDevice.selectedIndex = config.exportDevice;
+
+	exportLead = document.getElementById("exportLead");
+	exportLead.selectedIndex = config.exportLead;
 	
 	guitarPosition = document.getElementById("guitarPosition");
 	guitarPosition.selectedIndex = config.strumPos;	
@@ -11072,7 +11077,6 @@ async function exportStyle() {
 		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_bass.wav', 11, 'min', 'arra');		
 		
 		downloadCSV(slotNo);
-		
 	}
 
 	else {
@@ -11159,7 +11163,7 @@ function savePadWavFile(padName, bufferLeft, bufferRight, mixStart, mixSize, for
 	}
 	
 	const stereoBuffer = interleave(mixBufferLeft, mixBufferRight);			
-	const data = encodeWAV(stereoBuffer, format, sampleRate, numChannels, bitDepth, tempoRatio);
+	const data = encodeWAV(stereoBuffer, format, sampleRate, numChannels, bitDepth);
 	saveWavFile(padName, data);	
 }
 
@@ -11302,7 +11306,7 @@ async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
 	}
 	
 	const stereoBuffer = interleave(mixBufferLeft, mixBufferRight);	
-	const data = encodeWAV(stereoBuffer, format, sampleRate, numChannels, bitDepth, tempoRatio);
+	const data = encodeWAV(stereoBuffer, format, sampleRate, numChannels, bitDepth);
 	const chordName = chordType.toUpperCase() + "_" + KEYS[chordIndex] + ".wav";
 	saveWavFile(chordName, data);
 }
@@ -11346,7 +11350,7 @@ async function makeWavForNanobox (instrument) {
 	}
 	const name = metaData[0] + " " + tempo + " " + instrument.styleType + ".wav";	
 	const markers = addCuePoints(instrument, sampleRate, tempoRatio);
-	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, tempoRatio, markers);
+	const data = encodeWAV(result, format, sampleRate, numChannels, bitDepth, markers);
 	saveWavFile(name, data);	
 }
 
@@ -11519,7 +11523,7 @@ function encodeWAVCues(view, markers, samples, bytesPerSample) {
 	}	
 }
 
-function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, tempoRatio, markers) {
+function encodeWAV (samples, format, sampleRate, numChannels, bitDepth, markers) {
 	var bytesPerSample = bitDepth / 8;
 	var blockAlign = numChannels * bytesPerSample;
 	var markersLen = 0;
@@ -11569,74 +11573,45 @@ function writeString (view, offset, string) {
   }
 }
 
-function downloadCSV(slotNo) {
-	let csvFileName = "set_" + String(slotNo).padStart(4, '0') + ".csv";
-	let data = [
-		["#NOTE", 24,0,"01 - Play Note",24,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 25,0,"01 - Play Note",25,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 26,0,"01 - Play Note",26,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 27,0,"01 - Play Note",27,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 28,0,"01 - Play Note",28,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 29,0,"01 - Play Note",29,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 30,0,"01 - Play Note",30,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 31,0,"01 - Play Note",31,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 32,0,"01 - Play Note",32,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 33,0,"01 - Play Note",33,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 34,0,"01 - Play Note",34,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 35,0,"01 - Play Note",35,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 36,0,"01 - Play Note",36,0,0,750,0,0,0,1,127,0,0,64,""],	
-		["#NOTE", 37,0,"01 - Play Note",37,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 38,0,"01 - Play Note",38,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 39,0,"01 - Play Note",39,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 40,0,"01 - Play Note",40,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 41,0,"01 - Play Note",41,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 42,0,"01 - Play Note",42,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 43,0,"01 - Play Note",43,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 44,0,"01 - Play Note",44,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 45,0,"01 - Play Note",45,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 46,0,"01 - Play Note",46,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 47,0,"01 - Play Note",47,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 48,0,"01 - Play Note",48,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 49,0,"01 - Play Note",49,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 50,0,"01 - Play Note",50,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 51,0,"01 - Play Note",51,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 52,0,"01 - Play Note",52,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 53,0,"01 - Play Note",53,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 54,0,"01 - Play Note",54,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 55,0,"01 - Play Note",55,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 56,0,"01 - Play Note",56,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 57,0,"01 - Play Note",57,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 58,0,"01 - Play Note",58,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 59,0,"01 - Play Note",59,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 60,0,"01 - Play Note",60,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 61,0,"01 - Play Note",61,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 62,0,"01 - Play Note",62,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 63,0,"01 - Play Note",63,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 64,0,"01 - Play Note",64,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 65,0,"01 - Play Note",65,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 66,0,"01 - Play Note",66,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 67,0,"01 - Play Note",67,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 68,0,"01 - Play Note",68,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 69,0,"01 - Play Note",69,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 70,0,"01 - Play Note",70,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 71,0,"01 - Play Note",71,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 72,0,"01 - Play Note",72,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 73,0,"01 - Play Note",73,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 74,0,"01 - Play Note",74,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 75,0,"01 - Play Note",75,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 76,0,"01 - Play Note",76,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 77,0,"01 - Play Note",77,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 78,0,"01 - Play Note",78,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 79,0,"01 - Play Note",79,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 80,0,"01 - Play Note",80,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 81,0,"01 - Play Note",81,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 82,0,"01 - Play Note",82,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 83,0,"01 - Play Note",83,0,0,750,0,0,0,1,127,0,0,64,""],
-		["#NOTE", 84,0,"01 - Play Note",84,0,0,750,0,0,0,1,127,0,0,64,""],	
-	]
+async function generateLeadWavFile(url, fileNo) {
+	const response = await fetch(url);
+	const buffer = await response.arrayBuffer();
+	const sample = await window.audioContext.decodeAudioData(buffer);
+	console.debug("generateLeadWavFile fetched", url, fileNo, sample);
+			
+	const offlineCtx = new OfflineAudioContext(2, sample.length, 44100);
+	const source = offlineCtx.createBufferSource();
+	source.buffer = sample;
+	source.connect(offlineCtx.destination);
+	source.start(0);
+	const resample = await offlineCtx.startRendering();
+	const result = interleave(resample.getChannelData(0), resample.getChannelData(1));	
+	const data = encodeWAV(result, 1, 44100, 2, 16);
+	saveWavFile(String(fileNo).padStart(4, '0') + ".wav", data);					
+}
 
-	let fileNo = 204 * (parseInt(slotNo) - 1) + 85;		
-	console.debug("downloadCSV", csvFileName, data, fileNo);
+
+async function downloadCSV(slotNo) {
+	const startFileNo = 204 * (parseInt(slotNo) - 1) + 24;		
+	let csvFileName = "set_" + String(slotNo).padStart(4, '0') + ".csv";
+	
+	let data = []	
+	let fileNo = startFileNo;
+	
+	// lead instrument midi 24 - 84
+	for (let i=24; i<85; i++) {
+		const folder = ["acoustic-piano-1", "electric-guitar-1"];
+		const url = "assets/leads/" + folder[exportLead.selectedIndex] + "/" + String(i).padStart(4, '0') + ".wav";		
+		await generateLeadWavFile(url, fileNo);
+		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
+	}	
+
+	// worship pads midi 85 - 96
+	for (let i=85; i<97; i++) {
+		const url = "assets/pads/worship/" + String(i).padStart(4, '0') + ".ogg";		
+		await generateLeadWavFile(url, fileNo);
+		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
+	}	
 	
 	// global commands on channel 16 to stop all tracks
 	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
@@ -11653,40 +11628,42 @@ function downloadCSV(slotNo) {
 	}	
 	
 	// drums - midi channel 5 notes 36 - 46 (11 notes)
-	data.push(["#NOTE", 36, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 36, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 37, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 37, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 38, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 38, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 39, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 39, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 40, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 40, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 41, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 41, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 42, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 42, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 43, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 43, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 44, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 44, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 45, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 45, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);	
-	data.push(["#NOTE", 46, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,0,0,1,127,0,0,64,""]);
-	data.push(["#NOTE", 46, 7,"05 - Stop Track", fileNo++, 0, 0,0, 0,0,0,1,127,0,0,64,""]);		
+	data.push(["#NOTE", 36, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 36, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 37, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 37, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 38, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 38, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 39, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 39, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 40, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 40, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 41, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 41, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 42, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 42, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 43, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 43, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 44, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 44, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 45, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 45, 7,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);	
+	data.push(["#NOTE", 46, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,0,0,1,127,-20,0,64,""]);
+	data.push(["#NOTE", 46, 7,"05 - Stop Track", fileNo++, 0, 0,0, 0,0,0,1,127,-20,0,64,""]);		
 	
 	// chord - midi channel 7 notes 36 - 107 (72 notes)	
 	for (let i=0; i<72; i++) {
-		data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);		
-		data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);			
+		data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+		data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);			
 	}
 	
 	// bass - midi channel 6 notes 36 - 59 (24 notes)	
 	for (let i=0; i<24; i++) {
-		data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,0,0,64,""]);		
-		data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,0,0,64,""]);			
+		data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+		data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);			
 	}
+	
+	console.debug("downloadCSV", csvFileName, data, startFileNo, fileNo);	
 	
 	const csvContent = data.map(row => 
 		row.map(value => 
