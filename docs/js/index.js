@@ -11319,26 +11319,29 @@ async function makeWavForNanobox (instrument) {
 	const metaData = loopData.split("_");		
 	const buffer = loopCache[instrument.loop.url];
 	const numChannels = buffer.numberOfChannels;
-	const sampleRate = 44100; //buffer.sampleRate;
+	const sampleRate = buffer.sampleRate;
 	const format = 1;
 	const bitDepth = 16;
 	
 	let variations = 1;
 	let loopSize = 0;
+	let bufferLength = buffer.length;
 	
 	if (instrument.styleType == "chord") {
 		if (metaData.length == 5) variations = parseInt(metaData[4]); 
 		loopSize = 36 * variations;
+		bufferLength = buffer.length / variations * 2;
 	}
 	else
 		
 	if (instrument.styleType == "bass") {
 		if (metaData.length == 4) variations = parseInt(metaData[3]); 
 		loopSize = 24 * variations;
+		bufferLength = buffer.length / variations;		
 	}	
 
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
-	const newLength = Math.floor(buffer.length / tempoRatio);	
+	const newLength = Math.floor(bufferLength / tempoRatio);	
 	
 	const renderedBuffer = await renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio);
 	let result;
