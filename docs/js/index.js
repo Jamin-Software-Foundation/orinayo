@@ -11602,32 +11602,27 @@ async function downloadCSV(slotNo) {
 	
 	// lead instrument midi 24 - 84
 	for (let i=24; i<85; i++) {
-		const folder = ["acoustic-piano-1", "electric-guitar-1"];
+		const folder = ["acoustic-piano-1", "electric-guitar-1", "electric-guitar-2", "electric-guitar-3"];
 		const url = "assets/leads/" + folder[exportLead.selectedIndex] + "/" + String(i).padStart(4, '0') + ".wav";		
 		await generateLeadWavFile(url, fileNo);
 		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
 	}	
 
-	// worship pads midi 85 - 96
+	// backing tracks midi 85 - 96
 	for (let i=85; i<97; i++) {
 		const url = "assets/pads/worship/" + String(i).padStart(4, '0') + ".ogg";		
 		await generateLeadWavFile(url, fileNo);
-		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
-	}	
-	
+		data.push(["#NOTE", 56 + i - 85, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
+		data.push(["#NOTE", 68 + i - 85, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);	
+	}
+
 	// global commands on channel 16 to stop all tracks
 	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
 
 	// global commands on channel 16 to load presets 1-20 (36 - 55)
 	for (let i=0; i<20; i++) {
 		data.push(["#NOTE", 36 + i, 15,"07 - Load Preset", i + 1, 0, 0,0, 0,0,0,0,127,0,0,64,""]);		
-	}	
-	
-	// global commands on channel 16 to play/stop backing tracks (56 - 79)
-	for (let i=0; i<12; i++) {
-		data.push(["#NOTE", 56 + i, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
-		data.push(["#NOTE", 68 + i, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);			
-	}	
+	}		
 	
 	// drums - midi channel 5 notes 36 - 46 (11 notes)
 	data.push(["#NOTE", 36, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);
