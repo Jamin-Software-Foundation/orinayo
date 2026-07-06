@@ -11577,19 +11577,37 @@ function writeString (view, offset, string) {
 }
 
 async function generateLeadWavFile(url, fileNo) {
+	let sampleRate = 44100;	
+	
+	if (url.indexOf("-guitar") > 0) {
+		sampleRate = 48000;	
+	}
+	
 	const response = await fetch(url);
 	const buffer = await response.arrayBuffer();
-	const sample = await window.audioContext.decodeAudioData(buffer);
+	const audioCtx = new AudioContext({ sampleRate});
+	const sample = await audioCtx.decodeAudioData(buffer);
 	console.debug("generateLeadWavFile fetched", url, fileNo, sample);
-			
-	const offlineCtx = new OfflineAudioContext(2, sample.length, 44100);
+	const offlineCtx = new OfflineAudioContext(2, sample.length, sampleRate);	
+	window.ctx = offlineCtx; 	
 	const source = offlineCtx.createBufferSource();
-	source.buffer = sample;
-	source.connect(offlineCtx.destination);
-	source.start(0);
-	const resample = await offlineCtx.startRendering();
+	source.buffer = sample;	
+		
+	if (url.indexOf("-guitar") > 0) {	
+		const pedalOutput = window.offlinePedals.reduce((input, pedal, index) => {
+			return pedal(input, index + 1);
+			
+		}, source);	
+		
+		pedalOutput.connect(offlineCtx.destination);		
+	} else {	
+		source.connect(offlineCtx.destination);		
+	}
+
+	source.start(0);	
+	const resample = await offlineCtx.startRendering();	
 	const result = interleave(resample.getChannelData(0), resample.getChannelData(1));	
-	const data = encodeWAV(result, 1, 44100, 2, 16);
+	const data = encodeWAV(result, 1, sampleRate, 2, 16);
 	saveWavFile(String(fileNo).padStart(4, '0') + ".wav", data);					
 }
 
@@ -11599,6 +11617,8 @@ async function downloadCSV(slotNo) {
 	
 	let data = []	
 	let fileNo = startFileNo;
+	const guitarContext = window.ctx;
+	const convolverBuffer = window.convolver.buffer;
 	
 	// lead instrument midi 24 - 84
 	for (let i=24; i<85; i++) {
@@ -11608,6 +11628,7 @@ async function downloadCSV(slotNo) {
 		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
 	}	
 
+
 	// backing tracks midi 85 - 96
 	for (let i=85; i<97; i++) {
 		const url = "assets/pads/worship/" + String(i).padStart(4, '0') + ".ogg";		
@@ -11615,6 +11636,8 @@ async function downloadCSV(slotNo) {
 		data.push(["#NOTE", 56 + i - 85, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
 		data.push(["#NOTE", 68 + i - 85, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);	
 	}
+	
+	window.ctx = guitarContext;
 
 	// global commands on channel 16 to stop all tracks
 	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
@@ -11680,4 +11703,5 @@ async function downloadCSV(slotNo) {
 	link.click();
 	document.body.removeChild(link);
 	URL.revokeObjectURL(url); // Free up memory
+	
 }

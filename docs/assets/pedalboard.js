@@ -115,7 +115,7 @@ window.setupPedalBoard = async function(guitarContext, guitarName, deviceId, use
 		</fluent-tab-panel>			
    </fluent-tabs>		
   `;
-  
+
   window.pedals = [
     wahPedal,
     compressorPedal,
@@ -128,6 +128,19 @@ window.setupPedalBoard = async function(guitarContext, guitarName, deviceId, use
     tremoloPedal,
     reverbPedal,
 	dronePedal	
+  ]; 
+  
+  window.offlinePedals = [
+    wahPedal,
+    compressorPedal,
+    overdrivePedal,
+    boostPedal,
+    harmonicTremoloPedal,
+    chorusPedal,
+    delayPedal,
+    multiHeadDelay,
+    tremoloPedal,
+    reverbPedal
   ]; 
     
   if (useEffects && guitarName != null && guitarName != "") {  
