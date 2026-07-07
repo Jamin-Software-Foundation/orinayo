@@ -2423,7 +2423,7 @@ async function onloadHandler() {
 	window.addEventListener("gamepaddisconnected", disconnectHandler);
 
 	document.querySelector('#help').addEventListener("click", () => {	
-		window.open("./help.html", "user-guide");
+		window.open("https://jus-be.github.io/orinayo/", "user-guide");
 	});
 	
 	document.querySelector('#export').addEventListener("click", () => {	
