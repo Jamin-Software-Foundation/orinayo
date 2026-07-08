@@ -865,7 +865,7 @@ var WebAudioFontPlayer = /** @class */ (function () {
     ;
     WebAudioFontPlayer.prototype.resumeContext = function (audioContext) {
         try {
-            if (audioContext.state == 'suspended') {
+            if (audioContext.state == 'suspended' && !audioContext instanceof OfflineAudioContext) {
                 console.debug('audioContext.resume', audioContext);
                 audioContext.resume();
             }

@@ -67,7 +67,7 @@ var syncStartCheckedEle = null;
 var guitarIRDef = null;
 var guitarPosition = null;
 var exportDevice = null;
-var exportLead = null;
+var exportPads = null;
 var tempoDiv = null;
 var showVol = null;
 var bassKnob = null;
@@ -2103,7 +2103,7 @@ function saveConfig() {
 	config.programChange = programChangeEle.checked;
 	config.strumPos = guitarPosition?.selectedIndex;
 	config.exportDevice = exportDevice?.selectedIndex;
-	config.exportLead = exportLead?.selectedIndex;	
+	config.exportPads = exportPads?.selectedIndex;	
 	config.liberLiveChrd1 = liberLive.chord1;
 	config.liberLiveChrd2 = liberLive.chord2;
 	config.liberLiveDrms1 = liberLive.drums1;
@@ -5072,8 +5072,8 @@ async function setupUI(config, err) {
 	exportDevice = document.getElementById("exportDevice");
 	exportDevice.selectedIndex = config.exportDevice;
 
-	exportLead = document.getElementById("exportLead");
-	exportLead.selectedIndex = config.exportLead;
+	exportPads = document.getElementById("exportPads");
+	exportPads.selectedIndex = config.exportPads;
 	
 	guitarPosition = document.getElementById("guitarPosition");
 	guitarPosition.selectedIndex = config.strumPos;	
@@ -11577,35 +11577,51 @@ function writeString (view, offset, string) {
 }
 
 async function generateLeadWavFile(url, fileNo) {
-	let sampleRate = 44100;	
-	
-	if (url.indexOf("-guitar") > 0) {
-		sampleRate = 48000;	
-	}
-	
+	const sampleRate = 44100;		
 	const response = await fetch(url);
 	const buffer = await response.arrayBuffer();
 	const audioCtx = new AudioContext({ sampleRate});
 	const sample = await audioCtx.decodeAudioData(buffer);
 	console.debug("generateLeadWavFile fetched", url, fileNo, sample);
 	const offlineCtx = new OfflineAudioContext(2, sample.length, sampleRate);	
-	window.ctx = offlineCtx; 	
 	const source = offlineCtx.createBufferSource();
 	source.buffer = sample;	
-		
-	if (url.indexOf("-guitar") > 0) {	
-		const pedalOutput = window.offlinePedals.reduce((input, pedal, index) => {
-			return pedal(input, index + 1);
-			
-		}, source);	
-		
-		pedalOutput.connect(offlineCtx.destination);		
-	} else {	
-		source.connect(offlineCtx.destination);		
-	}
-
+	source.connect(offlineCtx.destination);		
 	source.start(0);	
 	const resample = await offlineCtx.startRendering();	
+	const result = interleave(resample.getChannelData(0), resample.getChannelData(1));	
+	const data = encodeWAV(result, 1, sampleRate, 2, 16);
+	saveWavFile(String(fileNo).padStart(4, '0') + ".wav", data);					
+}
+
+async function generateLeadWavNote(note, fileNo) {
+	console.debug("generateLeadWavFile fetched", note, fileNo);	
+
+	const guitarDuration = 480 / tempo;
+	let sampleRate = 48000;		
+	let offlineCtx = new OfflineAudioContext(2, guitarDuration * sampleRate, sampleRate);
+	const offlinePlayer = new WebAudioFontPlayer();		
+	offlinePlayer.loader.decodeAfterLoading(offlineCtx, '_tone_' + guitarName);	
+		
+	window.pedalInput = offlineCtx.createGain();
+	window.ctx = offlineCtx;	
+	  
+	const pedalOutput = window.offlinePedals.reduce((input, pedal, index) => {
+		return pedal(input, index + 1);
+	}, pedalInput);	
+	
+	pedalOutput.connect(offlineCtx.destination);
+	
+	offlinePlayer.queueWaveTable(window.ctx, window.ctx.destination, midiGuitar, 0, note, guitarDuration, guitarVolume, undefined, guitarReverb.checked);	
+	let resample = await window.ctx.startRendering();	
+	
+	sampleRate = 44100;		
+	offlineCtx = new OfflineAudioContext(2, resample.length, sampleRate);
+	const source = offlineCtx.createBufferSource();
+	source.buffer = resample;	
+	source.connect(offlineCtx.destination);		
+	source.start(0);	
+	resample = await offlineCtx.startRendering();		
 	const result = interleave(resample.getChannelData(0), resample.getChannelData(1));	
 	const data = encodeWAV(result, 1, sampleRate, 2, 16);
 	saveWavFile(String(fileNo).padStart(4, '0') + ".wav", data);					
@@ -11617,27 +11633,34 @@ async function downloadCSV(slotNo) {
 	
 	let data = []	
 	let fileNo = startFileNo;
-	const guitarContext = window.ctx;
-	const convolverBuffer = window.convolver.buffer;
 	
+	const guitarContext2 = window.ctx;	
+	const pedalInput2 = window.pedalInput;	
+
 	// lead instrument midi 24 - 84
 	for (let i=24; i<85; i++) {
-		const folder = ["acoustic-piano-1", "electric-guitar-1", "electric-guitar-2", "electric-guitar-3"];
-		const url = "assets/leads/" + folder[exportLead.selectedIndex] + "/" + String(i).padStart(4, '0') + ".wav";		
-		await generateLeadWavFile(url, fileNo);
+		await generateLeadWavNote(i, fileNo);
 		data.push(["#NOTE", i,0,"01 - Play Note",fileNo++,0,0,750,0,0,0,1,127,-20,0,64,""]);	
 	}	
-
-
-	// backing tracks midi 85 - 96
-	for (let i=85; i<97; i++) {
-		const url = "assets/pads/worship/" + String(i).padStart(4, '0') + ".ogg";		
-		await generateLeadWavFile(url, fileNo);
-		data.push(["#NOTE", 56 + i - 85, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
-		data.push(["#NOTE", 68 + i - 85, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);	
-	}
 	
-	window.ctx = guitarContext;
+	window.ctx = guitarContext2;
+	window.pedalInput = pedalInput2;	
+	
+	// pads tracks midi 85 - 96
+	
+	if (exportPads.selectedIndex > 0) {
+		const fileNames = ["worship"];
+		
+		for (let i=85; i<97; i++) {
+			const url = "assets/pads/" + fileNames[exportPads.selectedIndex - 1] + "/" + String(i).padStart(4, '0') + ".ogg";		
+			await generateLeadWavFile(url, fileNo);
+			data.push(["#NOTE", 56 + i - 85, 15,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,1,0,0,127,0,0,64,""]);		
+			data.push(["#NOTE", 68 + i - 85, 15,"05 - Stop Track",   fileNo++, 0, 0,0, 0,1,0,0,127,0,0,64,""]);	
+		}
+	}
+	else {
+		fileNo = fileNo + 12;
+	}
 
 	// global commands on channel 16 to stop all tracks
 	data.push(["#NOTE", 1, 15,"06 - Stop All", 0, 0, 0,0, 0,0,0,0,127,0,0,64,""]);	
@@ -11703,5 +11726,4 @@ async function downloadCSV(slotNo) {
 	link.click();
 	document.body.removeChild(link);
 	URL.revokeObjectURL(url); // Free up memory
-	
 }
