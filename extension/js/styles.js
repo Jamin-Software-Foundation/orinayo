@@ -302,6 +302,8 @@ var chord_loops = [
 	"assets/chords/way-pop_75_12800.chord",			
 	"assets/chords/wild-rock_120_8000_8000_2.chord",
 	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",	
+	"extra/assets/chords/worship-band-1_75_6400_6400_2.chord",	
+	"extra/assets/chords/worship-band-2_90_5333_5333_2.chord",		
 	"assets/chords/soft-rock_120_8000.chord",				// 	dummy line... last line is ignored
 ]
 
@@ -519,6 +521,7 @@ var bass_loops = [
 	"assets/bass/rock-band_120_4000.bass",	
 	"extra/assets/bass/rockit_140_13714.bass",
 	"extra/assets/bass/soft-ballad_75_12800.bass",
+	"extra/assets/bass/slap-funk_110_4364.bass",
 	"extra/assets/bass/slow-blues_60_32000.bass",	
 	"extra/assets/bass/slow-pop_75_25600.bass",	
 	"extra/assets/bass/slow-rock_80_12000.bass",
@@ -530,7 +533,9 @@ var bass_loops = [
 	"assets/bass/u2-guitar_105_18286.bass",
 	"extra/assets/bass/upbeat_120_16000.bass",
 	"assets/bass/village-pop_107_8972.bass",
-	"extra/assets/bass/wagner-pop_125_7680.bass",	
+	"extra/assets/bass/wagner-pop_125_7680.bass",
+	"extra/assets/bass/worship-band-1_75_6400.bass",
+	"extra/assets/bass/worship-band-2_90_5333.bass",	
 	"assets/bass/wild-rock_120_8000.bass"
 ]
 
