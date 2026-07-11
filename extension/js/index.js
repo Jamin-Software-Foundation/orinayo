@@ -11179,7 +11179,7 @@ async function makeWavForDrumPad(padName, variation) {
 
 	let drumBuffer = loopCache[drumLoop.loop.url];	
 	const drumLength = Math.floor(drumBuffer.length / tempoRatio);		
-	drumBuffer = await renderInstrument(drumBuffer, numChannels, drumLength, sampleRate, tempoRatio);
+	drumBuffer = await renderInstrument(drumBuffer, numChannels, drumLength, sampleRate, tempoRatio, midiVolumeEle[16].value / 100);
 
 	const drumBufferLeft = drumBuffer.getChannelData(0);
 	const drumBufferRight = drumBuffer.getChannelData(1);	
@@ -11201,7 +11201,7 @@ async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
 
 	let chordBuffer = loopCache[chordLoop.loop.url];	
 	const chordLength = Math.floor(chordBuffer.length / tempoRatio);		
-	chordBuffer = await renderInstrument(chordBuffer, numChannels, chordLength, sampleRate, tempoRatio);
+	chordBuffer = await renderInstrument(chordBuffer, numChannels, chordLength, sampleRate, tempoRatio, midiVolumeEle[18].value / 100);
 
 	let metaData = chordLoop.loop.url.substring(chordLoop.loop.url.lastIndexOf("/") + 1).split("_");	
 	let chordVars = 1;
@@ -11229,7 +11229,7 @@ async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
 
 	let bassBuffer = loopCache[bassLoop.loop.url];	
 	const bassLength = Math.floor(bassBuffer.length / tempoRatio);		
-	bassBuffer = await renderInstrument(bassBuffer, numChannels, bassLength, sampleRate, tempoRatio);
+	bassBuffer = await renderInstrument(bassBuffer, numChannels, bassLength, sampleRate, tempoRatio, midiVolumeEle[17].value / 100);
 
 	metaData = bassLoop.loop.url.substring(bassLoop.loop.url.lastIndexOf("/") + 1).split("_");		
 	let bassVars = 1;
@@ -11257,15 +11257,15 @@ async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
 
 	let drumBuffer = loopCache[drumLoop.loop.url];	
 	const drumLength = Math.floor(drumBuffer.length / tempoRatio);		
-	drumBuffer = await renderInstrument(drumBuffer, numChannels, drumLength, sampleRate, tempoRatio);
+	drumBuffer = await renderInstrument(drumBuffer, numChannels, drumLength, sampleRate, tempoRatio, midiVolumeEle[16].value / 100);
 
 	let bassBuffer = loopCache[bassLoop.loop.url];	
 	const bassLength = Math.floor(bassBuffer.length / tempoRatio);		
-	bassBuffer = await renderInstrument(bassBuffer, numChannels, bassLength, sampleRate, tempoRatio);
+	bassBuffer = await renderInstrument(bassBuffer, numChannels, bassLength, sampleRate, tempoRatio, midiVolumeEle[17].value / 100);
 
 	let chordBuffer = loopCache[chordLoop.loop.url];	
 	const chordLength = Math.floor(chordBuffer.length / tempoRatio);		
-	chordBuffer = await renderInstrument(chordBuffer, numChannels, chordLength, sampleRate, tempoRatio);
+	chordBuffer = await renderInstrument(chordBuffer, numChannels, chordLength, sampleRate, tempoRatio, midiVolumeEle[18].value / 100);
 
 	let metaData = chordLoop.loop.url.substring(chordLoop.loop.url.lastIndexOf("/") + 1).split("_");
 	const name = metaData[0] + " " + tempo + " " + chordLoop.styleType + ".wav";	
@@ -11326,24 +11326,27 @@ async function makeWavForNanobox (instrument) {
 	let variations = 1;
 	let loopSize = 0;
 	let bufferLength = buffer.length;
+	let volume = midiVolumeEle[16].value / 100;
 	
 	if (instrument.styleType == "chord") {
 		if (metaData.length == 5) variations = parseInt(metaData[4]); 
 		loopSize = 36 * variations;
 		bufferLength = buffer.length / variations * 2;
+		volume = midiVolumeEle[18].value / 100;
 	}
 	else
 		
 	if (instrument.styleType == "bass") {
 		if (metaData.length == 4) variations = parseInt(metaData[3]); 
 		loopSize = 24 * variations;
-		bufferLength = buffer.length / variations;		
+		bufferLength = buffer.length / variations;	
+		volume = midiVolumeEle[17].value / 100;		
 	}	
 
 	const tempoRatio = 2 ** (parseInt(tempoEle.value) / 12);
 	const newLength = Math.floor(bufferLength / tempoRatio);	
 	
-	const renderedBuffer = await renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio);
+	const renderedBuffer = await renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio, volume);
 	let result;
 	
 	if (numChannels === 2) {
@@ -11357,12 +11360,17 @@ async function makeWavForNanobox (instrument) {
 	saveWavFile(name, data);	
 }
 
-async function renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio) {	
+async function renderInstrument(buffer, numChannels, newLength, sampleRate, tempoRatio, volume) {	
 	const offlineCtx = new OfflineAudioContext(numChannels,	newLength,	sampleRate);
 	const source = offlineCtx.createBufferSource();
+	
+	const gainNode = offlineCtx.createGain();
+	gainNode.gain.value = volume; 
+	source.connect(gainNode);
+	gainNode.connect(offlineCtx.destination);
+	
 	source.buffer = buffer;
 	source.playbackRate.value = tempoRatio;
-	source.connect(offlineCtx.destination);
 	source.start(0);
 	return await offlineCtx.startRendering();	
 }
@@ -11576,7 +11584,7 @@ function writeString (view, offset, string) {
   }
 }
 
-async function generateLeadWavFile(url, fileNo) {
+async function generateLeadWavFile(url, fileNo, volume) {
 	const sampleRate = 44100;		
 	const response = await fetch(url);
 	const buffer = await response.arrayBuffer();
@@ -11585,8 +11593,13 @@ async function generateLeadWavFile(url, fileNo) {
 	console.debug("generateLeadWavFile fetched", url, fileNo, sample);
 	const offlineCtx = new OfflineAudioContext(2, sample.length, sampleRate);	
 	const source = offlineCtx.createBufferSource();
-	source.buffer = sample;	
-	source.connect(offlineCtx.destination);		
+	
+	const gainNode = offlineCtx.createGain();
+	gainNode.gain.value = volume; 
+	source.connect(gainNode);
+	gainNode.connect(offlineCtx.destination);	
+
+	source.buffer = sample;		
 	source.start(0);	
 	const resample = await offlineCtx.startRendering();	
 	const result = interleave(resample.getChannelData(0), resample.getChannelData(1));	
@@ -11595,7 +11608,7 @@ async function generateLeadWavFile(url, fileNo) {
 }
 
 async function generateLeadWavNote(note, fileNo) {
-	console.debug("generateLeadWavFile fetched", note, fileNo);	
+	console.debug("generateLeadWavNote midi note", note, fileNo);	
 
 	const guitarDuration = 480 / tempo;
 	let sampleRate = 48000;		
@@ -11604,6 +11617,7 @@ async function generateLeadWavNote(note, fileNo) {
 	offlinePlayer.loader.decodeAfterLoading(offlineCtx, '_tone_' + guitarName);	
 		
 	window.pedalInput = offlineCtx.createGain();
+	pedalInput.gain.value = 1.0; 
 	window.ctx = offlineCtx;	
 	  
 	const pedalOutput = window.offlinePedals.reduce((input, pedal, index) => {
@@ -11655,7 +11669,7 @@ async function downloadCSV(slotNo) {
 		
 		for (let i=85; i<97; i++) {
 			const url = "assets/pads/" + fileNames[exportPads.selectedIndex - 1] + "/" + String(i).padStart(4, '0') + ".ogg";		
-			await generateLeadWavFile(url, fileNo);
+			await generateLeadWavFile(url, fileNo, 0.5);	// lower volume
 			data.push(["#NOTE", 56 + i - 85, 15,"04 - Trigger Type 3", fileNo, 0, 2000,0, 0,1,0,0,127,0,0,64,""]);		
 			data.push(["#NOTE", 68 + i - 85, 15,"05 - Stop Track",   fileNo++, 0, 0,2000, 0,1,0,0,127,0,0,64,""]);	
 		}

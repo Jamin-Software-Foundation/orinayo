@@ -304,7 +304,7 @@ var chord_loops = [
 	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",	
 	"extra/assets/chords/worship-band-1_75_6400_6400_2.chord",	
 	"extra/assets/chords/worship-band-2_90_5333_5333_2.chord",		
-	"assets/chords/soft-rock_120_8000.chord",				// 	dummy line... last line is ignored
+	"extra/assets/chords/soft-rock_120_4000_4000_2.chord",				// 	dummy line... last line is ignored
 ]
 
 var drum_loops = [
