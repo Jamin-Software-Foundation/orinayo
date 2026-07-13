@@ -303,8 +303,13 @@ var chord_loops = [
 	"assets/chords/wild-rock_120_8000_8000_2.chord",
 	"extra/assets/chords/wagner-pop_125_7680_7680_4.chord",	
 	"extra/assets/chords/worship-band-1_75_6400_6400_2.chord",	
-	"extra/assets/chords/worship-band-2_90_5333_5333_2.chord",	
+	"extra/assets/chords/worship-band-2_90_5333_5333_2.chord",
+	"assets/chords/worship-band-pop_75_12800_12800_2.chord",
+	"assets/chords/worship-band-pop_90_5333_5333_2.chord",
 	"assets/chords/worship-band-rock_70_6857_6857_2.chord",
+	"assets/chords/worship-band-rock_100_4800_4800_2.chord",
+	"assets/chords/worship-band-strum_85_5647_5647_2.chord",
+	"assets/chords/worship-band-vibe_110_4364_4364_2.chord",
 	"extra/assets/chords/soft-rock_120_4000_4000_2.chord",
 ]
 
@@ -482,6 +487,7 @@ var bass_loops = [
 	"assets/bass/desert-pop_97_19794.bass",
 	"assets/bass/disco-80_110_8727_2.bass",	
 	"extra/assets/bass/disco-boggie_110_4364.bass",
+	"assets/bass/disco-band_110_4364.bass",
 	"assets/bass/disco-pop_116_8276_2.bass",
 	"extra/assets/bass/disco-rock_120_16000.bass",
 	"assets/bass/dream_85_22588.bass",
@@ -536,7 +542,11 @@ var bass_loops = [
 	"assets/bass/village-pop_107_8972.bass",
 	"extra/assets/bass/wagner-pop_125_7680.bass",
 	"extra/assets/bass/worship-band-1_75_6400.bass",
-	"extra/assets/bass/worship-band-2_90_5333.bass",	
+	"extra/assets/bass/worship-band-2_90_5333.bass",
+	"assets/bass/worship-band-pop_75_6400.bass",
+	"assets/bass/worship-band-pop_90_5333.bass",
+	"assets/bass/worship-band-rock_100_4800.bass",
+	"assets/bass/worship-band-vibe_110_4364.bass",
 	"assets/bass/wild-rock_120_8000.bass"
 ]
 
