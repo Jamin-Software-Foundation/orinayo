@@ -182,8 +182,12 @@ AudioLooper.prototype.update = function(id, sync) {
 	this.displayUI(true);	
 	
 	if (this.source) {	
-		this.id = id;	
-		this.source.stop();	
+		this.id = id;
+		try {
+			this.source.stop();	
+		} catch (e) {
+			console.debug("can't stop node", this);
+		}
 		this.source.buffer = null;
 		
 		const loop = this.getLoop(id);
