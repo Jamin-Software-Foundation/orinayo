@@ -339,6 +339,18 @@ The selected loop choice will be saved and recalled when the page is re-opened.
 Select an input MIDI device to use with the Orin Ayo ChordTracker feature.  This feature is implemented for the Yamaha Sonogenic SHS-500 Keytar and compatible devices.  Orin Ayo well send the chords being played as Yamaha midi SYSEX messages to the selected device. The device is then able to ensure that only notes in the current key and in harmony with the current chord will be played by the device.
 <br clear="left"/>
 
+## 18a - Export Backing
+Use this drop-down list to choose the export format or playback device used by the **Export** action button.
+
+For Web Audio loop styles, Orin Ayo can export backing files for supported targets such as Nanobox Tangerine, Akai MPX8, Akai MPC Sample, Roland SP-404 Mk2 and WAV Trigger Pro.
+
+If **MIDI file** is selected, Orin Ayo exports a MIDI drum file from the current song/style sequence instead of creating WAV files for sampler-style devices.
+
+## 18b - Export Pads
+Use this drop-down list to add optional pad sounds to an export.
+
+Select **None** to export only the main backing parts. Select **Worship Pads** to include the built-in worship pad set as extra exported pad tracks for compatible exports such as WAV Trigger Pro.
+
 ## 19 - Song Player
 <img align=left src=https://jus-be.github.io/orinayo/assets/screenshots/feature19.png />
 
@@ -464,6 +476,7 @@ These are all the buttons to making Orin Ayo perform a specific action depending
 - Lyrics
 - Save
 - Record
+- Export
 - Refresh
 - Settings
 - Help
@@ -574,6 +587,13 @@ This action button is used to save the current settings to a specific slot numbe
 Orin Ayo can record the current live style performance as an audio file (OGG). It can also record the playback of a song with the lyrics and chord progression as a video file (MP4)
 This action button is used to prompt for a file name for the audio or video file that will be created when the music is started.
 
+### Export
+Use this action button to export the current backing setup according to the **Export Backing** and **Export Pads** selections.
+
+When a supported Web Audio style is loaded, Orin Ayo generates downloadable WAV files for the selected sampler or playback target. When **MIDI file** is selected in **Export Backing**, it exports a MIDI drum file from the active song/style sequence instead.
+
+If **Export Pads** is enabled, the export also includes the selected pad sounds in addition to the main drums, chord and bass backing parts.
+
 ### Refresh
 Use this action button to refresh the screen or reset the application. It should also be used after external files are loaded with the load button.
 
@@ -623,4 +643,3 @@ The encoders can be pressed to mute musical instruments or rotated to change thi
 Orin ayo can be played live with a USB or Bluetooth numeric keypad. Any compatible wireless numeric keypad should work. 
 All basic chords are accessible with single key presses, while the advanced chords require two key key presses.
 Styles can be started, stopped and varied. The song key signature can also be stepped up and down.
-
