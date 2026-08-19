@@ -39,6 +39,8 @@
 <li><a href="#audio-bass">17 - Audio Bass</a></li>
 <li><a href="#a---audio-riffs">17a - Audio Riffs</a></li>
 <li><a href="#chord-tracker">18 - Chord Tracker</a></li>
+<li><a href="#a---export-backing">18a - Export Backing</a></li>
+<li><a href="#b---export-pads">18b - Export Pads</a></li>
 <li><a href="#song-player">19 - Song Player</a></li>
 </ul>
 </li>
@@ -79,7 +81,10 @@
 <h1 id="install">Install</h1>
 <p>Orinayo can be setup and accessed as follows:</p>
 <ul>
+<li>Type <a href="https://jus-be.github.io/orinayo/index.html">https://jus-be.github.io/orinayo/index.html</a> into a Chrome or Edge browser to use it directly from a web page.</li>
+<li>Install it as a progressive web app from the web page. Click on the “install” or “Add to home page” browser links/buttons.</li>
 <li>Install it as a browser extension for Google Chrome and Microsoft Edge from <a href="https://chromewebstore.google.com/detail/orinayo/mhnemaeacdgnkmoibfeodelijegakklp">https://chromewebstore.google.com/detail/orinayo/mhnemaeacdgnkmoibfeodelijegakklp</a></li>
+<li>On Windows 10+ desktops, download orinayo.exe and run it directly from a desktop. It loads the above web page using webview2. See <a href="https://github.com/jchv/go-webview2">https://github.com/jchv/go-webview2</a>. If you are using Windows 10+, the WebView2 runtime should already be installed. If you don’t have it installed, you can download and install a copy from Microsoft’s website - <a href="https://developer.microsoft.com/en-us/microsoft-edge/webview2/">https://developer.microsoft.com/en-us/microsoft-edge/webview2/</a></li>
 </ul>
 <h1 id="desktop-view">Desktop View</h1>
 <img src="https://jus-be.github.io/orinayo/assets/screenshots/orinayo_desktop.svg">
@@ -610,6 +615,13 @@ The selected loop choice will be saved and recalled when the page is re-opened.<
 <img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/feature8.png">
 <p>Select an input MIDI device to use with the Orin Ayo ChordTracker feature.  This feature is implemented for the Yamaha Sonogenic SHS-500 Keytar and compatible devices.  Orin Ayo well send the chords being played as Yamaha midi SYSEX messages to the selected device. The device is then able to ensure that only notes in the current key and in harmony with the current chord will be played by the device.<br>
 <br clear="left"></p>
+<h2 id="a---export-backing">18a - Export Backing</h2>
+<p>Use this drop-down list to choose the export format or playback device used by the <strong>Export</strong> action button.</p>
+<p>For Web Audio loop styles, Orin Ayo can export backing files for supported targets such as Nanobox Tangerine, Akai MPX8, Akai MPC Sample, Roland SP-404 Mk2 and WAV Trigger Pro.</p>
+<p>If <strong>MIDI file</strong> is selected, Orin Ayo exports a MIDI drum file from the current song/style sequence instead of creating WAV files for sampler-style devices.</p>
+<h2 id="b---export-pads">18b - Export Pads</h2>
+<p>Use this drop-down list to add optional pad sounds to an export.</p>
+<p>Select <strong>None</strong> to export only the main backing parts. Select <strong>Worship Pads</strong> to include the built-in worship pad set as extra exported pad tracks for compatible exports such as WAV Trigger Pro.</p>
 <h2 id="song-player">19 - Song Player</h2>
 <img align="left" src="https://jus-be.github.io/orinayo/assets/screenshots/feature19.png">
 <p>This feature enables OrinAyo to play song midi files that contain chord progressions that are compatible with Yamaha keyboards like the PSR-SX600 with a different style each time. The song lyrics and chord symbols can be viewed live just like karoke with the <strong>Lyrics</strong> action button.<br>
@@ -714,6 +726,7 @@ Select any of the IR wav files provided to use.
 <li>Lyrics</li>
 <li>Save</li>
 <li>Record</li>
+<li>Export</li>
 <li>Refresh</li>
 <li>Settings</li>
 <li>Help</li>
@@ -796,6 +809,10 @@ This action button is used to save the current settings to a specific slot numbe
 <img src="https://jus-be.github.io/orinayo/assets/screenshots/action-button27-record.png">
 <p>Orin Ayo can record the current live style performance as an audio file (OGG). It can also record the playback of a song with the lyrics and chord progression as a video file (MP4)<br>
 This action button is used to prompt for a file name for the audio or video file that will be created when the music is started.</p>
+<h3 id="export">Export</h3>
+<p>Use this action button to export the current backing setup according to the <strong>Export Backing</strong> and <strong>Export Pads</strong> selections.</p>
+<p>When a supported Web Audio style is loaded, Orin Ayo generates downloadable WAV files for the selected sampler or playback target. When <strong>MIDI file</strong> is selected in <strong>Export Backing</strong>, it exports a MIDI drum file from the active song/style sequence instead.</p>
+<p>If <strong>Export Pads</strong> is enabled, the export also includes the selected pad sounds in addition to the main drums, chord and bass backing parts.</p>
 <h3 id="refresh">Refresh</h3>
 <p>Use this action button to refresh the screen or reset the application. It should also be used after external files are loaded with the load button.</p>
 <h3 id="settings">Settings</h3>
