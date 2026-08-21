@@ -588,9 +588,9 @@ Orin Ayo can record the current live style performance as an audio file (OGG). I
 This action button is used to prompt for a file name for the audio or video file that will be created when the music is started.
 
 ### Export
-Use this action button to export the current backing setup according to the **Export Backing** and **Export Pads** selections.
+Use this action button to export the current backing style for playing live on the Orinayo Pico device without using a PC according to the **Export Backing** and **Export Pads** selections.
 
-When a supported Web Audio style is loaded, Orin Ayo generates downloadable WAV files for the selected sampler or playback target. When **MIDI file** is selected in **Export Backing**, it exports a MIDI drum file from the active song/style sequence instead.
+When a supported Web Audio style is loaded, Orin Ayo generates downloadable WAV files for the selected sampler or playback target connected and configured on the device. When **MIDI file** is selected in **Export Backing**, it exports a MIDI drum file from the active song/style sequence instead.
 
 If **Export Pads** is enabled, the export also includes the selected pad sounds in addition to the main drums, chord and bass backing parts.
 
