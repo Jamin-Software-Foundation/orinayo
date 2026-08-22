@@ -10950,7 +10950,7 @@ async function exportStyle() {
 	}
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 7) {	// WAV Trigger Pro
+	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 7) {						// WAV Trigger Pro
 		const slotNo = prompt("Enter number (1 - 20)");
 		
 		if (slotNo == null || parseInt(slotNo) < 1 || parseInt(slotNo) > 20) {

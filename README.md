@@ -1,5 +1,5 @@
 # Introduction
-Orin Ayo is live music production web application implemented in JavaScript and runs inside a browser as a browser extension external window. A binary executable file for Windows 10+ desktops is provided.
+Orin Ayo is live music production web application that can run from a browser tab or as a browser extension external window. A binary executable file for Windows 10+ desktops is provided that runs a hosted version at pade.chat.
 
 # Description
 It was originally developed to turn a guitar games controller HID device into a chord based MIDI controller for an arranger keyboard (Yamaha PSR SX-600), module (Ketron SD90), looper (Boss RC600) device or application (Giglad). It lets you play chords and control the hardware arranger or looper with the buttons on a gutar games controller. When combined with RealGuitar or RealLPC from MusicLabs, it becomes a complete live music production system.
@@ -16,6 +16,7 @@ Now it can work standalone without depending on an external musical hardware dev
 A ChordPro [editor](https://github.com/Jus-Be/chordpro-pdf-online) based on the chordpro-pdf-online project by [Ruth Wong](https://github.com/woshibiantai) is provided to edit a song and add extra directives for precise timing, section changes, tempo, etc.
 - It can play arranger MIDI files from any compatible Yamaha keyboard like the PSR-SX600 with a different style each time. The song lyrics and chord symbols can be viewed live just like karoke. The user can learn or play along live with the song by muting the recorded chord progression.
 - It can record a live perfomanmce as an audio file or as a video with lyrics file when playing a ChordPro generated midi file.
+- It can audio export styles into WAV files that are loaded on to an SD Card and played live with the [Orin Ayo Pico device](https://github.com/Jus-Be/orinayo-pico)
 
 # In use
 ## Controlling a Boss RC-600 Looper device and playing MusicLab's RealLPC Guitar
@@ -34,25 +35,28 @@ https://github.com/user-attachments/assets/12c69505-3887-4a6f-af7a-124bebd15741
 See [User Guide](USER-GUIDE.md)
 
 # Audio Loops
-The audio loops used by the smart sampler for creating music styles are created by recording a demo song I wrote called "Orin Ayo" with arranger styles from various keyboards I used over the years.
-I have also provide the tools I used to create the compressed OGG files that OrinAyo uses in the [tools](./tools) folder.
+The audio loops used by the smart sampler for creating music styles are created by recording a demo song I wrote called "Orin Ayo" with arranger styles from various keyboards and music software I used over the years.
+I have also provide the tools I used to create the compressed OGG/FLAC files that OrinAyo uses in the [tools](./tools) folder.
 
-These loops are limited demos of what can be achieved with these arranger keyboards. There is no loop stretching and each style has twelve fixed tempos, maj, min and sus chord types (36 audio slices). You are advised to acquire these keyboards and additional styles to get the full quality (WAV files) and value of these styles for any serious use.
+These loops are limited demos of what can be achieved with these arranger keyboards. There is no loop stretching and each style has twelve fixed tempos, maj, min and sus chord types (36 audio slices). You are advised to acquire these keyboards/software and additional styles to get the full quality (WAV files) and value of these styles for any serious use.
 
 The keyboard and styles used to create the demo audio loops used by OrinAyo smart sampler include:
+
+## Band In a Box 2026
+RealStyles and RealTracks.
+
+## Yamaha
+- PSR SX-600 Arranger keyboard.
+
+## Roland
+- Go:Keys 5 Arranger keyboard internal.
+
+## Korg
+- Korg PA-588 Arranger Piano. 
 
 ## Ketron
 - Ketron SD90 Arranger module internal styles
 - Ketron Event Arranger keyboard internal styles
-
-## Yamaha
-- PSR SX-600 Arranger keyboard internal styles
-
-## Roland
-- Go:Keys 5 Arranger keyboard.
-
-## Korg
-- Korg PA-588 Arranger Piano. 
 
 ## Additional Styles for the Ketron Event
 - Realdrum, Realbass and Realchord styles from https://store.sc-multimedia.nl/
