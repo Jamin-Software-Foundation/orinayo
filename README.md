@@ -7,6 +7,7 @@ It was originally developed to turn a guitar games controller HID device into a 
 Now it can work standalone without depending on an external musical hardware device to create quality live backing music to accompany a singer (including yourself) or a solo musician playing a melodic instrument.
 
 - It has an internal smart sampler that can play [audio loops](#audio-loops) like midi styles files. It can be extended with external OGG audio loop files in OrinAyo format.
+- It can audio export styles into WAV files that are loaded on to an SD Card and played live with the [Orin Ayo Pico device](https://github.com/Jus-Be/orinayo-pico) device.
 - It has an internal arranger engine that can play midi style files in Yamaha SFFx, Casio AC7 or Ketron KST format.
 - It uses WebAudio to implement the internal arranger synth engine (based on [sf2synth.js by GREE](https://github.com/gree/sf2synth.js/)) that can play the styles using sound font (sf2) files with WebAudio as well as notes from a standrd midi keyboard controller.
 - It has internal strumable acoustic and electric guitars using [WebAudioFont by Srgy Surkv](https://github.com/surikov/webaudiofont). It behaves just like RealGuitar does with a guitar hero controller.
@@ -16,7 +17,6 @@ Now it can work standalone without depending on an external musical hardware dev
 A ChordPro [editor](https://github.com/Jus-Be/chordpro-pdf-online) based on the chordpro-pdf-online project by [Ruth Wong](https://github.com/woshibiantai) is provided to edit a song and add extra directives for precise timing, section changes, tempo, etc.
 - It can play arranger MIDI files from any compatible Yamaha keyboard like the PSR-SX600 with a different style each time. The song lyrics and chord symbols can be viewed live just like karoke. The user can learn or play along live with the song by muting the recorded chord progression.
 - It can record a live perfomanmce as an audio file or as a video with lyrics file when playing a ChordPro generated midi file.
-- It can audio export styles into WAV files that are loaded on to an SD Card and played live with the [Orin Ayo Pico device](https://github.com/Jus-Be/orinayo-pico)
 
 # In use
 ## Controlling a Boss RC-600 Looper device and playing MusicLab's RealLPC Guitar
@@ -60,6 +60,11 @@ RealStyles and RealTracks.
 
 ## Additional Styles for the Ketron Event
 - Realdrum, Realbass and Realchord styles from https://store.sc-multimedia.nl/
+
+# Legal & Disclaimer
+This is a general-purpose wireless translation utility.
+- **Trademarks:** Any reference to third-party brands is for **compatibility description** only.
+- **Patents:** This software utilizes and implements standard open WebMIDI and WebAUDIO protocols/APIs to provide a unique musical interface.
 
 
 
