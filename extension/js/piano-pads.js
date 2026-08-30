@@ -22,7 +22,7 @@ window.setupPianos = function(context) {
 	}
 
 	let wp = 0;
-	const warmPad = new Soundfont2Sampler(context, { url: "./assets/pads/glass-pad.sf2",  createSoundfont: (data) => new SoundFont2(data), decayTime: 1.25});
+	const warmPad = new Soundfont2Sampler(context, { url: "./assets/pads/distant-pad.sf2",  createSoundfont: (data) => new SoundFont2(data), decayTime: 1.25});
 	
 	warmPad.load.then(() => {
 		warmPad.loadInstrument(warmPad.instrumentNames[wp]);
