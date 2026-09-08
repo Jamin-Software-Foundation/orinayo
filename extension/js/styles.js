@@ -146,6 +146,7 @@ var chord_loops = [
 	"assets/chords/acoustic-strum-6-8_48_10000_10000_4.chord",
 	"assets/chords/acoustic-strum-6-8_60_8000.chord",	
 	"assets/chords/afro-beat_96_10000_10000_4.chord",
+	"assets/chords/afro-band-pop_90_5333_5333_2.chord",		
 	"assets/chords/afro-folk_128_3750.chord",	
 	"assets/chords/afro-funk_125_7680_7680_2.chord",	
 	"assets/chords/afro-highlife_134_3582_3582_2.chord",
@@ -184,6 +185,7 @@ var chord_loops = [
 	"assets/chords/cosmic-pop_105_9143_9143_4.chord",
 	"assets/chords/country_073_26301.chord",
 	"assets/chords/country-band-folk_80_6000_6000_2.chord",
+	"assets/chords/country-band-pop_90_5333_5333_2.chord",	
 	"assets/chords/country-band-pop_105_4571_4571_2.chord",
 	"extra/assets/chords/country-pop-band_96_5000_5000_2.chord",
 	"assets/chords/country-rock_180_21333_10667.chord", 
@@ -356,6 +358,7 @@ var chord_loops = [
 	"extra/assets/chords/slow-blues_60_32000_32000_2.chord",
 	"extra/assets/chords/slow-pop_75_25600_25600_2.chord",	
 	"extra/assets/chords/slow-rock_80_12000_12000_4.chord",
+	"extra/assets/chords/soft-rock_120_4000_4000_2.chord",	
 	"assets/chords/smokie-beat_120_16000_16000_2.chord",	
 	"assets/chords/smooth-band-synth_90_5333_5333_2.chord",		
 	"assets/chords/steel-pop_115_8348_8348_2.chord",
@@ -389,7 +392,7 @@ var chord_loops = [
 	"assets/chords/worship-band-rock_100_4800_4800_2.chord",
 	"assets/chords/worship-band-strum_85_5647_5647_2.chord",
 	"assets/chords/worship-band-vibe_110_4364_4364_2.chord",
-	"extra/assets/chords/soft-rock_120_4000_4000_2.chord",
+	"assets/chords/zouk-band-pop_90_5333_5333_2.chord",	
 ]
 
 var drum_loops = [
@@ -409,7 +412,9 @@ var drum_loops = [
 	"assets/drums/afro_105_2286_18286_2286_2286_6857.drum",
 	"assets/drums/afro-atonto_125_1920_7680_1920_1920_3840.drum",
 	"assets/drums/afro-beat_96_2500_10000_2500_2500_10000.drum",
+	"assets/drums/afro-band-pop_90_2667_21333_2667_2667_4858.drum",
 	"assets/drums/afro-chaka_100_2400_19200_2400_2400_6724.drum",
+	"assets/drums/afro-dance_127_1890_11339_1890_1890_5669.drum",
 	"assets/drums/afro-doro_130_3692_29539_1846_1846_7385.drum",
 	"assets/drums/afro-highlife_134_1791_7164_1791_1791_3582.drum",	
 	"assets/drums/afro-juju_125_1920_7680_1920_1920_1920.drum",	
@@ -550,7 +555,11 @@ var drum_loops = [
 	"assets/drums/village-pop_107_2243_8972_2243_2243_4486.drum",
 	"assets/drums/wild-rock_120_2000_16000_2000_2000_8000.drum",
 	"extra/assets/drums/wagner-pop_125_1920_7680_1920_1920_11520.drum",	
-	"assets/drums/wonderfull_94_2553_10213_2553_2553_5106.drum"
+	"assets/drums/wonderfull_94_2553_10213_2553_2553_5106.drum",
+	"assets/drums/worship-rnb-beat_65_3692_14769_3692_3692_7385.drum",
+	"assets/drums/worship-rnb-beat_70_3429_13714_3429_3429_6857.drum",
+	"assets/drums/worship-rnb-beat_75_3200_12800_3200_3200_6400.drum",
+	"assets/drums/zouk-band-pop_90_2667_21333_2667_2667_8000.drum"
 ]
 
 var bass_loops = [
@@ -560,6 +569,7 @@ var bass_loops = [
 	"assets/bass/acoustic-strum_145_6621_2.bass",
 	"assets/bass/acoustic-strum-6-8_60_8000.bass",
 	"extra/assets/bass/acoustic-strum_94_5106.bass",
+	"assets/bass/afro-dance_127_3780_2.bass",	
 	"assets/bass/afro-highlife_134_3582_2.bass",	
 	"assets/bass/afro-juju_125_7680_2.bass",
 	"assets/bass/afro-juju_128_7500_2.bass",
