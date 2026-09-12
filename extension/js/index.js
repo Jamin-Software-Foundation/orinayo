@@ -83,7 +83,7 @@ var recorderDestination = null;
 var streamDestination = null;
 var publishConnection = null;
 var watchConnection = null;
-var lavaGenieWaitout = 1000;
+var neoUkeWaitout = 1000;
 var keysSound1 = null;
 var keysSound2 = null;
 var keysSound3 = null;
@@ -114,6 +114,7 @@ var recorderFilename = null;
 var mediaRecorder = null;
 var recordMode = false;
 var writeCharacteristic = null;
+var readCharacteristic = null;
 var readCharacteristic = null;
 var appliedVelocity = 0;
 var microphone = null;
@@ -494,7 +495,7 @@ function handleLiberLive(selected) {
 	}
 }
 
-function handleLavaGenie(selected) {
+function handleNeoUke(selected) {
 	bluetoothEle.style.display = selected ? "" : "none";	
 	let device;
 	
@@ -509,16 +510,16 @@ function handleLavaGenie(selected) {
 		
 			device = await navigator.bluetooth.requestDevice({		
 				filters: [{
-				services: ["0000fee0-0000-1000-8000-00805f9b34fb"],		
+				services: ["03b80e5a-ede8-4b33-a751-6ce34ec4c700"],		
 			}]});
 
 			if (device) {
-				console.debug("found lavagenie", device);				
+				console.debug("found neouke", device);				
 				
 				if (bluetoothGuitar) {			
 					await device.forget();
 					bluetoothGuitar	= null;				
-					console.debug("forget lavagenie", device);				
+					console.debug("forget neouke", device);				
 				} else {
 					bluetoothGuitar = device;
 				}				
@@ -600,8 +601,8 @@ function startRecording() {
 	mediaRecorder.start();		
 }
 
-async function onLavaGenieClick() {
-	console.debug('onLavaGenieClick');		
+async function onNeoUkeClick() {
+	console.debug('onNeoUkeClick');		
 	
 	let ready, device;
 	const devices = await navigator.bluetooth.getDevices();
@@ -616,23 +617,23 @@ async function onLavaGenieClick() {
 			if (!ready) {
 				ready = true;
 				textDecoder = new TextDecoder("utf-8"); 
-				doLavaGenieSetup(device);
+				doNeoUkeSetup(device);
 			}
 		});
 		
 		await device.watchAdvertisements();		
 		
 	} else {
-		device = await navigator.bluetooth.requestDevice({filters: [{services: ["0000fee0-0000-1000-8000-00805f9b34fb"]}]});
+		device = await navigator.bluetooth.requestDevice({filters: [{services: ["03b80e5a-ede8-4b33-a751-6ce34ec4c700"]}]});
 
 		if (device) {
 			bluetoothGuitar = device;
 			textDecoder = new TextDecoder("utf-8"); 			
-			doLavaGenieSetup(device);		
+			doNeoUkeSetup(device);		
 		}
 	}
 	
-	console.debug('onLavaGenieClick', device);		
+	console.debug('onNeoUkeClick', device);		
 }
 
 async function onLiberLiveClick() {
@@ -681,8 +682,8 @@ async function onLiberLiveClick() {
 	console.debug('onLiberLiveClick', device);	
 }
 
-async function doLavaGenieSetup(device) {
-	console.debug('doLavaGenieSetup', device);	
+async function doNeoUkeSetup(device) {
+	console.debug('doNeoUkeSetup', device);	
 	
 	if (device) {
 		bluetoothEle.style.display = "none";		
@@ -719,25 +720,22 @@ async function doLavaGenieSetup(device) {
 				console.debug('Found Characteristic', characteristic.uuid, characteristic.properties, service.uuid);										
 
 				if (characteristic.properties.read) {
-					handlers[characteristic.uuid] = characteristic;	
+					readCharacteristic = characteristic;	
 					
-					handlers[characteristic.uuid].addEventListener('characteristicvaluechanged',  (evt) => {
+					readCharacteristic.addEventListener('characteristicvaluechanged',  (evt) => {
 						const {buffer}  = evt.target.value;
 						const eventData = new Uint8Array(buffer);					
 						
-						for (let i in eventData) console.debug("Read", eventData.length, i + ":" + eventData[i]);						
+						//for (let i in eventData) console.debug("Read", eventData.length, i + ":" + eventData[i]);						
 					});					
 
 				}
-				else
 					
 				if (characteristic.properties.writeWithoutResponse) {
 					writeCharacteristic = characteristic;	
-					// TODO
-					//setTimeout(setLiberLiveChordMappings);
-					setTimeout(setLavaGenieSettings, 1000);
+					setTimeout(setNeoUkeSettings, 1000);
 				}
-				else
+				
 					
 				if (characteristic.properties.notify) {
 					console.debug('Setup Notifier', characteristic.uuid);					
@@ -751,8 +749,8 @@ async function doLavaGenieSetup(device) {
 						resetGuitarHero();
 					}	
 
-					document.getElementById("extern-device").innerHTML = "Lava Genie Guitar";
-					document.getElementById("lavagenie").style.display = "";
+					document.getElementById("extern-device").innerHTML = "NeoUke  Guitar";
+					document.getElementById("neouke").style.display = "";
 					
 					handlers[characteristic.uuid].addEventListener('characteristicvaluechanged', (evt) => {
 						const {buffer}  = evt.target.value;
@@ -761,40 +759,17 @@ async function doLavaGenieSetup(device) {
 						for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);	
 
 						let chordSelected = false;
-						let paddleMoved = false;
-						resetGuitarHero();
-						
-						if (eventData[0] == 202 && eventData[1] == 2 && eventData[2] == 101) { // control buttons
-								
-							if (eventData[3] == 2 && eventData[4] == 103) {	
 
-								if (!styleStarted) {
-									pad.buttons[LOGO] = true;		// START
-								} else {
-									pad.buttons[STARPOWER] = true;	// next style
-								}
-							}
-							else
-								
-							if (eventData[3] == 0 && eventData[4] == 101) {	
-								if (styleStarted) {
-									pad.buttons[LOGO] = true;		// STOP
-								}
-							}							
-	
-						}
-						else
-
-						if (eventData[0] == 202 && eventData[1] == 2 && eventData[2] == 92) { // chord key press	
+						if (eventData[2] == 144 && eventData[4] == 127) { // chord key press	
 						
-							if (eventData[3] == 25 && eventData[4] == 69) {
+							if (eventData[3] == 20) {
 								pad.buttons[YELLOW] = true;		// 7b			
 								pad.buttons[RED] = true;								
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 20 && eventData[4] == 72) {
+							if (eventData[3] == 127) {			// TODO
 								pad.buttons[YELLOW] = true;		// 5b			
 								pad.buttons[GREEN] = true;								
 								pad.buttons[RED] = true;							
@@ -802,20 +777,13 @@ async function doLavaGenieSetup(device) {
 							}
 							else
 
-							if (eventData[3] == 17 && eventData[4] == 77) {
-								pad.buttons[YELLOW] = true;		// 7b			
-								pad.buttons[RED] = true;								
-								chordSelected = true;
-							}
-							else
-								
-							if (eventData[3] == 52 && eventData[4] == 104) {
+							if (eventData[3] == 15 || eventData[3] == 16) {
 								pad.buttons[RED] = true;		// 6m
 								chordSelected = true;
 							}
 							else
 
-							if (eventData[3] == 57 && eventData[4] == 101) {
+							if (eventData[3] == 17) {
 								pad.buttons[RED] = true;		// 6
 								pad.buttons[YELLOW] = true;
 								pad.buttons[BLUE] = true;							
@@ -823,61 +791,53 @@ async function doLavaGenieSetup(device) {
 							}
 							else
 								
-							if (eventData[3] == 49 && eventData[4] == 109) {
-								pad.buttons[RED] = true;		// 6
-								pad.buttons[YELLOW] = true;
-								pad.buttons[BLUE] = true;							
-								chordSelected = true;
-							}
-							else
-								
-							if (eventData[3] == 84 && eventData[4] == 8) {
+							if (eventData[3] == 13) {
 								pad.buttons[GREEN] = true;		// 5								
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 81 && eventData[4] == 13) {
+							if (eventData[3] == 12) {
 								pad.buttons[GREEN] = true;		// 5sus							
 								pad.buttons[YELLOW] = true;						
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 89 && eventData[4] == 5) {
+							if (eventData[3] == 127) {			// TODO
 								pad.buttons[GREEN] = true;		// 5/7
 								pad.buttons[RED] = true;							
 								chordSelected = true;
 							}													
 							else
 								
-							if (eventData[3] == 97 && eventData[4] == 61) {
+							if (eventData[3] == 1) {
 								pad.buttons[YELLOW] = true;		// 1
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 100 && eventData[4] == 56) {
+							if (eventData[3] == 0) {
 								pad.buttons[YELLOW] = true;		// 1sus
 								pad.buttons[ORANGE] = true;							
 								chordSelected = true;
 							}
 							else
 
-							if (eventData[3] == 105 && eventData[4] == 53) {
+							if (eventData[3] == 2) {
 								pad.buttons[YELLOW] = true;		// 1/3
 								pad.buttons[BLUE] = true;							
 								chordSelected = true;
 							}
 							else						
 								
-							if (eventData[3] == 129 && eventData[4] == 221) {
+							if (eventData[3] == 10) {
 								pad.buttons[ORANGE] = true;		// 4								
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 132 && eventData[4] == 216) {
+							if (eventData[3] == 127) {			// TODO
 								pad.buttons[ORANGE] = true;		// 3b
 								pad.buttons[BLUE] = true;		
 								pad.buttons[RED] = true;							
@@ -885,41 +845,41 @@ async function doLavaGenieSetup(device) {
 							}
 							else
 
-							if (eventData[3] == 137 && eventData[4] == 213) {
+							if (eventData[3] == 9 ) {
 								pad.buttons[ORANGE] = true;		// 4/6
 								pad.buttons[BLUE] = true;							
 								chordSelected = true;
 							}
 							else						
 								
-							if (eventData[3] == 164 && eventData[4] == 248) {
+							if (eventData[3] == 3 || eventData[3] == 4) {
 								pad.buttons[BLUE] = true;		// 2m
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 161 && eventData[4] == 253) {
+							if (eventData[3] == 5) {
 								pad.buttons[BLUE] = true;		// 2
 								pad.buttons[RED] = true;							
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 169 && eventData[4] == 245) {
+							if (eventData[3] == 11) {
 								pad.buttons[ORANGE] = true;		// 4m
 								pad.buttons[RED] = true;							
 								chordSelected = true;
 							}	
 							else
 								
-							if (eventData[3] == 199 && eventData[4] == 155) {
+							if (eventData[3] == 6 || eventData[3] == 7) {
 								pad.buttons[GREEN] = true;		// 3m
 								pad.buttons[BLUE] = true;								
 								chordSelected = true;
 							}
 							else
 								
-							if (eventData[3] == 196 && eventData[4] == 152) {
+							if (eventData[3] == 8) {
 								pad.buttons[GREEN] = true;		// 3
 								pad.buttons[YELLOW] = true;								
 								pad.buttons[BLUE] = true;								
@@ -927,26 +887,18 @@ async function doLavaGenieSetup(device) {
 							}						
 							else
 								
-							if (eventData[3] == 201 && eventData[4] == 149) {
+							if (eventData[3] == 14) {
 								pad.buttons[GREEN] = true;		// 5m
 								pad.buttons[ORANGE] = true;															
 								chordSelected = true;
 							} 		
 						}
 				
-						if (chordSelected) { 
-							pad.axis[STRUM] = autoStrumUpDown();								
-						}
-
-						if (pad.buttons[LOGO]) {
-							toggleStartStop();
-						} else {
-							updateCanvas();	
-
-							if (pad.axis[STRUM] == STRUM_UP || pad.axis[STRUM] == STRUM_DOWN || pad.buttons[START] || pad.buttons[STARPOWER]) {			
-								doChord();				
-							}	
-						}												
+						pad.axis[STRUM] = autoStrumUpDown();								
+						activeStrum = null; 						
+						doChord();						
+						updateCanvas();			
+						resetGuitarHero();						
 					});					
 				}
 			}
@@ -954,62 +906,19 @@ async function doLavaGenieSetup(device) {
 	}						
 }
 
-async function setLavaGenieSettings() {
-	// bluetooth.addr==dd:22:33:44:67:fc
-	// bluetooth.addr==dd:22:33:44:67:fc && btatt.opcode.method==0x12
-	
-	/*
-	// Startup 
-	writeGenie([0xac, 0x2, 0xe6, 0x1, 0xe7]);
-	writeGenie([0xac, 0x2, 0x4e, 0x52, 0x1c]);
-	writeGenie([0xac, 0x2, 0x4e, 0x4a, 0x4]);
-	writeGenie([0xac, 0x2, 0x4e, 0x57, 0x19]);
-	writeGenie([0xac, 0x2, 0x4e, 0x59, 0x17]);
-	writeGenie([0xac, 0x2, 0x4e, 0x5a, 0x14]);
-	writeGenie([0xac, 0x2, 0x44, 0x0, 0x44]);
-	writeGenie([0xac, 0x2, 0x44, 0x1, 0x45]);
-	writeGenie([0xac, 0x2, 0x44, 0x2, 0x46]);
-	writeGenie([0xac, 0x2, 0x44, 0x3, 0x47]);
-	writeGenie([0xac, 0x2, 0x44, 0x4, 0x40]);
-	writeGenie([0xac, 0x2, 0x44, 0x5, 0x41]);
-	writeGenie([0xac, 0x1, 0x46, 0x46]);
-	writeGenie([0xac, 0x2, 0x4e, 0x63, 0x2d]);
-	writeGenie([0xac, 0x2, 0x4e, 0x4c, 0x2]);
-	writeGenie([0xac, 0x2, 0x4e, 0x49, 0x7]);
-	writeGenie([0xac, 0x2, 0x4e, 0x4f, 0x1]);
-	writeGenie([0xac, 0x1, 0xe2, 0xe2]);
-	writeGenie([0xac, 0x2, 0x4e, 0xe8, 0xa6]);
-	writeGenie([0xac, 0x2, 0x4e, 0x65, 0x2b]);
-	writeGenie([0xac, 0x2, 0x4e, 0x6a, 0x24]);
-	writeGenie([0xac, 0x2, 0x4e, 0xe9, 0xa7]);
-	writeGenie([0xac, 0x4, 0xee, 0x0, 0x0, 0x0, 0xee]);
-	writeGenie([0xad, 0x4, 0xee, 0x0, 0x0, 0x0, 0xee]);
-
-	// song mode
-	writeGenie([0xac, 0x2, 0xe6, 0x0, 0xe6]);
-	writeGenie([0xad, 0x1a, 0x70, 0x7, 0x1, 0xfb, 0x1, 0xf0, 0x1, 0xef, 0x1, 0xee, 0x1, 0xea, 0x1, 0xe9, 0x1, 0xe8, 0x1, 0xe7, 0x1, 0xe4, 0x1, 0xe3, 0x1, 0xe2, 0x1, 0xe1, 0x75]);
-	writeGenie([0xac, 0x2, 0x65, 0x0, 0x65]);
-	writeGenie([0xad, 0x4, 0x70, 0x7, 0x1, 0xdc, 0xaa]);
-	*/
-
+async function setNeoUkeSettings() {
 	// enable key press events
-	writeGenie([0xac, 0x2, 0x5d, 0x1, 0x5c]);
-
-	// mapping
-	//writeGenie([0xac, 0x2d, 0x67, 0x16, 0x4c, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x19, 0x39, 0x59, 0x69, 0x8b, 0xa9, 0xb1, 0x14, 0x31, 0x51, 0x64, 0x84, 0xa1, 0xc4, 0x8, 0x63, 0x11, 0x34, 0x54, 0x61, 0x81, 0xa4, 0xc7, 0x2, 0x49, 0x0, 0x2, 0x4a, 0x0, 0x2, 0x52, 0x4a, 0x2, 0x57, 0x1, 0x69]);
-
-	// key 1 LED 
-	//writeGenie([0xac, 0x6, 0x5c, 0x11, 0x1, 0x0, 0x0, 0x2, 0x4e]);
+	//writeNeoUke([0xac, 0x2, 0x5d, 0x1, 0x5c]);
 }
 
-function writeGenie(bytes) {
+function writeNeoUke(bytes) {
 	setTimeout(async () => {
 		let dataView = new Uint8Array(bytes);	
 		resp = await writeCharacteristic.writeValue(dataView);
-		console.debug("writeGenie", bytes, resp);		
-	}, lavaGenieWaitout);
+		console.debug("writeNeoUke", bytes, resp);		
+	}, neoUkeWaitout);
 	
-	lavaGenieWaitout = lavaGenieWaitout + 300;
+	neoUkeWaitout = neoUkeWaitout + 300;
 }
 
 async function setLiberLiveChordMappings() {
@@ -2035,11 +1944,11 @@ function initLiberLive() {
 	}	
 }
 
-function initLavaGenie() {
-	console.debug("initLavaGenie");
+function initNeoUke() {
+	console.debug("initNeoUke");
 	
-	if (inputDeviceType == "lavagenie" && !textDecoder) {	
-		onLavaGenieClick();			
+	if (inputDeviceType == "neouke" && !textDecoder) {	
+		onNeoUkeClick();			
 	}	
 }
 
@@ -2398,7 +2307,7 @@ async function onloadHandler() {
 		// TODO			
 		if (audioContext) audioContext.resume();
 		if (inputDeviceType == "liberlivec1") initLiberLive();
-		if (inputDeviceType == "lavagenie") initLavaGenie();		
+		if (inputDeviceType == "neouke") initNeoUke();		
 	})
 	
 	
@@ -5200,7 +5109,7 @@ async function setupUI(config, err) {
 	midiInType.options[2] = new Option("Artiphon Instrument 1", "instrument1", config.inputDeviceType == "instrument1");		
 	midiInType.options[3] = new Option("Artiphon Chorda", "chorda", config.inputDeviceType == "chorda");
 	midiInType.options[4] = new Option("LiberLive C1", "liberlivec1", config.inputDeviceType == "liberlivec1");
-	midiInType.options[5] = new Option("Lava Genie", "lavagenie", config.inputDeviceType == "lavagenie");	
+	midiInType.options[5] = new Option("Sonicake NeoUke", "neouke", config.inputDeviceType == "neouke");	
 	midiInType.options[6] = new Option("Keyboard", "keyboard", config.inputDeviceType == "keyboard");	
 	
 	let deviceIndex = 0;
@@ -5209,7 +5118,7 @@ async function setupUI(config, err) {
 	deviceIndex = config.inputDeviceType == "instrument1" ? 2 : deviceIndex;
 	deviceIndex = config.inputDeviceType == "chorda" ? 3 : deviceIndex;	
 	deviceIndex = config.inputDeviceType == "liberlivec1" ? 4 : deviceIndex;		
-	deviceIndex = config.inputDeviceType == "lavagenie" ? 5 : deviceIndex;	
+	deviceIndex = config.inputDeviceType == "neouke" ? 5 : deviceIndex;	
 	deviceIndex = config.inputDeviceType == "keyboard" ? 6 : deviceIndex;
 	midiInType.selectedIndex = deviceIndex;	
 	
@@ -5219,14 +5128,14 @@ async function setupUI(config, err) {
 		initLiberLive();	
 		handleLiberLive(inputDeviceType == "liberlivec1");
 		
-	} else if (inputDeviceType == "lavagenie") {
-		initLavaGenie();
-		handleLavaGenie(inputDeviceType == "lavagenie");		
+	} else if (inputDeviceType == "neouke") {
+		initNeoUke();
+		handleNeoUke(inputDeviceType == "neouke");		
 	}	
 
 	midiInType.addEventListener("click", function()
 	{
-		bluetoothEle.style.display = (midiInType.value == "liberlivec1" || midiInType.value == "lavagenie") ? "" : "none";
+		bluetoothEle.style.display = (midiInType.value == "liberlivec1" || midiInType.value == "neouke") ? "" : "none";
 	});
 	
 	midiInType.addEventListener("change", function()
@@ -5238,8 +5147,8 @@ async function setupUI(config, err) {
 		if (inputDeviceType == "liberlivec1") {
 			handleLiberLive(inputDeviceType == "liberlivec1");
 			
-		} else if (inputDeviceType == "lavagenie") {
-			handleLavaGenie(inputDeviceType == "lavagenie");		
+		} else if (inputDeviceType == "neouke") {
+			handleNeoUke(inputDeviceType == "neouke");		
 		}
 	});	
 
@@ -7025,7 +6934,7 @@ async function playChord(chord, root, type, bass) {
 		firstChord = chord;
 		const autoStrumCode = autoStrumUpDown();
 		
-		if (inputDeviceType == "lavagenie" || inputDeviceType == "keyboard" || songSequence?.data?.music) {
+		if (inputDeviceType == "keyboard" || songSequence?.data?.music) {
 			pad.axis[STRUM] = autoStrumCode;
 		}
 			
@@ -7837,7 +7746,6 @@ function dokeyChange() {
 }
 
 function doChord() {
-  //console.debug("doChord", pad)
   stopChord();
   
 
@@ -8007,6 +7915,8 @@ function doChord() {
   }
   
   activeStrum = pad.axis[STRUM];  
+  
+  console.debug("doChord", pad)
   
   if (!pad.buttons[YELLOW] && !pad.buttons[BLUE] && !pad.buttons[ORANGE] && !pad.buttons[RED]  && !pad.buttons[GREEN]) 
   {
