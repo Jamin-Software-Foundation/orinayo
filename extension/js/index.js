@@ -758,14 +758,22 @@ async function doNeoUkeSetup(device) {
 						
 						for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);	
 
-						let chordSelected = false;
-
 						if (eventData[2] == 144 && eventData[4] == 127) { // chord key press	
 						
+							if (eventData[3] == 19) {
+								pad.buttons[YELLOW] = true;		// 7			
+								pad.buttons[RED] = true;	
+								pad.buttons[GREEN] = true;	
+								pad.buttons[BLUE] = true;									
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
 							if (eventData[3] == 20) {
 								pad.buttons[YELLOW] = true;		// 7b			
 								pad.buttons[RED] = true;								
 								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();								
 							}
 							else
 								
@@ -773,13 +781,13 @@ async function doNeoUkeSetup(device) {
 								pad.buttons[YELLOW] = true;		// 5b			
 								pad.buttons[GREEN] = true;								
 								pad.buttons[RED] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 
 							if (eventData[3] == 15 || eventData[3] == 16) {
 								pad.buttons[RED] = true;		// 6m
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 
@@ -787,53 +795,53 @@ async function doNeoUkeSetup(device) {
 								pad.buttons[RED] = true;		// 6
 								pad.buttons[YELLOW] = true;
 								pad.buttons[BLUE] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 								
 							if (eventData[3] == 13) {
 								pad.buttons[GREEN] = true;		// 5								
-								chordSelected = true;
+								pad.axis[STRUM] = STRUM_DOWN;
 							}
 							else
 								
 							if (eventData[3] == 12) {
 								pad.buttons[GREEN] = true;		// 5sus							
 								pad.buttons[YELLOW] = true;						
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 								
-							if (eventData[3] == 127) {			// TODO
+							if (eventData[3] == 14) {			
 								pad.buttons[GREEN] = true;		// 5/7
 								pad.buttons[RED] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}													
 							else
 								
 							if (eventData[3] == 1) {
 								pad.buttons[YELLOW] = true;		// 1
-								chordSelected = true;
+								pad.axis[STRUM] = STRUM_DOWN;
 							}
 							else
 								
 							if (eventData[3] == 0) {
 								pad.buttons[YELLOW] = true;		// 1sus
 								pad.buttons[ORANGE] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 
 							if (eventData[3] == 2) {
 								pad.buttons[YELLOW] = true;		// 1/3
 								pad.buttons[BLUE] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else						
 								
 							if (eventData[3] == 10) {
 								pad.buttons[ORANGE] = true;		// 4								
-								chordSelected = true;
+								pad.axis[STRUM] = STRUM_DOWN;
 							}
 							else
 								
@@ -841,41 +849,41 @@ async function doNeoUkeSetup(device) {
 								pad.buttons[ORANGE] = true;		// 3b
 								pad.buttons[BLUE] = true;		
 								pad.buttons[RED] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 
 							if (eventData[3] == 9 ) {
 								pad.buttons[ORANGE] = true;		// 4/6
 								pad.buttons[BLUE] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else						
 								
 							if (eventData[3] == 3 || eventData[3] == 4) {
 								pad.buttons[BLUE] = true;		// 2m
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 								
 							if (eventData[3] == 5) {
 								pad.buttons[BLUE] = true;		// 2
 								pad.buttons[RED] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 								
 							if (eventData[3] == 11) {
 								pad.buttons[ORANGE] = true;		// 4m
 								pad.buttons[RED] = true;							
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}	
 							else
 								
 							if (eventData[3] == 6 || eventData[3] == 7) {
 								pad.buttons[GREEN] = true;		// 3m
 								pad.buttons[BLUE] = true;								
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}
 							else
 								
@@ -883,18 +891,17 @@ async function doNeoUkeSetup(device) {
 								pad.buttons[GREEN] = true;		// 3
 								pad.buttons[YELLOW] = true;								
 								pad.buttons[BLUE] = true;								
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							}						
 							else
 								
-							if (eventData[3] == 14) {
+							if (eventData[3] == 127) {			// TODO
 								pad.buttons[GREEN] = true;		// 5m
 								pad.buttons[ORANGE] = true;															
-								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();
 							} 		
 						}
-				
-						pad.axis[STRUM] = autoStrumUpDown();								
+												
 						activeStrum = null; 						
 						doChord();						
 						updateCanvas();			
