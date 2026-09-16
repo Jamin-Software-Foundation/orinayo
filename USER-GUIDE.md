@@ -198,18 +198,13 @@ When the first paddle is moved **down** on its own, Orin Ayo will cycles the sty
 When the second paddle is moved **down**, then it will play a fill for the current playing variation. When it is moved **up**, then it plays a break for  the current playing variation. 
 
 
-### Lava Genie
-The Lava Genie behaves like the LiberLive C1. However, it can only be used as a MIDI controller.  There is currently no support for using the internal sounds with Orin Ayo in harmony like the LiberLive C1. 
+### Sonicake NeoUke
+The Sonicake NeoUke behaves like the LiberLive C1. However, it can only be used as a MIDI controller.  There is currently no support for using the internal sounds with Orin Ayo in harmony like the LiberLive C1. 
 #### Chords
-It also uses the modified 7 basic chord key mapping and the 21 advanced key mapping from LiberLive C1.
-
-#### Start and Stop
-Press the Lava Genie Logo to start the OrinAyo arranger and use the Lava Genie rhythm stop button to stop the arranger.
-
-Pressing any of the 21 chord keys before doing so will cause the arranger to play an *intro* style variation before starting and an *end* style variation before stopping.
+It also uses the basic 7 basic chord key mapping and the 21 advanced key mapping set on the device.
 
 #### Style Variations/Sections (A,B,C,D)
-Press the Lava Genie Logo while the music plays to cycles the style variations A-->B-->C-->D-->A.  
+The Sonicake NeoUke does not have any support for stop, start or style variation control.
 
 ### Artiphon Instrument 1 and Chorda
 With Artiphon Instrument 1 and Chorda, only the first five pads are used like a Guitar Hero controller. The strum bridge pads are used to provide control (strum, start/stop, fill, next/previous section).
@@ -377,10 +372,10 @@ This part of the application is the application dashboard showing the current st
 
 Displays which Guitar Controller buttons currently pressed and consequently what chord will be be display on the main display.
 
-## 23 - External Guitar Status (LiberLive C1 or Lava Genie)
+## 23 - External Guitar Status (LiberLive C1 or Sonicake NeoUke)
 <img src=https://jus-be.github.io/orinayo/assets/screenshots/dashboard23.png />
 
-If you have an external digital guitar that supports Bluetooth like the LiberLive C1 or Lava Genie, this is where the connection status of the device is shown.
+If you have an external digital guitar that supports Bluetooth like the LiberLive C1 or Sonicake NeoUke, this is where the connection status of the device is shown.
 With the LiberLive C1, the following additional features are available:
 
 - Select what internal strum styles are to be played on paddle A and B at the current tempo. Please note that this is independent of the styles being played by Orin Ayo. When using this feature ensure that both styles complement each other.
