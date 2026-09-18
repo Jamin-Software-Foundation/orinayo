@@ -395,6 +395,7 @@ var chord_loops = [
 	"assets/chords/worship-band-strum_85_5647_5647_2.chord",
 	"assets/chords/worship-band-vibe_110_4364_4364_2.chord",
 	"assets/chords/zouk-band-pop_90_5333_5333_2.chord",	
+	"assets/chords/zouk-band-pop_103_9320_9320_2.chord",	
 ]
 
 var drum_loops = [
@@ -563,7 +564,9 @@ var drum_loops = [
 	"assets/drums/worship-rnb-beat_65_3692_14769_3692_3692_7385.drum",
 	"assets/drums/worship-rnb-beat_70_3429_13714_3429_3429_6857.drum",
 	"assets/drums/worship-rnb-beat_75_3200_12800_3200_3200_6400.drum",
-	"assets/drums/zouk-band-pop_90_2667_21333_2667_2667_8000.drum"
+	"assets/drums/zouk-band-pop_90_2667_21333_2667_2667_8000.drum",	
+	"assets/drums/zouk-band-pop_103_2330_18641_2330_2330_4660.drum",
+	"assets/drums/zouk-beat_100_2400_19200_2400_2400_7200.drum",
 ]
 
 var bass_loops = [
@@ -685,7 +688,8 @@ var bass_loops = [
 	"assets/bass/worship-band-pop_90_5333.bass",
 	"assets/bass/worship-band-rock_100_4800.bass",
 	"assets/bass/worship-band-vibe_110_4364.bass",
-	"assets/bass/wild-rock_120_8000.bass"
+	"assets/bass/wild-rock_120_8000.bass",
+	"assets/bass/zouk-band-pop_103_9320.bass",
 ]
 
 var riff_loops = [
