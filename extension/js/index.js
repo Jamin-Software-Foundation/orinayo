@@ -479,7 +479,7 @@ function handleLiberLive(selected) {
 	
 		bluetoothEle.addEventListener("click", async (evt) => {
 			device = await navigator.bluetooth.requestDevice({filters: [{services: ["000000ff-0000-1000-8000-00805f9b34fb"]}]});
-
+			
 			if (device) {
 				console.debug("found liberlive", device);	
 				
@@ -520,6 +520,36 @@ function handleNeoUke(selected) {
 					await device.forget();
 					bluetoothGuitar	= null;				
 					console.debug("forget neouke", device);				
+				} else {
+					bluetoothGuitar = device;
+				}				
+			}
+		});
+	}
+}
+
+function handleSoulmate(selected) {
+	bluetoothEle.style.display = selected ? "" : "none";	
+	let device;
+	
+	if (selected) 
+	{
+		if (mobileCheck()) {
+			const mobileToolbar = document.getElementById("mobile-toolbar");
+			mobileToolbar.append(bluetoothEle);			
+		}
+		
+		bluetoothEle.addEventListener("click", async (evt) => {			
+		
+			device = await navigator.bluetooth.requestDevice({filters: [{services: ["0000faa0-0000-1000-8000-00805f9b34fb"]}]});
+
+			if (device) {
+				console.debug("found soulmate", device);				
+				
+				if (bluetoothGuitar) {			
+					await device.forget();
+					bluetoothGuitar	= null;				
+					console.debug("forget soulmate", device);				
 				} else {
 					bluetoothGuitar = device;
 				}				
@@ -636,6 +666,42 @@ async function onNeoUkeClick() {
 	console.debug('onNeoUkeClick', device);		
 }
 
+async function onSoulmateClick() {
+	console.debug('onSoulmateClick');
+
+	// 0000faa0-0000-1000-8000-00805f9b34fb	
+	
+	let ready, device;
+	const devices = await navigator.bluetooth.getDevices();
+	console.debug('onSoulmateClick - devices', devices);
+
+	if (devices.length > 0) {
+		device = devices[0];
+		bluetoothGuitar = device;		
+		
+		device.addEventListener('advertisementreceived', (event) => {	
+			console.debug('Bluetooth device advert', event);
+			
+			if (!ready) {
+				ready = true;
+				textDecoder = new TextDecoder("utf-8"); 
+				doSoulmateSetup(device);
+			}
+		});
+		
+		await device.watchAdvertisements();		
+		
+	} else {
+		device = await navigator.bluetooth.requestDevice({filters: [{services: ["0000faa0-0000-1000-8000-00805f9b34fb"]}]});
+		
+		if (device) {
+			bluetoothGuitar = device;			
+			textDecoder = new TextDecoder("utf-8"); 			
+			doSoulmateSetup(device);		
+		}
+	}	
+}
+
 async function onLiberLiveClick() {
 	console.debug('onLiberLiveClick');	
 	
@@ -671,7 +737,7 @@ async function onLiberLiveClick() {
 		
 	} else {
 		device = await navigator.bluetooth.requestDevice({filters: [{services: ["000000ff-0000-1000-8000-00805f9b34fb"]}]});
-
+		
 		if (device) {
 			bluetoothGuitar = device;			
 			textDecoder = new TextDecoder("utf-8"); 			
@@ -680,237 +746,6 @@ async function onLiberLiveClick() {
 	}
 	
 	console.debug('onLiberLiveClick', device);	
-}
-
-async function doNeoUkeSetup(device) {
-	console.debug('doNeoUkeSetup', device);	
-	
-	if (device) {
-		bluetoothEle.style.display = "none";		
-		const ui = document.getElementById("lyrics");
-
-		device.addEventListener('gattserverdisconnected', (event) => {
-			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
-			if (_converse.api.connection) _converse.api.disconnect();
-		});
-		
-		const handlers = {};		
-		const server = await device.gatt.connect();
-		console.debug('GATT server', server);
-
-		const services = await server.getPrimaryServices();
-		
-		for (let service of services) {
-			console.debug("GATT service", service.uuid, service.isPrimary, service);
-			const characteristics = await service.getCharacteristics();
-			
-			for (let characteristic of characteristics) 
-			{
-				try {				
-					const descriptors = await characteristic.getDescriptors();
-				
-					for (let descriptor of descriptors) {
-						const value = await descriptor.readValue();
-						console.debug('Found Descriptor', descriptor.uuid, value);				
-					}
-				} catch (e) {
-
-				}
-
-				console.debug('Found Characteristic', characteristic.uuid, characteristic.properties, service.uuid);										
-
-				if (characteristic.properties.read) {
-					readCharacteristic = characteristic;	
-					
-					readCharacteristic.addEventListener('characteristicvaluechanged',  (evt) => {
-						const {buffer}  = evt.target.value;
-						const eventData = new Uint8Array(buffer);					
-						
-						//for (let i in eventData) console.debug("Read", eventData.length, i + ":" + eventData[i]);						
-					});					
-
-				}
-					
-				if (characteristic.properties.writeWithoutResponse) {
-					writeCharacteristic = characteristic;	
-					setTimeout(setNeoUkeSettings, 1000);
-				}
-				
-					
-				if (characteristic.properties.notify) {
-					console.debug('Setup Notifier', characteristic.uuid);					
-					handlers[characteristic.uuid] = await characteristic.startNotifications();
-					
-					let cannotFire = true;
-					let haveFired = false;					
-					
-					if (!game) {
-						setup();
-						resetGuitarHero();
-					}	
-
-					document.getElementById("extern-device").innerHTML = "NeoUke  Guitar";
-					document.getElementById("neouke").style.display = "";
-					
-					handlers[characteristic.uuid].addEventListener('characteristicvaluechanged', (evt) => {
-						const {buffer}  = evt.target.value;
-						const eventData = new Uint8Array(buffer);
-						
-						for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);	
-
-						if (eventData[2] == 144 && eventData[4] == 127) { // chord key press	
-						
-							if (eventData[3] == 19) {
-								pad.buttons[YELLOW] = true;		// 7			
-								pad.buttons[RED] = true;	
-								pad.buttons[GREEN] = true;	
-								pad.buttons[BLUE] = true;									
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 20) {
-								pad.buttons[YELLOW] = true;		// 7b			
-								pad.buttons[RED] = true;								
-								chordSelected = true;
-								pad.axis[STRUM] = autoStrumUpDown();								
-							}
-							else
-								
-							if (eventData[3] == 127) {			// TODO
-								pad.buttons[YELLOW] = true;		// 5b			
-								pad.buttons[GREEN] = true;								
-								pad.buttons[RED] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-
-							if (eventData[3] == 15 || eventData[3] == 16) {
-								pad.buttons[RED] = true;		// 6m
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-
-							if (eventData[3] == 17) {
-								pad.buttons[RED] = true;		// 6
-								pad.buttons[YELLOW] = true;
-								pad.buttons[BLUE] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 13) {
-								pad.buttons[GREEN] = true;		// 5								
-								pad.axis[STRUM] = STRUM_DOWN;
-							}
-							else
-								
-							if (eventData[3] == 12) {
-								pad.buttons[GREEN] = true;		// 5sus							
-								pad.buttons[YELLOW] = true;						
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 14) {			
-								pad.buttons[GREEN] = true;		// 5/7
-								pad.buttons[RED] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}													
-							else
-								
-							if (eventData[3] == 1) {
-								pad.buttons[YELLOW] = true;		// 1
-								pad.axis[STRUM] = STRUM_DOWN;
-							}
-							else
-								
-							if (eventData[3] == 0) {
-								pad.buttons[YELLOW] = true;		// 1sus
-								pad.buttons[ORANGE] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-
-							if (eventData[3] == 2) {
-								pad.buttons[YELLOW] = true;		// 1/3
-								pad.buttons[BLUE] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else						
-								
-							if (eventData[3] == 10) {
-								pad.buttons[ORANGE] = true;		// 4								
-								pad.axis[STRUM] = STRUM_DOWN;
-							}
-							else
-								
-							if (eventData[3] == 127) {			// TODO
-								pad.buttons[ORANGE] = true;		// 3b
-								pad.buttons[BLUE] = true;		
-								pad.buttons[RED] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-
-							if (eventData[3] == 9 ) {
-								pad.buttons[ORANGE] = true;		// 4/6
-								pad.buttons[BLUE] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else						
-								
-							if (eventData[3] == 3 || eventData[3] == 4) {
-								pad.buttons[BLUE] = true;		// 2m
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 5) {
-								pad.buttons[BLUE] = true;		// 2
-								pad.buttons[RED] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 11) {
-								pad.buttons[ORANGE] = true;		// 4m
-								pad.buttons[RED] = true;							
-								pad.axis[STRUM] = autoStrumUpDown();
-							}	
-							else
-								
-							if (eventData[3] == 6 || eventData[3] == 7) {
-								pad.buttons[GREEN] = true;		// 3m
-								pad.buttons[BLUE] = true;								
-								pad.axis[STRUM] = autoStrumUpDown();
-							}
-							else
-								
-							if (eventData[3] == 8) {
-								pad.buttons[GREEN] = true;		// 3
-								pad.buttons[YELLOW] = true;								
-								pad.buttons[BLUE] = true;								
-								pad.axis[STRUM] = autoStrumUpDown();
-							}						
-							else
-								
-							if (eventData[3] == 127) {			// TODO
-								pad.buttons[GREEN] = true;		// 5m
-								pad.buttons[ORANGE] = true;															
-								pad.axis[STRUM] = autoStrumUpDown();
-							} 		
-						}
-												
-						activeStrum = null; 						
-						doChord();						
-						updateCanvas();			
-						resetGuitarHero();						
-					});					
-				}
-			}
-		}
-	}						
 }
 
 async function setNeoUkeSettings() {
@@ -1449,6 +1284,317 @@ async function getSelectedChatBox() {
 	return null;
 }
 
+async function doNeoUkeSetup(device) {
+	console.debug('doNeoUkeSetup', device);	
+	
+	if (device) {
+		bluetoothEle.style.display = "none";		
+		const ui = document.getElementById("lyrics");
+
+		device.addEventListener('gattserverdisconnected', (event) => {
+			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
+			if (_converse.api.connection) _converse.api.disconnect();
+		});
+		
+		const handlers = {};		
+		const server = await device.gatt.connect();
+		console.debug('GATT server', server);
+
+		const services = await server.getPrimaryServices();
+		
+		for (let service of services) {
+			console.debug("GATT service", service.uuid, service.isPrimary, service);
+			const characteristics = await service.getCharacteristics();
+			
+			for (let characteristic of characteristics) 
+			{
+				try {				
+					const descriptors = await characteristic.getDescriptors();
+				
+					for (let descriptor of descriptors) {
+						const value = await descriptor.readValue();
+						console.debug('Found Descriptor', descriptor.uuid, value);				
+					}
+				} catch (e) {
+
+				}
+
+				console.debug('Found Characteristic', characteristic.uuid, characteristic.properties, service.uuid);										
+
+				if (characteristic.properties.read) {
+					readCharacteristic = characteristic;	
+					
+					readCharacteristic.addEventListener('characteristicvaluechanged',  (evt) => {
+						const {buffer}  = evt.target.value;
+						const eventData = new Uint8Array(buffer);					
+						
+						//for (let i in eventData) console.debug("Read", eventData.length, i + ":" + eventData[i]);						
+					});					
+
+				}
+					
+				if (characteristic.properties.writeWithoutResponse) {
+					writeCharacteristic = characteristic;	
+					setTimeout(setNeoUkeSettings, 1000);
+				}
+				
+					
+				if (characteristic.properties.notify) {
+					console.debug('Setup Notifier', characteristic.uuid);					
+					handlers[characteristic.uuid] = await characteristic.startNotifications();
+					
+					let cannotFire = true;
+					let haveFired = false;					
+					
+					if (!game) {
+						setup();
+						resetGuitarHero();
+					}	
+
+					document.getElementById("extern-device").innerHTML = "NeoUke  Guitar";
+					document.getElementById("neouke").style.display = "";
+					
+					handlers[characteristic.uuid].addEventListener('characteristicvaluechanged', (evt) => {
+						const {buffer}  = evt.target.value;
+						const eventData = new Uint8Array(buffer);
+						
+						for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);	
+
+						if (eventData[2] == 144 && eventData[4] == 127) { // chord key press	
+						
+							if (eventData[3] == 19) {
+								pad.buttons[YELLOW] = true;		// 7			
+								pad.buttons[RED] = true;	
+								pad.buttons[GREEN] = true;	
+								pad.buttons[BLUE] = true;									
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 20) {
+								pad.buttons[YELLOW] = true;		// 7b			
+								pad.buttons[RED] = true;								
+								chordSelected = true;
+								pad.axis[STRUM] = autoStrumUpDown();								
+							}
+							else
+								
+							if (eventData[3] == 127) {			// TODO
+								pad.buttons[YELLOW] = true;		// 5b			
+								pad.buttons[GREEN] = true;								
+								pad.buttons[RED] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+
+							if (eventData[3] == 15 || eventData[3] == 16) {
+								pad.buttons[RED] = true;		// 6m
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+
+							if (eventData[3] == 17) {
+								pad.buttons[RED] = true;		// 6
+								pad.buttons[YELLOW] = true;
+								pad.buttons[BLUE] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 13) {
+								pad.buttons[GREEN] = true;		// 5								
+								pad.axis[STRUM] = STRUM_DOWN;
+							}
+							else
+								
+							if (eventData[3] == 12) {
+								pad.buttons[GREEN] = true;		// 5sus							
+								pad.buttons[YELLOW] = true;						
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 14) {			
+								pad.buttons[GREEN] = true;		// 5/7
+								pad.buttons[RED] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}													
+							else
+								
+							if (eventData[3] == 1) {
+								pad.buttons[YELLOW] = true;		// 1
+								pad.axis[STRUM] = STRUM_DOWN;
+							}
+							else
+								
+							if (eventData[3] == 0) {
+								pad.buttons[YELLOW] = true;		// 1sus
+								pad.buttons[ORANGE] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+
+							if (eventData[3] == 2) {
+								pad.buttons[YELLOW] = true;		// 1/3
+								pad.buttons[BLUE] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else						
+								
+							if (eventData[3] == 10) {
+								pad.buttons[ORANGE] = true;		// 4								
+								pad.axis[STRUM] = STRUM_DOWN;
+							}
+							else
+								
+							if (eventData[3] == 127) {			// TODO
+								pad.buttons[ORANGE] = true;		// 3b
+								pad.buttons[BLUE] = true;		
+								pad.buttons[RED] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+
+							if (eventData[3] == 9 ) {
+								pad.buttons[ORANGE] = true;		// 4/6
+								pad.buttons[BLUE] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else						
+								
+							if (eventData[3] == 3 || eventData[3] == 4) {
+								pad.buttons[BLUE] = true;		// 2m
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 5) {
+								pad.buttons[BLUE] = true;		// 2
+								pad.buttons[RED] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 11) {
+								pad.buttons[ORANGE] = true;		// 4m
+								pad.buttons[RED] = true;							
+								pad.axis[STRUM] = autoStrumUpDown();
+							}	
+							else
+								
+							if (eventData[3] == 6 || eventData[3] == 7) {
+								pad.buttons[GREEN] = true;		// 3m
+								pad.buttons[BLUE] = true;								
+								pad.axis[STRUM] = autoStrumUpDown();
+							}
+							else
+								
+							if (eventData[3] == 8) {
+								pad.buttons[GREEN] = true;		// 3
+								pad.buttons[YELLOW] = true;								
+								pad.buttons[BLUE] = true;								
+								pad.axis[STRUM] = autoStrumUpDown();
+							}						
+							else
+								
+							if (eventData[3] == 127) {			// TODO
+								pad.buttons[GREEN] = true;		// 5m
+								pad.buttons[ORANGE] = true;															
+								pad.axis[STRUM] = autoStrumUpDown();
+							} 		
+						}
+												
+						activeStrum = null; 						
+						doChord();						
+						updateCanvas();			
+						resetGuitarHero();						
+					});					
+				}
+			}
+		}
+	}						
+}
+
+async function doSoulmateSetup(device) {
+	console.debug('doSoulmateSetup', device);
+
+	if (device) {
+		bluetoothEle.style.display = "none";
+		const ui = document.getElementById("lyrics");
+
+		device.addEventListener('gattserverdisconnected', (event) => {
+			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
+			if (_converse.api.connection) _converse.api.disconnect();
+		});
+		
+		const server = await device.gatt.connect();
+		console.debug('GATT server', server);
+
+		const services = await server.getPrimaryServices();
+		
+		for (let service of services) {
+			const characteristics = await service.getCharacteristics();
+			
+			for (let characteristic of characteristics) 
+			{
+				try {				
+					const descriptors = await characteristic.getDescriptors();
+				
+					for (let descriptor of descriptors) {
+						const value = await descriptor.readValue();
+						console.debug('Found Characteristic', service.uuid, characteristic.uuid, characteristic.properties.notify, descriptor.uuid, value);				
+					}
+				} catch (e) {
+
+				}
+
+				console.debug('Found Characteristic', service.uuid, characteristic.uuid, characteristic.properties.notify);										
+				
+				if (characteristic.properties.write) {
+					writeCharacteristic = characteristic;	
+					//setTimeout(setLiberLiveChordMappings);
+					//setTimeout(setLiberLiveDeviceSettings, 1000);
+				}
+				else
+					
+				if (characteristic.properties.notify) {
+					const handler = await characteristic.startNotifications();
+					let cannotFire = true;
+					let haveFired = false;				
+					
+					if (!game) {
+						setup();
+						resetGuitarHero();
+					}	
+					
+					document.getElementById("soulmate").style.display = "";						
+
+					if (mobileCheck()) {
+						document.getElementById("extern-device").innerHTML = "Soulmate N1 Guitar";						
+						const controlDevice = document.getElementById("control-device");
+						controlDevice.append(document.getElementById("ll-chord1"));			
+						controlDevice.append(document.getElementById("ll-drums1"));	
+						controlDevice.append(document.getElementById("ll-chord2"));	
+						controlDevice.append(document.getElementById("ll-drums2"));	
+						controlDevice.append(document.getElementById("ll-keysign"));							
+					}				
+					
+					handler.addEventListener('characteristicvaluechanged', (evt) => {
+						const {buffer}  = evt.target.value;
+						const eventData = new Uint8Array(buffer);					
+						
+						//if (eventData.length != 14 || (eventData.length == 14 && eventData[9] != 49 && eventData[9] != 50 && eventData[10] != 49 && eventData[10] != 50)) {
+							for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
+						//}
+						
+						// TODO - handle all button press events
+					});	
+				}
+			}
+		}
+	}		
+}
+
 async function doLiberLiveSetup(device) {
 	console.debug('doLiberLiveSetup', device);
 
@@ -1476,7 +1622,7 @@ async function doLiberLiveSetup(device) {
 				
 					for (let descriptor of descriptors) {
 						const value = await descriptor.readValue();
-						console.debug('Found Characteristic', service.uuid, characteristic.uuid, characteristic.properties.notify, descriptor.uuid, value);				
+						//console.debug('Found Characteristic', service.uuid, characteristic.uuid, characteristic.properties.notify, descriptor.uuid, value);				
 					}
 				} catch (e) {
 
@@ -1518,7 +1664,7 @@ async function doLiberLiveSetup(device) {
 						const eventData = new Uint8Array(buffer);					
 						
 						if (eventData.length != 14 || (eventData.length == 14 && eventData[9] != 49 && eventData[9] != 50 && eventData[10] != 49 && eventData[10] != 50)) {
-							//for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
+							for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
 						}
 						
 						if (eventData[7]) {
@@ -1959,6 +2105,14 @@ function initNeoUke() {
 	}	
 }
 
+function initSoulmate() {
+	console.debug("initSoulmate");
+	
+	if (inputDeviceType == "soulmate" && !textDecoder) {	
+		onSoulmateClick();			
+	}	
+}
+
 function getConfig() {
 	const data = localStorage.getItem("orin.ayo.config");
 	let config = {};
@@ -2315,6 +2469,7 @@ async function onloadHandler() {
 		if (audioContext) audioContext.resume();
 		if (inputDeviceType == "liberlivec1") initLiberLive();
 		if (inputDeviceType == "neouke") initNeoUke();		
+		if (inputDeviceType == "soulmate") initSoulmate();			
 	})
 	
 	
@@ -5117,7 +5272,8 @@ async function setupUI(config, err) {
 	midiInType.options[3] = new Option("Artiphon Chorda", "chorda", config.inputDeviceType == "chorda");
 	midiInType.options[4] = new Option("LiberLive C1", "liberlivec1", config.inputDeviceType == "liberlivec1");
 	midiInType.options[5] = new Option("Sonicake NeoUke", "neouke", config.inputDeviceType == "neouke");	
-	midiInType.options[6] = new Option("Keyboard", "keyboard", config.inputDeviceType == "keyboard");	
+	midiInType.options[6] = new Option("Soulmate N1", "soulmate", config.inputDeviceType == "soulmate");		
+	midiInType.options[7] = new Option("Keyboard", "keyboard", config.inputDeviceType == "keyboard");	
 	
 	let deviceIndex = 0;
 	deviceIndex = config.inputDeviceType == "games-controller" ? 0 : deviceIndex;
@@ -5126,7 +5282,8 @@ async function setupUI(config, err) {
 	deviceIndex = config.inputDeviceType == "chorda" ? 3 : deviceIndex;	
 	deviceIndex = config.inputDeviceType == "liberlivec1" ? 4 : deviceIndex;		
 	deviceIndex = config.inputDeviceType == "neouke" ? 5 : deviceIndex;	
-	deviceIndex = config.inputDeviceType == "keyboard" ? 6 : deviceIndex;
+	deviceIndex = config.inputDeviceType == "soulmate" ? 6 : deviceIndex;
+	deviceIndex = config.inputDeviceType == "keyboard" ? 7 : deviceIndex;	
 	midiInType.selectedIndex = deviceIndex;	
 	
 	inputDeviceType = config.inputDeviceType;
@@ -5135,14 +5292,23 @@ async function setupUI(config, err) {
 		initLiberLive();	
 		handleLiberLive(inputDeviceType == "liberlivec1");
 		
-	} else if (inputDeviceType == "neouke") {
+	} 
+	else 
+		
+	if (inputDeviceType == "neouke") {
 		initNeoUke();
 		handleNeoUke(inputDeviceType == "neouke");		
+	}
+	else 
+		
+	if (inputDeviceType == "soulmate") {
+		initSoulmate();
+		handleSoulmate(inputDeviceType == "soulmate");		
 	}	
 
 	midiInType.addEventListener("click", function()
 	{
-		bluetoothEle.style.display = (midiInType.value == "liberlivec1" || midiInType.value == "neouke") ? "" : "none";
+		bluetoothEle.style.display = (midiInType.value == "liberlivec1" || midiInType.value == "neouke" || midiInType.value == "soulmate") ? "" : "none";
 	});
 	
 	midiInType.addEventListener("change", function()
@@ -5154,9 +5320,17 @@ async function setupUI(config, err) {
 		if (inputDeviceType == "liberlivec1") {
 			handleLiberLive(inputDeviceType == "liberlivec1");
 			
-		} else if (inputDeviceType == "neouke") {
+		} 
+		else
+		
+		if (inputDeviceType == "neouke") {
 			handleNeoUke(inputDeviceType == "neouke");		
 		}
+		else
+		
+		if (inputDeviceType == "soulmate") {
+			handleSoulmate(inputDeviceType == "soulmate");		
+		}		
 	});	
 
 	setGigladUI();
