@@ -3330,7 +3330,6 @@ function handleFullKeyboard(name, code) {
 	resetGuitarHero();		
 }
 
-
 function handleSevenButtons(name, code) {
 	var handled = false;
 
