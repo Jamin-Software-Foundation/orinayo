@@ -2755,8 +2755,9 @@ async function onloadHandler() {
 		//console.debug("keydown", name, code);
 		
 		if (!keyboard.has(name)) {
-			keyboard.set(name, true);			
-			handleKeyboard(name, code);	
+			keyboard.set(name, true);	
+			const isNumLockOn = event.getModifierState('NumLock');		
+			handleKeyboard(name, code, isNumLockOn);	
 		}			
 	});		
 
@@ -3296,26 +3297,39 @@ function updateTempo() {
 	}	
 }
 
-function handleKeyboard(name, code) {
-	console.debug("handleKeyboard", name, code);
+function handleKeyboard(name, code, isNumLockOn) {
+	console.debug("handleKeyboard", name, code, isNumLockOn);
 	
 	if (!game) {
 		setup();
 		resetGuitarHero();
 	}
-
-	var handled = false;	
 	
 	if (inputDeviceType == "orinayo") {
-		handled = handleSevenButtons(name, code);
-		updateCanvas();			
-	} else {
-		handled = handleNumPad(name, code);	
+		handleSevenButtons(name, code);
+		updateCanvas();	
+		resetGuitarHero();			
+	} 
+	else 
+		
+	if (isNumLockOn) {
+		handleNumPad(name, code);	
 		doChord();
 		updateCanvas();
 		resetGuitarHero();			
 	}
+	else {
+		handleFullKeyboard(name, code);			
+	}
 }
+
+function handleFullKeyboard(name, code) {
+	// TODO
+	
+	updateCanvas();
+	resetGuitarHero();		
+}
+
 
 function handleSevenButtons(name, code) {
 	var handled = false;
@@ -4799,9 +4813,26 @@ function normaliseSffStyle() {
 	}		
 }
 
+function padNumber(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+}
+
+function loopCompare(a, b) {	
+	const a_metadata = a.split("_");
+	const b_metadata = b.split("_");
+	const a_tempo = parseInt(a_metadata[1]);
+	const b_tempo = parseInt(b_metadata[1]);
+	return a_tempo - b_tempo;
+}
+
 async function setupUI(config, err) {	
 	console.debug("setupUI", config);
-		
+	
+	chord_loops.sort((a, b) => loopCompare(a, b));
+	drum_loops.sort((a, b) => loopCompare(a, b));
+	bass_loops.sort((a, b) => loopCompare(a, b));	
+			
 	tempo = config.tempo ? config.tempo : tempo;
 	guitarVolume = config.guitarVolume ? config.guitarVolume : guitarVolume;
 	savedGuitarVolume = guitarVolume;
@@ -5536,7 +5567,7 @@ async function setupUI(config, err) {
 		let selectedDrum = false;	
 		const loopData = drumLoop.substring(drumLoop.lastIndexOf("/") + 1).replace(".drum", "");
 		const metaData = loopData.split("_");		
-		const drumName = metaData[0] + " (" + metaData[1] + ")";			
+		const drumName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];			
 		
 		if (config.realDrum && config.realDrum == drumLoop) {
 			if (!realInstrument) realInstrument = {};			
@@ -5557,7 +5588,7 @@ async function setupUI(config, err) {
 		let selectedBass = false;	
 		const loopData = bassLoop.substring(bassLoop.lastIndexOf("/") + 1).replace(".bass", "");
 		const metaData = loopData.split("_");		
-		const bassName = metaData[0] + " (" + metaData[1] + ")";		
+		const bassName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];			
 		
 		if (config.realBass && config.realBass == bassLoop) {
 			if (!realInstrument) realInstrument = {};			
@@ -5578,7 +5609,7 @@ async function setupUI(config, err) {
 		let selectedChord = false;	
 		const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");
 		const metaData = loopData.split("_");		
-		const chordName = metaData[0] + " (" + metaData[1] + ")";		
+		const chordName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];		
 		
 		if (config.realChord && config.realChord == chordLoop) {
 			if (!realInstrument) realInstrument = {};			
@@ -5599,7 +5630,7 @@ async function setupUI(config, err) {
 		let selectedRiff = false;	
 		const loopData = riffLoop.substring(riffLoop.lastIndexOf("/") + 1).replace(".riff", "");
 		const metaData = loopData.split("_");		
-		const riffName = metaData[0] + " (" + metaData[1] + ")";		
+		const riffName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];		
 		
 		if (config.realRiff && config.realRiff == riffLoop) {
 			if (!realInstrument) realInstrument = {};			
@@ -5623,7 +5654,7 @@ async function setupUI(config, err) {
 				selectedLoop = db.name == config.realDrum;
 				const loopData = loop.replace(".drum", "");
 				const metaData = loopData.split("_");		
-				const drumName = metaData[0] + " (" + metaData[1] + ")";
+				const drumName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];	
 				
 				if (selectedLoop) {
 					if (!realInstrument) realInstrument = {};					
@@ -5639,7 +5670,7 @@ async function setupUI(config, err) {
 				selectedLoop = db.name == config.realChord;
 				const loopData = loop.replace(".chord", "");
 				const metaData = loopData.split("_");		
-				const chordName = metaData[0] + " (" + metaData[1] + ")";
+				const chordName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];	
 				
 				if (selectedLoop) {
 					if (!realInstrument) realInstrument = {};
@@ -5655,7 +5686,7 @@ async function setupUI(config, err) {
 				selectedLoop = db.name == config.realBass;
 				const loopData = loop.replace(".bass", "");
 				const metaData = loopData.split("_");		
-				const bassName = metaData[0] + " (" + metaData[1] + ")";
+				const bassName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];	
 				
 				if (selectedLoop) {
 					if (!realInstrument) realInstrument = {};
@@ -6151,7 +6182,7 @@ function createDrumList(config, realDrumsLoop, realChordsLoop) {
 		const styleName = realInstrument.chord[0].substring(realInstrument.chord[0].lastIndexOf("/") + 1);
 		const loopData = drumLoop.substring(drumLoop.lastIndexOf("/") + 1).replace(".drum", "");		
 		const metaData = loopData.split("_");		
-		const drumName = metaData[0] + " (" + metaData[1] + ")";			
+		const drumName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];			
 
 		if (realInstrument.chord[1] == metaData[1]) 
 		{
@@ -6185,7 +6216,7 @@ function createChordList(config, realChordsLoop) {
 		const chordLoop = chord_loops[i];
 		const loopData = chordLoop.substring(chordLoop.lastIndexOf("/") + 1).replace(".chord", "");		
 		const metaData = loopData.split("_");		
-		const chordName = metaData[0] + " (" + metaData[1] + ")";			
+		const chordName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];				
 
 		if (Math.abs(tempo - parseInt(metaData[1])) < 5) 
 		{
@@ -6248,7 +6279,7 @@ function createBassList(config, realBassLoop, realChordsLoop) {
 		const styleName = realInstrument.chord[0].substring(realInstrument.chord[0].lastIndexOf("/") + 1);
 		const loopData = bassLoop.substring(bassLoop.lastIndexOf("/") + 1).replace(".bass", "");		
 		const metaData = loopData.split("_");		
-		const bassName = metaData[0] + " (" + metaData[1] + ")";			
+		const bassName = padNumber(parseInt(metaData[1]), 3) + " - " + metaData[0];				
 
 		if (realInstrument.chord[1] == metaData[1]) 
 		{
