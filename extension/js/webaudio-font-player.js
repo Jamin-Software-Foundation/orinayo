@@ -1090,19 +1090,23 @@ var WebAudioFontPlayer = /** @class */ (function () {
     ;
     WebAudioFontPlayer.prototype.findZone = function (audioContext, preset, pitch) {
         var zone = null;
-        for (var i = preset.zones.length - 1; i >= 0; i--) {
-            zone = preset.zones[i];
-            if (zone.keyRangeLow <= pitch && zone.keyRangeHigh + 1 >= pitch) {
-                break;
-            }
-        }
-        try {
-            if (zone)
-                this.adjustZone(audioContext, zone);
-        }
-        catch (ex) {
-            console.error('adjustZone', ex);
-        }
+		
+		if (preset) {
+			for (var i = preset.zones.length - 1; i >= 0; i--) {
+				zone = preset.zones[i];
+				if (zone.keyRangeLow <= pitch && zone.keyRangeHigh + 1 >= pitch) {
+					break;
+				}
+			}
+			try {
+				if (zone)
+					this.adjustZone(audioContext, zone);
+			}
+			catch (ex) {
+				console.error('adjustZone', ex);
+				return zone;
+			}
+		}
         return zone;
     };
    
