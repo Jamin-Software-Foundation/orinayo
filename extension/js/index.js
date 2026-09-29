@@ -1293,6 +1293,7 @@ async function doNeoUkeSetup(device) {
 
 		device.addEventListener('gattserverdisconnected', (event) => {
 			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
+			document.getElementById("neouke").style.display = "none";			
 			if (_converse.api.connection) _converse.api.disconnect();
 		});
 		
@@ -1524,6 +1525,7 @@ async function doSoulmateSetup(device) {
 
 		device.addEventListener('gattserverdisconnected', (event) => {
 			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
+			document.getElementById("soulmate").style.display = "none";	
 			if (_converse.api.connection) _converse.api.disconnect();
 		});
 		
@@ -1581,13 +1583,90 @@ async function doSoulmateSetup(device) {
 					
 					handler.addEventListener('characteristicvaluechanged', (evt) => {
 						const {buffer}  = evt.target.value;
-						const eventData = new Uint8Array(buffer);					
+						const eventData = new Uint8Array(buffer);	
+						let fretPressed = false;
 						
 						//if (eventData.length != 14 || (eventData.length == 14 && eventData[9] != 49 && eventData[9] != 50 && eventData[10] != 49 && eventData[10] != 50)) {
-							for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
+							if ( eventData[0] != 144) for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
 						//}
 						
 						// TODO - handle all button press events
+						
+						if (eventData.length == 3) 
+						{
+							if (eventData[1] == 4) 						// Volume 0 (start/stop)
+							{
+								if (eventData[0] == 240 && eventData[2] == 0) {
+									pad.buttons[LOGO] = true;
+									setTimeout(toggleStartStop);
+									return;
+								}
+							}
+							
+							if (eventData[1] == 10)						// Fretboard
+							{
+								resetGuitarHero();	
+								fretPressed = true;								
+								
+								if (eventData[2] == 9)
+								{
+									if (eventData[0] == 245) {
+										pad.buttons[YELLOW] = true;		// 1									
+									}	
+
+									if (eventData[0] == 244) {
+										pad.buttons[BLUE] = true;		// 2m									
+									}
+
+									if (eventData[0] == 243) {									
+										pad.buttons[GREEN] = true;		// 3m
+										pad.buttons[BLUE] = true;								
+									}
+									if (eventData[0] == 242) {
+										pad.buttons[ORANGE] = true;		// 4									
+									}	
+
+									if (eventData[0] == 241) {
+										pad.buttons[GREEN] = true;		// 5									
+									}
+
+									if (eventData[0] == 240) {									
+										pad.buttons[RED] = true;		// 6m							
+									}									
+								}
+							}
+							
+							if (eventData[1] == 12) 							// Paddle control
+							{
+								if (eventData[0] == 252 && eventData[2] == 1) 
+								{
+									if (pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) {
+										pad.axis[STRUM] = STRUM_UP;
+										activeStrum = null; 						
+										doChord();						
+										updateCanvas();											
+										
+									} else {
+										pad.buttons[STARPOWER] = true;	// next style
+										doChord();	
+									}											
+								}
+								
+								if (eventData[0] == 253 && eventData[2] == 1) 
+								{
+									if (pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) {									
+										pad.axis[STRUM] = STRUM_DOWN;
+										activeStrum = null; 						
+										doChord();						
+										updateCanvas();	
+										
+									} else {
+										pad.buttons[START] = true;		// prev style
+										doChord();	
+									}										
+								}								
+							}								
+						}							
 					});	
 				}
 			}
@@ -1604,6 +1683,7 @@ async function doLiberLiveSetup(device) {
 
 		device.addEventListener('gattserverdisconnected', (event) => {
 			console.debug('Bluetooth device ' + device.name + ' is disconnected.', event);
+			document.getElementById("liberlive").style.display = "none";				
 			if (_converse.api.connection) _converse.api.disconnect();
 		});
 		
@@ -11203,7 +11283,6 @@ async function exportStyle() {
 	else
 		
 	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 8) {												// Ketron Event	
-		/*
 		await makeWavForDrumPad('INT1.wav', 'int1');						// Drums
 		await makeWavForDrumPad('INT2.wav', 'int1');		
 		await makeWavForDrumPad('INT3.wav', 'int1');		
@@ -11261,7 +11340,7 @@ async function exportStyle() {
 		await makeWavForChordPad('SUS_A.wav', 9,  'sus', 'arra');
 		await makeWavForChordPad('SUS_A#.wav', 10, 'sus', 'arra');
 		await makeWavForChordPad('SUS_B.wav', 11, 'sus', 'arra');
-		*/
+
 		await makeWavForChordPad('MAJ_C.wav', 0,  'maj', 'arrb');			// Maj Var B
 		await makeWavForChordPad('MAJ_C#.wav', 1,  'maj', 'arrb');
 		await makeWavForChordPad('MAJ_D.wav', 2,  'maj', 'arrb');
@@ -11300,7 +11379,7 @@ async function exportStyle() {
 		await makeWavForChordPad('SUS_A.wav', 9,  'sus', 'arrb');
 		await makeWavForChordPad('SUS_A#.wav', 10, 'sus', 'arrb');
 		await makeWavForChordPad('SUS_B.wav', 11, 'sus', 'arrb');	
-		/*
+
 		await makeWavForBassPad('BMAJ_C.wav', 0,  'maj', 'arra');				// Bass ROOT 
 		await makeWavForBassPad('BMAJ_C#.wav', 1,  'maj', 'arra');
 		await makeWavForBassPad('BMAJ_D.wav', 2,  'maj', 'arra');
@@ -11339,7 +11418,6 @@ async function exportStyle() {
 		await makeWavForBassPad('BMIN_A.wav', 9,  'min', 'arra');
 		await makeWavForBassPad('BMIN_A#.wav', 10, 'min', 'arra');
 		await makeWavForBassPad('BMIN_B.wav', 11, 'min', 'arra');	
-		*/
 	}
 	else {
 		alert("Export not yet implemented for this instrument or settings");
@@ -11430,6 +11508,7 @@ function savePadWavFile(padName, bufferLeft, bufferRight, mixStart, mixSize, for
 }
 
 async function makeWavForDrumPad(padName, variation) {
+	if (!drumLoop?.loop) return;	
 	console.debug("makeWavForDrumPad", padName);	
 	const buffer = loopCache[drumLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
@@ -11452,6 +11531,7 @@ async function makeWavForDrumPad(padName, variation) {
 }
 
 async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
+	if (!chordLoop?.loop) return;
 	console.debug("makeWavForChordPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
@@ -11480,6 +11560,7 @@ async function makeWavForChordPad(padName, chordIndex, chordType, variation) {
 }
 
 async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
+	if (!chordLoop?.loop) return;	
 	console.debug("makeWavForBassPad", padName);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
@@ -11508,6 +11589,7 @@ async function makeWavForBassPad(padName, chordIndex, bassType, variation) {
 }
 
 async function makeWavForMpx(chordIndex, chordType, bassType, variation) {
+	if (!chordLoop?.loop) return;	
 	console.debug("makeWavForMpx", chordIndex);	
 	const buffer = loopCache[chordLoop.loop.url];	
 	const numChannels = buffer.numberOfChannels;
