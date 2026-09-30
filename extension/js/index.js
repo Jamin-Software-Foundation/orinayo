@@ -34,7 +34,7 @@ const WHAMMY = 2;
 const LOGO = 12;
 const CONTROL = 100;
 
-var starPowerStart = false;
+var startTimestamp = new Date();
 var guitarControllerName = "";
 var updating = false;
 var songNote = null;
@@ -1381,7 +1381,7 @@ async function doNeoUkeSetup(device) {
 							else
 								
 							if (eventData[3] == 127) {			// TODO
-								pad.buttons[YELLOW] = true;		// 5b			
+								pad.buttons[YELLOW] = true;		// 6b			
 								pad.buttons[GREEN] = true;								
 								pad.buttons[RED] = true;							
 								pad.axis[STRUM] = autoStrumUpDown();
@@ -1586,10 +1586,7 @@ async function doSoulmateSetup(device) {
 						const eventData = new Uint8Array(buffer);	
 						let fretPressed = false;
 						
-						//if (eventData.length != 14 || (eventData.length == 14 && eventData[9] != 49 && eventData[9] != 50 && eventData[10] != 49 && eventData[10] != 50)) {
-							if ( eventData[0] != 144) for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);						
-						//}
-						
+						//if ( eventData[0] != 144) for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);												
 						// TODO - handle all button press events
 						
 						if (eventData.length == 3) 
@@ -1602,43 +1599,187 @@ async function doSoulmateSetup(device) {
 									return;
 								}
 							}
+							else
+								
+							if (eventData[1] == 6) 						// Transpose (keyChange)
+							{
+								if (eventData[0] == 240) {
+									keyChange = eventData[2];
+									dokeyChange();
+								}
+							}
+							else							
 							
 							if (eventData[1] == 10)						// Fretboard
 							{
 								resetGuitarHero();	
-								fretPressed = true;								
+								fretPressed = true;
 								
+								if (eventData[2] == 7)
+								{
+									if (eventData[0] == 245) {
+										pad.buttons[YELLOW] = true;		// 1sus
+										pad.buttons[ORANGE] = true;										
+									}	
+									else
+										
+									if (eventData[0] == 244) {
+										pad.buttons[BLUE] = true;		// 2
+										pad.buttons[RED] = true;								
+									}
+									else
+
+									if (eventData[0] == 243) {									
+										pad.buttons[GREEN] = true;		// 3
+										pad.buttons[YELLOW] = true;								
+										pad.buttons[BLUE] = true;								
+									}
+									else
+										
+									if (eventData[0] == 242) {
+										pad.buttons[ORANGE] = true;		// 4m
+										pad.buttons[RED] = true;									
+									}	
+									else
+										
+									if (eventData[0] == 241) {
+										pad.buttons[GREEN] = true;		// 5sus							
+										pad.buttons[YELLOW] = true;									
+									}
+									else
+										
+									if (eventData[0] == 240) {									
+										pad.buttons[RED] = true;		// 6
+										pad.buttons[YELLOW] = true;
+										pad.buttons[BLUE] = true;							
+									}									
+								}
+								else
+									
 								if (eventData[2] == 9)
 								{
 									if (eventData[0] == 245) {
 										pad.buttons[YELLOW] = true;		// 1									
 									}	
-
+									else
+										
 									if (eventData[0] == 244) {
 										pad.buttons[BLUE] = true;		// 2m									
 									}
+									else
 
 									if (eventData[0] == 243) {									
 										pad.buttons[GREEN] = true;		// 3m
 										pad.buttons[BLUE] = true;								
 									}
+									else
+										
 									if (eventData[0] == 242) {
 										pad.buttons[ORANGE] = true;		// 4									
 									}	
-
+									else
+										
 									if (eventData[0] == 241) {
 										pad.buttons[GREEN] = true;		// 5									
 									}
-
+									else
+										
 									if (eventData[0] == 240) {									
 										pad.buttons[RED] = true;		// 6m							
 									}									
 								}
+								else
+									
+								if (eventData[2] == 11)
+								{
+									if (eventData[0] == 245) {
+										pad.buttons[YELLOW] = true;		// 1/3
+										pad.buttons[BLUE] = true;								
+									}	
+									else
+										
+									if (eventData[0] == 244) {
+										pad.buttons[RED] = true;		// 4/1
+										pad.buttons[YELLOW] = true;											
+										pad.buttons[BLUE] = true;			
+										pad.buttons[ORANGE] = true;													
+									}
+									else
+
+									if (eventData[0] == 243) {									
+										pad.buttons[GREEN] = true;		// 5/1
+										pad.buttons[YELLOW] = true;											
+										pad.buttons[BLUE] = true;			
+										pad.buttons[ORANGE] = true;								
+									}
+									else
+										
+									if (eventData[0] == 242) {
+										pad.buttons[ORANGE] = true;		// 4/6
+										pad.buttons[BLUE] = true;									
+									}	
+									else
+										
+									if (eventData[0] == 241) {
+										pad.buttons[GREEN] = true;		// 5/7
+										pad.buttons[RED] = true;								
+									}
+									else
+										
+									if (eventData[0] == 240) {									
+										pad.buttons[YELLOW] = true;		// 7			
+										pad.buttons[RED] = true;	
+										pad.buttons[GREEN] = true;	
+										pad.buttons[BLUE] = true;							
+									}									
+								}	
+								else
+									
+								if (eventData[2] == 13)
+								{
+									if (eventData[0] == 245) {
+										pad.buttons[YELLOW] = true;		// 7b			
+										pad.buttons[RED] = true;							
+									}	
+									else
+										
+									if (eventData[0] == 244) {
+										pad.buttons[BLUE] = true;		// 2m														
+									}
+									else
+
+									if (eventData[0] == 243) {									
+										pad.buttons[RED] = true;		// 3b									
+										pad.buttons[BLUE] = true;			
+										pad.buttons[ORANGE] = true;								
+									}
+									else
+										
+									if (eventData[0] == 242) {
+										pad.buttons[YELLOW] = true;		// 4/5										
+										pad.buttons[BLUE] = true;		
+										pad.buttons[ORANGE] = true;										
+									}	
+									else
+										
+									if (eventData[0] == 241) {
+										pad.buttons[GREEN] = true;		// 5m
+										pad.buttons[ORANGE] = true;									
+									}
+									else
+										
+									if (eventData[0] == 240) {									
+										pad.buttons[YELLOW] = true;		// 6b			
+										pad.buttons[GREEN] = true;								
+										pad.buttons[RED] = true;						
+									}									
+								}								
 							}
+							else
 							
-							if (eventData[1] == 12) 							// Paddle control
+							if (eventData[1] == 12 && eventData[2] == 1) 							// Paddle control
 							{
-								if (eventData[0] == 252 && eventData[2] == 1) 
+								if (eventData[0] == 252) 
 								{
 									if (pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) {
 										pad.axis[STRUM] = STRUM_UP;
@@ -1647,12 +1788,14 @@ async function doSoulmateSetup(device) {
 										updateCanvas();											
 										
 									} else {
+										pad.buttons[START] = false;
 										pad.buttons[STARPOWER] = true;	// next style
 										doChord();	
 									}											
 								}
+								else
 								
-								if (eventData[0] == 253 && eventData[2] == 1) 
+								if (eventData[0] == 253) 
 								{
 									if (pad.buttons[GREEN] || pad.buttons[RED] || pad.buttons[YELLOW] || pad.buttons[BLUE] || pad.buttons[ORANGE]) {									
 										pad.axis[STRUM] = STRUM_DOWN;
@@ -1661,10 +1804,20 @@ async function doSoulmateSetup(device) {
 										updateCanvas();	
 										
 									} else {
+										pad.buttons[STARPOWER] = false;
 										pad.buttons[START] = true;		// prev style
 										doChord();	
 									}										
-								}								
+								}
+									
+								else if (eventData[0] == 240) padsMode = 1;	// full chord up/down
+								else if (eventData[0] == 242) padsMode = 2;	// chord up/root note down	
+								else if (eventData[0] == 244) padsMode = 3;	// root note up/down
+								else if (eventData[0] == 246) padsMode = 4;	// 3rd note up/root note down
+								else if (eventData[0] == 248) padsMode = 5;	// 5th note up/root note down							
+								else if (eventData[0] == 250) padsMode = 0;	// reset	
+
+								orinayo_pad.innerHTML = (padsMode == 0) ? "None" : "Pad " + padsMode;								
 							}								
 						}							
 					});	
@@ -8505,6 +8658,9 @@ function endAudioStyle() {
 }
 
 function toggleStartStop() {
+	if ((new Date()) - startTimestamp < 5000) return;
+	startTimestamp = new Date();
+	
 	console.debug("toggleStartStop", styleStarted);
 	audioContext.resume();
 	
