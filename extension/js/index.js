@@ -642,7 +642,7 @@ async function onNeoUkeClick() {
 		bluetoothGuitar = device;
 						
 		device.addEventListener('advertisementreceived', (event) => {	
-			//console.debug('Bluetooth device advert', event);
+			console.debug('Bluetooth device advert', event, device);
 			
 			if (!ready) {
 				ready = true;
@@ -1288,7 +1288,7 @@ async function doNeoUkeSetup(device) {
 	console.debug('doNeoUkeSetup', device);	
 	
 	if (device) {
-		bluetoothEle.style.display = "none";		
+		//bluetoothEle.style.display = "none";		
 		const ui = document.getElementById("lyrics");
 
 		device.addEventListener('gattserverdisconnected', (event) => {
@@ -1520,7 +1520,7 @@ async function doSoulmateSetup(device) {
 	console.debug('doSoulmateSetup', device);
 
 	if (device) {
-		bluetoothEle.style.display = "none";
+		//bluetoothEle.style.display = "none";
 		const ui = document.getElementById("lyrics");
 
 		device.addEventListener('gattserverdisconnected', (event) => {
@@ -1586,7 +1586,7 @@ async function doSoulmateSetup(device) {
 						const eventData = new Uint8Array(buffer);	
 						let fretPressed = false;
 						
-						//if ( eventData[0] != 144) for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);												
+						if ( eventData[0] != 144) for (let i in eventData) console.debug("Event", eventData.length, i + ":" + eventData[i]);												
 						// TODO - handle all button press events
 						
 						if (eventData.length == 3) 
@@ -1831,7 +1831,7 @@ async function doLiberLiveSetup(device) {
 	console.debug('doLiberLiveSetup', device);
 
 	if (device) {
-		bluetoothEle.style.display = "none";
+		//bluetoothEle.style.display = "none";
 		const ui = document.getElementById("lyrics");
 
 		device.addEventListener('gattserverdisconnected', (event) => {

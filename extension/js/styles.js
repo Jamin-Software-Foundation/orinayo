@@ -524,6 +524,7 @@ var bass_loops = [
 	"extra/assets/bass/guitar-ballad_70_27429.bass",
 	"assets/bass/half-beat-pop_114_16842.bass",	
 	"assets/bass/half-beat-pop_119_16134.bass",	
+	"assets/bass/house-of-pop_172_5581.bass",
 	"assets/bass/indie-band-pop_85_5647.bass",
 	"extra/assets/bass/jazzy-band_80_6000.bass",
 	"assets/bass/jazzy-funk_110_17455.bass",
