@@ -11307,7 +11307,7 @@ async function exportStyle() {
 	}
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 7) {												// WAV Trigger Pro
+	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 7) {												// WAV Trigger Pro (Regular Style)
 		const slotNo = prompt("Enter number (1 - 20)");
 		
 		if (slotNo == null || parseInt(slotNo) < 1 || parseInt(slotNo) > 20) {
@@ -11435,10 +11435,139 @@ async function exportStyle() {
 		
 		downloadCSV(slotNo);
 	}
-
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 8) {												// Ketron Event	
+	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 8) {												// WAV Trigger Pro (DJ Style)
+		const slotNo = prompt("Enter number (1 - 20)");
+		
+		if (slotNo == null || parseInt(slotNo) < 1 || parseInt(slotNo) > 20) {
+			if (slotNo != null) alert("Invalid slot number. Use a suitable value between 1 and 20");
+			return;
+		}
+		
+		let fileNo = 204 * (parseInt(slotNo) - 1) + 97;	// skip multi-sampler uses 8 octaves (8 *12) = 97 files per preset
+		
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'int1');						// Drums (0)
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'arra');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'fila');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'arrb');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'filb');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'arrc');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'filc');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'arrd');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'fild');	
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'brka');
+		await makeWavForDrumPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_drums.wav', 'end1');	
+		
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 0,  'maj', 'arra');			// Chord Var A (11)
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 1,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 2,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 3,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 4,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 5,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 6,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 7,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 8,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 9,  'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 10, 'maj', 'arra');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 11, 'maj', 'arra');		
+
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 0,  'maj', 'arrb');			// Chord Var B (23)
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 1,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 2,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 3,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 4,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 5,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 6,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 7,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 8,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 9,  'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 10, 'maj', 'arrb');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 11, 'maj', 'arrb');	
+
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 0,  'maj', 'arrc');			// Chord Var C (35)
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 1,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 2,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 3,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 4,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 5,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 6,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 7,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 8,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 9,  'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 10, 'maj', 'arrc');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 11, 'maj', 'arrc');		
+
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 0,  'maj', 'arrd');			// Chord Var D (47)
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 1,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 2,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 3,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 4,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 5,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 6,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 7,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 8,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 9,  'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 10, 'maj', 'arrd');
+		await makeWavForChordPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_chords.wav', 11, 'maj', 'arrd');	
+
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 0,  'maj', 'arra');				// Bass Var A (59)
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 1,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 2,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 3,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 4,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 5,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 6,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 7,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 8,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 9,  'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 10, 'maj', 'arra');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 11, 'maj', 'arra');	
+
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 0,  'maj', 'arrb');				// Bass Var B (71)
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 1,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 2,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 3,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 4,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 5,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 6,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 7,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 8,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 9,  'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 10, 'maj', 'arrb');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 11, 'maj', 'arrb');			
+
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 0,  'maj', 'arrc');				// Bass Var C (83)
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 1,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 2,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 3,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 4,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 5,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 6,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 7,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 8,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 9,  'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 10, 'maj', 'arrc');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 11, 'maj', 'arrc');	
+
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 0,  'maj', 'arrd');				// Bass Var D (95)
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 1,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 2,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 3,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 4,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 5,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 6,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 7,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 8,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 9,  'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 10, 'maj', 'arrd');
+		await makeWavForBassPad(String(fileNo++).padStart(4, '0') + '_' + tempo + '_bass.wav', 11, 'maj', 'arrd');	
+		
+		downloadCSV(slotNo);		
+	}
+	else
+		
+	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 9) {												// Ketron Event	
 		await makeWavForDrumPad('INT1.wav', 'int1');						// Drums
 		await makeWavForDrumPad('INT2.wav', 'int1');		
 		await makeWavForDrumPad('INT3.wav', 'int1');		
@@ -12210,16 +12339,30 @@ async function downloadCSV(slotNo) {
 	data.push(["#NOTE", 46, 4,"04 - Trigger Type 3", fileNo, 0, 0,0, 0,0,0,1,127,-20,0,64,""]);
 	data.push(["#NOTE", 46, 7,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 0,0,0,1,127,-20,0,64,""]);		
 	
-	// chord - midi channel 7 notes 36 - 107 (72 notes)	
-	for (let i=0; i<72; i++) {
-		data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
-		data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
-	}
-	
-	// bass - midi channel 6 notes 36 - 59 (24 notes)	
-	for (let i=0; i<24; i++) {
-		data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
-		data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+	if (exportDevice.selectedIndex == 8 ) {						// WAV Trigger Pro song mode (dj style)
+		// chord - midi channel 7 notes 36 - 83 (48 notes 4x12x1)	
+		for (let i=0; i<48; i++) {
+			data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+			data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		}
+		
+		// bass - midi channel 6 notes 36 - 83 (48 notes 4x12x1)	
+		for (let i=0; i<48; i++) {
+			data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+			data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		}		
+	} else {
+		// chord - midi channel 7 notes 36 - 106 (72 notes 2x12x3)	
+		for (let i=0; i<72; i++) {
+			data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+			data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		}
+		
+		// bass - midi channel 6 notes 36 - 58 (24 notes 1x12x2)	
+		for (let i=0; i<24; i++) {
+			data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+			data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		}
 	}
 	
 	console.debug("downloadCSV", csvFileName, data, startFileNo, fileNo);	
