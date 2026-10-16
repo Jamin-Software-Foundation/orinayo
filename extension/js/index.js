@@ -10152,15 +10152,20 @@ function setupRealInstruments() {
 		
 		let variations = 1;
 		if (realInstrument.chord.length == 5) variations = parseInt(realInstrument.chord[4]);	// style with multiple variations
-		if (realInstrument.chord.length == 6) variations = 4;									// song with 4 varaiations
+		
+		if (realInstrument.chord.length == 7) {
+			variations = 4;															// song with max 4 varaiations
+			keyChange = config.keyChange || parseInt(realInstrument.chord[6]);		// set default transpose to song default key
+		}
 		
 		let start = 0;
 		
 		for (let v=0; v<variations; v++) 
 		{	
-			if (realInstrument.chord.length == 6) {
+			if (realInstrument.chord.length == 7) {
 				let size = parseInt(realInstrument.chord[v + 2]);
-				//let start = v * (size * 12);
+				if (size == 0) continue;
+
 				let stop = start + size;	
 
 				for (let j=0; j<12; j++) {
@@ -10213,38 +10218,37 @@ function setupRealInstruments() {
 			}				
 		}
 
-		if (realInstrument.chord.length < 6) {		
-			// fill missing variations from defined 
-			
-			let toVariation = "";
-			let fromVariation = "_arra";
-			
-			for (let v=variations; v<4; v++) 
-			{	
-				if (v == 1) {
-					fromVariation = "_arra";				
-					toVariation = "_arrb";
-				}
-				if (v == 2) {
-					fromVariation = "_arra";				
-					toVariation = "_arrc";
-				}
+		// fill missing variations from defined 
+		
+		let toVariation = "";
+		let fromVariation = "_arra";
+		
+		for (let v=1; v<4; v++) 
+		{	
+			if (v == 1) {
+				fromVariation = "_arra";				
+				toVariation = "_arrb";
+			}
+			else
 				
-				if (v == 3) {
-					fromVariation = "_arrb";				
-					toVariation = "_arrd";
-				}
-						
-				for (let i=0; i<3; i++) 
-				{
-					for (let j=0; j<12; j++) {
-						realInstrument.chords["key" + j + "_maj" + toVariation] = realInstrument.chords["key" + j + "_maj" + fromVariation];
-						realInstrument.chords["key" + j + "_min" + toVariation] = realInstrument.chords["key" + j + "_min" + fromVariation];
-						realInstrument.chords["key" + j + "_sus" + toVariation] = realInstrument.chords["key" + j + "_sus" + fromVariation];
-					}					
-				}
-			}		
-		}
+			if (v == 2) {
+				fromVariation = "_arra";				
+				toVariation = "_arrc";
+			}
+			else
+			
+			if (v == 3) {
+				fromVariation = "_arrb";				
+				toVariation = "_arrd";
+			}
+					
+
+			for (let j=0; j<12; j++) {
+				if (!realInstrument.chords["key" + j + "_maj" + toVariation]) realInstrument.chords["key" + j + "_maj" + toVariation] = realInstrument.chords["key" + j + "_maj" + fromVariation];
+				if (!realInstrument.chords["key" + j + "_min" + toVariation]) realInstrument.chords["key" + j + "_min" + toVariation] = realInstrument.chords["key" + j + "_min" + fromVariation];
+				if (!realInstrument.chords["key" + j + "_sus" + toVariation]) realInstrument.chords["key" + j + "_sus" + toVariation] = realInstrument.chords["key" + j + "_sus" + fromVariation];
+			}					
+		}		
 	}	
 	
 	if (realInstrument.bass && realInstrument.bass.length > 2) {	
@@ -10254,15 +10258,16 @@ function setupRealInstruments() {
 		
 		let variations = 1;
 		if (realInstrument.bass.length == 4) variations = parseInt(realInstrument.bass[3]);
-		if (realInstrument.bass.length == 6) variations = 4;
+		if (realInstrument.bass.length == 7) variations = 4;
 
 		let start = 0;		
 		
 		for (let v=0; v<variations; v++) 
 		{				
-			if (realInstrument.bass.length == 6) {
+			if (realInstrument.bass.length == 7) {
 				let size = parseInt(realInstrument.bass[v + 2]);
-				//let start = v * (size * 12);
+				if (size == 0) continue;
+				
 				let stop = start + size;	
 
 				for (let j=0; j<12; j++) {
@@ -10312,38 +10317,36 @@ function setupRealInstruments() {
 				realInstrument.size += stop;			
 			}
 		}
-
-		if (realInstrument.bass.length < 6) {		
-			// fill missing variations from defined 
-			
-			let toVariation = "";
-			let fromVariation = "_arra";
-			
-			for (let v=variations; v<4; v++) 
-			{	
-				if (v == 1) {
-					fromVariation = "_arra";				
-					toVariation = "_arrb";
-				}
-				if (v == 2) {
-					fromVariation = "_arra";				
-					toVariation = "_arrc";
-				}
+	
+		// fill missing variations from defined 
+		
+		let toVariation = "";
+		let fromVariation = "_arra";
+		
+		for (let v=1; v<4; v++) 
+		{	
+			if (v == 1) {
+				fromVariation = "_arra";				
+				toVariation = "_arrb";
+			}
+			else
 				
-				if (v == 3) {
-					fromVariation = "_arrb";				
-					toVariation = "_arrd";
-				}
-						
-				for (let i=0; i<3; i++) 
-				{
-					for (let j=0; j<12; j++) {
-						realInstrument.basses["key" + j + "_maj" + toVariation] = realInstrument.basses["key" + j + "_maj" + fromVariation];
-						realInstrument.basses["key" + j + "_min" + toVariation] = realInstrument.basses["key" + j + "_min" + fromVariation];
-						realInstrument.basses["key" + j + "_sus" + toVariation] = realInstrument.basses["key" + j + "_sus" + fromVariation];
-					}					
-				}
-			}	
+			if (v == 2) {
+				fromVariation = "_arra";				
+				toVariation = "_arrc";
+			}
+			else
+			
+			if (v == 3) {
+				fromVariation = "_arrb";				
+				toVariation = "_arrd";
+			}
+					
+			for (let j=0; j<12; j++) {
+				if (!realInstrument.basses["key" + j + "_maj" + toVariation]) realInstrument.basses["key" + j + "_maj" + toVariation] = realInstrument.basses["key" + j + "_maj" + fromVariation];
+				if (!realInstrument.basses["key" + j + "_min" + toVariation]) realInstrument.basses["key" + j + "_min" + toVariation] = realInstrument.basses["key" + j + "_min" + fromVariation];
+				if (!realInstrument.basses["key" + j + "_sus" + toVariation]) realInstrument.basses["key" + j + "_sus" + toVariation] = realInstrument.basses["key" + j + "_sus" + fromVariation];
+			}					
 		}			
 	}	
 
