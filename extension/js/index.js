@@ -12406,15 +12406,23 @@ async function downloadCSV(slotNo) {
 	
 	if (exportDevice.selectedIndex == 8 ) {						// WAV Trigger Pro song mode (dj style)
 		// chord - midi channel 7 notes 36 - 83 (48 notes 4x12x1)	
-		for (let i=0; i<48; i++) {
-			data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
-			data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		for (let v=0; v<4; v++) 
+		{
+			for (let n=0; n<12; n++) {
+				const i = (v * 12) + n;		// all songs in the key of C
+				data.push(["#NOTE", 36 + i, 6,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+				data.push(["#NOTE", 36 + i, 9,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+			}
 		}
 		
 		// bass - midi channel 6 notes 36 - 83 (48 notes 4x12x1)	
-		for (let i=0; i<48; i++) {
-			data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
-			data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+		for (let v=0; v<4; v++) 
+		{
+			for (let n=0; n<12; n++) {	
+				const i = (v * 12) + n;
+				data.push(["#NOTE", 36 + i, 5,"04 - Trigger Type 3", fileNo, 0, 0,0, 1,1,0,1,127,-20,0,64,""]);		
+				data.push(["#NOTE", 36 + i, 8,"05 - Stop Track", fileNo++, 0, 0,releaseTime, 1,1,0,1,127,-20,0,64,""]);			
+			}
 		}		
 	} else {
 		// chord - midi channel 7 notes 36 - 106 (72 notes 2x12x3)	
