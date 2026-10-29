@@ -11621,6 +11621,7 @@ async function exportStyle() {
 		const zipFile = new JSZip();	
 		let metaData = drumLoop.loop.url.substring(drumLoop.loop.url.lastIndexOf("/") + 1).split("_");	
 		const drumName =  metaData[0].toUpperCase();	
+		exportButton.innerText = "Exporting..Drums-" + drumName;	
 		
 		let zipPath = "USER_MODELING/LiveDrum/" + metaData[0].toUpperCase() + "_" + tempo + "/";
 	
@@ -11659,7 +11660,8 @@ async function exportStyle() {
 		const styleTable = ["arra", "arrb", "arrc", "arrd"];
 		
 		for (let v=0; v<chordVariations; v++) {
-			zipPath = "USER_MODELING/RealChord/" + metaData[0].toUpperCase() + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+			zipPath = "USER_MODELING/RealChord/" + chordName + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+			exportButton.innerText = "Exporting..Chords-" + chordName + "-" + styleTable[v].toUpperCase();	
 		
 			await makeWavForChordPad(zipPath + 'MAJ_C.wav', 0,  'maj', styleTable[v], zipFile);			// Maj Var
 			await makeWavForChordPad(zipPath + 'MAJ_C#.wav', 1,  'maj', styleTable[v], zipFile);
@@ -11715,7 +11717,8 @@ async function exportStyle() {
 		}
 				
 		for (let v=0; v<bassVariations; v++) {		
-			zipPath = "USER_MODELING/RealBass/" + metaData[0].toUpperCase() + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+			zipPath = "USER_MODELING/RealBass/" + bassName + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+			exportButton.innerText = "Exporting..Bass-" + bassName + "-" + styleTable[v].toUpperCase();				
 			
 			await makeWavForBassPad(zipPath + 'BMAJ_C.wav', 0,  'maj', styleTable[v], zipFile);				// Bass ROOT 
 			await makeWavForBassPad(zipPath + 'BMAJ_C#.wav', 1,  'maj', styleTable[v], zipFile);
@@ -12512,7 +12515,61 @@ async function downloadCSV(slotNo) {
 	URL.revokeObjectURL(url); // Free up memory
 }
 
-function buildKstFile(drumName, chordName, chordVariations, bassName, bassVariations, kstTempo) {
+async function buildKstFile(drumName, chordName, chordVariations, bassName, bassVariations, kstTempo) {	
+    let bassVarTable = ['ARRA', 'ARRB', 'ARRC', 'ARRD'];
+    let chordVarTable = ['ARRA', 'ARRB', 'ARRC', 'ARRD'];
+	
+	if (bassVariations == 3) bassVarTable = ['ARRA', 'ARRB', 'ARRC', 'ARRC'];
+	if (bassVariations == 2) bassVarTable = ['ARRA', 'ARRB', 'ARRA', 'ARRB'];
+	if (bassVariations == 1) bassVarTable = ['ARRA', 'ARRA', 'ARRA', 'ARRA'];
+		
+	if (chordVariations == 3) chordVarTable = ['ARRA', 'ARRB', 'ARRC', 'ARRC'];
+	if (chordVariations == 2) chordVarTable = ['ARRA', 'ARRB', 'ARRA', 'ARRB'];
+	if (chordVariations == 1) chordVarTable = ['ARRA', 'ARRA', 'ARRA', 'ARRA'];
+	
+	const response = await fetch('assets/ketron-event.kst');
+	const kshpChunk = await response.bytes();
+	console.debug("Fetched raw file bytes directly:", kshpChunk.length);
+	
+	replaceNullTerminatedString(kshpChunk, 0x4942, drumName + "_" + kstTempo);
+
+	replaceNullTerminatedString(kshpChunk, 0x530B, bassName + "-" + bassVarTable[0] + "_" + kstTempo);
+	replaceNullTerminatedString(kshpChunk, 0x535B, bassName + "-" + bassVarTable[1] + "_" + kstTempo);
+	replaceNullTerminatedString(kshpChunk, 0x53AB, bassName + "-" + bassVarTable[2] + "_" + kstTempo);
+	replaceNullTerminatedString(kshpChunk, 0x53FB, bassName + "-" + bassVarTable[3] + "_" + kstTempo);
+	
+	replaceNullTerminatedString(kshpChunk, 0x54EB, chordName + "-" + chordVarTable[0] + "_" + kstTempo);	
+	replaceNullTerminatedString(kshpChunk, 0x553B, chordName + "-" + chordVarTable[1] + "_" + kstTempo);	
+	replaceNullTerminatedString(kshpChunk, 0x558B, chordName + "-" + chordVarTable[2] + "_" + kstTempo);	
+	replaceNullTerminatedString(kshpChunk, 0x55DB, chordName + "-" + chordVarTable[3] + "_" + kstTempo);	
+	return kshpChunk;
+	
+    // Combine all chunks into final binary layout buffer array
+    //const finalKstBinary = new Uint8Array([...mthdChunk, ...mtrkHeader, ...trackData, ...kshpChunk]);
+    //return finalKstBinary;
+}
+
+function replaceNullTerminatedString(targetArray, startIndex, newString) {
+	/**
+	 * Replaces a null-terminated string inside a Uint8Array at a specific index.
+	 * 
+	 * @param {Uint8Array} targetArray - The main binary array (e.g., your KSHP data).
+	 * @param {number} startIndex - The exact byte index where the string begins.
+	 * @param {string} newString - The new text string to inject.
+	 */	
+    // 1. Convert the string into standard raw UTF-8 bytes
+    const encoder = new TextEncoder();
+    const stringBytes = encoder.encode(newString);
+    
+    // 2. Inject the string bytes directly into the array at the target address
+    targetArray.set(stringBytes, startIndex);
+    
+    // 3. Append the mandatory null terminator (0x00) immediately after the text
+    targetArray[startIndex + stringBytes.length] = 0;
+}
+
+
+function old_buildKstFile(drumName, chordName, chordVariations, bassName, bassVariations, kstTempo) {
 	const encoder = new TextEncoder();
 	const trackData = [];
 	const styleTable = ["arra", "arrb", "arrc", "arrd"];	
