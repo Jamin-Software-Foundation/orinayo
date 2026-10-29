@@ -11058,6 +11058,10 @@ function setupVoiceCommands() {
 
 async function exportStyle() {
 	exporting = true;
+	const exportButton = document.querySelector("#export");
+	
+	exportButton.innerText = "Exporting..";				
+	exportButton.style.setProperty("--accent-fill-rest", "red");			
 		
 	if ((bassLoop || chordLoop || drumLoop) &&  exportDevice.selectedIndex == 0) {						// Akai MPX Var A
 		await makeWavForMpx(parseInt(keyChange + 0), "maj", "maj", "arra");
@@ -11613,164 +11617,158 @@ async function exportStyle() {
 	}
 	else
 		
-	if ((bassLoop || chordLoop || drumLoop) && exportDevice.selectedIndex == 8) {						// Ketron Event	
-		const zipDrums = new JSZip();	
-		const metaData = chordLoop.loop.url.substring(chordLoop.loop.url.lastIndexOf("/") + 1).split("_");	
+	if ((bassLoop && chordLoop && drumLoop) && exportDevice.selectedIndex == 8) {						// Ketron Event	
+		const zipFile = new JSZip();	
+		let metaData = drumLoop.loop.url.substring(drumLoop.loop.url.lastIndexOf("/") + 1).split("_");	
+		const drumName =  metaData[0].toUpperCase();	
+		
+		let zipPath = "USER_MODELING/LiveDrum/" + metaData[0].toUpperCase() + "_" + tempo + "/";
 	
-		await makeWavForDrumPad('INT1.wav', 'int1', zipDrums);						// Drums
-		await makeWavForDrumPad('INT2.wav', 'int1', zipDrums);		
-		await makeWavForDrumPad('INT3.wav', 'int1', zipDrums);		
-		await makeWavForDrumPad('ARRA.wav', 'arra', zipDrums);
-		await makeWavForDrumPad('FILA.wav', 'fila', zipDrums);
-		await makeWavForDrumPad('ARRB.wav', 'arrb', zipDrums);
-		await makeWavForDrumPad('FILB.wav', 'filb', zipDrums);
-		await makeWavForDrumPad('ARRC.wav', 'arrc', zipDrums);
-		await makeWavForDrumPad('FILC.wav', 'filc', zipDrums);
-		await makeWavForDrumPad('ARRD.wav', 'arrd', zipDrums);
-		await makeWavForDrumPad('FILD.wav', 'fild', zipDrums);	
-		await makeWavForDrumPad('BRKA.wav', 'brka', zipDrums);
-		await makeWavForDrumPad('BRKB.wav', 'brka', zipDrums);
-		await makeWavForDrumPad('BRKC.wav', 'brka', zipDrums);
-		await makeWavForDrumPad('BRKD.wav', 'brka', zipDrums);		
-		await makeWavForDrumPad('END1.wav', 'end1', zipDrums);	
-		await makeWavForDrumPad('END2.wav', 'end1', zipDrums);
-		await makeWavForDrumPad('END3.wav', 'end1', zipDrums);
+		await makeWavForDrumPad(zipPath + 'INT1.wav', 'int1', zipFile);						// Drums
+		await makeWavForDrumPad(zipPath + 'INT2.wav', 'int1', zipFile);		
+		await makeWavForDrumPad(zipPath + 'INT3.wav', 'int1', zipFile);		
+		await makeWavForDrumPad(zipPath + 'ARRA.wav', 'arra', zipFile);
+		await makeWavForDrumPad(zipPath + 'FILA.wav', 'fila', zipFile);
+		await makeWavForDrumPad(zipPath + 'ARRB.wav', 'arrb', zipFile);
+		await makeWavForDrumPad(zipPath + 'FILB.wav', 'filb', zipFile);
+		await makeWavForDrumPad(zipPath + 'ARRC.wav', 'arrc', zipFile);
+		await makeWavForDrumPad(zipPath + 'FILC.wav', 'filc', zipFile);
+		await makeWavForDrumPad(zipPath + 'ARRD.wav', 'arrd', zipFile);
+		await makeWavForDrumPad(zipPath + 'FILD.wav', 'fild', zipFile);	
+		await makeWavForDrumPad(zipPath + 'BRKA.wav', 'brka', zipFile);
+		await makeWavForDrumPad(zipPath + 'BRKB.wav', 'brka', zipFile);
+		await makeWavForDrumPad(zipPath + 'BRKC.wav', 'brka', zipFile);
+		await makeWavForDrumPad(zipPath + 'BRKD.wav', 'brka', zipFile);		
+		await makeWavForDrumPad(zipPath + 'END1.wav', 'end1', zipFile);	
+		await makeWavForDrumPad(zipPath + 'END2.wav', 'end1', zipFile);
+		await makeWavForDrumPad(zipPath + 'END3.wav', 'end1', zipFile);
 		
-		const zipfileDrums = metaData[0].toUpperCase() + "-DRUMS" + "_" + tempo + ".zip";	
-		saveZipFile(zipfileDrums, zipDrums);		
-
-		const zipArrA = new JSZip();		
-		await makeWavForChordPad('MAJ_C.wav', 0,  'maj', 'arra', zipArrA);			// Maj Var A
-		await makeWavForChordPad('MAJ_C#.wav', 1,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_D.wav', 2,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_D#.wav', 3,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_E.wav', 4,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_F.wav', 5,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_F#.wav', 6,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_G.wav', 7,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_G#.wav', 8,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_A.wav', 9,  'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_A#.wav', 10, 'maj', 'arra', zipArrA);
-		await makeWavForChordPad('MAJ_B.wav', 11, 'maj', 'arra', zipArrA);	
-
-		await makeWavForChordPad('MIN_C.wav', 0,  'min', 'arra', zipArrA);			// Min Var A
-		await makeWavForChordPad('MIN_C#.wav', 1,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_D.wav', 2,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_D#.wav', 3,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_E.wav', 4,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_F.wav', 5,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_F#.wav', 6,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_G.wav', 7,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_G#.wav', 8,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_A.wav', 9,  'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_A#.wav', 10, 'min', 'arra', zipArrA);
-		await makeWavForChordPad('MIN_B.wav', 11, 'min', 'arra', zipArrA);	
-
-		await makeWavForChordPad('SUS_C.wav', 0,  'sus', 'arra', zipArrA);			// Sus Var A
-		await makeWavForChordPad('SUS_C#.wav', 1,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_D.wav', 2,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_D#.wav', 3,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_E.wav', 4,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_F.wav', 5,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_F#.wav', 6,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_G.wav', 7,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_G#.wav', 8,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_A.wav', 9,  'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_A#.wav', 10, 'sus', 'arra', zipArrA);
-		await makeWavForChordPad('SUS_B.wav', 11, 'sus', 'arra', zipArrA);
+		metaData = chordLoop.loop.url.substring(chordLoop.loop.url.lastIndexOf("/") + 1).split("_");
+		const chordName =  metaData[0].toUpperCase();
 		
-		const zipfileArrA = metaData[0].toUpperCase() + "-CHORD-A" + "_" + tempo + ".zip";	
-		saveZipFile(zipfileArrA, zipArrA);		
-
-		const zipArrB = new JSZip();
-		await makeWavForChordPad('MAJ_C.wav', 0,  'maj', 'arrb', zipArrB);			// Maj Var B
-		await makeWavForChordPad('MAJ_C#.wav', 1,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_D.wav', 2,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_D#.wav', 3,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_E.wav', 4,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_F.wav', 5,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_F#.wav', 6,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_G.wav', 7,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_G#.wav', 8,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_A.wav', 9,  'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_A#.wav', 10, 'maj', 'arrb', zipArrB);
-		await makeWavForChordPad('MAJ_B.wav', 11, 'maj', 'arrb', zipArrB);	
-
-		await makeWavForChordPad('MIN_C.wav', 0,  'min', 'arrb', zipArrB);			// Min Var B
-		await makeWavForChordPad('MIN_C#.wav', 1,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_D.wav', 2,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_D#.wav', 3,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_E.wav', 4,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_F.wav', 5,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_F#.wav', 6,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_G.wav', 7,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_G#.wav', 8,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_A.wav', 9,  'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_A#.wav', 10, 'min', 'arrb', zipArrB);
-		await makeWavForChordPad('MIN_B.wav', 11, 'min', 'arrb', zipArrB);	
-
-		await makeWavForChordPad('SUS_C.wav', 0,  'sus', 'arrb', zipArrB);			// Sus Var B (71)
-		await makeWavForChordPad('SUS_C#.wav', 1,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_D.wav', 2,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_D#.wav', 3,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_E.wav', 4,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_F.wav', 5,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_F#.wav', 6,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_G.wav', 7,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_G#.wav', 8,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_A.wav', 9,  'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_A#.wav', 10, 'sus', 'arrb', zipArrB);
-		await makeWavForChordPad('SUS_B.wav', 11, 'sus', 'arrb', zipArrB);	
-
-		const zipfileArrB = metaData[0].toUpperCase() + "-CHORD-B" + "_" + tempo + ".zip";	
-		saveZipFile(zipfileArrB, zipArrB);		
-
-		const zipBass = new JSZip();
-		await makeWavForBassPad('BMAJ_C.wav', 0,  'maj', 'arra', zipBass);				// Bass ROOT 
-		await makeWavForBassPad('BMAJ_C#.wav', 1,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_D.wav', 2,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_D#.wav', 3,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_E.wav', 4,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_F.wav', 5,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_F#.wav', 6,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_G.wav', 7,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_G#.wav', 8,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_A.wav', 9,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_A#.wav', 10, 'maj', 'arra', zipBass);
-		await makeWavForBassPad('BMAJ_B.wav', 11, 'maj', 'arra', zipBass);	
-
-		await makeWavForBassPad('BROOT_C.wav', 0,  'maj', 'arra', zipBass);				// Bass Maj
-		await makeWavForBassPad('BROOT_C#.wav', 1,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_D.wav', 2,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_D#.wav', 3,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_E.wav', 4,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_F.wav', 5,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_F#.wav', 6,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_G.wav', 7,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_G#.wav', 8,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_A.wav', 9,  'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_A#.wav', 10, 'maj', 'arra', zipBass);
-		await makeWavForBassPad('BROOT_B.wav', 11, 'maj', 'arra', zipBass);
+		let chordVariations = 1;		
+		if (metaData.length == 5) chordVariations = parseInt(metaData[4]);	// style with multiple variations
 		
-		await makeWavForBassPad('BMIN_C.wav', 0,  'min', 'arra', zipBass);				// Bass Min
-		await makeWavForBassPad('BMIN_C#.wav', 1,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_D.wav', 2,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_D#.wav', 3,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_E.wav', 4,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_F.wav', 5,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_F#.wav', 6,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_G.wav', 7,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_G#.wav', 8,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_A.wav', 9,  'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_A#.wav', 10, 'min', 'arra', zipBass);
-		await makeWavForBassPad('BMIN_B.wav', 11, 'min', 'arra', zipBass);	
+		if (metaData.length == 7) {
+			chordVariations = 4;															// song with max 4 variations
+			if (metaData[5] == "0") chordVariations = 3;
+			if (metaData[4] == "0") chordVariations = 2;
+			if (metaData[3] == "0") chordVariations = 1;			
+		}
 		
-		const zipfileBass = metaData[0].toUpperCase() + "-BASS" + "_" + tempo + ".zip";	
-		saveZipFile(zipfileBass, zipBass);
+		const styleTable = ["arra", "arrb", "arrc", "arrd"];
+		
+		for (let v=0; v<chordVariations; v++) {
+			zipPath = "USER_MODELING/RealChord/" + metaData[0].toUpperCase() + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+		
+			await makeWavForChordPad(zipPath + 'MAJ_C.wav', 0,  'maj', styleTable[v], zipFile);			// Maj Var
+			await makeWavForChordPad(zipPath + 'MAJ_C#.wav', 1,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_D.wav', 2,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_D#.wav', 3,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_E.wav', 4,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_F.wav', 5,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_F#.wav', 6,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_G.wav', 7,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_G#.wav', 8,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_A.wav', 9,  'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_A#.wav', 10, 'maj', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MAJ_B.wav', 11, 'maj', styleTable[v], zipFile);	
+
+			await makeWavForChordPad(zipPath + 'MIN_C.wav', 0,  'min', styleTable[v], zipFile);			// Min Var
+			await makeWavForChordPad(zipPath + 'MIN_C#.wav', 1,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_D.wav', 2,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_D#.wav', 3,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_E.wav', 4,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_F.wav', 5,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_F#.wav', 6,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_G.wav', 7,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_G#.wav', 8,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_A.wav', 9,  'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_A#.wav', 10, 'min', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'MIN_B.wav', 11, 'min', styleTable[v], zipFile);	
+
+			await makeWavForChordPad(zipPath + 'SUS_C.wav', 0,  'sus', styleTable[v], zipFile);			// Sus Var
+			await makeWavForChordPad(zipPath + 'SUS_C#.wav', 1,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_D.wav', 2,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_D#.wav', 3,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_E.wav', 4,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_F.wav', 5,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_F#.wav', 6,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_G.wav', 7,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_G#.wav', 8,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_A.wav', 9,  'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_A#.wav', 10, 'sus', styleTable[v], zipFile);
+			await makeWavForChordPad(zipPath + 'SUS_B.wav', 11, 'sus', styleTable[v], zipFile);		
+		}					
+
+		metaData = bassLoop.loop.url.substring(bassLoop.loop.url.lastIndexOf("/") + 1).split("_");
+		const bassName =  metaData[0].toUpperCase();
+		
+		bassVariations = 1;		
+		if (metaData.length == 4) bassVariations = parseInt(metaData[3]);		
+		
+		if (metaData.length == 7) {
+			bassVariations = 4;															// song with max 4 variations
+			if (metaData[5] == "0") bassVariations = 3;
+			if (metaData[4] == "0") bassVariations = 2;
+			if (metaData[3] == "0") bassVariations = 1;			
+		}
+				
+		for (let v=0; v<bassVariations; v++) {		
+			zipPath = "USER_MODELING/RealBass/" + metaData[0].toUpperCase() + "-" + styleTable[v].toUpperCase() + "_" + tempo + "/";	
+			
+			await makeWavForBassPad(zipPath + 'BMAJ_C.wav', 0,  'maj', styleTable[v], zipFile);				// Bass ROOT 
+			await makeWavForBassPad(zipPath + 'BMAJ_C#.wav', 1,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_D.wav', 2,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_D#.wav', 3,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_E.wav', 4,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_F.wav', 5,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_F#.wav', 6,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_G.wav', 7,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_G#.wav', 8,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_A.wav', 9,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_A#.wav', 10, 'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMAJ_B.wav', 11, 'maj', styleTable[v], zipFile);	
+
+			await makeWavForBassPad(zipPath + 'BROOT_C.wav', 0,  'maj', styleTable[v], zipFile);				// Bass Maj
+			await makeWavForBassPad(zipPath + 'BROOT_C#.wav', 1,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_D.wav', 2,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_D#.wav', 3,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_E.wav', 4,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_F.wav', 5,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_F#.wav', 6,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_G.wav', 7,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_G#.wav', 8,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_A.wav', 9,  'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_A#.wav', 10, 'maj', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BROOT_B.wav', 11, 'maj', styleTable[v], zipFile);
+			
+			await makeWavForBassPad(zipPath + 'BMIN_C.wav', 0,  'min', styleTable[v], zipFile);				// Bass Min
+			await makeWavForBassPad(zipPath + 'BMIN_C#.wav', 1,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_D.wav', 2,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_D#.wav', 3,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_E.wav', 4,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_F.wav', 5,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_F#.wav', 6,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_G.wav', 7,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_G#.wav', 8,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_A.wav', 9,  'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_A#.wav', 10, 'min', styleTable[v], zipFile);
+			await makeWavForBassPad(zipPath + 'BMIN_B.wav', 11, 'min', styleTable[v], zipFile);	
+		}
+		
+		const kstName = "USER_STYLE/Ballad/" + chordName + ".KST";
+		zipFile.file(kstName, buildKstFile(drumName, chordName, chordVariations, bassName, bassVariations, tempo)); 	
+
+		const zipFileName = chordName +  "_" + tempo + ".zip";				
+		saveZipFile(zipFileName, zipFile);				
 	}
 	else {
 		alert("Export not yet implemented for this instrument or settings");
 	}
+	
+	exportButton.innerText = "Export";				
+	exportButton.style.setProperty("--accent-fill-rest", "#0066cc");		
 	setTimeout(() => exporting = false, 3000);
 }
 
@@ -12512,4 +12510,99 @@ async function downloadCSV(slotNo) {
 	link.click();
 	document.body.removeChild(link);
 	URL.revokeObjectURL(url); // Free up memory
+}
+
+function buildKstFile(drumName, chordName, chordVariations, bassName, bassVariations, kstTempo) {
+	const encoder = new TextEncoder();
+	const trackData = [];
+	const styleTable = ["arra", "arrb", "arrc", "arrd"];	
+
+	// Helper to generate text-meta instructions at current timeline boundary
+	function writeTextMeta(textStr) {
+		const textBytes = encoder.encode(textStr);
+		trackData.push(0x00, 0xFF, 0x01, textBytes.length, ...textBytes);
+	}
+
+	// Helper to inject structural layout transition block tags
+	function writeMarkerMeta(markerStr) {
+		const markerBytes = encoder.encode(markerStr);
+		trackData.push(0x00, 0xFF, 0x06, markerBytes.length, ...markerBytes);
+	}
+
+	// Helper to calculate Variable Length Quantities (VLQ) for timeline positioning
+	function getVlqBytes(ticks) {
+		if (ticks === 0) return [0x00];
+		let buffer = [];
+		while (ticks > 0) {
+			let byte = ticks & 0x7F;
+			ticks >>= 7;
+			if (buffer.length > 0) byte |= 0x80;
+			buffer.unshift(byte);
+		}
+		return buffer;
+	}
+
+	// --- SECTION 1: GLOBAL ARCHITECTURE INITIALIZATION ---
+	writeMarkerMeta("Audya Style 1.0"); // Universal styling compatibility header
+	trackData.push(0x00, 0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08); // 4/4 Signature Mapping
+
+	// Set Style Clock Reference Tempo
+	const microsecondsPerBeat = Math.ceil(60000000 / kstTempo);
+	trackData.push(
+		0x00, 0xFF, 0x51, 0x03,
+		(microsecondsPerBeat >> 16) & 0xFF,
+		(microsecondsPerBeat >> 8) & 0xFF,
+		microsecondsPerBeat & 0xFF
+	);
+
+	// --- SECTION 2: EMBED TEXT ROUTING PATHWAYS (DELTA TIME 0) ---
+	// Directs the system to bypass LSB constraints and pull folder strings directly
+	//writeTextMeta("LDRUM:DREAM_BALLAD_DRUMS_85");
+
+	// --- SECTION 3: VARIATION TIMELINE BLOCKS & REAL CHORD MORPHS ---
+	const ticksPerMeasure = 1920; // 480 PPQ * 4 beats
+	const fourMeasuresDelta = getVlqBytes(ticksPerMeasure * 4);
+
+	// --- ARRANGER A WINDOW ---
+	trackData.push(0x00, 0xFF, 0x06, 0x08, ...encoder.encode("ARRA_MAJ"));
+	trackData.push(...fourMeasuresDelta, 0xFF, 0x06, 0x01, 0x20); // Pad sequence boundary safely
+
+	// --- ARRANGER B WINDOW ---
+	trackData.push(0x00, 0xFF, 0x06, 0x08, ...encoder.encode("ARRB_MAJ"));
+	trackData.push(...fourMeasuresDelta, 0xFF, 0x06, 0x01, 0x20);
+
+	// --- ARRANGER C WINDOW ---
+	trackData.push(0x00, 0xFF, 0x06, 0x08, ...encoder.encode("ARRC_MAJ"));
+	trackData.push(...fourMeasuresDelta, 0xFF, 0x06, 0x01, 0x20);
+
+	// --- ARRANGER D WINDOW ---
+	trackData.push(0x00, 0xFF, 0x06, 0x08, ...encoder.encode("ARRD_MAJ"));
+	trackData.push(...fourMeasuresDelta, 0xFF, 0x06, 0x01, 0x20);
+
+	// --- SECTION 4: SAFE TRACK CLOSURE TERMINATION ---
+	trackData.push(0x00, 0xFF, 0x2F, 0x00);
+
+	// --- SECTION 5: LOWER-LEVEL STANDARD MIDI WRAPPER ---
+	const headerChunk = [
+		0x4D, 0x54, 0x68, 0x64, // 'MThd' signature
+		0x00, 0x00, 0x00, 0x06, // Header length constant
+		0x00, 0x00,             // SMF Format Type 0
+		0x00, 0x01,             // Single Track setup
+		0x01, 0xE0              // 480 PPQ metric timing reference resolution
+	];
+
+	const trackSize = trackData.length;
+	const trackHeader = [
+		0x4D, 0x54, 0x72, 0x6B, // 'MTrk' signature
+		(trackSize >> 24) & 0xFF,
+		(trackSize >> 16) & 0xFF,
+		(trackSize >> 8) & 0xFF,
+		trackSize & 0xFF
+	];
+
+	// Combine arrays out of heap execution array allocation blocks
+	const totalByteArray = new Uint8Array([...headerChunk, ...trackHeader, ...trackData]);
+
+	// Execute browser automated binary download process
+	return new Blob([totalByteArray], { type: "application/octet-stream" });
 }
